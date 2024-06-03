@@ -5,7 +5,6 @@ using DataAccess.DAOs;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.IService;
 
 namespace WebAPI.Controllers
 {
@@ -16,22 +15,20 @@ namespace WebAPI.Controllers
         private readonly IBrandRepository _repository;
         private readonly ICategoryRepository _cate;
         private readonly IMapper _mapper;
-        private readonly IImageService _service;
 
-        public BrandController(IBrandRepository repository, IMapper mapper, IImageService service, ICategoryRepository cate)
+        public BrandController(IBrandRepository repository, IMapper mapper, ICategoryRepository cate)
         {
             _repository = repository;
             _mapper = mapper;
-            _service = service;
             _cate = cate;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var brands = _repository.GetAllBrand();
+                var brands = await _repository.GetAllBrandAsync();
                 return Ok(brands);
             }
             catch (Exception ex)
@@ -41,11 +38,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var brand = _repository.GetBrandById(id);
+                var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
                     return NotFound(new { message = "Brand not found." });
@@ -59,11 +56,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("GetByCategory/{cate_id}")]
-        public IActionResult GetByCategory(int cate_id)
+        public async Task<IActionResult> GetByCategory(int cate_id)
         {
             try
             {
-                var brands = _repository.GetBrandsByCategory(cate_id);
+                var category = await _cate.GetCategoryByIdAsync(cate_id);
+                if (category == null || category.Isdelete == true)
+                {
+                    return NotFound(new { message = "Category not found." });
+                }
+                var brands = await _repository.GetBrandsByCategoryAsync(cate_id);
                 if (brands == null)
                 {
                     return NotFound(new { message = "Brand not found." });
@@ -77,7 +79,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromForm] BrandDTO brandDto)
+        public async Task<IActionResult> Create([FromForm] BrandDTO brandDto)
         {
             try
             {
@@ -86,19 +88,17 @@ namespace WebAPI.Controllers
                     return StatusCode(0, new { message = "Please pass the valid data." });
                 }
                 var brand = _mapper.Map<Brand>(brandDto);
-                var check = _repository.CheckBrand(brand);
+                var check = await _repository.CheckBrandAsync(brand);
                 if (!check)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
-                }            
-                
-                if (brandDto.ImageFile != null)
-                {
-                    var imagePath = _service.SaveImage(brandDto.ImageFile, "brands");
-                    brand.Image = imagePath;
                 }
-
-                var result = _repository.CreateBrand(brand);
+                var category = await _cate.GetCategoryByIdAsync(brandDto.CategoryId);
+                if(category == null || category.Isdelete == true)
+                {
+                    return NotFound(new { message = "Category not found." });
+                }    
+                var result = await _repository.CreateBrandAsync(brand);
                 if (result)
                 {
                     return Ok(new { message = "Brand added successfully." });
@@ -113,7 +113,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromForm] BrandDTO brandDto)
+        public async Task<IActionResult> Update(int id, [FromForm] BrandDTO brandDto)
         {
             try
             {
@@ -122,39 +122,25 @@ namespace WebAPI.Controllers
                     return StatusCode(0, new { message = "Please pass the valid data." });
                 }
 
-                var brand = _repository.GetBrandById(id);
+                var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
                     return NotFound(new { message = "Brand not found." });
-                }    
+                }
 
                 _mapper.Map(brandDto, brand);
-                var check = _repository.CheckBrand(brand);
+                var check = await _repository.CheckBrandAsync(brand);
                 if (!check)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
                 }
-
-                if (brandDto.ImageFile != null)
+                var category = await _cate.GetCategoryByIdAsync(brandDto.CategoryId);
+                if (category == null || category.Isdelete == true)
                 {
-                    try
-                    {
-                        var imagePath = _service.SaveImage(brandDto.ImageFile, "brands");
-                        // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                        if (!string.IsNullOrEmpty(brand.Image))
-                        {
-                            _service.DeleteImage(brand.Image);
-                        }
-                        brand.Image = imagePath;
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        return BadRequest(new { message = ex.Message });
-                    }
-
+                    return NotFound(new { message = "Category not found." });
                 }
 
-                var result = _repository.Update(brand);
+                var result = await _repository.UpdateBrandAsync(brand);
                 if (result)
                 {
                     return Ok(new { message = "Brand updated successfully." });
@@ -169,16 +155,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var brand = _repository.GetBrandById(id);
+                var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
                     return NotFound(new { message = "Brand not found." });
                 }
-                var result = _repository.DeleteBrand(brand);
+                var result = await _repository.DeleteBrandAsync(brand);
                 if (result)
                 {
                     return Ok(new { message = "Brand deleted successfully." });

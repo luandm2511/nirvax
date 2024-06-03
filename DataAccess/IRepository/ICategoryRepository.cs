@@ -9,11 +9,11 @@ namespace DataAccess.IRepository
 {
     public interface ICategoryRepository
     {
-        IEnumerable<Category> GetAllCategory();
-        Category GetCategoryById(int id);
-        bool CreateCategory(Category category);
-        bool Update(Category category);
-        bool DeleteCategory(Category category);
-        bool CheckCategory(Category category);
+        Task<IEnumerable<Category>> GetAllCategoryAsync();
+        Task<Category> GetCategoryByIdAsync(int id);
+        Task<bool> CreateCategoryAsync(Category category);
+        Task<bool> UpdateAsync(Category category);
+        Task<bool> DeleteCategoryAsync(Category category);
+        Task<bool> CheckCategoryAsync(Category category);
     }
 }

@@ -22,11 +22,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAccounts()
+        public async Task<IActionResult> GetAllAccounts()
         {
             try
             {
-                var accounts = _repository.GetAllAccount();
+                var accounts = await _repository.GetAllAccountAsync();
                 return Ok(accounts);
             }
             catch (Exception ex)
@@ -36,11 +36,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetAccountById(int id)
+        public async Task<IActionResult> GetAccountById(int id)
         {
             try
             {
-                var account = _repository.GetAccountById(id);
+                var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
                     return NotFound(new { message = "Account not found." });
@@ -53,18 +53,18 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost("{id}/ban")]
-        public IActionResult BanAccount(int id)
+        [HttpPut("{id}/ban")]
+        public async Task<IActionResult> BanAccount(int id)
         {
             try
             {
-                var account = _repository.GetAccountById(id);
+                var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
                     return NotFound(new { message = "Account not found." });
                 }
 
-                _repository.BanAccount(account);
+                await _repository.BanAccountAsync(account);
                 return Ok(new { message = "Account banned successfully." });
             }
             catch (Exception ex)
@@ -73,12 +73,32 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("search")]
-        public IActionResult SearchAccounts([FromQuery] string keyword)
+        [HttpPut("{id}/unban")]
+        public async Task<IActionResult> UnbanAccount(int id)
         {
             try
             {
-                var accounts = _repository.SearchAccount(keyword);
+                var account = await _repository.GetAccountByIdAsync(id);
+                if (account == null)
+                {
+                    return NotFound(new { message = "Account not found." });
+                }
+
+                await _repository.UnbanAccountAsync(account);
+                return Ok(new { message = "Account unbanned successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchAccounts([FromQuery] string keyword)
+        {
+            try
+            {
+                var accounts = await _repository.SearchAccountAsync(keyword);
                 return Ok(accounts);
             }
             catch (Exception ex)
@@ -88,17 +108,17 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/change-password")]
-        public IActionResult ChangePassword(int id, [FromBody] string newPassword)
+        public async Task<IActionResult> ChangePassword(int id, [FromBody] string newPassword)
         {
             try
             {
-                var account = _repository.GetAccountById(id);
+                var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
                     return NotFound(new { message = "Account not found." });
                 }
 
-                _repository.ChangePassword(id, newPassword);
+                await _repository.ChangePasswordAsync(id, newPassword);
                 return Ok(new { message = "Password changed successfully." });
             }
             catch (Exception ex)
@@ -108,18 +128,38 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/update-profile")]
-        public IActionResult UpdateAccount(UpdateUserDTO model)
+        public async Task<IActionResult> UpdateAccount(int id,UpdateUserDTO model)
         {
             try
             {
-                var account = _repository.GetAccountById(model.AccountId);
+                var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
                     return NotFound(new { message = "Account not found." });
                 }
-                var pro = _mapper.Map<Account>(model);
-                _repository.UpdateAccount(pro);
+                _mapper.Map(model, account);
+                await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Profile updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/{avatar}")]
+        public async Task<IActionResult> UpdateAvatar(int id, string avatar)
+        {
+            try
+            {
+                var account = await _repository.GetAccountByIdAsync(id);
+                if (account == null)
+                {
+                    return NotFound(new { message = "Account not found." });
+                }
+                account.Image = avatar;
+                await _repository.UpdateAccountAsync(account);
+                return Ok(new { message = "Avatar updated successfully." });
             }
             catch (Exception ex)
             {

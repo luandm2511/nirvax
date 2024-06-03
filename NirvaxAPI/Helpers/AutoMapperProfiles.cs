@@ -13,12 +13,9 @@ namespace WebAPI.Helpers
             CreateMap<Login, Owner>().ReverseMap();
             CreateMap<Login, Staff>().ReverseMap();
             CreateMap<Account, UpdateUserDTO>().ReverseMap();
-            CreateMap<Category, CategoryDTO>().ReverseMap()
-                .ForMember(dest => dest.Image, opt => opt.Ignore()); // Image sẽ được xử lý riêng
-            CreateMap<Brand, BrandDTO>().ReverseMap()
-                .ForMember(dest => dest.Image, opt => opt.Ignore()); // Image sẽ được xử lý riêng
-            CreateMap<Product, ProductDTO>().ReverseMap()
-                .ForMember(dest => dest.Images, opt => opt.Ignore());
+            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Brand, BrandDTO>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Image, ImageDTO>().ReverseMap();
             CreateMap<Comment, ReplyCommentDTO>().ReverseMap();
             CreateMap<Comment, CommentDTO>().ReverseMap();

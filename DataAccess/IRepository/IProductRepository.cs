@@ -19,9 +19,11 @@ namespace DataAccess.IRepository
         Task<bool> UpdateAsync(Product product);
         Task<bool> DeleteAsync(Product product);
         Task<bool> BanProductAsync(Product product);
+        Task<bool> UnbanProductAsync(Product product);
         Task<bool> CheckProductAsync(Product product);
         Task<bool> AddRatingAsync(Product product, int rating);
-        Task<IEnumerable<Product>> GetTopSellingProductsAsync(int top);
+        Task<IEnumerable<Product>> GetTopSellingProductsAsync();
+        Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId);
         Task<ProductSize> GetByIdAsync(string id);
 
     }

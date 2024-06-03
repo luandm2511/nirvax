@@ -348,12 +348,10 @@ public partial class NirvaxContext : DbContext
 
             entity.HasOne(d => d.Description).WithMany(p => p.Images)
                 .HasForeignKey(d => d.DescriptionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_image_description");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Images)
                 .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_image_product");
         });
 

@@ -11,12 +11,12 @@ namespace DataAccess.Repository
 {
     public class CommentRepository : ICommentRepository
     {
-        public Task<bool> AddCommentAsync(Comment comment) => CommentDAO.AddCommentAsync(comment);
+        public async Task<bool> AddCommentAsync(Comment comment) => await CommentDAO.AddCommentAsync(comment);
 
-        public Task<Comment> GetCommentByIdAsync(int commentId) => CommentDAO.GetCommentByIdAsync(commentId);
+        public async Task<Comment> GetCommentByIdAsync(int commentId) => await CommentDAO.GetCommentByIdAsync(commentId);
 
-        public Task<IEnumerable<Comment>> GetCommentsByProductIdAsync(int productId) => CommentDAO.GetCommentsByProductIdAsync(productId);
+        public async Task<IEnumerable<Comment>> GetCommentsByProductIdAsync(int productId) => await CommentDAO.GetCommentsByProductIdAsync(productId);
 
-        public Task<bool> UpdateCommentAsync(Comment comment) => CommentDAO.UpdateCommentAsync(comment);
+        public async Task<bool> UpdateCommentAsync(Comment comment) => await CommentDAO.UpdateCommentAsync(comment);
     }
 }

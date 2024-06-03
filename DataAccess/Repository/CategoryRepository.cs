@@ -11,15 +11,22 @@ namespace DataAccess.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public IEnumerable<Category> GetAllCategory() => CategoryDAO.GetAllCategory();
-        public Category GetCategoryById(int id) => CategoryDAO.GetCategoryById(id);
+        public Task<IEnumerable<Category>> GetAllCategoryAsync() => CategoryDAO.GetAllCategoryAsync();
+        public Task<Category> GetCategoryByIdAsync(int id) => CategoryDAO.GetCategoryByIdAsync(id);
+        public Task<bool> CreateCategoryAsync(Category category)
+        {
+            category.Isdelete = false;
+            return CategoryDAO.CreateCategoryAsync(category);
+        }
 
-        public bool CreateCategory(Category category) => CategoryDAO.CreateCategory(category);
+        public Task<bool> UpdateAsync(Category category) => CategoryDAO.UpdateCategoryAsync(category);
 
-        public bool Update(Category category) => CategoryDAO.UpdateCategory(category);
+        public Task<bool> DeleteCategoryAsync(Category category)
+        {
+            category.Isdelete = true;
+            return CategoryDAO.UpdateCategoryAsync(category);
+        }
 
-        public bool DeleteCategory(Category category) => CategoryDAO.DeleteCategory(category);
-
-        public bool CheckCategory(Category category) => CategoryDAO.CheckCategory(category);
+        public Task<bool> CheckCategoryAsync(Category category) => CategoryDAO.CheckCategoryAsync(category);
     }
 }

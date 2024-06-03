@@ -9,8 +9,6 @@ namespace BusinessObject.DTOs
 {
     public class UpdateUserDTO
     {
-        [Required]
-        public int AccountId { get; set; }
 
         [Required(ErrorMessage = " FullName cannot be empty!!")]
         [MinLength(2, ErrorMessage = "FullName needs to be at least 2 characters!!")]

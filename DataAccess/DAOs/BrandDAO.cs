@@ -12,105 +12,46 @@ namespace DataAccess.DAOs
     {
         private static readonly NirvaxContext _context = new NirvaxContext();
 
-        public static IEnumerable<Brand> GetAllBrand()
+        public static async Task<IEnumerable<Brand>> GetAllBrandAsync()
         {
-            try
-            {
-                return _context.Brands.Include(b => b.Category).Where(b => !b.Isdelete).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while retrieving brands.", ex);
-            }
+            return await _context.Brands
+                .Include(b => b.Category)
+                .Where(b => !b.Isdelete)
+                .ToListAsync();
         }
 
-        public static Brand GetBrandById(int id)
+        public static async Task<Brand> GetBrandByIdAsync(int id)
         {
-            try
-            {
-                return _context.Brands.Include(b => b.Category).SingleOrDefault(b => b.BrandId == id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the brand with ID {id}.", ex);
-            }
+            return await _context.Brands
+                .Include(b => b.Category)
+                .SingleOrDefaultAsync(b => b.BrandId == id);
         }
 
-        public static IEnumerable<Brand> GetBrandsByCategory(int cate_id)
+        public static async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id)
         {
-            try
-            {
-                return _context.Brands.Include(b => b.Category).Where(b => !b.Isdelete && b.CategoryId == cate_id).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the brand with category {cate_id}.", ex);
-            }
+            return await _context.Brands
+                .Include(b => b.Category)
+                .Where(b => !b.Isdelete && b.CategoryId == cate_id)
+                .ToListAsync();
         }
 
-        public static bool CreateBrand(Brand brand)
+        public static async Task<bool> CreateBrandAsync(Brand brand)
         {
-            try
-            {
-                brand.Isdelete = false;
-                _context.Brands.Add(brand);
-                _context.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while adding the brand.", ex);
-            }
+            _context.Brands.Add(brand);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public static bool UpdateBrand(Brand brand)
+        public static async Task<bool> UpdateBrandAsync(Brand brand)
         {
-            try
-            {
-                _context.Entry<Brand>(brand).State =
-                        Microsoft.EntityFrameworkCore.EntityState.Modified;
-                _context.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while updating the brand.", ex);
-            }
+            _context.Brands.Update(brand);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public static bool DeleteBrand(Brand brand)
+        public static async Task<bool> CheckBrandAsync(Brand brand)
         {
-            try
-            {
-                if (brand != null)
-                {
-                    brand.Isdelete = true;
-                    _context.SaveChanges();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while deleting the category with ID {brand.BrandId}.", ex);
-            }
-        }
-
-        public static bool CheckBrand(Brand brand)
-        {
-            try
-            {
-
-                if (_context.Brands.Any(b => b.Name == brand.Name && b.BrandId != brand.BrandId && !b.Isdelete))
-                {
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while checking the brand with ID {brand.BrandId}.", ex);
-            }
+            return !await _context.Brands.AnyAsync(b => b.Name == brand.Name && b.BrandId != brand.BrandId && !b.Isdelete);
         }
     }
 }

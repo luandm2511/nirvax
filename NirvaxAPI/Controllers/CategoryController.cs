@@ -3,7 +3,6 @@ using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.IService;
 
 namespace WebAPI.Controllers
 {
@@ -13,21 +12,19 @@ namespace WebAPI.Controllers
     {
         private readonly ICategoryRepository _repository;
         private readonly IMapper _mapper;
-        private readonly IImageService _service;
 
-        public CategoryController(ICategoryRepository repository, IMapper mapper, IImageService service)
+        public CategoryController(ICategoryRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            _service = service;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var categories = _repository.GetAllCategory();
+                var categories = await _repository.GetAllCategoryAsync();
                 return Ok(categories);
             }
             catch (Exception ex)
@@ -37,11 +34,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var category = _repository.GetCategoryById(id);
+                var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
                     return NotFound(new { message = "Category not found." });
@@ -55,7 +52,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromForm] CategoryDTO categoryDto)
+        public async Task<IActionResult> Create([FromForm] CategoryDTO categoryDto)
         {
             try
             {
@@ -64,19 +61,13 @@ namespace WebAPI.Controllers
                     return StatusCode(0, new { message = "Please pass the valid data." });
                 }
                 var category = _mapper.Map<Category>(categoryDto);
-                var check = _repository.CheckCategory(category);
+                var check = await _repository.CheckCategoryAsync(category);
                 if (!check)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The category name has been duplicated." });
                 }
 
-                if (categoryDto.ImageFile != null)
-                {
-                    var imagePath = _service.SaveImage(categoryDto.ImageFile,"categories");
-                    category.Image = imagePath;
-                }
-
-                var result = _repository.CreateCategory(category);
+                var result = await _repository.CreateCategoryAsync(category);
                 if (result)
                 {
                     return Ok(new { message = "Category added successfully." });
@@ -91,7 +82,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromForm] CategoryDTO categoryDto)
+        public async Task<IActionResult> Update(int id, [FromForm] CategoryDTO categoryDto)
         {
             try
             {
@@ -99,39 +90,20 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(0, new { message = "Please pass the valid data." });
                 }
-                var category = _repository.GetCategoryById(id);
+                var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
                     return NotFound(new { message = "Category not found." });
                 }
 
                 _mapper.Map(categoryDto, category);
-                var check = _repository.CheckCategory(category);
+                var check = await _repository.CheckCategoryAsync(category);
                 if (!check)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The category name has been duplicated." });
                 }
 
-                if (categoryDto.ImageFile != null)
-                {
-                    try
-                    {
-                        var imagePath = _service.SaveImage(categoryDto.ImageFile, "categories");
-                        // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                        if (!string.IsNullOrEmpty(category.Image))
-                        {
-                            _service.DeleteImage(category.Image);
-                        }
-                        category.Image = imagePath;
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        return BadRequest(new { message = ex.Message });
-                    }
-                    
-                }
-
-                var result = _repository.Update(category);
+                var result = await _repository.UpdateAsync(category);
                 if (result)
                 {
                     return Ok(new { message = "Category updated successfully." });
@@ -146,16 +118,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var category = _repository.GetCategoryById(id);
+                var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
                     return NotFound(new { message = "Category not found." });
                 }
-                var result = _repository.DeleteCategory(category);
+                var result = await _repository.DeleteCategoryAsync(category);
                 if (result)
                 {
                     return Ok(new { message = "Category deleted successfully." });

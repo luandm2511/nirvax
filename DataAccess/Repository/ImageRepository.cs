@@ -11,14 +11,14 @@ namespace DataAccess.Repository
 {
     public class ImageRepository : IImageRepository
     {
-        public Task<bool> AddImagesAsync(Image image) => ImageDAO.AddImagesAsync(image);
+        public async Task<bool> AddImagesAsync(Image image) => await ImageDAO.AddImagesAsync(image);
 
-        public Task<bool> DeleteImagesAsync(Image image) => ImageDAO.DeleteImagesAsync(image);
+        public async Task<bool> DeleteImagesAsync(Image image) => await ImageDAO.DeleteImagesAsync(image);
 
-        public Task<IEnumerable<Image>> GetByDescriptionAsync(int desId) => ImageDAO.GetByDescriptionAsync(desId);
+        public async Task<IEnumerable<Image>> GetByDescriptionAsync(int desId) => await ImageDAO.GetByDescriptionAsync(desId);
 
-        public Task<Image> GetByIdAsync(int id) => ImageDAO.GetByIdAsync(id);
+        public async Task<Image> GetByIdAsync(int id) => await ImageDAO.GetByIdAsync(id);
 
-        public Task<IEnumerable<Image>> GetByProductAsync(int productId) => ImageDAO.GetByProductAsync(productId);
+        public async Task<IEnumerable<Image>> GetByProductAsync(int productId) => await ImageDAO.GetByProductAsync(productId);
     }
 }

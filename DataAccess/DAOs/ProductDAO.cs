@@ -14,76 +14,41 @@ namespace DataAccess.DAOs
 
         public static async Task<IEnumerable<Product>> GetAllAsync()
         {
-            try
-            {
-                return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner).Where(p => !p.Isdelete).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while retrieving products.", ex);
-            }
         }
 
         public static async Task<Product> GetByIdAsync(int id)
         {
-            try
-            {
-                return await _context.Products.Include(p => p.Images)
+            return await _context.Products.Include(p => p.Images)
                     .Include(p => p.Description)
                     .Include(p => p.Category)
                     .Include(p => p.Brand)
                     .Include(p => p.Owner)
                     .FirstOrDefaultAsync(p => p.ProductId == id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the product with ID {id}.", ex);
-            }      
         }
 
         public static async Task<IEnumerable<Product>> GetByOwnerAsync(int ownerId)
         {
-            try
-            { 
-                return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner).Where(p => p.OwnerId == ownerId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the product with owner {ownerId}.", ex);
-            }
         }
 
         public static async Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId)
         {
-            try
-            {
-                return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner)
                     .Where(p => p.CategoryId == categoryId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the product with category {categoryId}.", ex);
-            }
         }
 
         public static async Task<IEnumerable<Product>> GetByBrandAsync(int brandId)
         {
-            try
-            {
-                return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner).Where(p => p.BrandId == brandId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the product with brand {brandId}.", ex);
-            }
         }
 
         public static async Task<IEnumerable<Product>> SearchAsync(string productName, float? minPrice, float? maxPrice, int? categoryId, int? brandId, int? ownerId)
@@ -115,112 +80,41 @@ namespace DataAccess.DAOs
 
         public static async Task<bool> CreateAsync(Product product)
         {
-            try
-            {
-                product.RatePoint = 0;
-                product.RateCount = 0;
-                product.QuantitySold = 0;
-                product.Isban = false;
-                product.Isdelete = false;
-                await _context.Products.AddAsync(product);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when adding product.", ex);
-            }
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public static async Task<bool> UpdateAsync(Product product)
         {
-            try
-            {
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when updating the product with {product.ProductId}.", ex);
-            }
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public static async Task<bool> DeleteAsync(Product product)
+        public static async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId)
         {
-            try
-            {
-                product.Isdelete = true;
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when deleting the product with {product.ProductId}.", ex);
-            }
-        }
-
-        public static async Task<bool> BanProductAsync(Product product)
-        {
-            try
-            {
-                product.Isban = true;
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when banning the product with {product.ProductId}.", ex);
-            }
-        }
-
-        public static async Task<bool> AddRatingAsync(Product product, int rating)
-        {
-            try
-            {
-                product.RateCount++;
-                product.RatePoint = (product.RatePoint * (product.RateCount - 1) + rating) / product.RateCount;
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when rating the product with {product.ProductId}.", ex);
-            }
-        }
-
-        public static async Task<IEnumerable<Product>> GetTopSellingProductsAsync(int top)
-        {
-            try
-            {
-                return await _context.Products
+            return await _context.Products
                 .OrderByDescending(p => p.QuantitySold)
-                .Take(top)
+                .Take(5)
+                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
+                .ToListAsync();
+        }
+        public static async Task<IEnumerable<Product>> GetTopSellingProductsAsync()
+        {
+            return await _context.Products
+                .OrderByDescending(p => p.QuantitySold)
+                .Take(10)
                 .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)
                 .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when list top {top} products selling.", ex);
-            }
         }
 
         public static async Task<bool> CheckProductAsync(Product product)
         {
-            try
-            {
-                if (await _context.Products
+            if (await _context.Products
                     .AnyAsync(p => p.Name == product.Name && p.BrandId != product.BrandId
                     && p.OwnerId == product.OwnerId && !p.Isdelete)) return false;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while checking the brand with ID {product.ProductId}.", ex);
-            }
+            return true;
         }
 
         public static async Task<ProductSize> GetByIdAsync(string id)

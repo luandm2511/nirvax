@@ -9,12 +9,12 @@ namespace DataAccess.IRepository
 {
     public interface IBrandRepository
     {
-        IEnumerable<Brand> GetAllBrand();
-        Brand GetBrandById(int id);
-        IEnumerable<Brand> GetBrandsByCategory(int cate_id);
-        bool CreateBrand(Brand brand);
-        bool Update(Brand brand);
-        bool DeleteBrand(Brand brand);
-        bool CheckBrand(Brand brand);
+        Task<IEnumerable<Brand>> GetAllBrandAsync();
+        Task<Brand> GetBrandByIdAsync(int id);
+        Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id);
+        Task<bool> CreateBrandAsync(Brand brand);
+        Task<bool> UpdateBrandAsync(Brand brand);
+        Task<bool> DeleteBrandAsync(Brand brand);
+        Task<bool> CheckBrandAsync(Brand brand);
     }
 }
