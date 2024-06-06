@@ -150,9 +150,9 @@ namespace WebAPI.Controllers
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, userInfo.Email),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, userInfo.Role.ToString())
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+            authClaims.Add(new Claim(ClaimTypes.Role, userInfo.Role.ToString()));
 
             var token = new JwtSecurityToken(
                 issuer: _config["JWT:ValidIssuer"],

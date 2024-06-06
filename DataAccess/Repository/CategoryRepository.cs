@@ -1,32 +1,34 @@
-﻿using System;
+﻿using AutoMapper.Execution;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static DataAccess.Repository.StaffRepository;
+using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public Task<IEnumerable<Category>> GetAllCategoryAsync() => CategoryDAO.GetAllCategoryAsync();
-        public Task<Category> GetCategoryByIdAsync(int id) => CategoryDAO.GetCategoryByIdAsync(id);
-        public Task<bool> CreateCategoryAsync(Category category)
+       
+        private readonly CategoryDAO _categoryDAO;
+        public CategoryRepository(CategoryDAO categoryDAO)
         {
-            category.Isdelete = false;
-            return CategoryDAO.CreateCategoryAsync(category);
+            _categoryDAO = categoryDAO;
         }
 
-        public Task<bool> UpdateAsync(Category category) => CategoryDAO.UpdateCategoryAsync(category);
 
-        public Task<bool> DeleteCategoryAsync(Category category)
+        public List<CategoryDTO> GetAllCategories()
         {
-            category.Isdelete = true;
-            return CategoryDAO.UpdateCategoryAsync(category);
+            
+            return _categoryDAO.GetAllCategories();
         }
 
-        public Task<bool> CheckCategoryAsync(Category category) => CategoryDAO.CheckCategoryAsync(category);
     }
 }

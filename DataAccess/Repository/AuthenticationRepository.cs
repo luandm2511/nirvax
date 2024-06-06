@@ -12,7 +12,7 @@ namespace DataAccess.Repository
 { 
     public class AuthenticationRepository : IAuthenticationRepository
     {
-        public Account LoginUser(Login login) =>  AuthenticationDAO.LoginUser(login); 
+        public Account LoginUser(Login login)  => AuthenticationDAO.LoginUser(login);
         public Account LoginAdmin(Login login) => AuthenticationDAO.LoginAdmin(login);
         public Owner LoginShop(Login login) => AuthenticationDAO.LoginShop(login);
         public Staff LoginStaff(Login login) => AuthenticationDAO.LoginStaff(login);

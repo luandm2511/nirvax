@@ -1,31 +1,34 @@
-﻿using System;
+﻿using AutoMapper.Execution;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static DataAccess.Repository.StaffRepository;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository
 {
     public class BrandRepository : IBrandRepository
     {
-        public async Task<IEnumerable<Brand>> GetAllBrandAsync() => await BrandDAO.GetAllBrandAsync();
-        public async Task<Brand> GetBrandByIdAsync(int id) => await BrandDAO.GetBrandByIdAsync(id);
-        public async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id) => await BrandDAO.GetBrandsByCategoryAsync(cate_id);
-        public async Task<bool> CreateBrandAsync(Brand brand) 
+       
+        private readonly BrandDAO _brandDAO;
+        public BrandRepository(BrandDAO brandDAO)
         {
-            brand.Isdelete = false;
-            return await BrandDAO.CreateBrandAsync(brand);
+            _brandDAO = brandDAO;
         }
-        public async Task<bool> UpdateBrandAsync(Brand brand) => await BrandDAO.UpdateBrandAsync(brand);
-        public async Task<bool> DeleteBrandAsync(Brand brand)
+
+
+        public List<BrandDTO> GetAllBrands()
         {
-            brand.Isdelete = true;
-            return await BrandDAO.UpdateBrandAsync(brand);
+            
+            return _brandDAO.GetAllBrands();
         }
-        public async Task<bool> CheckBrandAsync(Brand brand) => await BrandDAO.CheckBrandAsync(brand);
+
     }
 }

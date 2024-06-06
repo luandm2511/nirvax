@@ -73,7 +73,7 @@ public partial class NirvaxContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-HKH7PJO\\MSSQLSERVER01;Initial Catalog=Nirvax;User ID=sa;Password=123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -348,10 +348,12 @@ public partial class NirvaxContext : DbContext
 
             entity.HasOne(d => d.Description).WithMany(p => p.Images)
                 .HasForeignKey(d => d.DescriptionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_image_description");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Images)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_image_product");
         });
 
@@ -381,9 +383,10 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<ImportProductDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ImportProductDetail");
+            entity.ToTable("ImportProductDetail");
+
+
+            entity.HasKey(ipd => new { ipd.ImportId, ipd.ProductSizeId });
 
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
@@ -746,7 +749,7 @@ public partial class NirvaxContext : DbContext
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.Password)
-                .HasMaxLength(24)
+                .HasMaxLength(80)
                 .IsUnicode(false)
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
@@ -789,7 +792,7 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF81DFF54B");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF27394119");
 
             entity.ToTable("Warehouse");
 
@@ -806,9 +809,12 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<WarehouseDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("WarehouseDetail");
+            entity.ToTable("WarehouseDetail");
+
+
+            entity.HasKey(ipd => new { ipd.WarehouseId, ipd.ProductSizeId });
+           
+              
 
             entity.Property(e => e.Location)
                 .HasMaxLength(50)

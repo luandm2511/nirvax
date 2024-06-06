@@ -1,46 +1,45 @@
-﻿using System;
+﻿using BusinessObject.Models;
+using Microsoft.EntityFrameworkCore;
+using BusinessObject.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BusinessObject.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace DataAccess.DAOs
 {
-    public static class CategoryDAO
+    public class CategoryDAO
     {
-        private static readonly NirvaxContext _context = new NirvaxContext();
 
-        public static async Task<IEnumerable<Category>> GetAllCategoryAsync()
+        private readonly NirvaxContext _context;
+         private readonly  IMapper _mapper;
+
+  
+        
+
+        public CategoryDAO(NirvaxContext context, IMapper mapper) 
         {
-            return await _context.Categories.Where(c => !c.Isdelete).ToListAsync();
+           
+            _context = context;
+            _mapper = mapper;
+        }
+        public List<CategoryDTO> GetAllCategories()
+        {
+            List<CategoryDTO> listCategoryDTO = new List<CategoryDTO>();
+
+
+                List<Category> getList = _context.Categories.ToList();
+            listCategoryDTO = _mapper.Map<List<CategoryDTO>>(getList);
+          
+            return listCategoryDTO;
         }
 
-        public static async Task<Category> GetCategoryByIdAsync(int id)
-        {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
-        }
-
-        public static async Task<bool> CreateCategoryAsync(Category category)
-        {
-            await _context.Categories.AddAsync(category);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public static async Task<bool> UpdateCategoryAsync(Category category)
-        {
-            _context.Categories.Update(category);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public static async Task<bool> CheckCategoryAsync(Category category)
-        {
-            return !await _context.Categories.AnyAsync(c => c.Name == category.Name && c.CategoryId != category.CategoryId && !c.Isdelete);
-        }
+     
     }
-
 }
+
+  
+
+
