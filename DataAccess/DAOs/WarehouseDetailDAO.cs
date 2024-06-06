@@ -48,18 +48,19 @@ namespace DataAccess.DAOs
         //cùng productSizeId thì cộng quantity và price
         public async Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSize(int warehouseId, int page, int pageSize)
         {
-           // List<WarehouseDetailDTO> listWarehouseDetailDTO = new List<WarehouseDetailDTO>();
+           List<WarehouseDetail> listWarehouseDetail= new List<WarehouseDetail>();
           var result= await _context.WarehouseDetails
               //  .Where(i => i.ProductSize.Isdelete == false)    
                 .Where(wd=> wd.WarehouseId == warehouseId)
           
-            .GroupBy(w => new { w.ProductSizeId, w.Location })
+            .GroupBy(w => new { w.ProductSizeId })
 
         .Select(g => new WarehouseDetailFinalDTO
         {
             WarehouseId = warehouseId,
             ProductSizeId = g.Key.ProductSizeId,
-           Location = g.Key.Location,
+            
+           Location = g.Select(i => i.Location).FirstOrDefault(),
             TotalQuantity = g.Sum(wd => wd.QuantityInStock),
             TotalUnitPrice = g.Sum(wd => wd.UnitPrice)
         })
