@@ -64,9 +64,9 @@ public Task<bool> CheckProfileExist(string ownerEmail)
     return _staffDAO.CheckProfileExist(ownerEmail);
 }
 
-public Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod)
+public Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword)
 {
-    return _staffDAO.ChangePasswordStaff(staffId, oldPassword, newPasswod);
+    return _staffDAO.ChangePasswordStaff(staffId, oldPassword, newPasswod, confirmPassword);
 }
 
 public Task<bool> CreateStaff(StaffDTO staffDTO)

@@ -162,29 +162,47 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod)
+        public async Task<ActionResult> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword)
         {
-            var checkStaff = await _repo.CheckStaffExist(staffId);
-            if (checkStaff == true)
+            try
             {
-                var staff1 = await _repo.ChangePasswordStaff(staffId, oldPassword, newPasswod);
-                if (staff1 == true)
+                var checkStaff = await _repo.CheckStaffExist(staffId);
+                if (checkStaff == true)
                 {
-                    return StatusCode(200, new
+                    var staff1 = await _repo.ChangePasswordStaff(staffId, oldPassword, newPasswod, confirmPassword);
+                    if (staff1 == true)
+                    {
+                        return StatusCode(200, new
+                        {
+
+                            Result = true,
+                            Message = "Change password of staff" + ok,
+                            Data = staff1
+                        });
+                    }
+                    return StatusCode(500, new
                     {
 
                         Result = true,
-                        Message = "Change password of staff" + ok,
-                        Data = staff1
+                        Message = "Internet error"
+                        // Data = staff1
                     });
                 }
+                return StatusCode(400, new
+                {
+                    StatusCode = 400,
+                    Result = false,
+                    Message = "Staff not exist",
+                });
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                StatusCode = 400,
-                Result = false,
-                Message = "Wrong old password",
-            });
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 

@@ -19,7 +19,7 @@ namespace DataAccess.IRepository
        // Task<bool> CheckStaff(string,int staffDTO);
 
         Task<bool> CheckProfileStaff(StaffProfileDTO staffProfileDTO);
-        Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod);
+        Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword);
 
         Task<bool> CheckStaffExist(int staffId);
 

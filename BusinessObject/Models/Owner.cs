@@ -20,8 +20,8 @@ public partial class Owner
 
 
     [Required(ErrorMessage = " Password cannot be empty!!")]
-    [MinLength(6, ErrorMessage = " Password to be at least 6 characters!!")]
-    [MaxLength(10, ErrorMessage = "Password is limited to 10 characters!!")]
+    [MinLength(8, ErrorMessage = " Password to be at least 8 characters!!")]
+    [MaxLength(24, ErrorMessage = "Password is limited to 24 characters!!")]
     public string Password { get; set; } = null!;
 
     [Required(ErrorMessage = " Fullname cannot be empty!!")]
