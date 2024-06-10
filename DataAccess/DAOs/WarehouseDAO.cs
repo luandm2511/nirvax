@@ -181,12 +181,12 @@ namespace DataAccess.DAOs
             var result = await _context.WarehouseDetails
                 .Where(wd => wd.WarehouseId == warehouse.WarehouseId)
 
-            .GroupBy(w => new { w.ProductSizeId, w.Location })
+            .GroupBy(w => new { w.ProductSizeId})
 
         .Select(g => new WarehouseDetail
         {
             ProductSizeId = g.Key.ProductSizeId,
-            Location = g.Key.Location,
+            Location = g.Select(i => i.Location).FirstOrDefault(),
             QuantityInStock = g.Sum(wd => wd.QuantityInStock),
             UnitPrice = g.Sum(wd => wd.UnitPrice)
         })

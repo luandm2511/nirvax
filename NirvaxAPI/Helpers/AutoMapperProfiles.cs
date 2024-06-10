@@ -43,6 +43,8 @@ namespace WebAPI.Helpers
             CreateMap<Brand, BrandDTO>().ReverseMap();
             CreateMap<Service, ServiceDTO>().ReverseMap();
             CreateMap<Voucher, VoucherDTO>().ReverseMap();
+        
+
             CreateMap<Room, RoomDTO>().ReverseMap();
             CreateMap<Room, RoomContentDTO>().ReverseMap();
 

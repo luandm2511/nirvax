@@ -197,9 +197,11 @@ namespace DataAccess.DAOs
 
         public async Task<double> TotalPriceVoucherUsedStatistics(int ownerId)
         {
-           List<Voucher> listVoucher= await _context.Vouchers.Where(i => i.OwnerId == ownerId).Where(i => i.Isused == true).ToListAsync();
-            var totalPrice = listVoucher.Sum(p => p.Price);
-            return totalPrice;
+            double totalUsedAmount = await _context.Vouchers
+             .Where(voucher => voucher.Isused == true)
+             .SumAsync(voucher => voucher.Price * voucher.Quantity);
+
+            return totalUsedAmount;
         }
 
 
