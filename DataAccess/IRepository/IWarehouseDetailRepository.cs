@@ -15,9 +15,6 @@ namespace DataAccess.IRepository
         Task<bool> CheckWarehouseDetailExist(int warehouseId);
 
     
-
-
-
         Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSize(int warehouseId, int page, int pageSize);
 
         Task<int> SumOfKindProdSizeStatistics(int warehouseId);

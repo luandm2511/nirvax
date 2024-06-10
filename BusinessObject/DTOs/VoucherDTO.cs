@@ -24,6 +24,7 @@ namespace BusinessObject.DTOs
         public DateTime EndDate { get; set; }
 
         public bool? Isdelete { get; set; }
+        public bool? Isused { get; set; }
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
 
         public int OwnerId { get; set; }

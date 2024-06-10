@@ -139,6 +139,7 @@ namespace DataAccess.DAOs
         public async Task<bool> CreateVoucher(VoucherDTO voucherDTO)
         {
             voucherDTO.Isdelete = false;
+            voucherDTO.Isused = false;
             Voucher voucher = _mapper.Map<Voucher>(voucherDTO);
             await _context.Vouchers.AddAsync(voucher);
             int i = await _context.SaveChangesAsync();
@@ -185,6 +186,20 @@ namespace DataAccess.DAOs
             return false;
 
 
+        }
+
+        public async Task<int> QuantityVoucherUsedStatistics(int ownerId)
+        {
+           
+            var quantity = await _context.Vouchers.Where(i => i.OwnerId == ownerId).Where(i => i.Isused == true).CountAsync();
+            return quantity;
+        }
+
+        public async Task<double> TotalPriceVoucherUsedStatistics(int ownerId)
+        {
+           List<Voucher> listVoucher= await _context.Vouchers.Where(i => i.OwnerId == ownerId).Where(i => i.Isused == true).ToListAsync();
+            var totalPrice = listVoucher.Sum(p => p.Price);
+            return totalPrice;
         }
 
 

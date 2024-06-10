@@ -223,5 +223,51 @@ namespace WebAPI.Controllers
 
             }
 
+        [HttpGet]
+        public async Task<ActionResult> QuantityVoucherUsedStatistics(int ownerId)
+        {
+            var number = await _repo.QuantityVoucherUsedStatistics(ownerId);
+            if (number != null)
+            {
+                return StatusCode(200, new
+                {
+
+                    Result = true,
+                    Message = number,
+
+                });
+            }
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = badRequest,
+            });
+
         }
+
+        [HttpGet]
+        public async Task<ActionResult> TotalPriceVoucherUsedStatistics(int ownerId)
+        {
+            var number = await _repo.TotalPriceVoucherUsedStatistics(ownerId);
+            if (number != null)
+            {
+                return StatusCode(200, new
+                {
+
+                    Result = true,
+                    Message = number,
+
+                });
+            }
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = badRequest,
+            });
+
+        }
+
+    }
     }

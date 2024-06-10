@@ -14,6 +14,8 @@ namespace DataAccess.IRepository
         Task<bool> CheckVoucher(VoucherDTO voucherDTO);
         Task<bool> CheckVoucherExist(VoucherDTO voucherDTO);
         Task<bool> CheckVoucherById(string voucherId);
+        Task<int> QuantityVoucherUsedStatistics(int ownerId);
+        Task<double> TotalPriceVoucherUsedStatistics(int ownerId);
         Task<List<VoucherDTO>> GetAllVoucherForUser();
 
         Task<List<VoucherDTO>> GetAllVouchers(string? searchQuery, int page, int pageSize);

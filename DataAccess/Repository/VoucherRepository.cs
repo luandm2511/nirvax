@@ -23,7 +23,16 @@ namespace DataAccess.Repository
         {
             _voucherDAO = voucherDAO;
         }
+        public Task<int> QuantityVoucherUsedStatistics(int ownerId)
+        {
+            return _voucherDAO.QuantityVoucherUsedStatistics(ownerId);
 
+        }
+        public Task<double> TotalPriceVoucherUsedStatistics(int ownerId)
+        {
+            return _voucherDAO.TotalPriceVoucherUsedStatistics(ownerId);
+
+        }
         public Task<bool> CheckVoucherById(string voucherId)
         {
             return _voucherDAO.CheckVoucherById(voucherId);

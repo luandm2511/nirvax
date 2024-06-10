@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace BusinessObject.Models;
+namespace WebAPI.Models;
 
 public partial class NirvaxContext : DbContext
 {

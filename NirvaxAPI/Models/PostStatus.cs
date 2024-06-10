@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BusinessObject.Models;
+namespace WebAPI.Models;
 
-public partial class Service
+public partial class PostStatus
 {
-    public int ServiceId { get; set; }
+    public int StatusPostId { get; set; }
 
     public string Name { get; set; } = null!;
-
-    public bool Isdelete { get; set; }
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
 }

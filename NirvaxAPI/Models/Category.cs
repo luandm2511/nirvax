@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BusinessObject.Models;
+namespace WebAPI.Models;
 
-public partial class Brand
+public partial class Category
 {
-    public int BrandId { get; set; }
+    public int CategoryId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -13,9 +13,7 @@ public partial class Brand
 
     public bool Isdelete { get; set; }
 
-    public int CategoryId { get; set; }
-
-    public virtual Category Category { get; set; } = null!;
+    public virtual ICollection<Brand> Brands { get; set; } = new List<Brand>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

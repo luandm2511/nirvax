@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BusinessObject.Models;
+namespace WebAPI.Models;
 
-public partial class ImportProductDetail
+public partial class OrderDetail
 {
-    public int ImportId { get; set; }
+    public int OrderId { get; set; }
 
     public string ProductSizeId { get; set; } = null!;
 
-    public int QuantityReceived { get; set; }
+    public int Quantity { get; set; }
 
     public double UnitPrice { get; set; }
 
-    public virtual ImportProduct Import { get; set; } = null!;
+    public virtual Order Order { get; set; } = null!;
 
     public virtual ProductSize ProductSize { get; set; } = null!;
 }
