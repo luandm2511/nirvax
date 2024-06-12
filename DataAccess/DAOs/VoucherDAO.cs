@@ -208,7 +208,7 @@ namespace DataAccess.DAOs
               
                 throw new Exception("Voucher is not exist!");
             }
-            int ownerId = voucher.OwnerId;
+           // int ownerId = voucher.OwnerId;
             if (quantity <=0)
             {
                 throw new Exception("Quantity voucher used should above 0!");
@@ -216,53 +216,33 @@ namespace DataAccess.DAOs
             }
             voucher.Quantity = voucher.Quantity - quantity;
             double price = voucher.Price * quantity;
-             await QuantityVoucherUsed(quantity,ownerId);
-             await PriceVoucherUsed(price, ownerId);
+            if(voucher.QuantityUsed == null) { voucher.QuantityUsed = 0; }
+            if (voucher.TotalPriceUsed == null) { voucher.TotalPriceUsed = 0.0; }
+
+            voucher.QuantityUsed = voucher.QuantityUsed + quantity;
+            voucher.TotalPriceUsed = voucher.TotalPriceUsed + price;
 
             _context.Vouchers.Update(voucher);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<int> QuantityVoucherUsed(int quantity, int ownerId)
-        {
-            if (!_memoryCache.TryGetValue<int>($"TotalQuantity_{ownerId}", out int totalQuantity))
-            {
-                totalQuantity = 0;
-            }
-            totalQuantity += quantity;
-            _memoryCache.Set($"TotalQuantity_{ownerId}", totalQuantity);
-            return totalQuantity;
-        }
-
+      
         public async Task<int> QuantityVoucherUsedStatistics(int ownerId)
         {
-
-            if (_memoryCache.TryGetValue<int>($"TotalQuantity_{ownerId}", out int totalQuantity))
-            {
-                return totalQuantity;
-            }
-            return 0;
+            List<Voucher> voucher = await _context.Vouchers.Where(i => i.OwnerId == ownerId).ToListAsync();
+            var totalQuantity = voucher.Sum(i => i.QuantityUsed);
+            return totalQuantity ?? 0;
         }
 
-        public async Task<double> PriceVoucherUsed(double price, int ownerId)
-        {
-            if (!_memoryCache.TryGetValue<double>($"TotalPrice_{ownerId}", out double totalPrice))
-            {
-                totalPrice = 0;
-            }
-            totalPrice += price;
-            _memoryCache.Set($"TotalPrice_{ownerId}", totalPrice);
-            return totalPrice;
-        }
+       
 
         public async Task<double> PriceVoucherUsedStatistics(int ownerId)
         {
-            if (_memoryCache.TryGetValue<double>($"TotalPrice_{ownerId}", out double totalPrice))
-            {
-                return totalPrice;
-            }
-            return 0;
+            List<Voucher> voucher = await _context.Vouchers.Where(i => i.OwnerId == ownerId).ToListAsync();
+            //  var totalPrice = voucher.Sum(i => i.TotalPriceUsed);
+            var totalPrice = voucher.Sum(v => (v.QuantityUsed) * v.Price);
+            return totalPrice ?? 0 ;
         }
 
 
