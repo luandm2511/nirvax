@@ -29,9 +29,9 @@ namespace DataAccess.Repository
 
         }
 
-        public Task<bool> PriceAndQuantityByOrder(int ownerId, string voucherId, int quantity)
+        public Task<bool> PriceAndQuantityByOrder( string voucherId, int quantity)
         {
-            return _voucherDAO.PriceAndQuantityByOrder(ownerId, voucherId, quantity);
+            return _voucherDAO.PriceAndQuantityByOrder( voucherId, quantity);
         }
         public Task<double> PriceVoucherUsedStatistics(int ownerId)
         {

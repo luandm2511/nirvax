@@ -309,10 +309,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> PriceAndQuantityByOrder(int ownerId, string voucherId, int quantity)
+        public async Task<ActionResult> PriceAndQuantityByOrder( string voucherId, int quantity)
         {
             try {
-                var result = await _repo.PriceAndQuantityByOrder(ownerId, voucherId, quantity);
+                var result = await _repo.PriceAndQuantityByOrder( voucherId, quantity);
                 if (result == true)
                 {
                     return StatusCode(200, new
