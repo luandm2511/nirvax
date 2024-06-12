@@ -8,11 +8,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAOs
 {
-    public static class BrandDAO
+    public class BrandDAO
     {
-        private static readonly NirvaxContext _context = new NirvaxContext();
+        private readonly NirvaxContext _context;
 
-        public static async Task<IEnumerable<Brand>> GetAllBrandAsync()
+        public BrandDAO(NirvaxContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Brand>> GetAllBrandAsync()
         {
             return await _context.Brands
                 .Include(b => b.Category)
@@ -20,14 +25,14 @@ namespace DataAccess.DAOs
                 .ToListAsync();
         }
 
-        public static async Task<Brand> GetBrandByIdAsync(int id)
+        public async Task<Brand> GetBrandByIdAsync(int id)
         {
             return await _context.Brands
                 .Include(b => b.Category)
                 .SingleOrDefaultAsync(b => b.BrandId == id);
         }
 
-        public static async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id)
+        public async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id)
         {
             return await _context.Brands
                 .Include(b => b.Category)
@@ -35,21 +40,21 @@ namespace DataAccess.DAOs
                 .ToListAsync();
         }
 
-        public static async Task<bool> CreateBrandAsync(Brand brand)
+        public async Task<bool> CreateBrandAsync(Brand brand)
         {
             _context.Brands.Add(brand);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public static async Task<bool> UpdateBrandAsync(Brand brand)
+        public async Task<bool> UpdateBrandAsync(Brand brand)
         {
             _context.Brands.Update(brand);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public static async Task<bool> CheckBrandAsync(Brand brand)
+        public async Task<bool> CheckBrandAsync(Brand brand)
         {
             return !await _context.Brands.AnyAsync(b => b.Name == brand.Name && b.BrandId != brand.BrandId && !b.Isdelete);
         }

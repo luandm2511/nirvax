@@ -121,7 +121,7 @@ namespace WebAPI.Controllers
         {
             try
             { 
-                var products = await _productRepository.SearchAsync(productName, minPrice, maxPrice, categoryId, brandId, ownerId);
+                var products = await _productRepository.SearchProductsAsync(productName, minPrice, maxPrice, categoryId, brandId, ownerId);
                 return Ok(products);
             }
             catch (Exception ex)

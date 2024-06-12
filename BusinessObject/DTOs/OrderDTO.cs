@@ -8,9 +8,9 @@ namespace BusinessObject.DTOs
 {
     public class OrderDTO
     {
-        public DateTime RequiredDate { get; set; }
         public int AccountId { get; set; }
-        public List<CartItemDTO> CartItems { get; set; }
+        public DateTime RequiredDate { get; set; }
+        public List<string> CartItemIds { get; set; } = new List<string>();
         public string? VoucherId { get; set; }
     }
 }

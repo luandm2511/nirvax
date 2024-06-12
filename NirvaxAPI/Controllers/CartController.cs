@@ -12,10 +12,14 @@ namespace WebAPI.Controllers
     public class CartController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
+        private readonly IProductSizeRepository _productSizeRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CartController(IProductRepository productRepository)
+        public CartController(IProductRepository productRepository,IProductSizeRepository productSizeRepository, IHttpContextAccessor httpContextAccessor)
         {
             _productRepository = productRepository;
+            _productSizeRepository = productSizeRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet("{userId}")]
@@ -23,7 +27,7 @@ namespace WebAPI.Controllers
         {
             try
             { 
-                var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>($"Cart_{userId}") ?? new List<CartItem>();
+                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -33,40 +37,50 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("{userId}")]
-        public async Task<IActionResult> AddToCart(int userId, string productsizeId, int quantity)
+        public async Task<IActionResult> AddToCart(int userId, string productsizeId, int quantity, int ownerId)
         {
             try
             {
-                var productsize = await _productRepository.GetByIdAsync(productsizeId);
+                var productsize = await _productSizeRepository.GetByIdAsync(productsizeId);
                 if (productsize == null || productsize.Isdelete == true)
                 {
                     return NotFound(new { message = "Product is not found." });
                 }
 
-                var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>($"Cart_{userId}") ?? new List<CartItem>();
+                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
 
-                var cartItem = cart.FirstOrDefault(c => c.ProductSizeId == productsizeId);
-                if (cartItem == null)
+                var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
+                if (ownerCart == null)
                 {
-                    cart.Add(new CartItem
+                    ownerCart = new CartOwner { OwnerId = ownerId };
+                    cart.Add(ownerCart);
+                }
+
+                var existingItem = ownerCart.CartItems.FirstOrDefault(c => c.ProductSizeId == productsizeId);
+                if (existingItem == null)
+                {
+                    ownerCart.CartItems.Add(new CartItem
                     {
                         ProductSizeId = productsize.ProductSizeId,
-                        ProductId = productsize.ProductId,
                         ProductName = productsize.Product.Name,
-                        SizeName = productsize.Size.Name,
+                        Size = productsize.Size.Name,
                         Price = productsize.Product.Price,
                         Quantity = quantity,
-                        ImageUrl = productsize.Product.Images.FirstOrDefault()?.LinkImage
+                        Image = productsize.Product.Images.FirstOrDefault()?.LinkImage,
+                        OwnerId = ownerId
                     });
                 }
                 else
                 {
-                    cartItem.Quantity += quantity;
+                    existingItem.Quantity += quantity;
                 }
+                // Move the updated owner to the top of the cart list
+                cart.Remove(ownerCart);
+                cart.Insert(0, ownerCart);
 
-                HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
+                _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
 
-                return Ok(new { message = "Product is created successfully." });
+                return Ok(new { message = "Product is add to cart successfully." });
             }
             catch (Exception ex)
             {
@@ -75,28 +89,32 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{userId}")]
-        public IActionResult UpdateCart(int userId, string productsizeId, int quantity)
+        public IActionResult UpdateCart(int userId, string productsizeId, int quantity, int ownerId)
         {
             try
-            { 
-                var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>($"Cart_{userId}") ?? new List<CartItem>();
-                var cartItem = cart.FirstOrDefault(c => c.ProductSizeId == productsizeId);
-
-                if (cartItem == null)
+            {
+                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
+                
+                var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
+                if (ownerCart != null)
                 {
-                    return NotFound($"Don't have any product by {productsizeId} in cart.");
+                    var existingItem = ownerCart.CartItems.FirstOrDefault(i => i.ProductSizeId == productsizeId);
+                    if (existingItem != null)
+                    {
+                        existingItem.Quantity = quantity;
+                        if (existingItem.Quantity <= 0)
+                        {
+                            ownerCart.CartItems.Remove(existingItem);
+                        }
+                    }
+                    if (ownerCart.CartItems.Count == 0)
+                    {
+                        cart.Remove(ownerCart);
+                    }
                 }
 
-                if (quantity <= 0)
-                {
-                    cart.Remove(cartItem);
-                }
-                else
-                {
-                    cartItem.Quantity = quantity;
-                }
 
-                HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
+                _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -110,17 +128,23 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>($"Cart_{userId}") ?? new List<CartItem>();
-                var cartItem = cart.FirstOrDefault(c => c.ProductSizeId == productsizeId);
+                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
 
-                if (cartItem == null)
+                foreach (var ownerCart in cart)
                 {
-                    return NotFound("Don't have any product in cart.");
+                    var existingItem = ownerCart.CartItems.FirstOrDefault(i => i.ProductSizeId == productsizeId);
+                    if (existingItem != null)
+                    {
+                        ownerCart.CartItems.Remove(existingItem);
+                        if (ownerCart.CartItems.Count == 0)
+                        {
+                            cart.Remove(ownerCart);
+                        }
+                        break;
+                    }
                 }
 
-                cart.Remove(cartItem);
-
-                HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
+                _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
                 return Ok(cart);
             }
             catch (Exception ex)

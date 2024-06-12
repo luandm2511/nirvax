@@ -14,7 +14,7 @@ namespace DataAccess.IRepository
         Task<IEnumerable<Product>> GetByOwnerAsync(int ownerId);
         Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId);
         Task<IEnumerable<Product>> GetByBrandAsync(int brandId);
-        Task<IEnumerable<Product>> SearchAsync(string productName, float? minPrice, float? maxPrice, int? categoryId, int? brandId, int? ownerId);
+        Task<IEnumerable<Product>> SearchProductsAsync(string? searchTerm, double? minPrice = null, double? maxPrice = null, int? categoryId = null, int? brandId = null, int? sizeId = null);
         Task<bool> CreateAsync(Product product);
         Task<bool> UpdateAsync(Product product);
         Task<bool> DeleteAsync(Product product);
@@ -24,7 +24,6 @@ namespace DataAccess.IRepository
         Task<bool> AddRatingAsync(Product product, int rating);
         Task<IEnumerable<Product>> GetTopSellingProductsAsync();
         Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId);
-        Task<ProductSize> GetByIdAsync(string id);
 
     }
 }

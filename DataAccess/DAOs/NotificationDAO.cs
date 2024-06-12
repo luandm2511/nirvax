@@ -8,17 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAOs
 {
-    public static class NotificationDAO
+    public class NotificationDAO
     {
-        private static readonly NirvaxContext _context = new NirvaxContext();
-        public static async Task<bool> AddNotificationAsync(Notification notification)
+        private readonly NirvaxContext _context;
+
+        public NotificationDAO(NirvaxContext context)
+        {
+            _context = context;
+        }
+        public async Task<bool> AddNotificationAsync(Notification notification)
         {
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public static async Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id)
+        public async Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id)
         {
             return await _context.Notifications
                 .Include(n => n.Owner)
@@ -27,7 +32,7 @@ namespace DataAccess.DAOs
                 .ToListAsync();
         }
 
-        public static async Task<IEnumerable<Notification>> GetNotificationsByOwnerAsync(int id)
+        public async Task<IEnumerable<Notification>> GetNotificationsByOwnerAsync(int id)
         {
             return await _context.Notifications
                 .Include(n => n.Owner)
@@ -36,7 +41,7 @@ namespace DataAccess.DAOs
                 .ToListAsync();
         }
 
-        public static async Task<Notification> GetNotificationByidAsync(int id)
+        public async Task<Notification> GetNotificationByidAsync(int id)
         {
             return await _context.Notifications
                 .Include(n => n.Owner)

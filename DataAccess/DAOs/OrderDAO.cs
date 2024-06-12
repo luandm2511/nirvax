@@ -9,18 +9,29 @@ using Microsoft.Identity.Client;
 
 namespace DataAccess.DAOs
 {
-    public static class OrderDAO
+    public class OrderDAO
     {
-        private static readonly NirvaxContext _context = new NirvaxContext();
+        private readonly NirvaxContext _context;
 
-        public static async Task<bool> AddOrders(IEnumerable<Order> orders)
+        public OrderDAO(NirvaxContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<bool> AddOrders(IEnumerable<Order> orders)
         {
             await _context.Orders.AddRangeAsync(orders);
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> AddOrder(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
-        public static async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
+        public async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
         {
             return await _context.Orders
                     .Include(o => o.Owner)
@@ -31,7 +42,7 @@ namespace DataAccess.DAOs
                     .ToListAsync();
         }
 
-        public static async Task<IEnumerable<Order>> GetOrdersByOwnerId(int ownerId)
+        public async Task<IEnumerable<Order>> GetOrdersByOwnerId(int ownerId)
         {
             return await _context.Orders
                     .Include(o => o.Owner)
@@ -42,7 +53,7 @@ namespace DataAccess.DAOs
                     .ToListAsync();
         }
 
-        public static async Task<Order> GetOrderById(int orderId)
+        public async Task<Order> GetOrderById(int orderId)
         {
             return await _context.Orders
                     .Include(o => o.Owner)
@@ -52,14 +63,19 @@ namespace DataAccess.DAOs
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
 
-        public static async Task<bool> UpdateOrder(Order order)
+        public async Task<bool> UpdateOrder(Order order)
         {
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public static async Task<IEnumerable<Order>> SearchOrders(string codeOrder)
+        public async Task<bool> CodeOrderExists(string codeOrder)
+        {
+            return await _context.Orders.AnyAsync(o => o.CodeOrder == codeOrder);
+        }
+
+        public async Task<IEnumerable<Order>> SearchOrders(string codeOrder)
         {
             return await _context.Orders.Where(o => o.CodeOrder.Contains(codeOrder)).ToListAsync();
         }

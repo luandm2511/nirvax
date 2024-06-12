@@ -4,6 +4,7 @@ using System.Text;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,109 +12,59 @@ namespace DataAccess.DAOs
 {
     public class AuthenticationDAO
     {
-        private readonly IConfiguration _config;
-        public AuthenticationDAO(IConfiguration config)
+        private readonly NirvaxContext _context;
+
+        public AuthenticationDAO(NirvaxContext context)
         {
-            _config = config;
+            _context = context;
         }
 
-        public static Account LoginUser(Login login)
+        public async Task<Account> GetAccountByEmailAsync(string email) => await _context.Accounts.FirstOrDefaultAsync(a => a.Email == email);
+
+        public async Task<Owner> GetOwnerByEmailAsync(string email) => await _context.Owners.FirstOrDefaultAsync(o => o.Email == email);
+
+        public async Task<Staff> GetStaffByEmailAsync(string email) => await _context.Staff.FirstOrDefaultAsync(o => o.Email == email);
+
+        public async Task<Account> GetAccountByPhoneAsync(string phone) => await _context.Accounts.FirstOrDefaultAsync(a => a.Phone == phone);
+
+        public async Task<Owner> GetOwnerByPhoneAsync(string phone) => await _context.Owners.FirstOrDefaultAsync(o => o.Phone == phone);
+
+        public async Task<bool> AddAccountAsync(Account account)
         {
-            Account account;
-            try
-            {
-                using (var _context = new NirvaxContext())
-                {
-                    account = _context.Accounts.FirstOrDefault(u => u.Email == login.Email);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-
-
-            if (account == null || account.Role != "User")
-            {
-                return null;
-            }
-            return account;
+            await _context.Accounts.AddAsync(account);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public static Account LoginAdmin(Login login)
+        public async Task<bool> AddOwnerAsync(Owner owner)
         {
-            Account account;
-            try
-            {
-                using (var _context = new NirvaxContext())
-                {
-                    account = _context.Accounts.FirstOrDefault(u => u.Email == login.Email);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            if (account == null || account.Role != "Admin")
-            {
-                return null;
-            }
-
-            return account;
+            await _context.Owners.AddAsync(owner);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> CheckPhoneAsync(string phone)
+        {
+            if (await _context.Accounts
+                    .AnyAsync(p => p.Phone == phone)) return false;
+            if (await _context.Owners
+                    .AnyAsync(p => p.Phone == phone)) return false;
+            if (await _context.Staff.AnyAsync(o => o.Phone == phone)) return false;
+            return true;
+        }
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            if (await _context.Accounts
+                    .AnyAsync(p => p.Email == email)) return false;
+            if (await _context.Owners
+                    .AnyAsync(p => p.Email == email)) return false;
+            if (await _context.Staff.AnyAsync(p => p.Email == email)) return false;
+            return true;
         }
 
-        public static Owner LoginShop(Login login)
+        public async Task<bool> SaveChangesAsync()
         {
-            Owner owner;
-            try
-            {
-                using (var _context = new NirvaxContext())
-                {
-                    owner = _context.Owners.FirstOrDefault(u => u.Email == login.Email);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            if (owner == null)
-            {
-                return null;
-            }
-            return owner;
+            await _context.SaveChangesAsync();
+            return true;
         }
-
-        public static Staff LoginStaff(Login login)
-        {
-            Staff staff;
-            try
-            {
-                using (var _context = new NirvaxContext())
-                {
-                    staff = _context.Staff.FirstOrDefault(u => u.Email == login.Email);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            if (staff == null)
-            {
-                return null;
-            }
-            return staff;
-        }
-
-        public static bool CheckPW(string pw, string password)
-        {
-            if (pw.Equals(password))
-            {
-                return true;
-            }
-            return false;   
-        }
-
-        
     }
 }

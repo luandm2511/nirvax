@@ -10,10 +10,13 @@ namespace DataAccess.IRepository
 {
     public interface IAuthenticationRepository
     {
-        Account LoginUser(Login login);
-        Account LoginAdmin(Login login);
-        Owner LoginShop(Login login);
-        Staff LoginStaff(Login login);
-        bool CheckPW(string Pw, string Password);
+        Task<Account> GetAccountByEmailAsync(string email);
+        Task<Owner> GetOwnerByEmailAsync(string email);
+        Task<Staff> GetStaffByEmailAsync(string email);
+        Task<bool> CheckPhoneAsync(string phone);
+        Task<bool> AddAccountAsync(Account account);
+        Task<bool> AddOwnerAsync(Owner owner);
+        Task<bool> CheckEmailAsync(string email);
+        Task<bool> SaveChangesAsync();
     }
 }

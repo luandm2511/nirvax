@@ -127,8 +127,9 @@ public partial class NirvaxContext : DbContext
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
             entity.Property(e => e.Password)
-                .HasMaxLength(24)
+                .HasMaxLength(60)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)
@@ -469,7 +470,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.AccountId).HasColumnName("account_id");
             entity.Property(e => e.CodeOrder)
                 .HasMaxLength(10)
-                .IsUnicode(false)
                 .HasColumnName("code_order");
             entity.Property(e => e.OrderDate)
                 .HasColumnType("datetime")
@@ -571,8 +571,9 @@ public partial class NirvaxContext : DbContext
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
             entity.Property(e => e.Password)
-                .HasMaxLength(24)
+                .HasMaxLength(60)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)
@@ -746,8 +747,9 @@ public partial class NirvaxContext : DbContext
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.Password)
-                .HasMaxLength(24)
+                .HasMaxLength(60)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)

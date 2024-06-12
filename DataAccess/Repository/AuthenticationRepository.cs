@@ -9,13 +9,53 @@ using DataAccess.DAOs;
 using DataAccess.IRepository;
 
 namespace DataAccess.Repository
-{ 
+{
     public class AuthenticationRepository : IAuthenticationRepository
     {
-        public Account LoginUser(Login login) =>  AuthenticationDAO.LoginUser(login); 
-        public Account LoginAdmin(Login login) => AuthenticationDAO.LoginAdmin(login);
-        public Owner LoginShop(Login login) => AuthenticationDAO.LoginShop(login);
-        public Staff LoginStaff(Login login) => AuthenticationDAO.LoginStaff(login);
-        public bool CheckPW(string Pw, string Password) => AuthenticationDAO.CheckPW(Pw, Password);
+        private readonly AuthenticationDAO _authen;
+
+        public AuthenticationRepository(AuthenticationDAO authen)
+        {
+            _authen = authen;
+        }
+        async Task<bool> IAuthenticationRepository.AddAccountAsync(Account account)
+        {
+            return await _authen.AddAccountAsync(account);
+        }
+
+        async Task<bool> IAuthenticationRepository.AddOwnerAsync(Owner owner)
+        {
+            return await _authen.AddOwnerAsync(owner);
+        }
+
+        async Task<Account> IAuthenticationRepository.GetAccountByEmailAsync(string email)
+        {
+            return await _authen.GetAccountByEmailAsync(email);
+        }
+
+        async Task<Owner> IAuthenticationRepository.GetOwnerByEmailAsync(string email)
+        {
+            return await _authen.GetOwnerByEmailAsync(email);
+        }
+
+        async Task<bool> IAuthenticationRepository.CheckPhoneAsync(string phone)
+        {
+            return await _authen.CheckPhoneAsync(phone);
+        }
+
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            return await _authen.CheckEmailAsync(email);
+        }
+
+        public async Task<Staff> GetStaffByEmailAsync(string email)
+        {
+            return await _authen.GetStaffByEmailAsync(email);
+        }
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _authen.SaveChangesAsync();
+        }
     }
 }
+ 

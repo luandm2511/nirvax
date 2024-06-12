@@ -10,9 +10,14 @@ namespace DataAccess.DAOs
 {
     public class CommentDAO
     {
-        private static readonly NirvaxContext _context = new NirvaxContext();
+        private readonly NirvaxContext _context;
 
-        public static async Task<IEnumerable<Comment>> GetCommentsByProductIdAsync(int productId)
+        public CommentDAO(NirvaxContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByProductIdAsync(int productId)
         {
             return await _context.Comments.Include(c => c.Product)
                 .Include(c => c.Account)
@@ -20,7 +25,7 @@ namespace DataAccess.DAOs
                 .Where(c => c.ProductId == productId).ToListAsync();
         }
 
-        public static async Task<Comment> GetCommentByIdAsync(int commentId)
+        public async Task<Comment> GetCommentByIdAsync(int commentId)
         {
             return await _context.Comments.Include(c => c.Product)
                     .Include(c => c.Account)
@@ -28,7 +33,7 @@ namespace DataAccess.DAOs
                     .FirstOrDefaultAsync(c => c.CommentId == commentId);
         }
 
-        public static async Task<bool> AddCommentAsync(Comment comment)
+        public async Task<bool> AddCommentAsync(Comment comment)
         {
             comment.Timestamp = DateTime.Now;
             await _context.Comments.AddAsync(comment);
@@ -36,7 +41,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public static async Task<bool> UpdateCommentAsync(Comment comment)
+        public async Task<bool> UpdateCommentAsync(Comment comment)
         {
             _context.Comments.Update(comment);
             await _context.SaveChangesAsync();

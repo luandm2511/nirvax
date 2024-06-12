@@ -5,6 +5,7 @@ using DataAccess.DAOs;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Service;
 
 namespace WebAPI.Controllers
 {
@@ -108,7 +109,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/change-password")]
-        public async Task<IActionResult> ChangePassword(int id, [FromBody] string newPassword)
+        public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePassword changePassword)
         {
             try
             {
@@ -117,8 +118,16 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Account not found." });
                 }
-
-                await _repository.ChangePasswordAsync(id, newPassword);
+                if(!PasswordHasher.VerifyPassword(changePassword.OldPassword, account.Password))
+                {
+                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The old password is incorrect." });
+                }
+                if (changePassword.NewPassword != changePassword.ConfirmPassword)
+                {
+                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The new password and confim password do not match." });
+                }
+                account.Password = PasswordHasher.HashPassword(changePassword.NewPassword);
+                await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Password changed successfully." });
             }
             catch (Exception ex)

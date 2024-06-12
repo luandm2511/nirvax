@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BusinessObject.Models;
+using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 using WebAPI.Helpers;
+using WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +33,26 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
+builder.Services.AddScoped<AccountDAO>();
+builder.Services.AddScoped<AuthenticationDAO>();
+builder.Services.AddScoped<BrandDAO>();
+builder.Services.AddScoped<CategoryDAO>();
+builder.Services.AddScoped<CommentDAO>();
+builder.Services.AddScoped<ImageDAO>();
+builder.Services.AddScoped<NotificationDAO>();
+builder.Services.AddScoped<OrderDAO>();
+builder.Services.AddScoped<OrderDetailDAO>();
+builder.Services.AddScoped<OwnerDAO>();
+builder.Services.AddScoped<ProductDAO>();
+builder.Services.AddScoped<ProductSizeDAO>();
+builder.Services.AddScoped<VoucherDAO>();
+builder.Services.AddScoped<StaffDAO>();
+builder.Services.AddScoped<AccessLogDAO>();
+
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -40,6 +61,15 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
+builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
+builder.Services.AddScoped<IAccessLogService, AccessLogService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -89,6 +119,7 @@ app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseAccessLogMiddleware();
 
 app.MapControllers();
 

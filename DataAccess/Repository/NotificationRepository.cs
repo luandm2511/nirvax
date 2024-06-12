@@ -11,21 +11,27 @@ namespace DataAccess.Repository
 {
     public class NotificationRepository : INotificationRepository
     {
-        public async Task<bool> AddNotificationAsync(Notification notification) => await NotificationDAO.AddNotificationAsync(notification);
+        private readonly NotificationDAO _noti;
+        public NotificationRepository(NotificationDAO noti)
+        {
+            _noti = noti;
+        }
+
+        public async Task<bool> AddNotificationAsync(Notification notification) => await _noti.AddNotificationAsync(notification);
 
         public async Task<Notification> GetNotificationByidAsync(int id)
         {
-            return await NotificationDAO.GetNotificationByidAsync(id);
+            return await _noti.GetNotificationByidAsync(id);
         }
 
         public async Task<IEnumerable<Notification>> GetNotificationsByOwnerAsync(int id)
         {
-            return await NotificationDAO.GetNotificationsByOwnerAsync(id);
+            return await _noti.GetNotificationsByOwnerAsync(id);
         }
 
         public async Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id)
         {
-            return await NotificationDAO.GetNotificationsByUserAsync(id);
+            return await _noti.GetNotificationsByUserAsync(id);
         }
     }
 }

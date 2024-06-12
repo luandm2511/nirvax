@@ -11,30 +11,47 @@ namespace DataAccess.Repository
 {
     public class OrderRepository : IOrderRepository
     {
-        public async Task<bool> AddOrders(IEnumerable<Order> orders) => await OrderDAO.AddOrders(orders);
+        private readonly OrderDAO _orderDAO;
+        public OrderRepository(OrderDAO orderDAO)
+        {
+            _orderDAO = orderDAO;
+        }
+
+        public async Task<bool> AddOrder(Order order)
+        {
+            return await _orderDAO.AddOrder(order);
+        }
+
+        public async Task<bool> AddOrders(IEnumerable<Order> orders) => await _orderDAO.AddOrders(orders);
+
+        public async Task<bool> CodeOrderExists(string codeOrder)
+        {
+            return await _orderDAO.CodeOrderExists(codeOrder);
+        }
+
         public async Task<Order> GetOrderById(int orderId)
         {
-            return await OrderDAO.GetOrderById(orderId);
+            return await _orderDAO.GetOrderById(orderId);
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
         {
-            return await OrderDAO.GetOrdersByAccountId(accountId);
+            return await _orderDAO.GetOrdersByAccountId(accountId);
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByOwnerId(int ownerId)
         {
-            return await OrderDAO.GetOrdersByOwnerId(ownerId);
+            return await _orderDAO.GetOrdersByOwnerId(ownerId);
         }
 
         public async Task<IEnumerable<Order>> SearchOrders(string codeOrder)
         {
-            return await OrderDAO.SearchOrders(codeOrder);
+            return await _orderDAO.SearchOrders(codeOrder);
         }
 
         public async Task<bool> UpdateOrder(Order order)
         {
-            return await OrderDAO.UpdateOrder(order);
+            return await _orderDAO.UpdateOrder(order);
         }
     }
 }

@@ -9,35 +9,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAOs
 {
-    public static class CategoryDAO
+    public class CategoryDAO
     {
-        private static readonly NirvaxContext _context = new NirvaxContext();
+        private readonly NirvaxContext _context;
 
-        public static async Task<IEnumerable<Category>> GetAllCategoryAsync()
+        public CategoryDAO(NirvaxContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategoryAsync()
         {
             return await _context.Categories.Where(c => !c.Isdelete).ToListAsync();
         }
 
-        public static async Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(int id)
         {
             return await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
         }
 
-        public static async Task<bool> CreateCategoryAsync(Category category)
+        public async Task<bool> CreateCategoryAsync(Category category)
         {
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public static async Task<bool> UpdateCategoryAsync(Category category)
+        public async Task<bool> UpdateCategoryAsync(Category category)
         {
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public static async Task<bool> CheckCategoryAsync(Category category)
+        public async Task<bool> CheckCategoryAsync(Category category)
         {
             return !await _context.Categories.AnyAsync(c => c.Name == category.Name && c.CategoryId != category.CategoryId && !c.Isdelete);
         }

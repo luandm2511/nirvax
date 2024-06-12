@@ -12,20 +12,26 @@ namespace DataAccess.Repository
 {
     public class BrandRepository : IBrandRepository
     {
-        public async Task<IEnumerable<Brand>> GetAllBrandAsync() => await BrandDAO.GetAllBrandAsync();
-        public async Task<Brand> GetBrandByIdAsync(int id) => await BrandDAO.GetBrandByIdAsync(id);
-        public async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id) => await BrandDAO.GetBrandsByCategoryAsync(cate_id);
+        private readonly BrandDAO _brandDAO;
+        public BrandRepository(BrandDAO brandDAO)
+        {
+            _brandDAO = brandDAO;
+        }
+
+        public async Task<IEnumerable<Brand>> GetAllBrandAsync() => await _brandDAO.GetAllBrandAsync();
+        public async Task<Brand> GetBrandByIdAsync(int id) => await _brandDAO.GetBrandByIdAsync(id);
+        public async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id) => await _brandDAO.GetBrandsByCategoryAsync(cate_id);
         public async Task<bool> CreateBrandAsync(Brand brand) 
         {
             brand.Isdelete = false;
-            return await BrandDAO.CreateBrandAsync(brand);
+            return await _brandDAO.CreateBrandAsync(brand);
         }
-        public async Task<bool> UpdateBrandAsync(Brand brand) => await BrandDAO.UpdateBrandAsync(brand);
+        public async Task<bool> UpdateBrandAsync(Brand brand) => await _brandDAO.UpdateBrandAsync(brand);
         public async Task<bool> DeleteBrandAsync(Brand brand)
         {
             brand.Isdelete = true;
-            return await BrandDAO.UpdateBrandAsync(brand);
+            return await _brandDAO.UpdateBrandAsync(brand);
         }
-        public async Task<bool> CheckBrandAsync(Brand brand) => await BrandDAO.CheckBrandAsync(brand);
+        public async Task<bool> CheckBrandAsync(Brand brand) => await _brandDAO.CheckBrandAsync(brand);
     }
 }
