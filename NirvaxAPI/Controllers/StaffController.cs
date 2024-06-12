@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Commons;
-using WebAPI.IServiceImage;
+
 
 namespace WebAPI.Controllers
 {
@@ -17,16 +17,16 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IStaffRepository  _repo;
-        private readonly IImageService _serviceImg;
+        
         private readonly string ok = "successfully ";
         private readonly string notFound = "Not found ";
         private readonly string badRequest = "Failed! ";
 
-        public StaffController(IConfiguration config, IStaffRepository repo, IImageService serviceImg)
+        public StaffController(IConfiguration config, IStaffRepository repo)
         {
             _config = config;
              _repo = repo;
-            _serviceImg = serviceImg;
+           
         }
 
 
@@ -110,11 +110,7 @@ namespace WebAPI.Controllers
                 var checkStaff = await _repo.CheckStaff(staffDTO);
                 if (checkStaff == true)
                 {
-                    if (staffDTO.ImageFile != null)
-                    {
-                        var imagePath = _serviceImg.SaveImage(staffDTO.ImageFile, "staffs");
-                        staffDTO.Image = imagePath;
-                    }
+                  
 
                     var staff1 = await _repo.CreateStaff(staffDTO);
                     if (staff1 == true)
@@ -214,26 +210,7 @@ namespace WebAPI.Controllers
                 var checkStaff = await _repo.CheckStaff(staffDTO);
                 if (checkStaff == true)
                 {
-                    if (staffDTO.ImageFile != null)
-                    {
-                        try
-                        {
-                            var imagePath = _serviceImg.SaveImage(staffDTO.ImageFile, "staffs");
-                            var staffUpdate = await _repo.GetStaffById(staffDTO.StaffId);
-                            // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                            if (!string.IsNullOrEmpty(staffUpdate.Image))
-                            {
-                                _serviceImg.DeleteImage(staffUpdate.Image);
-                            }
-                            staffDTO.Image = imagePath;
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            return BadRequest(new { message = ex.Message });
-                        }
-
-                    }
-
+                      
                     var staff1 = await _repo.UpdateStaff(staffDTO);
                     if (staff1 == true)
                     {
@@ -328,25 +305,7 @@ namespace WebAPI.Controllers
             var checkOwner = await _repo.CheckStaffExist(staffAvatarDTO.StaffId);
             if (checkOwner == true)
             {
-                if (staffAvatarDTO.ImageFile != null)
-                {
-                    try
-                    {
-                        var imagePath = _serviceImg.SaveImage(staffAvatarDTO.ImageFile, "staffs");
-                        var staffUpdate = await _repo.GetStaffById(staffAvatarDTO.StaffId);
-                        // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                        if (!string.IsNullOrEmpty(staffUpdate.Image))
-                        {
-                            _serviceImg.DeleteImage(staffUpdate.Image);
-                        }
-                        staffAvatarDTO.Image = imagePath;
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        return BadRequest(new { message = ex.Message });
-                    }
-
-                }
+                
 
                 var owner1 = await _repo.UpdateAvatarStaff(staffAvatarDTO);
                 if (owner1 == true)

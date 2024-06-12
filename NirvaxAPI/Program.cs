@@ -14,8 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SqlServer.Server;
 using WebAPI.Helpers;
-using WebAPI.IServiceImage;
-using WebAPI.ServiceImage;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +28,12 @@ builder.Services.AddCors(options =>
                          options.AddDefaultPolicy(policy => policy.AllowAnyOrigin()
                                                                   .AllowAnyHeader()
                                                                   .AllowAnyMethod()));
+//builder.Services.AddStackExchangeRedisCache(redisOptions =>
+//{
+//   string connection = builder.Configuration.GetConnectionString("Redis");
+//  redisOptions.Configuration = connection;
+//});
+builder.Services.AddMemoryCache();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 
@@ -86,7 +91,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IDescriptionRepository, DescriptionRepository>();
 builder.Services.AddScoped<DescriptionDAO>();
 
-builder.Services.AddScoped<IImageService, ImageService>();
+
 
 
 

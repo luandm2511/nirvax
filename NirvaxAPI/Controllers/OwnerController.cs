@@ -3,7 +3,7 @@ using BusinessObject.Models;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
-using WebAPI.IServiceImage;
+
 
 namespace WebAPI.Controllers
 {
@@ -13,16 +13,16 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IOwnerRepository  _repo;
-        private readonly IImageService _serviceImg;
+      
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public OwnerController(IConfiguration config, IOwnerRepository repo, IImageService serviceImg)
+        public OwnerController(IConfiguration config, IOwnerRepository repo)
         {
             _config = config;
              _repo = repo;
-            _serviceImg= serviceImg;
+      
         }
 
 
@@ -276,25 +276,7 @@ namespace WebAPI.Controllers
             var checkOwner = await _repo.CheckOwnerExist(ownerAvatarDTO.OwnerId);
             if (checkOwner == true)
             {
-                if (ownerAvatarDTO.ImageFile != null)
-                {
-                    try
-                    {
-                        var imagePath = _serviceImg.SaveImage(ownerAvatarDTO.ImageFile, "owners");
-                        var staffUpdate = await _repo.GetOwnerById(ownerAvatarDTO.OwnerId);
-                        // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                        if (!string.IsNullOrEmpty(staffUpdate.Image))
-                        {
-                            _serviceImg.DeleteImage(staffUpdate.Image);
-                        }
-                        ownerAvatarDTO.Image = imagePath;
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        return BadRequest(new { message = ex.Message });
-                    }
-
-                }
+                
                 var owner1 = await _repo.UpdateAvatarOwner(ownerAvatarDTO);
                 if (owner1)
                 {

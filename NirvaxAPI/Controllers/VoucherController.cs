@@ -98,6 +98,7 @@ namespace WebAPI.Controllers
             [HttpPost]
             public async Task<ActionResult> CreateVoucher(VoucherDTO voucherDTO)
             {
+            try { 
             if (ModelState.IsValid)
             {
                 var checkVoucher = await _repo.CheckVoucher(voucherDTO);
@@ -142,8 +143,16 @@ namespace WebAPI.Controllers
                 Result = false,
                 Message = "Please enter valid Staff",
             });
-
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
 
 
 
@@ -151,6 +160,7 @@ namespace WebAPI.Controllers
             [HttpPut]
             public async Task<ActionResult> UpdateVoucher(VoucherDTO voucherDTO)
             {
+            try { 
             if (ModelState.IsValid)
             {
                 var checkVoucher = await _repo.CheckVoucherExist(voucherDTO);
@@ -194,8 +204,17 @@ namespace WebAPI.Controllers
                 Result = false,
                 Message = "Please enter valid Staff",
             });
-
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
+        }
 
 
 
@@ -226,30 +245,42 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> QuantityVoucherUsedStatistics(int ownerId)
         {
-            var number = await _repo.QuantityVoucherUsedStatistics(ownerId);
-            if (number != null)
+            try
             {
-                return StatusCode(200, new
+                var number = await _repo.QuantityVoucherUsedStatistics(ownerId);
+                if (number != null)
                 {
+                    return StatusCode(200, new
+                    {
 
-                    Result = true,
-                    Message = number,
+                        Result = true,
+                        Message = number,
 
+                    });
+                }
+                return StatusCode(400, new
+                {
+                    StatusCode = 400,
+                    Result = false,
+                    Message = badRequest,
                 });
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                StatusCode = 400,
-                Result = false,
-                Message = badRequest,
-            });
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpGet]
-        public async Task<ActionResult> TotalPriceVoucherUsedStatistics(int ownerId)
+        public async Task<ActionResult> PriceVoucherUsedStatistics(int ownerId)
         {
-            var number = await _repo.TotalPriceVoucherUsedStatistics(ownerId);
+            try { 
+            var number = await _repo.PriceVoucherUsedStatistics(ownerId);
             if (number != null)
             {
                 return StatusCode(200, new
@@ -266,6 +297,49 @@ namespace WebAPI.Controllers
                 Result = false,
                 Message = badRequest,
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PriceAndQuantityByOrder(int ownerId, string voucherId, int quantity)
+        {
+            try {
+                var result = await _repo.PriceAndQuantityByOrder(ownerId, voucherId, quantity);
+                if (result == true)
+                {
+                    return StatusCode(200, new
+                    {
+
+                        Result = true,
+                        Message = "Update voucher after used success!",
+
+                    });
+                }
+                return StatusCode(400, new
+                {
+                    StatusCode = 400,
+                    Result = false,
+                    Message = badRequest,
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
 
         }
 

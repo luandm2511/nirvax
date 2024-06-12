@@ -4,7 +4,7 @@ using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.IServiceImage;
+
 
 namespace WebAPI.Controllers
 {
@@ -17,17 +17,16 @@ namespace WebAPI.Controllers
 
             private readonly IAdvertisementRepository _repo;
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly IImageService _serviceImg;
+   
 
         private readonly string ok = "successfully";
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, IImageService serviceImg)
+            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment)
             {
                 _config = config;
-            _serviceImg = serviceImg;
-
+            
             _repo = repo;
             this._hostEnvironment = hostEnvironment;
             }
@@ -135,11 +134,7 @@ namespace WebAPI.Controllers
                 var checkAd = await _repo.CheckAdvertisementCreate(advertisementCreateDTO);
                 if (checkAd == true)
                 {
-                    if (advertisementCreateDTO.ImageFile != null)
-                    {
-                        var imagePath = _serviceImg.SaveImage(advertisementCreateDTO.ImageFile, "ads");
-                        advertisementCreateDTO.Image = imagePath;
-                    }
+                   
                     var advertisement1 = await _repo.CreateAdvertisement(advertisementCreateDTO);
                     if (advertisement1)
                     {
@@ -190,25 +185,7 @@ namespace WebAPI.Controllers
                 var checkAd =await _repo.CheckAdvertisement(advertisementDTO);
                 if (checkAd == true)
                 {
-                    if (advertisementDTO.ImageFile != null)
-                    {
-                        try
-                        {
-                            var imagePath = _serviceImg.SaveImage(advertisementDTO.ImageFile, "ads");
-                            var adUpdate = await _repo.GetAdvertisementById(advertisementDTO.AdId);
-                            // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                            if (!string.IsNullOrEmpty(adUpdate.Image))
-                            {
-                                _serviceImg.DeleteImage(adUpdate.Image);
-                            }
-                            advertisementDTO.Image = imagePath;
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            return BadRequest(new { message = ex.Message });
-                        }
-
-                    }
+                    
                     var advertisement1 =await _repo.UpdateAdvertisement(advertisementDTO);
                     if (advertisement1)
                     {

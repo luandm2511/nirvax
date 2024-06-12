@@ -21,8 +21,7 @@ namespace BusinessObject.DTOs
         public string Content { get; set; } = null!;
 
         public string? Image { get; set; } = null!;
-       // [NotMapped]
-        public IFormFile? ImageFile { get; set; } = null!;
+      
         //  public string ImageSrc { get; set; } = null!;
         [Required(ErrorMessage = " StatusPostId cannot be empty!!")]
 

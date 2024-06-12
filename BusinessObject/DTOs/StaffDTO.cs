@@ -32,7 +32,7 @@ namespace BusinessObject.DTOs
 
         public string? Image { get; set; }
         
-        public IFormFile? ImageFile { get; set; }
+      //  public IFormFile? ImageFile { get; set; }
 
         [Required(ErrorMessage = " Phone cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Phone to be at least 9 characters!!")]
@@ -54,7 +54,7 @@ namespace BusinessObject.DTOs
         public int StaffId { get; set; }
         public string? Image { get; set; }
         //[NotMapped]
-        public IFormFile? ImageFile { get; set; }
+       // public IFormFile? ImageFile { get; set; }
     }
 
     public class StaffProfileDTO

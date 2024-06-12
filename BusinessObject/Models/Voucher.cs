@@ -19,8 +19,6 @@ public partial class Voucher
 
     public bool Isdelete { get; set; }
 
-    public bool? Isused { get; set; }
-
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual Owner Owner { get; set; } = null!;

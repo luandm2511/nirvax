@@ -252,20 +252,10 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateAvatarOwner(OwnerAvatarDTO ownerAvatarDTO)
         {
-            if (ownerAvatarDTO.ImageFile != null)
-            {
-                var fileResult = _fileService.SaveImage(ownerAvatarDTO.ImageFile);
-                if (fileResult.Item1 == 1)
-                {
-                    ownerAvatarDTO.Image = fileResult.Item2; // getting name of image
-                }
-            }
+            
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerAvatarDTO.OwnerId);
-            string oldImage = owner.Image;
-            if (ownerAvatarDTO.ImageFile != null)
-            {
-                _fileService.DeleteImage(oldImage);
-            }
+            owner.Image = ownerAvatarDTO.Image;
+           
           
             _mapper.Map(ownerAvatarDTO, owner);
              _context.Owners.Update(owner);

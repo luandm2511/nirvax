@@ -776,7 +776,6 @@ public partial class NirvaxContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("end_date");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
-            entity.Property(e => e.Isused).HasColumnName("isused");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.Price).HasColumnName("price");
             entity.Property(e => e.Quantity).HasColumnName("quantity");

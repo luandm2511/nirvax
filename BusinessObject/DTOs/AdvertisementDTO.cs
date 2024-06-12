@@ -22,7 +22,7 @@ namespace BusinessObject.DTOs
         public string Content { get; set; } = null!;
 
         public string? Image { get; set; } = null!;
-        public IFormFile? ImageFile { get; set; } = null!;
+        //public IFormFile? ImageFile { get; set; } = null!;
         //  public string ImageSrc { get; set; } = null!;
         [Required(ErrorMessage = " StatusPostId cannot be empty!!")]
         public int StatusPostId { get; set; }

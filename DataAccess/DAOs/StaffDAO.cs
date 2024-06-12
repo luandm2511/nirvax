@@ -240,7 +240,8 @@ namespace DataAccess.DAOs
             {
                 staffDTO.Password = staffOrgin.Password;
             }
-           
+              // staffOrgin.Image = staffDTO.
+             
                 _mapper.Map(staffDTO, staffOrgin);
                  _context.Staff.Update(staffOrgin);
                 await _context.SaveChangesAsync();
@@ -269,20 +270,9 @@ namespace DataAccess.DAOs
         }
         public async Task<bool> UpdateAvatarStaff(StaffAvatarDTO staffAvatarDTO)
         {
-            if (staffAvatarDTO.ImageFile != null)
-            {
-                var fileResult = _fileService.SaveImage(staffAvatarDTO.ImageFile);
-                if (fileResult.Item1 == 1)
-                {
-                    staffAvatarDTO.Image = fileResult.Item2; // getting name of image
-                }
-            }
+           
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffAvatarDTO.StaffId);
-            string oldImage = staff.Image;
-            if (staffAvatarDTO.ImageFile != null)
-            {
-                _fileService.DeleteImage(oldImage);
-            }
+           
 
             _mapper.Map(staffAvatarDTO, staff);
              _context.Staff.Update(staff);
