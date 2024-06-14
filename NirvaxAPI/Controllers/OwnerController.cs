@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwners(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
-            var list = await _repo.GetAllOwners( searchQuery, page,  pageSize);
+            var list = await _repo.GetAllOwnersAsync( searchQuery, page,  pageSize);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -50,9 +50,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersForUser(string? searchQuery)
+        public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersForUserAsync(string? searchQuery)
         {
-            var list = await _repo.GetAllOwnersForUser(searchQuery);
+            var list = await _repo.GetAllOwnersForUserAsync(searchQuery);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -72,12 +72,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{ownerId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetOwnerById(int ownerId)
+        public async Task<ActionResult> GetOwnerByIdAsync(int ownerId)
         {
-            var checkOwner = await _repo.CheckOwnerExist(ownerId);
+            var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
             if(checkOwner == true)
             {
-                var owner = await _repo.GetOwnerById(ownerId);
+                var owner = await _repo.GetOwnerByIdAsync(ownerId);
                 return StatusCode(200, new
                 {
                     Result = true,
@@ -95,12 +95,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{ownerEmail}")]
         //  [Authorize]
-        public async Task<ActionResult> GetOwnerByEmail(string ownerEmail)
+        public async Task<ActionResult> GetOwnerByEmailAsync(string ownerEmail)
         {
-            var checkOwner = await _repo.CheckProfileExist(ownerEmail);
+            var checkOwner = await _repo.CheckProfileExistAsync(ownerEmail);
             if (checkOwner == true)
             {
-                var owner = await _repo.GetOwnerByEmail(ownerEmail);
+                var owner = await _repo.GetOwnerByEmailAsync(ownerEmail);
                 return StatusCode(200, new
                 {
                     Result = true,
@@ -118,9 +118,9 @@ namespace WebAPI.Controllers
 
         //check exist
         [HttpPost]
-        public async Task<ActionResult> CreateOwner(OwnerDTO ownerDTO)
+        public async Task<ActionResult> CreateOwnerAsync(OwnerDTO ownerDTO)
         {
-            var owner1 = await _repo.CreateOwner(ownerDTO);
+            var owner1 = await _repo.CreateOwnerAsync(ownerDTO);
             if (owner1)
             {
                 return StatusCode(200, new
@@ -143,12 +143,12 @@ namespace WebAPI.Controllers
          
 
         [HttpPut]
-        public async Task<ActionResult> ChangePasswordOwner(int ownerId, string oldPassword, string newPasswod)
+        public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
         {
-            var checkOwner = await _repo.CheckOwnerExist(ownerId);
+            var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
             if (checkOwner == true)
             {
-                var owner1 = await _repo.ChangePasswordOwner(ownerId, oldPassword, newPasswod);
+                var owner1 = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPasswod);
                 if (owner1)
                 {
                     return StatusCode(200, new
@@ -170,14 +170,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateOwner(OwnerDTO ownerDTO)
+        public async Task<ActionResult> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkOwner = await _repo.CheckOwner(ownerDTO);
+                var checkOwner = await _repo.CheckOwnerAsync(ownerDTO);
             if (checkOwner == true)
             {
-                var owner1 = await _repo.UpdateOwner(ownerDTO);
+                var owner1 = await _repo.UpdateOwnerAsync(ownerDTO);
                 if (owner1)
                 {
                     return StatusCode(200, new
@@ -220,14 +220,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateProfileOwner(OwnerProfileDTO ownerProfileDTO)
+        public async Task<ActionResult> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkOwner = await _repo.CheckProfileOwner(ownerProfileDTO);
+                var checkOwner = await _repo.CheckProfileOwnerAsync(ownerProfileDTO);
             if (checkOwner == true)
             {
-                var owner1 = await _repo.UpdateProfileOwner(ownerProfileDTO);
+                var owner1 = await _repo.UpdateProfileOwnerAsync(ownerProfileDTO);
                 if (owner1)
                 {
                     return StatusCode(200, new
@@ -271,13 +271,13 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> UpdateAvatarOwner([FromForm] OwnerAvatarDTO ownerAvatarDTO)
+        public async Task<ActionResult> UpdateAvatarOwnerAsync([FromForm] OwnerAvatarDTO ownerAvatarDTO)
         {
-            var checkOwner = await _repo.CheckOwnerExist(ownerAvatarDTO.OwnerId);
+            var checkOwner = await _repo.CheckOwnerExistAsync(ownerAvatarDTO.OwnerId);
             if (checkOwner == true)
             {
                 
-                var owner1 = await _repo.UpdateAvatarOwner(ownerAvatarDTO);
+                var owner1 = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
                 if (owner1)
                 {
                     return StatusCode(200, new
@@ -300,9 +300,9 @@ namespace WebAPI.Controllers
         
 
         [HttpPatch("{ownerId}")]
-        public async Task<ActionResult> BanOwner(int ownerId)
+        public async Task<ActionResult> BanOwnerAsync(int ownerId)
         {
-            var owner1 = await _repo.BanOwner(ownerId);
+            var owner1 = await _repo.BanOwnerAsync(ownerId);
             if (owner1)
             {
                 return StatusCode(200, new
@@ -323,9 +323,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{ownerId}")]
-        public async Task<ActionResult> UnBanOwner(int ownerId)
+        public async Task<ActionResult> UnBanOwnerAsync(int ownerId)
         {
-            var owner1 = await _repo.UnBanOwner(ownerId);
+            var owner1 = await _repo.UnBanOwnerAsync(ownerId);
             if (owner1)
             {
                 return StatusCode(200, new
@@ -346,9 +346,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> NumberOfOwnerStatistics()
+        public async Task<ActionResult> NumberOfOwnerStatisticsAsync()
         {
-            var number = await _repo.NumberOfOwnerStatistics();
+            var number = await _repo.NumberOfOwnerStatisticsAsync();
             if (number != null)
             {
                 return StatusCode(200, new

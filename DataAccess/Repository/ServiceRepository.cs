@@ -23,49 +23,49 @@ namespace DataAccess.Repository
             _serviceDAO = serviceDAO;
         }
 
-        public Task<bool> CheckService(ServiceDTO serviceDTO)
+        public Task<bool> CheckServiceAsync(int serviceId, string name)
         {
-            return _serviceDAO.CheckService(serviceDTO); 
+            return _serviceDAO.CheckServiceAsync(serviceId, name); 
         }
 
-        public Task<bool> CheckServiceExist(int serviceId)
+        public Task<bool> CheckServiceExistAsync(int serviceId)
         {
-            return _serviceDAO.CheckServiceExist(serviceId);
+            return _serviceDAO.CheckServiceExistAsync(serviceId);
         }
 
-        public Task<List<ServiceDTO>> GetAllServices(string? searchQuery, int page, int pageSize)
+        public Task<List<ServiceDTO>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
             
-            return _serviceDAO.GetAllServices(searchQuery, page,  pageSize);
+            return _serviceDAO.GetAllServicesAsync(searchQuery, page,  pageSize);
         }
        
-             public Task<List<ServiceDTO>> GetAllServiceForUser()
+             public Task<List<ServiceDTO>> GetAllServiceForUserAsync()
         {
 
-            return _serviceDAO.GetAllServiceForUser();
+            return _serviceDAO.GetAllServiceForUserAsync();
         }
 
-        public Task<ServiceDTO> GetServiceById(int serviceId)
+        public Task<ServiceDTO> GetServiceByIdAsync(int serviceId)
         {
-            return (_serviceDAO.GetServiceById(serviceId));
+            return (_serviceDAO.GetServiceByIdAsync(serviceId));
         }
   
-        public Task<bool> CreateService(ServiceDTO serviceDTO)
+        public Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
         {
-            return _serviceDAO.CreateService(serviceDTO);
+            return _serviceDAO.CreateServiceAsync(serviceCreateDTO);
         }
 
-        public Task<bool> UpdateService(ServiceDTO serviceDTO)
+        public Task<bool> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
-            return _serviceDAO.UpdateService(serviceDTO);
+            return _serviceDAO.UpdateServiceAsync(serviceDTO);
         }
-        public Task<bool> RestoreService(int serviceId)
+        public Task<bool> RestoreServiceAsync(int serviceId)
         {
-            return _serviceDAO.RestoreService(serviceId);
+            return _serviceDAO.RestoreServiceAsync(serviceId);
         }
-        public Task<bool> DeleteService(int serviceId)
+        public Task<bool> DeleteServiceAsync(int serviceId)
         {
-            return _serviceDAO.DeleteService(serviceId);
+            return _serviceDAO.DeleteServiceAsync(serviceId);
         }
 
     }

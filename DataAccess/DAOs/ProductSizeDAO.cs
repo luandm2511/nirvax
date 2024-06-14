@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Azure;
 using Azure.Core;
 using System.Drawing;
+using Size = BusinessObject.Models.Size;
 
 namespace DataAccess.DAOs
 {
@@ -30,7 +31,7 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckProductSizeExist(string productSizeId)
+        public async Task<bool> CheckProductSizeExistAsync(string productSizeId)
         {
 
             ProductSize? productSize = new ProductSize();
@@ -45,7 +46,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> CheckProductSizeById(string productSizeId)
+        public async Task<bool> CheckProductSizeByIdAsync(string productSizeId)
         {
 
             ProductSize? productSize = new ProductSize();
@@ -60,7 +61,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> CheckProductSize(ProductSizeDTO productSizeDTO)
+        public async Task<bool> CheckProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
 
             ProductSize? productSize = new ProductSize();
@@ -76,7 +77,7 @@ namespace DataAccess.DAOs
         }
 
         //staff,owner
-        public async Task<List<ProductSizeDTO>> GetAllProductSizes(string? searchQuery, int page, int pageSize)
+        public async Task<List<ProductSizeDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
         {
             List<ProductSizeDTO> listProductSizeDTO = new List<ProductSizeDTO>();
 
@@ -104,7 +105,7 @@ namespace DataAccess.DAOs
         }
 
         //user,guest
-        public async Task<List<ProductSizeDTO>> GetProductSizeByProductId(int productId)
+        public async Task<List<ProductSizeDTO>> GetProductSizeByProductIdAsync(int productId)
         {
             List<ProductSizeDTO> listProductSizeDTO = new List<ProductSizeDTO>();
 
@@ -118,7 +119,7 @@ namespace DataAccess.DAOs
         }
 
         //detail
-        public async Task<ProductSizeDTO> GetProductSizeById(string productSizeId)
+        public async Task<ProductSizeDTO> GetProductSizeByIdAsync(string productSizeId)
         {
             ProductSizeDTO productSizeDTO = new ProductSizeDTO();
             try
@@ -134,10 +135,21 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateProductSize(ProductSizeDTO productSizeDTO)
+        public async Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO, int prodId, int sizeId)
         {
-            productSizeDTO.Isdelete = false;
-            ProductSize productSize = _mapper.Map<ProductSize>(productSizeDTO);
+            Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == prodId);
+            Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeId);
+           
+            //productSizeCreateDTO.Isdelete = false;
+            ProductSize productSize = _mapper.Map<ProductSize>(productSizeCreateDTO);
+            productSize.ProductSizeId = product.Name.Trim()+ "_" + size.Name.Trim();
+            var checkId = productSize.ProductSizeId;
+            List<ProductSize> checkProdSize = await _context.ProductSizes.Where(i => i.ProductSizeId.Trim() == checkId.Trim()).ToListAsync();
+            if(checkProdSize.Count > 0) {
+                return false;
+            } 
+            productSize.Isdelete = false;
+            productSize.ProductSizeId = product.Name.Trim() + "_" + size.Name.Trim();
             await _context.ProductSizes.AddAsync(productSize);
             int i = await _context.SaveChangesAsync();
             
@@ -149,7 +161,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateProductSize(ProductSizeDTO productSizeDTO)
+        public async Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
             ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeDTO.ProductSizeId);
             //ánh xạ đối tượng ProductSizeDTO đc truyền vào cho staff
@@ -162,7 +174,7 @@ namespace DataAccess.DAOs
           
         }
 
-        public async Task<bool> DeleteProductSize(string productSizeId)
+        public async Task<bool> DeleteProductSizeAsync(string productSizeId)
         {
             ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
             //ánh xạ đối tượng ProductSizeDTO đc truyền vào cho staff

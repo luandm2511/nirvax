@@ -24,9 +24,9 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Service>>> GetAllServices(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<Service>>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
             {
-                var list = await _repo.GetAllServices(searchQuery, page, pageSize);
+                var list = await _repo.GetAllServicesAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -46,9 +46,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Service>>> GetAllServiceForUser()
+        public async Task<ActionResult<IEnumerable<Service>>> GetAllServiceForUserAsync()
         {
-            var list = await _repo.GetAllServiceForUser();
+            var list = await _repo.GetAllServiceForUserAsync();
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -68,12 +68,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{serviceId}")]
             //  [Authorize]
-            public async Task<ActionResult> GetServiceById(int serviceId)
+            public async Task<ActionResult> GetServiceByIdAsync(int serviceId)
             {
-                var checkServiceExist = await _repo.CheckServiceExist(serviceId);
+                var checkServiceExist = await _repo.CheckServiceExistAsync(serviceId);
                 if (checkServiceExist == true)
                 {
-                    var service = await _repo.GetServiceById(serviceId);
+                    var service = await _repo.GetServiceByIdAsync(serviceId);
 
 
                     return StatusCode(200, new
@@ -94,14 +94,14 @@ namespace WebAPI.Controllers
             }
 
             [HttpPost]
-            public async Task<ActionResult> CreateService(ServiceDTO serviceDTO)
+            public async Task<ActionResult> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
             {
             if (ModelState.IsValid)
             {
-                var checkService = await _repo.CheckService(serviceDTO);
+                var checkService = await _repo.CheckServiceAsync(0, serviceCreateDTO.Name);
                 if (checkService == true)
                 {
-                    var service1 = await _repo.CreateService(serviceDTO);
+                    var service1 = await _repo.CreateServiceAsync(serviceCreateDTO);
                     if (service1)
                     {
                         return StatusCode(200, new
@@ -145,14 +145,14 @@ namespace WebAPI.Controllers
         }
 
             [HttpPut]
-            public async Task<ActionResult> UpdateService(ServiceDTO serviceDTO)
+            public async Task<ActionResult> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkService = await _repo.CheckService(serviceDTO);
+                var checkService = await _repo.CheckServiceAsync(serviceDTO.ServiceId, serviceDTO.Name);
                 if (checkService == true)
                 {
-                    var service1 = await _repo.UpdateService(serviceDTO);
+                    var service1 = await _repo.UpdateServiceAsync(serviceDTO);
                     if (service1)
                     {
                         return StatusCode(200, new
@@ -195,9 +195,9 @@ namespace WebAPI.Controllers
             }
 
             [HttpPatch("{serviceId}")]
-            public async Task<ActionResult> DeleteService(int serviceId)
+            public async Task<ActionResult> DeleteServiceAsync(int serviceId)
             {
-                var service1 = await _repo.DeleteService(serviceId);
+                var service1 = await _repo.DeleteServiceAsync(serviceId);
                 if (service1)
                 {
                     return StatusCode(200, new
@@ -218,9 +218,9 @@ namespace WebAPI.Controllers
             }
 
         [HttpPatch("{serviceId}")]
-        public async Task<ActionResult> RestoreService(int serviceId)
+        public async Task<ActionResult> RestoreServiceAsync(int serviceId)
         {
-            var service1 = await _repo.RestoreService(serviceId);
+            var service1 = await _repo.RestoreServiceAsync(serviceId);
             if (service1)
             {
                 return StatusCode(200, new

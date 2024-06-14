@@ -26,7 +26,7 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckImportProductExist(int importId)
+        public async Task<bool> CheckImportProductExistAsync(int importId)
         {
             ImportProduct? sid = new ImportProduct();
 
@@ -38,7 +38,7 @@ namespace DataAccess.DAOs
             }
             return true;
         }
-        public async Task<List<ImportProductDTO>> GetAllImportProduct(int warehouseId,DateTime? from, DateTime? to)
+        public async Task<List<ImportProductDTO>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
         {
             List<ImportProductDTO> listImportDTO = new List<ImportProductDTO>();
          
@@ -67,7 +67,7 @@ namespace DataAccess.DAOs
         }
 
         //tự xem details số liệu
-        public async Task<ImportProductDTO> GetImportProductById(int importId)
+        public async Task<ImportProductDTO> GetImportProductByIdAsync(int importId)
         {
             ImportProductDTO importProductDTO = new ImportProductDTO();
             ImportProduct? sid = await _context.ImportProducts
@@ -79,7 +79,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async  Task<List<ImportProductDTO>> GetImportProductByWarehouse(int warehouseId)
+        public async  Task<List<ImportProductDTO>> GetImportProductByWarehouseAsync(int warehouseId)
         {
             List<ImportProductDTO> listImportProductDTO;
             try
@@ -92,11 +92,11 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> CreateImportProduct(ImportProductDTO importProductDTO)
+        public async Task<bool> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
         {
-            if (importProductDTO.ImportDate != null && importProductDTO.ImportDate.Date >= DateTime.Now.Date)
+            if (importProductCreateDTO.ImportDate != null && importProductCreateDTO.ImportDate.Date >= DateTime.Now.Date)
             {
-                ImportProduct importProduct = _mapper.Map<ImportProduct>(importProductDTO);
+                ImportProduct importProduct = _mapper.Map<ImportProduct>(importProductCreateDTO);
                await  _context.ImportProducts.AddAsync(importProduct);
                 int i =await _context.SaveChangesAsync();
                 if (i > 0)
@@ -105,10 +105,10 @@ namespace DataAccess.DAOs
                 }
                 else { return false; }
             }
-            else if (importProductDTO.ImportDate == null)
+            else if (importProductCreateDTO.ImportDate == null)
             {
-                importProductDTO.ImportDate = DateTime.Now;
-                ImportProduct importProduct = _mapper.Map<ImportProduct>(importProductDTO);
+                importProductCreateDTO.ImportDate = DateTime.Now;
+                ImportProduct importProduct = _mapper.Map<ImportProduct>(importProductCreateDTO);
                 await _context.ImportProducts.AddAsync(importProduct);
                int i= await _context.SaveChangesAsync();
                 if (i > 0)
@@ -121,7 +121,7 @@ namespace DataAccess.DAOs
             else return false;
         }
 
-        public async Task<bool> UpdateImportProduct(ImportProductDTO importProductDTO)
+        public async Task<bool> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
             ImportProduct? importProduct = await _context.ImportProducts.SingleOrDefaultAsync(i => i.ImportId == importProductDTO.ImportId);
             //ánh xạ đối tượng staffdto đc truyền vào cho staff

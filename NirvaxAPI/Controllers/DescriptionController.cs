@@ -24,9 +24,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptions(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
         {
-            var list = await _repo.GetAllDescriptions(searchQuery, page, pageSize);
+            var list = await _repo.GetAllDescriptionsAsync(searchQuery, page, pageSize);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -46,12 +46,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{sizeId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetDescriptionById(int sizeId)
+        public async Task<ActionResult> GetDescriptionByIdAsync(int sizeId)
         {
-            var checkSizeExist = await _repo.CheckDescriptionExist(sizeId);
+            var checkSizeExist = await _repo.CheckDescriptionExistAsync(sizeId);
             if (checkSizeExist == true)
             {
-                var description = await _repo.GetDescriptionById(sizeId);
+                var description = await _repo.GetDescriptionByIdAsync(sizeId);
 
 
                 return StatusCode(200, new
@@ -72,15 +72,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateDesctiption(DescriptionDTO descriptionDTO)
+        public async Task<ActionResult> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
             if (ModelState.IsValid)
             {
 
-                var checkDescription = await _repo.CheckDescription(descriptionDTO);
+                var checkDescription = await _repo.CheckDescriptionAsync(0,descriptionCreateDTO.Title, descriptionCreateDTO.Content);
             if (checkDescription == true)
             {
-                var description1 = await _repo.CreateDesctiption(descriptionDTO);
+                var description1 = await _repo.CreateDesctiptionAsync(descriptionCreateDTO);
                 if (description1)
                 {
                     return StatusCode(200, new
@@ -124,12 +124,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateDesctiption(DescriptionDTO descriptionDTO)
+        public async Task<ActionResult> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
         {
-            var checkDescription = await _repo.CheckDescription(descriptionDTO);
+            var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
             if (checkDescription == true)
             {
-                var description1 = await _repo.UpdateDesctiption(descriptionDTO);
+                var description1 = await _repo.UpdateDesctiptionAsync(descriptionDTO);
                 if (description1)
                 {
                     return StatusCode(200, new
@@ -161,9 +161,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{sizeId}")]
-        public async Task<ActionResult> DeleteDesctiption(int sizeId)
+        public async Task<ActionResult> DeleteDesctiptionAsync(int sizeId)
         {
-            var description1 = await _repo.DeleteDesctiption(sizeId);
+            var description1 = await _repo.DeleteDesctiptionAsync(sizeId);
             if (description1)
             {
                 return StatusCode(200, new

@@ -31,11 +31,11 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckRoom(RoomDTO roomDTO)
+        public async Task<bool> CheckRoomAsync(int accountId, int ownerId)
         {
 
-            List<Account> listAccount = await _context.Accounts.Where(i=> i.AccountId == roomDTO.AccountId).ToListAsync();
-            List<Owner> listOwner = await _context.Owners.Where(i => i.OwnerId == roomDTO.OwnerId).ToListAsync();
+            List<Account> listAccount = await _context.Accounts.Where(i=> i.AccountId == accountId).ToListAsync();
+            List<Owner> listOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).ToListAsync();
 
 
             if (listAccount.Count > 0 && listOwner.Count > 0)
@@ -49,7 +49,7 @@ namespace DataAccess.DAOs
        
 
         //owner,staff
-        public async Task<List<RoomDTO>> ViewUserHistoryChat(int accountId)
+        public async Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
         {
             List<RoomDTO> listSizeDTO = new List<RoomDTO>();
             
@@ -57,18 +57,13 @@ namespace DataAccess.DAOs
                     .Include(i => i.Account).Include(i => i.Owner)
                     .Where(i => i.Account.AccountId == accountId)
                     .ToListAsync();
-            //foreach (Room room in getList)
-           // {
-              //  List<Message> listMessage = await _context.Messages.Include(i => i.Room).Where(i => i.RoomId == room.RoomId).ToListAsync();
-               // var lastIndex = listMessage.Count()-1;
-               // room.Content = listMessage[lastIndex].Content;
-          //  }
+            
                 listSizeDTO = _mapper.Map<List<RoomDTO>>(getList);
             
             return listSizeDTO;
         }
 
-        public async Task<List<RoomDTO>> ViewOwnerHistoryChat(int ownerId)
+        public async Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
         {
             List<RoomDTO> listSizeDTO = new List<RoomDTO>();
             List<Room> getList = await _context.Rooms
@@ -82,7 +77,7 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<RoomDTO> GetRoomByAccountIdAndOwnerId(int accountId, int ownerId)
+        public async Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
             try
             {
@@ -101,7 +96,7 @@ namespace DataAccess.DAOs
            
         }
 
-        public async Task<int> GetRoomIdByAccountIdAndOwnerId(int accountId, int ownerId) 
+        public async Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId) 
         {
             try
             {
@@ -121,7 +116,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> CheckRoomExist(int roomId)
+        public async Task<bool> CheckRoomExistAsync(int roomId)
         {
             Room? sid = new Room();
 
@@ -135,7 +130,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<RoomDTO> GetRoomById(int roomId)
+        public async Task<RoomDTO> GetRoomByIdAsync(int roomId)
         {
             RoomDTO roomDTO = new RoomDTO();
             try
@@ -154,13 +149,13 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateRoom(RoomDTO roomDTO)
+        public async Task<bool> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
-            Room room = await _context.Rooms.Where(i => i.OwnerId == roomDTO.OwnerId && i.AccountId == roomDTO.AccountId).FirstOrDefaultAsync();
+            Room room = await _context.Rooms.Where(i => i.OwnerId == roomCreateDTO.OwnerId && i.AccountId == roomCreateDTO.AccountId).FirstOrDefaultAsync();
             if(room == null)
             {
-                roomDTO.Timestamp = DateTime.Now;
-                Room roomCreate = _mapper.Map<Room>(roomDTO);
+                roomCreateDTO.Timestamp = DateTime.Now;
+                Room roomCreate = _mapper.Map<Room>(roomCreateDTO);
                 await _context.Rooms.AddAsync(roomCreate);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)
@@ -179,7 +174,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateContentRoom(int roomId)
+        public async Task<bool> UpdateContentRoomAsync(int roomId)
         {
             Room room = await _context.Rooms.Where(i => i.RoomId == roomId).FirstOrDefaultAsync();
             if (room != null)

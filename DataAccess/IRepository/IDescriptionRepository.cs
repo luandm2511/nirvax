@@ -11,15 +11,15 @@ namespace DataAccess.IRepository
 {
     public interface IDescriptionRepository
     {
-        Task<List<DescriptionDTO>> GetAllDescriptions(string? searchQuery, int page, int pageSize);
-        Task<DescriptionDTO> GetDescriptionById(int sizeId);
-        Task<bool> CheckDescription(DescriptionDTO descriptionDTO);
+        Task<List<DescriptionDTO>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize);
+        Task<DescriptionDTO> GetDescriptionByIdAsync(int sizeId);
+        Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content);
 
-        Task<bool> CheckDescriptionExist(int sizeId);
-        Task<bool> CreateDesctiption(DescriptionDTO descriptionDTO);
+        Task<bool> CheckDescriptionExistAsync(int sizeId);
+        Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO);
 
-        Task<bool> UpdateDesctiption(DescriptionDTO descriptionDTO);
-        Task<bool> DeleteDesctiption(int sizeId);
+        Task<bool> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO);
+        Task<bool> DeleteDesctiptionAsync(int sizeId);
 
     }
 }

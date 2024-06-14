@@ -25,9 +25,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ProductSize>>> GetAllProductSizes(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<ProductSize>>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
         {
-            var list = await _repo.GetAllProductSizes(searchQuery, page, pageSize);
+            var list = await _repo.GetAllProductSizesAsync(searchQuery, page, pageSize);
             if (list.Any())
             {
                 return StatusCode(200,new
@@ -47,9 +47,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ProductSize>>> GetProductSizeByProductId(int productId)
+        public async Task<ActionResult<IEnumerable<ProductSize>>> GetProductSizeByProductIdAsync(int productId)
         {
-            var list = await _repo.GetProductSizeByProductId(productId);
+            var list = await _repo.GetProductSizeByProductIdAsync(productId);
             if (list.Any())
             {
                 return StatusCode(200,new
@@ -71,12 +71,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{productSizeId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetProductSizeById(string productSizeId)
+        public async Task<ActionResult> GetProductSizeByIdAsync(string productSizeId)
         {
-            var checkProductSize = await _repo.CheckProductSizeById(productSizeId);
+            var checkProductSize = await _repo.CheckProductSizeByIdAsync(productSizeId);
             if (checkProductSize == true)
             {
-                var productSize = await _repo.GetProductSizeById(productSizeId);
+                var productSize = await _repo.GetProductSizeByIdAsync(productSizeId);
                 return StatusCode(200,new
                 {
                     Result = true,
@@ -94,14 +94,12 @@ namespace WebAPI.Controllers
 
         //check exist
         [HttpPost]
-        public async Task<ActionResult> CreateProductSize(ProductSizeDTO productSizeDTO)
+        public async Task<ActionResult> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO, int prodId, int sizeId)
         {
             if (ModelState.IsValid)
             {
-                var checkProductSize = await _repo.CheckProductSize(productSizeDTO);
-            if (checkProductSize == true)
-            {
-                var productSize1 = await _repo.CreateProductSize(productSizeDTO);
+
+                var productSize1 = await _repo.CreateProductSizeAsync(productSizeCreateDTO, prodId, sizeId);
                 if (productSize1)
                 {
                     return StatusCode(200, new
@@ -122,20 +120,8 @@ namespace WebAPI.Controllers
                         Data = ""
                     });
                 }
-            }
-
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        StatusCode = 400,
-                        Result = false,
-                        Message = "There already exists a staff with that information",
-                    });
-                }
 
             }
-
             return StatusCode(400, new
             {
                 StatusCode = 400,
@@ -150,14 +136,14 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> UpdateProductSize(ProductSizeDTO productSizeDTO)
+        public async Task<ActionResult> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkProductSize = await _repo.CheckProductSizeExist(productSizeDTO.ProductSizeId);
+                var checkProductSize = await _repo.CheckProductSizeExistAsync(productSizeDTO.ProductSizeId);
             if (checkProductSize == true)
             {
-                var productSize1 = await _repo.UpdateProductSize(productSizeDTO);
+                var productSize1 = await _repo.UpdateProductSizeAsync(productSizeDTO);
                 if (productSize1)
                 {
                     return StatusCode(200, new
@@ -204,9 +190,9 @@ namespace WebAPI.Controllers
 
 
 [HttpPatch("{productSizeId}")]
-        public async Task<ActionResult> DeleteProductSize(string productSizeId)
+        public async Task<ActionResult> DeleteProductSizeAsync(string productSizeId)
         {
-            var productSize1 = await _repo.DeleteProductSize(productSizeId);
+            var productSize1 = await _repo.DeleteProductSizeAsync(productSizeId);
             if (productSize1)
             {
                 return StatusCode(200, new

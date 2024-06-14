@@ -36,7 +36,7 @@ namespace DataAccess.DAOs
         }
 
        
-        public async Task<bool> CheckVoucherById(string voucherId)
+        public async Task<bool> CheckVoucherByIdAsync(string voucherId)
         {
 
             Voucher? voucher = new Voucher();
@@ -51,7 +51,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> CheckVoucher(VoucherDTO voucherDTO)
+        public async Task<bool> CheckVoucherAsync(VoucherDTO voucherDTO)
         {
 
             Voucher? voucher = new Voucher();
@@ -73,7 +73,7 @@ namespace DataAccess.DAOs
             return false;
         }
 
-        public async Task<bool> CheckVoucherExist(VoucherDTO voucherDTO)
+        public async Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO)
         {
             Voucher? sid = new Voucher();
             sid = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
@@ -90,7 +90,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<VoucherDTO>> GetAllVouchers(string? searchQuery, int page, int pageSize)
+        public async Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize)
         {
             List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
 
@@ -118,7 +118,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<VoucherDTO>> GetAllVoucherForUser()
+        public async Task<List<VoucherDTO>> GetAllVoucherForUserAsync()
         {
             List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
               List<Voucher> getList = await _context.Vouchers
@@ -130,7 +130,7 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<VoucherDTO> GetVoucherById(string voucherId)
+        public async Task<VoucherDTO> GetVoucherByIdAsync(string voucherId)
         {
             VoucherDTO voucherDTO = new VoucherDTO();
             try
@@ -148,7 +148,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateVoucher(VoucherDTO voucherDTO)
+        public async Task<bool> CreateVoucherAsync(VoucherDTO voucherDTO)
         {
             voucherDTO.Isdelete = false;
            
@@ -165,7 +165,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateVoucher(VoucherDTO voucherDTO)
+        public async Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO)
         {
            
                 Voucher? voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
@@ -178,7 +178,7 @@ namespace DataAccess.DAOs
        
         }
 
-        public async Task<bool> DeleteVoucher(string voucherId)
+        public async Task<bool> DeleteVoucherAsync(string voucherId)
         {
             Voucher? voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherId);
             //ánh xạ đối tượng VoucherDTO đc truyền vào cho staff
@@ -200,7 +200,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> PriceAndQuantityByOrder(string voucherId, int quantity)
+        public async Task<bool> PriceAndQuantityByOrderAsync(string voucherId, int quantity)
         {
             Voucher? voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherId);
             
@@ -217,10 +217,10 @@ namespace DataAccess.DAOs
             voucher.Quantity = voucher.Quantity - quantity;
             double price = voucher.Price * quantity;
             if(voucher.QuantityUsed == null) { voucher.QuantityUsed = 0; }
-            if (voucher.TotalPriceUsed == null) { voucher.TotalPriceUsed = 0.0; }
+           // if (voucher.TotalPriceUsed == null) { voucher.TotalPriceUsed = 0.0; }
 
             voucher.QuantityUsed = voucher.QuantityUsed + quantity;
-            voucher.TotalPriceUsed = voucher.TotalPriceUsed + price;
+          //  voucher.TotalPriceUsed = voucher.TotalPriceUsed + price;
 
             _context.Vouchers.Update(voucher);
             await _context.SaveChangesAsync();
@@ -228,7 +228,7 @@ namespace DataAccess.DAOs
         }
 
       
-        public async Task<int> QuantityVoucherUsedStatistics(int ownerId)
+        public async Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId)
         {
             List<Voucher> voucher = await _context.Vouchers.Where(i => i.OwnerId == ownerId).ToListAsync();
             var totalQuantity = voucher.Sum(i => i.QuantityUsed);
@@ -237,7 +237,7 @@ namespace DataAccess.DAOs
 
        
 
-        public async Task<double> PriceVoucherUsedStatistics(int ownerId)
+        public async Task<double> PriceVoucherUsedStatisticsAsync(int ownerId)
         {
             List<Voucher> voucher = await _context.Vouchers.Where(i => i.OwnerId == ownerId).ToListAsync();
             //  var totalPrice = voucher.Sum(i => i.TotalPriceUsed);

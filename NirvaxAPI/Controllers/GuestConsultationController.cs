@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultations(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize)
             {
-                var list = await _repo.GetAllGuestConsultations(searchQuery, page, pageSize);
+                var list = await _repo.GetAllGuestConsultationsAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -52,12 +52,12 @@ namespace WebAPI.Controllers
 
             [HttpGet("{guestId}")]
             //  [Authorize]
-            public async Task<ActionResult> GetGuestConsultationsById(int guestId)
+            public async Task<ActionResult> GetGuestConsultationsByIdAsync(int guestId)
             {
-                var checkSizeExist = await _repo.CheckGuestConsultationExist(guestId);
+                var checkSizeExist = await _repo.CheckGuestConsultationExistAsync(guestId);
                 if (checkSizeExist == true)
                 {
-                    var guestConsultation = await _repo.GetGuestConsultationsById(guestId);
+                    var guestConsultation = await _repo.GetGuestConsultationsByIdAsync(guestId);
 
 
                     return StatusCode(200, new
@@ -80,14 +80,14 @@ namespace WebAPI.Controllers
            
 
             [HttpPost]
-            public async Task<ActionResult> CreateGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+            public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
             {
             if (ModelState.IsValid)
             {
-                var checkGuestConsultation = await _repo.CheckGuestConsultation(guestConsultationDTO);
+                var checkGuestConsultation = await _repo.CheckGuestConsultationAsync(guestConsultationCreateDTO);
                 if (checkGuestConsultation == true)
                 {
-                    var guestConsultation1 = await _repo.CreateGuestConsultation(guestConsultationDTO);
+                    var guestConsultation1 = await _repo.CreateGuestConsultationAsync(guestConsultationCreateDTO);
                     if (guestConsultation1)
                     {
                         return StatusCode(200, new
@@ -132,12 +132,12 @@ namespace WebAPI.Controllers
 
 
             [HttpPut]
-            public async Task<ActionResult> UpdateGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+            public async Task<ActionResult> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO)
             {
-                var checkGuestConsultation = await _repo.CheckGuestConsultationExist(guestConsultationDTO.GuestId);
+                var checkGuestConsultation = await _repo.CheckGuestConsultationExistAsync(guestConsultationDTO.GuestId);
                 if (checkGuestConsultation == true)
                 {
-                    var guestConsultation1 = await _repo.UpdateGuestConsultation(guestConsultationDTO);
+                    var guestConsultation1 = await _repo.UpdateGuestConsultationAsync(guestConsultationDTO);
                     if (guestConsultation1)
                     {
                         return StatusCode(200, new
@@ -169,12 +169,12 @@ namespace WebAPI.Controllers
             }
 
             [HttpPut]
-            public async Task<ActionResult> UpdateStatusGuestConsultationt(int guestId, int statusGuestId)
+            public async Task<ActionResult> UpdateStatusGuestConsultationtAsync(int guestId, int statusGuestId)
             {
-                var checkGuestConsultation = await _repo.CheckGuestConsultationExist(guestId);
+                var checkGuestConsultation = await _repo.CheckGuestConsultationExistAsync(guestId);
                 if (checkGuestConsultation == true)
                 {
-                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationt(guestId, statusGuestId);
+                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtAsync(guestId, statusGuestId);
                     if (guestConsultation1)
                     {
                         return StatusCode(200, new
@@ -205,9 +205,9 @@ namespace WebAPI.Controllers
 
             }
         [HttpGet]
-        public async Task<ActionResult> ViewGuestConsultationStatistics()
+        public async Task<ActionResult> ViewGuestConsultationStatisticsAsync()
         {
-            var number = await _repo.ViewGuestConsultationStatistics();
+            var number = await _repo.ViewGuestConsultationStatisticsAsync();
             if (number != null)
             {
                 return StatusCode(200, new

@@ -29,9 +29,9 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Message>>> ViewUserHistoryChat(int roomId)
+            public async Task<ActionResult<IEnumerable<Message>>> ViewUserHistoryChatAsync(int roomId)
             {
-                var list = await _repo.ViewAllMessageByRoom(roomId);
+                var list = await _repo.ViewAllMessageByRoomAsync(roomId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -49,15 +49,15 @@ namespace WebAPI.Controllers
             }
 
         [HttpPost]
-        public async Task<ActionResult> CreateMessage(MessageDTO messageDTO)
+        public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-            var checkMessage = await _repo.CheckMessage(messageDTO);
+            var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
             if (checkMessage == true)
             {
-                var message1 = await _repo.CreateMessage(messageDTO);
+                var message1 = await _repo.CreateMessageAsync(messageCreateDTO);
                 if (message1)
                 {
-                    var result = await _room.UpdateContentRoom(messageDTO.RoomId);
+                    var result = await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
                     if (result)
                     {
                         return StatusCode(200, new

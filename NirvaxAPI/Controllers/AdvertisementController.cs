@@ -34,9 +34,9 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisements(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
             {
-                var list =await _repo.GetAllAdvertisements(searchQuery, page, pageSize);
+                var list =await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -55,9 +55,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsForUser(string? searchQuery)
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
-            var list =await _repo.GetAllAdvertisementsForUser(searchQuery);
+            var list =await _repo.GetAllAdvertisementsForUserAsync(searchQuery);
             if (list!=null)
             {
                 return StatusCode(200, new
@@ -77,12 +77,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{adId}")]
             //  [Authorize]
-            public async Task<ActionResult> GetAdvertisementById(int adId)
+            public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
             {
-                var checkSizeExist =await _repo.CheckAdvertisementExist(adId);
+                var checkSizeExist =await _repo.CheckAdvertisementExistAsync(adId);
                 if (checkSizeExist == true)
                 {
-                    var advertisement =await _repo.GetAdvertisementById(adId);
+                    var advertisement =await _repo.GetAdvertisementByIdAsync(adId);
 
 
                     return StatusCode(200, new
@@ -104,10 +104,10 @@ namespace WebAPI.Controllers
 
         [HttpGet("{adId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetAdvertisementByIdForUser(int adId)
+        public async Task<ActionResult> GetAdvertisementByIdForUserAsync(int adId)
         {
            
-                var advertisement =await _repo.GetAdvertisementByIdForUser(adId);
+                var advertisement =await _repo.GetAdvertisementByIdForUserAsync(adId);
             if (advertisement != null)
             {
 
@@ -127,15 +127,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-            public async Task<ActionResult> CreateAdvertisement([FromForm] AdvertisementCreateDTO advertisementCreateDTO)
+            public async Task<ActionResult> CreateAdvertisementAsync([FromForm] AdvertisementCreateDTO advertisementCreateDTO)
             {
             if (ModelState.IsValid)
             {
-                var checkAd = await _repo.CheckAdvertisementCreate(advertisementCreateDTO);
+                var checkAd = await _repo.CheckAdvertisementCreateAsync(advertisementCreateDTO);
                 if (checkAd == true)
                 {
                    
-                    var advertisement1 = await _repo.CreateAdvertisement(advertisementCreateDTO);
+                    var advertisement1 = await _repo.CreateAdvertisementAsync(advertisementCreateDTO);
                     if (advertisement1)
                     {
                         return StatusCode(200, new
@@ -178,15 +178,15 @@ namespace WebAPI.Controllers
      
 
             [HttpPut]
-            public async Task<ActionResult> UpdateAdvertisement([FromForm] AdvertisementDTO advertisementDTO)
+            public async Task<ActionResult> UpdateAdvertisementAsync([FromForm] AdvertisementDTO advertisementDTO)
             {
             if (ModelState.IsValid)
             {
-                var checkAd =await _repo.CheckAdvertisement(advertisementDTO);
+                var checkAd =await _repo.CheckAdvertisementAsync(advertisementDTO);
                 if (checkAd == true)
                 {
                     
-                    var advertisement1 =await _repo.UpdateAdvertisement(advertisementDTO);
+                    var advertisement1 =await _repo.UpdateAdvertisementAsync(advertisementDTO);
                     if (advertisement1)
                     {
                         return StatusCode(200, new
@@ -230,12 +230,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateStatusAdvertisement(int adId, int StatusPostId)
+        public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, int StatusPostId)
         { 
-            var checkAd =await _repo.CheckAdvertisementExist(adId);
+            var checkAd =await _repo.CheckAdvertisementExistAsync(adId);
             if (checkAd == true)
             {
-                var advertisement1 =await _repo.UpdateStatusAdvertisement(adId, StatusPostId);
+                var advertisement1 =await _repo.UpdateStatusAdvertisementAsync(adId, StatusPostId);
                 if (advertisement1)
                 {
                     return StatusCode(200, new
@@ -266,9 +266,9 @@ namespace WebAPI.Controllers
 
         }
         [HttpGet]
-        public async Task<ActionResult> ViewOwnerBlogStatistics(int ownerId)
+        public async Task<ActionResult> ViewOwnerBlogStatisticsAsync(int ownerId)
         {
-            var number = await _repo.ViewOwnerBlogStatistics(ownerId);
+            var number = await _repo.ViewOwnerBlogStatisticsAsync(ownerId);
             if (number != null)
             {
                 return StatusCode(200, new
@@ -289,9 +289,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewBlogStatistics()
+        public async Task<ActionResult> ViewBlogStatisticsAsync()
         {
-            var number = await _repo.ViewBlogStatistics();
+            var number = await _repo.ViewBlogStatisticsAsync();
             if (number != null)
             {
                 return StatusCode(200, new

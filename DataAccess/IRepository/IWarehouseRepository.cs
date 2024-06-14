@@ -11,20 +11,20 @@ namespace DataAccess.IRepository
 {
     public interface IWarehouseRepository
     {
-        Task<int> ViewCountImportStatistics(int warehouseId);
-        Task<int> ViewNumberOfProductByImportStatistics(int importId, int ownerId);
-        Task<double> ViewPriceByImportStatistics(int importId, int ownerId);
-        Task<int> QuantityWarehouseStatistics(int ownerId);
-        Task<List<ImportProduct>> GetWarehouseByImportProduct(int ownerId, int page, int pageSize);
-        Task<List<WarehouseDetail>> GetAllWarehouseDetail(int ownerId, int page, int pageSize);
-        Task<Warehouse> GetWarehouseById(int ownerId);
+        Task<int> ViewCountImportStatisticsAsync(int warehouseId);
+        Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId);
+        Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId);
+        Task<int> QuantityWarehouseStatisticsAsync(int ownerId);
+        Task<List<ImportProduct>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize);
+        Task<List<WarehouseDetail>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize);
+        Task<Warehouse> GetWarehouseByIdAsync(int ownerId);
 
-        Task<int> GetWarehouseIdByOwnerId(int ownerId);
-        Task<bool> CheckWarehouse(WarehouseDTO warehouseDTO);
-        Task<Warehouse> UpdateQuantityAndPriceWarehouse(int ownerId);
-        Task<bool> CreateWarehouse(WarehouseDTO warehouseDTO);
+        Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId);
+        Task<bool> CheckWarehouseAsync(WarehouseDTO warehouseDTO);
+        Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId);
+        Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO);
 
-        Task<bool> UpdateWarehouse(WarehouseDTO warehouseDTO);
+        Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO);
 
 
     }

@@ -23,63 +23,63 @@ namespace DataAccess.Repository
         {
             _voucherDAO = voucherDAO;
         }
-        public Task<int> QuantityVoucherUsedStatistics(int ownerId)
+        public Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId)
         {
-            return _voucherDAO.QuantityVoucherUsedStatistics(ownerId);
+            return _voucherDAO.QuantityVoucherUsedStatisticsAsync(ownerId);
 
         }
 
-        public Task<bool> PriceAndQuantityByOrder( string voucherId, int quantity)
+        public Task<bool> PriceAndQuantityByOrderAsync( string voucherId, int quantity)
         {
-            return _voucherDAO.PriceAndQuantityByOrder( voucherId, quantity);
+            return _voucherDAO.PriceAndQuantityByOrderAsync( voucherId, quantity);
         }
-        public Task<double> PriceVoucherUsedStatistics(int ownerId)
+        public Task<double> PriceVoucherUsedStatisticsAsync(int ownerId)
         {
-            return _voucherDAO.PriceVoucherUsedStatistics(ownerId);
+            return _voucherDAO.PriceVoucherUsedStatisticsAsync(ownerId);
 
         }
-        public Task<bool> CheckVoucherById(string voucherId)
+        public Task<bool> CheckVoucherByIdAsync(string voucherId)
         {
-            return _voucherDAO.CheckVoucherById(voucherId);
+            return _voucherDAO.CheckVoucherByIdAsync(voucherId);
         }
-        public Task<bool> CheckVoucher(VoucherDTO voucherDTO)
+        public Task<bool> CheckVoucherAsync(VoucherDTO voucherDTO)
         {
-            return _voucherDAO.CheckVoucher(voucherDTO);
+            return _voucherDAO.CheckVoucherAsync(voucherDTO);
         }
-        public Task<bool> CheckVoucherExist(VoucherDTO voucherDTO)
+        public Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO)
         {
-            return _voucherDAO.CheckVoucherExist(voucherDTO);
+            return _voucherDAO.CheckVoucherExistAsync(voucherDTO);
         }
 
        
-        public Task<List<VoucherDTO>> GetAllVouchers(string? searchQuery, int page, int pageSize)
+        public Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize)
         {
-            return _voucherDAO.GetAllVouchers(searchQuery, page, pageSize);
+            return _voucherDAO.GetAllVouchersAsync(searchQuery, page, pageSize);
         }
 
-       public Task<List<VoucherDTO>> GetAllVoucherForUser()
+       public Task<List<VoucherDTO>> GetAllVoucherForUserAsync()
         {
-            return _voucherDAO.GetAllVoucherForUser();
+            return _voucherDAO.GetAllVoucherForUserAsync();
         }
 
      
-        public Task<VoucherDTO> GetVoucherById(string voucherId)
+        public Task<VoucherDTO> GetVoucherByIdAsync(string voucherId)
         {
-            return _voucherDAO.GetVoucherById(voucherId);
+            return _voucherDAO.GetVoucherByIdAsync(voucherId);
         }
 
-        public Task<bool> CreateVoucher(VoucherDTO voucherDTO)
+        public Task<bool> CreateVoucherAsync(VoucherDTO voucherDTO)
         {
-            return _voucherDAO.CreateVoucher(voucherDTO);
+            return _voucherDAO.CreateVoucherAsync(voucherDTO);
         }
-
-        public Task<bool> UpdateVoucher(VoucherDTO voucherDTO)
+        
+        public Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO)
         {
-            return _voucherDAO.UpdateVoucher(voucherDTO);
+            return _voucherDAO.UpdateVoucherAsync(voucherDTO);
         }
-        public Task<bool> DeleteVoucher(string voucherId)
+        public Task<bool> DeleteVoucherAsync(string voucherId)
         {
-            return _voucherDAO.DeleteVoucher(voucherId);
+            return _voucherDAO.DeleteVoucherAsync(voucherId);
         }
 
     }

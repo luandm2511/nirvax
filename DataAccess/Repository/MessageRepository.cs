@@ -25,23 +25,23 @@ namespace DataAccess.Repository
 
 
 
-        public Task<List<MessageDTO>> ViewAllMessageByRoom(int roomId)
+        public Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
         {
-            return _messageDAO.ViewAllMessageByRoom(roomId);
+            return _messageDAO.ViewAllMessageByRoomAsync(roomId);
         }
 
-        public Task<bool> CheckMessage(MessageDTO messageDTO)
+        public Task<bool> CheckMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-            return _messageDAO.CheckMessage(messageDTO);
+            return _messageDAO.CheckMessageAsync(messageCreateDTO);
         }
-        public Task<bool> CreateMessage(MessageDTO messageDTO)
+        public Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-            return _messageDAO.CreateMessage(messageDTO);
+            return _messageDAO.CreateMessageAsync(messageCreateDTO);
         }
 
-        public Task<bool> CreateMessageFromOwner(Message message)
+        public Task<bool> CreateMessageFromOwnerAsync(Message message)
         {
-            return _messageDAO.CreateMessageFromOwner(message);
+            return _messageDAO.CreateMessageFromOwnerAsync(message);
         }
 
     }

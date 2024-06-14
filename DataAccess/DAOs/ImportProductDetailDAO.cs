@@ -27,7 +27,7 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckImportProductDetailExist(int importProductDetailId)
+        public async Task<bool> CheckImportProductDetailExistAsync(int importProductDetailId)
         {
             ImportProductDetail? sid = new ImportProductDetail();
 
@@ -42,7 +42,7 @@ namespace DataAccess.DAOs
 
 
         //show list theo import Id => detail import đó
-        public async Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportId(int importId)
+        public async Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
             List<ImportProductDetailDTO> listImportProductDetailDTO = new List<ImportProductDetailDTO>();
             List<ImportProductDetail> getList = await _context.ImportProductDetails
@@ -54,7 +54,7 @@ namespace DataAccess.DAOs
         }
 
         // detail list all các detail của import nhưng 
-        public async  Task<List<ImportProductDetailDTO>> GetAllImportProductDetail()
+        public async  Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync()
         {
             List<ImportProductDetailDTO> listImportProductDetailDTO;
             try
@@ -69,7 +69,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> CreateImportProductDetail(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
             var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(i => i.ImportId == importId);
             if (importProduct == null)
@@ -108,7 +108,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> UpdateImportProductDetail(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
             var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(i => i.ImportId == importId);
             List<ImportProductDetail> importProductDetails = await _context.ImportProductDetails.Where(i => i.ImportId == importId).ToListAsync();

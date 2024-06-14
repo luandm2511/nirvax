@@ -11,23 +11,20 @@ namespace DataAccess.IRepository
 {
     public interface IProductSizeRepository
     {
-        Task<bool> CheckProductSize(ProductSizeDTO productSizeDTO);
-        Task<bool> CheckProductSizeExist(string productSizeId);
-        Task<bool> CheckProductSizeById(string productSizeId);
+        Task<bool> CheckProductSizeAsync(ProductSizeDTO productSizeDTO);
+        Task<bool> CheckProductSizeExistAsync(string productSizeId);
+        Task<bool> CheckProductSizeByIdAsync(string productSizeId);
 
 
-        
+        Task<List<ProductSizeDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize);
+        Task<List<ProductSizeDTO>> GetProductSizeByProductIdAsync(int productId);
 
+        Task<ProductSizeDTO> GetProductSizeByIdAsync(string productSizeId);
 
-        Task<List<ProductSizeDTO>> GetAllProductSizes(string? searchQuery, int page, int pageSize);
-        Task<List<ProductSizeDTO>> GetProductSizeByProductId(int productId);
+        Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO, int prodId, int sizeId);
 
-        Task<ProductSizeDTO> GetProductSizeById(string productSizeId);
-
-        Task<bool> CreateProductSize(ProductSizeDTO productSizeDTO);
-
-        Task<bool> UpdateProductSize(ProductSizeDTO productSizeDTO);
-        Task<bool> DeleteProductSize(string productSizeId);
+        Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO);
+        Task<bool> DeleteProductSizeAsync(string productSizeId);
 
     }
 }

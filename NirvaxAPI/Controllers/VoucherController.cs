@@ -24,9 +24,9 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchers(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize)
             {
-                var list = await _repo.GetAllVouchers(searchQuery, page, pageSize);
+                var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -45,9 +45,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherForUser()
+        public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherForUserAsync()
         {
-            var list = await _repo.GetAllVoucherForUser();
+            var list = await _repo.GetAllVoucherForUserAsync();
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -73,12 +73,12 @@ namespace WebAPI.Controllers
 
             [HttpGet("{voucherId}")]
             //  [Authorize]
-            public async Task<ActionResult> GetProductSizeById(string voucherId)
+            public async Task<ActionResult> GetProductSizeByIdAsync(string voucherId)
             {
-                var checkVoucher = await _repo.CheckVoucherById(voucherId);
+                var checkVoucher = await _repo.CheckVoucherByIdAsync(voucherId);
                 if (checkVoucher == true)
                 {
-                    var voucher = await _repo.GetVoucherById(voucherId);
+                    var voucher = await _repo.GetVoucherByIdAsync(voucherId);
                     return StatusCode(200, new
                     {
                         Result = true,
@@ -96,15 +96,15 @@ namespace WebAPI.Controllers
 
             //check exist
             [HttpPost]
-            public async Task<ActionResult> CreateVoucher(VoucherDTO voucherDTO)
+            public async Task<ActionResult> CreateVoucherAsync(VoucherDTO voucherDTO)
             {
             try { 
             if (ModelState.IsValid)
             {
-                var checkVoucher = await _repo.CheckVoucher(voucherDTO);
+                var checkVoucher = await _repo.CheckVoucherAsync(voucherDTO);
                 if (checkVoucher == true)
                 {
-                    var voucher1 = await _repo.CreateVoucher(voucherDTO);
+                    var voucher1 = await _repo.CreateVoucherAsync(voucherDTO);
                     if (voucher1)
                     {
                         return StatusCode(200, new
@@ -158,15 +158,15 @@ namespace WebAPI.Controllers
 
 
             [HttpPut]
-            public async Task<ActionResult> UpdateVoucher(VoucherDTO voucherDTO)
+            public async Task<ActionResult> UpdateVoucherAsync(VoucherDTO voucherDTO)
             {
             try { 
             if (ModelState.IsValid)
             {
-                var checkVoucher = await _repo.CheckVoucherExist(voucherDTO);
+                var checkVoucher = await _repo.CheckVoucherExistAsync(voucherDTO);
                 if (checkVoucher == true)
                 {
-                    var voucher1 = await _repo.UpdateVoucher(voucherDTO);
+                    var voucher1 = await _repo.UpdateVoucherAsync(voucherDTO);
                     if (voucher1)
                     {
                         return StatusCode(200, new
@@ -220,9 +220,9 @@ namespace WebAPI.Controllers
 
 
             [HttpPatch("{voucherId}")]
-            public async Task<ActionResult> DeleteVoucher(string voucherId)
+            public async Task<ActionResult> DeleteVoucherAsync(string voucherId)
             {
-                var voucher1 = await _repo.DeleteVoucher(voucherId);
+                var voucher1 = await _repo.DeleteVoucherAsync(voucherId);
                 if (voucher1)
                 {
                     return StatusCode(200, new
@@ -243,11 +243,11 @@ namespace WebAPI.Controllers
             }
 
         [HttpGet]
-        public async Task<ActionResult> QuantityVoucherUsedStatistics(int ownerId)
+        public async Task<ActionResult> QuantityVoucherUsedStatisticsAsync(int ownerId)
         {
             try
             {
-                var number = await _repo.QuantityVoucherUsedStatistics(ownerId);
+                var number = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
                 if (number != null)
                 {
                     return StatusCode(200, new
@@ -277,10 +277,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> PriceVoucherUsedStatistics(int ownerId)
+        public async Task<ActionResult> PriceVoucherUsedStatisticsAsync(int ownerId)
         {
             try { 
-            var number = await _repo.PriceVoucherUsedStatistics(ownerId);
+            var number = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);
             if (number != null)
             {
                 return StatusCode(200, new
@@ -309,10 +309,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> PriceAndQuantityByOrder(string voucherId, int quantity)
+        public async Task<ActionResult> PriceAndQuantityByOrderAsync(string voucherId, int quantity)
         {
             try {
-                var result = await _repo.PriceAndQuantityByOrder( voucherId, quantity);
+                var result = await _repo.PriceAndQuantityByOrderAsync( voucherId, quantity);
                 if (result == true)
                 {
                     return StatusCode(200, new

@@ -11,21 +11,21 @@ namespace DataAccess.IRepository
 {
     public interface IVoucherRepository
     {
-        Task<bool> CheckVoucher(VoucherDTO voucherDTO);
-        Task<bool> CheckVoucherExist(VoucherDTO voucherDTO);
-        Task<bool> CheckVoucherById(string voucherId);
-        Task<int> QuantityVoucherUsedStatistics(int ownerId);
-        Task<double> PriceVoucherUsedStatistics(int ownerId);
-        Task<List<VoucherDTO>> GetAllVoucherForUser();
-        Task<bool> PriceAndQuantityByOrder( string voucherId, int quantity);
-        Task<List<VoucherDTO>> GetAllVouchers(string? searchQuery, int page, int pageSize);
+        Task<bool> CheckVoucherAsync(VoucherDTO voucherDTO);
+        Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO);
+        Task<bool> CheckVoucherByIdAsync(string voucherId);
+        Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId);
+        Task<double> PriceVoucherUsedStatisticsAsync(int ownerId);
+        Task<List<VoucherDTO>> GetAllVoucherForUserAsync();
+        Task<bool> PriceAndQuantityByOrderAsync( string voucherId, int quantity);
+        Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize);
 
-        Task<VoucherDTO> GetVoucherById(string voucherId);
+        Task<VoucherDTO> GetVoucherByIdAsync(string voucherId);
 
-        Task<bool> CreateVoucher(VoucherDTO voucherDTO);
+        Task<bool> CreateVoucherAsync(VoucherDTO voucherDTO);
 
-        Task<bool> UpdateVoucher(VoucherDTO voucherDTO);
-        Task<bool> DeleteVoucher(string voucherId);
+        Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO);
+        Task<bool> DeleteVoucherAsync(string voucherId);
 
     }
 }

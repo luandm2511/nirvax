@@ -25,46 +25,46 @@ namespace DataAccess.Repository
 
 
 
-        public Task<List<RoomDTO>> ViewUserHistoryChat(int accountId)
+        public Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
         {
             
-            return _roomDAO.ViewUserHistoryChat(accountId); 
+            return _roomDAO.ViewUserHistoryChatAsync(accountId); 
         }
         
-        public Task<List<RoomDTO>> ViewOwnerHistoryChat(int ownerId)
+        public Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
         {
 
-            return _roomDAO.ViewOwnerHistoryChat(ownerId);
+            return _roomDAO.ViewOwnerHistoryChatAsync(ownerId);
         }
 
-        public Task<bool> CreateRoom(RoomDTO roomDTO)
+        public Task<bool> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
-            return _roomDAO.CreateRoom(roomDTO);
+            return _roomDAO.CreateRoomAsync(roomCreateDTO);
         }
-        public Task<bool> CheckRoom(RoomDTO roomDTO)
+        public Task<bool> CheckRoomAsync(int accountId, int ownerId)
         {
-            return _roomDAO.CheckRoom(roomDTO);
-        }
-
-        public Task<bool> UpdateContentRoom(int roomId)
-        {
-            return _roomDAO.UpdateContentRoom(roomId);
+            return _roomDAO.CheckRoomAsync(accountId, ownerId);
         }
 
-
-
-        public Task<RoomDTO> GetRoomById(int roomId)
+        public Task<bool> UpdateContentRoomAsync(int roomId)
         {
-            return _roomDAO.GetRoomById(roomId);
+            return _roomDAO.UpdateContentRoomAsync(roomId);
         }
 
-        public Task<int> GetRoomIdByAccountIdAndOwnerId(int accountId, int ownerId)
+
+
+        public Task<RoomDTO> GetRoomByIdAsync(int roomId)
         {
-            return _roomDAO.GetRoomIdByAccountIdAndOwnerId(accountId, ownerId);
+            return _roomDAO.GetRoomByIdAsync(roomId);
         }
-        public Task<RoomDTO> GetRoomByAccountIdAndOwnerId(int accountId, int ownerId)
+
+        public Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-            return _roomDAO.GetRoomByAccountIdAndOwnerId(accountId, ownerId);
+            return _roomDAO.GetRoomIdByAccountIdAndOwnerIdAsync(accountId, ownerId);
+        }
+        public Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
+        {
+            return _roomDAO.GetRoomByAccountIdAndOwnerIdAsync(accountId, ownerId);
         }
 
     }

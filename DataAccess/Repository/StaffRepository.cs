@@ -26,71 +26,71 @@ namespace DataAccess.Repository
        
 
 
-        public Task<List<StaffDTO>> GetAllStaffs(string? searchQuery, int page, int pageSize)
+        public Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize)
         {
 
-            return _staffDAO.GetAllStaffs(searchQuery, page, pageSize);
+            return _staffDAO.GetAllStaffsAsync(searchQuery, page, pageSize);
         }
 
 
 
 
-    public Task<StaffDTO> GetStaffById(int staffId)
+    public Task<StaffDTO> GetStaffByIdAsync(int staffId)
         {
-            return _staffDAO.GetStaffById(staffId);
+            return _staffDAO.GetStaffByIdAsync(staffId);
         }
 
-public Task<StaffDTO> GetStaffByEmail(string ownerEmail)
+public Task<StaffDTO> GetStaffByEmailAsync(string ownerEmail)
 {
-    return (_staffDAO.GetStaffByEmail(ownerEmail));
+    return (_staffDAO.GetStaffByEmailAsync(ownerEmail));
 }
 
 
-public Task<bool> CheckStaff(StaffDTO staffDTO)
+public Task<bool> CheckStaffAsync(int staffId, string email, string phone)
 {
-    return _staffDAO.CheckStaff(staffDTO);
+    return _staffDAO.CheckStaffAsync(staffId, email, phone);
 }
-public Task<bool> CheckStaffExist(int staffId)
+public Task<bool> CheckStaffExistAsync(int staffId)
 {
-    return _staffDAO.CheckStaffExist(staffId);
+    return _staffDAO.CheckStaffExistAsync(staffId);
 }
-public Task<bool> CheckProfileStaff(StaffProfileDTO staffProfileDTO)
+public Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO)
 {
-    return _staffDAO.CheckProfileStaff(staffProfileDTO);
-}
-
-public Task<bool> CheckProfileExist(string ownerEmail)
-{
-    return _staffDAO.CheckProfileExist(ownerEmail);
+    return _staffDAO.CheckProfileStaffAsync(staffProfileDTO);
 }
 
-public Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword)
+public Task<bool> CheckProfileExistAsync(string ownerEmail)
 {
-    return _staffDAO.ChangePasswordStaff(staffId, oldPassword, newPasswod, confirmPassword);
+    return _staffDAO.CheckProfileExistAsync(ownerEmail);
 }
 
-public Task<bool> CreateStaff(StaffDTO staffDTO)
+public Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword)
 {
-    return _staffDAO.CreateStaff(staffDTO);
+    return _staffDAO.ChangePasswordStaffAsync(staffId, oldPassword, newPasswod, confirmPassword);
 }
 
-public Task<bool> UpdateStaff(StaffDTO staffDTO)
+public Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO)
 {
-    return _staffDAO.UpdateStaff(staffDTO);
+    return _staffDAO.CreateStaffAsync(staffCreateDTO);
 }
 
-public Task<bool> UpdateProfileStaff(StaffProfileDTO staffProfileDTO)
+public Task<bool> UpdateStaffAsync(StaffDTO staffDTO)
 {
-    return _staffDAO.UpdateProfileStaff(staffProfileDTO);
+    return _staffDAO.UpdateStaffAsync(staffDTO);
 }
 
-        public Task<bool> UpdateAvatarStaff(StaffAvatarDTO staffAvatarDTO)
+public Task<bool> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
+{
+    return _staffDAO.UpdateProfileStaffAsync(staffProfileDTO);
+}
+
+        public Task<bool> UpdateAvatarStaffAsync(StaffAvatarDTO staffAvatarDTO)
         {
-            return _staffDAO.UpdateAvatarStaff(staffAvatarDTO);
+            return _staffDAO.UpdateAvatarStaffAsync(staffAvatarDTO);
         }
-public Task<bool> BanStaff(int staffId)
+public Task<bool> BanStaffAsync(int staffId)
 {
-    return _staffDAO.BanStaff(staffId);
+    return _staffDAO.BanStaffAsync(staffId);
 }
 
 

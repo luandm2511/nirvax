@@ -20,48 +20,50 @@ namespace DataAccess.DAOs
 
         private readonly NirvaxContext _context;
         private readonly IMapper _mapper;
-        private IFileService _fileService;
+        
 
 
 
-        public StaffDAO(IFileService fs, NirvaxContext context, IMapper mapper)
+        public StaffDAO( NirvaxContext context, IMapper mapper)
         {
-            this._fileService = fs;
+           
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckStaff(StaffDTO staffDTO)
+        public async Task<bool> CheckStaffAsync(int staffId, string email, string phone)
         {
-
-            Staff? Staff = new Staff();
-            Staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffDTO.StaffId);
-            Staff? StaffCreate = new Staff();
-            StaffCreate = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == staffDTO.Email || i.Phone == staffDTO.Phone);
-            if (Staff != null)
+           
+            if (staffId == 0)
             {
-                List<Staff> getList = await _context.Staff
-                 
-                 //check khác Id`
-                 .Where(i => i.StaffId != staffDTO.StaffId)
-                 .Where(i => i.Email == staffDTO.Email || i.Phone == staffDTO.Phone)
-                 .ToListAsync();
-                if (getList.Count > 0)
-                {
-                    return false;
-                }
-                else
+                Staff? Staff = new Staff();
+                Staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == email || i.Phone == phone);
+                if(Staff == null)
                 {
                     return true;
                 }
-            } else if (StaffCreate == null && Staff == null){
-              
-                return true;
+            } else
+            {       
+                    List<Staff> getList = await _context.Staff
+                     .Where(i => i.StaffId != staffId)
+                     .Where(i => i.Email == email || i.Phone == phone)
+                     .ToListAsync();
+
+                    if (getList.Count > 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                
             }
+
             return false;
         }
 
-        public async Task<bool> CheckProfileStaff(StaffProfileDTO staffProfileDTO)
+        public async Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
             // StaffDTO checkownerDTO = new StaffDTO();
             Staff? Staff = new Staff();
@@ -86,7 +88,7 @@ namespace DataAccess.DAOs
             return false;
         }
         //check xem owner đó có tồn tại hay không
-        public async Task<bool> CheckStaffExist(int staffId)
+        public async Task<bool> CheckStaffExistAsync(int staffId)
         {
             Staff? sid = new Staff();
 
@@ -98,7 +100,7 @@ namespace DataAccess.DAOs
             }
             return true;
         }
-        public async Task<bool> CheckProfileExist(string staffEmail)
+        public async Task<bool> CheckProfileExistAsync(string staffEmail)
         {
             Staff? sid = new Staff();
 
@@ -113,7 +115,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword)
+        public async Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword)
         {
             //check password             
             Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
@@ -147,7 +149,7 @@ namespace DataAccess.DAOs
 
 
         //owner
-        public async Task<List<StaffDTO>> GetAllStaffs(string? searchQuery, int page, int pageSize)
+        public async Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize)
         {
             List<StaffDTO> listStaffDTO = new List<StaffDTO>();
 
@@ -175,7 +177,7 @@ namespace DataAccess.DAOs
         }
 
         //details
-        public async Task<StaffDTO> GetStaffById(int staffId)
+        public async Task<StaffDTO> GetStaffByIdAsync(int staffId)
         {
             StaffDTO staffDTO = new StaffDTO();
             try
@@ -189,7 +191,7 @@ namespace DataAccess.DAOs
         }
 
         //profile
-        public async Task<StaffDTO> GetStaffByEmail(string staffEmail)
+        public async Task<StaffDTO> GetStaffByEmailAsync(string staffEmail)
         {
             StaffDTO staffDTO = new StaffDTO();
             try
@@ -204,12 +206,12 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateStaff(StaffDTO staffDTO)
+        public async Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO)
         {
             
-            string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(staffDTO.Password);
-            staffDTO.Password = newpasswordHash;
-            Staff staff = _mapper.Map<Staff>(staffDTO);
+            string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(staffCreateDTO.Password);
+            staffCreateDTO.Password = newpasswordHash;
+            Staff staff = _mapper.Map<Staff>(staffCreateDTO);
 
 
             await _context.Staff.AddAsync(staff);
@@ -226,7 +228,7 @@ namespace DataAccess.DAOs
 
         //oldPass = xyz
         //newPass =1234
-        public async Task<bool> UpdateStaff(StaffDTO staffDTO)
+        public async Task<bool> UpdateStaffAsync(StaffDTO staffDTO)
         {
             StaffDTO newStaff;
             newStaff = staffDTO;
@@ -251,7 +253,7 @@ namespace DataAccess.DAOs
         }
 
         //owner
-        public async Task<bool> UpdateProfileStaff(StaffProfileDTO staffProfileDTO)
+        public async Task<bool> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffProfileDTO.StaffId);
 
@@ -268,7 +270,7 @@ namespace DataAccess.DAOs
           
 
         }
-        public async Task<bool> UpdateAvatarStaff(StaffAvatarDTO staffAvatarDTO)
+        public async Task<bool> UpdateAvatarStaffAsync(StaffAvatarDTO staffAvatarDTO)
         {
            
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffAvatarDTO.StaffId);
@@ -281,7 +283,7 @@ namespace DataAccess.DAOs
 
 
         }
-        public async Task<bool> BanStaff(int staffId)
+        public async Task<bool> BanStaffAsync(int staffId)
         {
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
             //ánh xạ đối tượng staffdto đc truyền vào cho Staff

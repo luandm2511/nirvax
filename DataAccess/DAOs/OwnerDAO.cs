@@ -20,14 +20,14 @@ namespace DataAccess.DAOs
 
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
-        private IFileService _fileService;
+      //  private IFileService _fileService;
 
 
 
 
-        public  OwnerDAO(IFileService fs,NirvaxContext context, IMapper mapper)
+        public  OwnerDAO(NirvaxContext context, IMapper mapper)
         {
-            this._fileService = fs;
+           // this._fileService = fs;
              _context = context;
             _mapper = mapper;
         }
@@ -35,14 +35,14 @@ namespace DataAccess.DAOs
 
 
         // thống kê tổng tài khoản owner
-        public async Task<int> NumberOfOwnerStatistics()
+        public async Task<int> NumberOfOwnerStatisticsAsync()
         {
             var number = await _context.Owners.Where(i=> i.IsBan == false).CountAsync();
             return number;
         }
 
 
-        public async Task<bool> CheckOwner(OwnerDTO ownerDTO)
+        public async Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO)
         {
             // OwnerDTO checkownerDTO = new OwnerDTO();
             Owner? owner = new Owner();
@@ -67,7 +67,7 @@ namespace DataAccess.DAOs
             return false;
         }
 
-        public async Task<bool> CheckProfileOwner(OwnerProfileDTO ownerProfileDTO)
+        public async Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
             // OwnerDTO checkownerDTO = new OwnerDTO();
             Owner? owner = new Owner();
@@ -92,7 +92,7 @@ namespace DataAccess.DAOs
             return false;
         }
         //check xem owner đó có tồn tại hay không
-        public async Task<bool> CheckOwnerExist(int ownerId)
+        public async Task<bool> CheckOwnerExistAsync(int ownerId)
         {
             Owner? sid = new Owner();
 
@@ -104,7 +104,7 @@ namespace DataAccess.DAOs
             }
             return true;
         }
-        public async Task<bool> CheckProfileExist(string ownerEmail)
+        public async Task<bool> CheckProfileExistAsync(string ownerEmail)
         {
             Owner? sid = new Owner();
 
@@ -119,7 +119,7 @@ namespace DataAccess.DAOs
 
        
 
-        public async Task<bool> ChangePasswordOwner(int ownerId, string oldPassword, string newPasswod)
+        public async Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
         { 
                 //check password             
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);  
@@ -140,7 +140,7 @@ namespace DataAccess.DAOs
 
 
         //admin
-        public async Task<List<OwnerDTO>> GetAllOwners(string? searchQuery, int page, int pageSize)
+        public async Task<List<OwnerDTO>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
             List<OwnerDTO> listOwnerDTO = new List<OwnerDTO>();
 
@@ -169,7 +169,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<OwnerDTO>> GetAllOwnersForUser(string? searchQuery)
+        public async Task<List<OwnerDTO>> GetAllOwnersForUserAsync(string? searchQuery)
         {
             List<OwnerDTO> listOwnerDTO = new List<OwnerDTO>();
 
@@ -193,7 +193,7 @@ namespace DataAccess.DAOs
         }
 
         //admin
-        public async Task<OwnerDTO> GetOwnerById(int ownerId)
+        public async Task<OwnerDTO> GetOwnerByIdAsync(int ownerId)
         {
             OwnerDTO ownerDTO = new OwnerDTO();
             try
@@ -207,7 +207,7 @@ namespace DataAccess.DAOs
         }
 
         //profile
-        public async Task<OwnerDTO> GetOwnerByEmail(string ownerEmail)
+        public async Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail)
         {
             OwnerDTO ownerDTO = new OwnerDTO();
             try
@@ -222,7 +222,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateOwner(OwnerDTO ownerDTO)
+        public async Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO)
         {
             string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(ownerDTO.Password);
             Owner owner = _mapper.Map<Owner>(ownerDTO);
@@ -239,7 +239,7 @@ namespace DataAccess.DAOs
         }
 
         //admin
-        public async Task<bool> UpdateOwner(OwnerDTO ownerDTO)
+        public async Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerDTO.OwnerId);
                 _mapper.Map(ownerDTO, owner);
@@ -250,7 +250,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateAvatarOwner(OwnerAvatarDTO ownerAvatarDTO)
+        public async Task<bool> UpdateAvatarOwnerAsync(OwnerAvatarDTO ownerAvatarDTO)
         {
             
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerAvatarDTO.OwnerId);
@@ -266,7 +266,7 @@ namespace DataAccess.DAOs
         }
 
         //owner
-        public async Task<bool> UpdateProfileOwner(OwnerProfileDTO ownerProfileDTO)
+        public async Task<bool> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
 
@@ -284,7 +284,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> BanOwner(int ownerId)
+        public async Task<bool> BanOwnerAsync(int ownerId)
         {
             Owner? owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerId);
             //ánh xạ đối tượng staffdto đc truyền vào cho staff
@@ -303,8 +303,9 @@ namespace DataAccess.DAOs
 
 
         }
+        
 
-        public async Task<bool> UnBanOwner(int ownerId)
+        public async Task<bool> UnBanOwnerAsync(int ownerId)
         {
             Owner? owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerId);
             //ánh xạ đối tượng staffdto đc truyền vào cho staff

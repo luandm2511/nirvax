@@ -21,13 +21,13 @@ namespace WebAPI.Controllers
             _config = config;
             _repo = repo;
         }
-
+        
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProduct(int warehouseId,DateTime? from, DateTime? to)
+        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
         {
-            var list = await _repo.GetAllImportProduct(warehouseId,from, to);
+            var list = await _repo.GetAllImportProductAsync(warehouseId,from, to);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -47,12 +47,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{importId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetImportProductById(int importId)
+        public async Task<ActionResult> GetImportProductByIdAsync(int importId)
         {
-            var checkSizeExist = await _repo.CheckImportProductExist(importId);
+            var checkSizeExist = await _repo.CheckImportProductExistAsync(importId);
             if (checkSizeExist == true)
             {
-                var importProduct = await _repo.GetImportProductById(importId);
+                var importProduct = await _repo.GetImportProductByIdAsync(importId);
 
 
                 return StatusCode(200, new
@@ -73,10 +73,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateImportProduct(ImportProductDTO importProductDTO)
+        public async Task<ActionResult> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
         {
             try { 
-                var importProduct1 = await _repo.CreateImportProduct(importProductDTO);
+                var importProduct1 = await _repo.CreateImportProductAsync(importProductCreateDTO);
                 if (importProduct1)
                 {
                     return StatusCode(200, new
@@ -110,10 +110,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateImportProduct(ImportProductDTO importProductDTO)
+        public async Task<ActionResult> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
            
-                var importProduct1 = await _repo.UpdateImportProduct(importProductDTO);
+                var importProduct1 = await _repo.UpdateImportProductAsync(importProductDTO);
                 if (importProduct1)
                 {
                     return StatusCode(200, new

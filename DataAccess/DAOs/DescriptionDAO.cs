@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Azure;
 using Azure.Core;
+using System.Numerics;
 
 namespace DataAccess.DAOs
 {
@@ -29,23 +30,26 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckDescription(DescriptionDTO descriptionDTO)
+        public async Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content)
         {
-
-            Description? description = new Description();
-            description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionDTO.DescriptionId);
-            Description? sizeCreate = new Description();
-            sizeCreate = await _context.Descriptions.SingleOrDefaultAsync(i => i.Content.Trim() == descriptionDTO.Content.Trim() || i.Title.Trim() == descriptionDTO.Title.Trim());
-            if (description != null)
+            if (descriptionId == 0)
+            {
+                Description? des = new Description();
+                des = await _context.Descriptions.SingleOrDefaultAsync(i => i.Content.Trim() == content.Trim() || i.Title.Trim() == title.Trim());
+                if (des == null)
+                {
+                    return true;
+                }
+            }
+            else
             {
                 List<Description> getList = await _context.Descriptions
-               //  .Where(i => i.Isdelete == false)
-                 //check khác Id`
-                 .Where(i => i.DescriptionId != descriptionDTO.DescriptionId)
-                 .Where(i => i.Content == descriptionDTO.Content)
-                 .Where(i => i.Title == descriptionDTO.Title)
+      
+                .Where(i => i.DescriptionId != descriptionId)
+                .Where(i => i.Content.Trim() == content.Trim())
+                .Where(i => i.Title.Trim() == title.Trim())
+                .ToListAsync();
 
-                 .ToListAsync();
                 if (getList.Count > 0)
                 {
                     return false;
@@ -54,15 +58,14 @@ namespace DataAccess.DAOs
                 {
                     return true;
                 }
+
             }
-            else if (sizeCreate == null && description == null)
-            {
-                return true;
-            }
-                return false;
+
+            return false;
+          
         }
 
-        public async Task<bool> CheckDescriptionExist(int descriptionId)
+        public async Task<bool> CheckDescriptionExistAsync(int descriptionId)
         {
             Description? sid = new Description();
 
@@ -77,7 +80,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<DescriptionDTO>> GetAllDescriptions(string? searchQuery, int page, int pageSize)
+        public async Task<List<DescriptionDTO>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
         {
             List<DescriptionDTO> listSizeDTO = new List<DescriptionDTO>();
 
@@ -104,7 +107,7 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<DescriptionDTO> GetDescriptionById(int descriptionId)
+        public async Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
         {
             DescriptionDTO descriptionDTO = new DescriptionDTO();
             try
@@ -123,10 +126,10 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateDesctiption(DescriptionDTO descriptionDTO)
+        public async Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
-            descriptionDTO.Isdelete = false;
-            Description description = _mapper.Map<Description>(descriptionDTO);
+            descriptionCreateDTO.Isdelete = false;
+            Description description = _mapper.Map<Description>(descriptionCreateDTO);
             await _context.Descriptions.AddAsync(description);
             int i = await _context.SaveChangesAsync();
             if (i > 0)
@@ -137,7 +140,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateDesctiption(DescriptionDTO descriptionDTO)
+        public async Task<bool> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
         {
             Description? description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionDTO.DescriptionId);
             //ánh xạ đối tượng DescriptionDTO đc truyền vào cho staff
@@ -148,7 +151,7 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> DeleteDesctiption(int descriptionId)
+        public async Task<bool> DeleteDesctiptionAsync(int descriptionId)
         {
             Description? description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);
             //ánh xạ đối tượng DescriptionDTO đc truyền vào cho staff

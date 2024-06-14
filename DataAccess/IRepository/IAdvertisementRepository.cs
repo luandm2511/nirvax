@@ -11,19 +11,19 @@ namespace DataAccess.IRepository
 {
      public interface IAdvertisementRepository
     {
-        Task<AdvertisementDTO> GetAdvertisementById(int adId);
-        Task<int> ViewOwnerBlogStatistics(int ownerId);
-        Task<int> ViewBlogStatistics();
-        Task<AdvertisementDTO> GetAdvertisementByIdForUser(int adId);
-        Task<bool> CheckAdvertisementCreate(AdvertisementCreateDTO advertisementCreateDTO);
+        Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId);
+        Task<int> ViewOwnerBlogStatisticsAsync(int ownerId);
+        Task<int> ViewBlogStatisticsAsync();
+        Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId);
+        Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO);
         
-        Task<bool> CreateAdvertisement(AdvertisementCreateDTO advertisementCreateDTO);
-        Task<bool> UpdateAdvertisement(AdvertisementDTO advertisementDTO);
+        Task<bool> CreateAdvertisementAsync(AdvertisementCreateDTO advertisementCreateDTO);
+        Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO);
 
-        Task<bool> CheckAdvertisementExist(int adId);
-        Task<bool> CheckAdvertisement(AdvertisementDTO advertisementDTO);
-         Task<bool> UpdateStatusAdvertisement(int adId, int statusPostId);
-        Task<List<AdvertisementDTO>> GetAllAdvertisements(string? searchQuery, int page, int pageSize);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsForUser(string? searchQuery);
+        Task<bool> CheckAdvertisementExistAsync(int adId);
+        Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO);
+         Task<bool> UpdateStatusAdvertisementAsync(int adId, int statusPostId);
+        Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);
+        Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery);
     }
 }

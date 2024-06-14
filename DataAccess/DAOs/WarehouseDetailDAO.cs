@@ -27,7 +27,7 @@ namespace DataAccess.DAOs
 
         
 
-        public async Task<bool> CheckWarehouseDetailExist(int warehouseId)
+        public async Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
         {
             WarehouseDetail? sid = new WarehouseDetail();
 
@@ -40,13 +40,13 @@ namespace DataAccess.DAOs
             return true;
         }
 
-
+        
       
         //khi thêm vô
         //gọi lại lệnh fetch
         //thực thi theo productSizeId
         //cùng productSizeId thì cộng quantity và price
-        public async Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSize(int warehouseId, int page, int pageSize)
+        public async Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
         {
            List<WarehouseDetail> listWarehouseDetail= new List<WarehouseDetail>();
           var result= await _context.WarehouseDetails
@@ -76,7 +76,7 @@ namespace DataAccess.DAOs
         }
 
         //tổng số loại sản phẩm => số sản phẩm theo productSizeId
-        public async Task<int> SumOfKindProdSizeStatistics(int warehouseId)
+        public async Task<int> SumOfKindProdSizeStatisticsAsync(int warehouseId)
         {
 
             var sumKindProduct = await _context.WarehouseDetails.Where(i => i.WarehouseId == warehouseId).GroupBy(w => w.ProductSizeId).CountAsync();
@@ -84,7 +84,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> CreateWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public async Task<bool> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
           
             WarehouseDetail warehouseDetail = _mapper.Map<WarehouseDetail>(warehouseDetailDTO);
@@ -99,7 +99,7 @@ namespace DataAccess.DAOs
         }
 
         //update product size, create warehouse detail
-        public async Task<bool> PatchWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public async Task<bool> PatchWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
             ProductSize productSize;
             productSize = await _context.ProductSizes.FirstOrDefaultAsync(i => i.ProductSizeId == warehouseDetailDTO.ProductSizeId);
@@ -117,7 +117,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public async Task<bool> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
             WarehouseDetail? warehouseDetail = await _context.WarehouseDetails.SingleOrDefaultAsync(i => i.WarehouseId == warehouseDetailDTO.WarehouseId);
             //ánh xạ đối tượng WarehouseDetailDTO đc truyền vào cho staff

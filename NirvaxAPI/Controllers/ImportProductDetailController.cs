@@ -25,9 +25,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetail()
+        public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailAsync()
         {
-            var list = await _repo.GetAllImportProductDetail();
+            var list = await _repo.GetAllImportProductDetailAsync();
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -46,9 +46,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailByImportId(int importId)
+        public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
-            var list = await _repo.GetAllImportProductDetailByImportId(importId);
+            var list = await _repo.GetAllImportProductDetailByImportIdAsync(importId);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -67,11 +67,11 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         //  [Authorize]
-        public async Task<ActionResult> CreateImportProductDetail(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<ActionResult> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
             try
             {
-                var importProductDetail = await _repo.CreateImportProductDetail(importId, importProductDetailDTO);
+                var importProductDetail = await _repo.CreateImportProductDetailAsync(importId, importProductDetailDTO);
 
                 if (importProductDetail == true)
                 {
@@ -104,11 +104,11 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         //  [Authorize]
-        public async Task<ActionResult> UpdateImportProductDetail(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<ActionResult> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
             try
             {
-                var importProductDetail = await _repo.UpdateImportProductDetail(importId, importProductDetailDTO);
+                var importProductDetail = await _repo.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
 
                 if (importProductDetail == true)
                 {

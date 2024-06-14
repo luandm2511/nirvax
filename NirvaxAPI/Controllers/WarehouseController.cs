@@ -27,10 +27,10 @@ namespace WebAPI.Controllers
 
         [HttpGet("{ownerId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetWarehouseIdByOwnerId(int ownerId)
+        public async Task<ActionResult> GetWarehouseIdByOwnerIdAsync(int ownerId)
         {
             
-                var warehouse = await _repo.GetWarehouseIdByOwnerId(ownerId);
+                var warehouse = await _repo.GetWarehouseIdByOwnerIdAsync(ownerId);
             if (warehouse != null)
             {
                 return StatusCode(200, new
@@ -54,14 +54,14 @@ namespace WebAPI.Controllers
 
         [HttpGet("{ownerId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetWarehouseByOwner(int ownerId)
+        public async Task<ActionResult> GetWarehouseByOwnerAsync(int ownerId)
         {
           
-                var wh = await _repo.GetWarehouseById(ownerId);
+                var wh = await _repo.GetWarehouseByIdAsync(ownerId);
 
                 if (wh != null)
                 {
-                   var result = await _repo.UpdateQuantityAndPriceWarehouse(ownerId);
+                   var result = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
                    if (result != null)
                    {
                     return StatusCode(200, new
@@ -84,12 +84,12 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetWarehouseByImportProduct(int ownerId, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
         {
-            var list = await _repo.GetWarehouseByImportProduct(ownerId,  page,  pageSize);
+            var list = await _repo.GetWarehouseByImportProductAsync(ownerId,  page,  pageSize);
             if (list.Any())
             {
-                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouse(ownerId);
+                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
                 if(numberOfWarehouse != null)
                 {
                     return StatusCode(200, new
@@ -112,12 +112,12 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<WarehouseDetail>>> GetAllWarehouseDetail(int ownerId, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<WarehouseDetail>>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
         {
-            var list = await _repo.GetAllWarehouseDetail(ownerId, page, pageSize);
+            var list = await _repo.GetAllWarehouseDetailAsync(ownerId, page, pageSize);
             if (list.Any())
             {
-                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouse(ownerId);
+                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
                 if (numberOfWarehouse != null)
                 {
                     return StatusCode(200, new
@@ -144,11 +144,11 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         //  [Authorize]
-        public async Task<ActionResult> CreateWarehouse(WarehouseDTO warehouseDTO)
+        public async Task<ActionResult> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
         {
             try
             {
-                var warehouse = await _repo.CreateWarehouse(warehouseDTO);
+                var warehouse = await _repo.CreateWarehouseAsync(warehouseCreateDTO);
 
                 if (warehouse == true)
                 {
@@ -178,11 +178,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateWarehouse(WarehouseDTO warehouseDTO)
+        public async Task<ActionResult> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
         {
             try
             {
-                var size1 = await _repo.UpdateWarehouse(warehouseDTO);
+                var size1 = await _repo.UpdateWarehouseAsync(warehouseDTO);
                 if (size1)
                 {
                     return StatusCode(200, new
@@ -213,9 +213,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewCountImportStatistics(int warehouseId)
+        public async Task<ActionResult> ViewCountImportStatisticsAsync(int warehouseId)
         {
-            var number = await _repo.ViewCountImportStatistics(warehouseId);
+            var number = await _repo.ViewCountImportStatisticsAsync(warehouseId);
             if (number != null)
             {
                 return StatusCode(200, new
@@ -236,9 +236,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewNumberOfProductByImportStatistics(int importId, int ownerId)
+        public async Task<ActionResult> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId)
         {
-            var number = await _repo.ViewNumberOfProductByImportStatistics(importId, ownerId);
+            var number = await _repo.ViewNumberOfProductByImportStatisticsAsync(importId, ownerId);
             if (number != null)
             {
                 return StatusCode(200, new
@@ -259,9 +259,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewPriceByImportStatistics(int importId, int ownerId)
+        public async Task<ActionResult> ViewPriceByImportStatisticsAsync(int importId, int ownerId)
         {
-            var number = await _repo.ViewPriceByImportStatistics(importId, ownerId);
+            var number = await _repo.ViewPriceByImportStatisticsAsync(importId, ownerId);
             if (number != null)
             {
                 return StatusCode(200, new
@@ -282,9 +282,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> QuantityWarehouseStatistics(int ownerId)
+        public async Task<ActionResult> QuantityWarehouseStatisticsAsync(int ownerId)
         {
-            var number = await _repo.QuantityWarehouseStatistics(ownerId);
+            var number = await _repo.QuantityWarehouseStatisticsAsync(ownerId);
             if (number != null)
             {
                 return StatusCode(200, new

@@ -11,30 +11,30 @@ namespace DataAccess.IRepository
 {
     public interface IOwnerRepository
     {
-        Task<int> NumberOfOwnerStatistics();
-        Task<List<OwnerDTO>> GetAllOwners(string? searchQuery, int page, int pageSize);
+        Task<int> NumberOfOwnerStatisticsAsync();
+        Task<List<OwnerDTO>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize);
 
-        Task<List<OwnerDTO>> GetAllOwnersForUser(string? searchQuery);
-        Task<OwnerDTO> GetOwnerById(int ownerId);
-        Task<OwnerDTO> GetOwnerByEmail(string ownerEmail);
+        Task<List<OwnerDTO>> GetAllOwnersForUserAsync(string? searchQuery);
+        Task<OwnerDTO> GetOwnerByIdAsync(int ownerId);
+        Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail);
 
-        Task<bool> CheckOwner(OwnerDTO ownerDTO);
-       Task<bool> CheckProfileOwner(OwnerProfileDTO ownerProfileDTO);
-        Task<bool> ChangePasswordOwner(int  ownerId, string oldPassword, string newPasswod);
+        Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO);
+       Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
+        Task<bool> ChangePasswordOwnerAsync(int  ownerId, string oldPassword, string newPasswod);
 
-        Task<bool> CheckOwnerExist(int ownerId);
+        Task<bool> CheckOwnerExistAsync(int ownerId);
 
-        Task<bool> CheckProfileExist(string ownerEmail);
+        Task<bool> CheckProfileExistAsync(string ownerEmail);
 
 
-        Task<bool> CreateOwner(OwnerDTO ownerDTO);
+        Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO);
 
-        Task<bool> UpdateOwner(OwnerDTO ownerDTO);
-        Task<bool> UpdateProfileOwner(OwnerProfileDTO ownerProfileDTO);
-        Task<bool> UpdateAvatarOwner(OwnerAvatarDTO ownerAvatarDTO);
+        Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO);
+        Task<bool> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
+        Task<bool> UpdateAvatarOwnerAsync(OwnerAvatarDTO ownerAvatarDTO);
 
-        Task<bool> BanOwner(int ownerId);
-        Task<bool> UnBanOwner(int ownerId);
+        Task<bool> BanOwnerAsync(int ownerId);
+        Task<bool> UnBanOwnerAsync(int ownerId);
 
 
     }

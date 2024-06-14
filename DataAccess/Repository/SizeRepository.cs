@@ -23,44 +23,44 @@ namespace DataAccess.Repository
             _sizeDAO = sizeDAO;
         }
 
-        public Task<bool> CheckSize(SizeDTO sizeDTO)
+        public Task<bool> CheckSizeAsync(int sizeId, int ownerId, string name)
         {
-            return _sizeDAO.CheckSize(sizeDTO); 
+            return _sizeDAO.CheckSizeAsync(sizeId, ownerId, name); 
         }
 
 
-        public Task<bool> CheckSizeExist(int sizeId)
+        public Task<bool> CheckSizeExistAsync(int sizeId)
         {
-            return _sizeDAO.CheckSizeExist(sizeId);
+            return _sizeDAO.CheckSizeExistAsync(sizeId);
         }
 
-        public Task<List<SizeDTO>> GetAllSizes(string? searchQuery, int page, int pageSize)
+        public Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize)
         {
             
-            return _sizeDAO.GetAllSizes(searchQuery, page,  pageSize);
+            return _sizeDAO.GetAllSizesAsync(searchQuery, page,  pageSize);
         }
 
-        public Task<SizeDTO> GetSizeById(int sizeId)
+        public Task<SizeDTO> GetSizeByIdAsync(int sizeId)
         {
-            return (_sizeDAO.GetSizeById(sizeId));
+            return (_sizeDAO.GetSizeByIdAsync(sizeId));
         }
   
-        public Task<bool> CreateSize(SizeDTO sizeDTO)
+        public Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
-            return _sizeDAO.CreateSize(sizeDTO);
+            return _sizeDAO.CreateSizeAsync(sizeCreateDTO);
         }
 
-        public Task<bool> UpdateSize(SizeDTO sizeDTO)
+        public Task<bool> UpdateSizeAsync(SizeDTO sizeDTO)
         {
-            return _sizeDAO.UpdateSize(sizeDTO);
+            return _sizeDAO.UpdateSizeAsync(sizeDTO);
         }
-        public Task<bool> DeleteSize(int sizeId)
+        public Task<bool> DeleteSizeAsync(int sizeId)
         {
-            return _sizeDAO.DeleteSize(sizeId);
+            return _sizeDAO.DeleteSizeAsync(sizeId);
         }
-        public Task<bool> RestoreSize(int sizeId)
+        public Task<bool> RestoreSizeAsync(int sizeId)
         {
-            return _sizeDAO.RestoreSize(sizeId);
+            return _sizeDAO.RestoreSizeAsync(sizeId);
         }
 
     }

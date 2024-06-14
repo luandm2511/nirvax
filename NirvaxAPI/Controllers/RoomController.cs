@@ -35,9 +35,9 @@ namespace WebAPI.Controllers
      
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Room>>> ViewUserHistoryChat(int accountId)
+        public async Task<ActionResult<IEnumerable<Room>>> ViewUserHistoryChatAsync(int accountId)
         {
-            var list = await _repo.ViewUserHistoryChat(accountId);
+            var list = await _repo.ViewUserHistoryChatAsync(accountId);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -56,9 +56,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Room>>> ViewOwnerHistoryChat(int ownerId)
+        public async Task<ActionResult<IEnumerable<Room>>> ViewOwnerHistoryChatAsync(int ownerId)
         {
-            var list = await _repo.ViewOwnerHistoryChat(ownerId);
+            var list = await _repo.ViewOwnerHistoryChatAsync(ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -78,10 +78,10 @@ namespace WebAPI.Controllers
 
         [HttpGet()]
         //  [Authorize]
-        public async Task<ActionResult> GetRoomIdByAccountIdAndOwnerId(int accountId, int ownerId)
+        public async Task<ActionResult> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
 
-            var room = await _repo.GetRoomIdByAccountIdAndOwnerId(accountId, ownerId);
+            var room = await _repo.GetRoomIdByAccountIdAndOwnerIdAsync(accountId, ownerId);
             if (room != null)
             {
                 return StatusCode(200, new
@@ -100,10 +100,10 @@ namespace WebAPI.Controllers
 
         [HttpGet()]
         //  [Authorize]
-        public async Task<ActionResult> GetRoomByAccountIdAndOwnerId(int accountId, int ownerId)
+        public async Task<ActionResult> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
             
-                var room = await _repo.GetRoomByAccountIdAndOwnerId(accountId, ownerId);
+                var room = await _repo.GetRoomByAccountIdAndOwnerIdAsync(accountId, ownerId);
             if (room != null)
             {
                 return StatusCode(200, new
@@ -122,10 +122,10 @@ namespace WebAPI.Controllers
 
         [HttpGet("{roomId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetRoomById(int roomId)
+        public async Task<ActionResult> GetRoomByIdAsync(int roomId)
         {
            
-                var size = await _repo.GetRoomById(roomId);
+                var size = await _repo.GetRoomByIdAsync(roomId);
             if (size != null)
             {
 
@@ -145,25 +145,19 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateRoom(RoomDTO roomDTO)
+        public async Task<ActionResult> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
             try
             {
 
 
-                var checkSize = await _repo.CheckRoom(roomDTO);
+                var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
                 if (checkSize == true)
                 {
-                    var size1 = await _repo.CreateRoom(roomDTO);
+                    var size1 = await _repo.CreateRoomAsync(roomCreateDTO);
                     if (size1)
                     {
-                        //Message message = new Message();
-                        //  message.SenderId = roomDTO.OwnerId;
-                        //message.ReceiverId = roomDTO.AccountId;
-                        //message.RoomId = roomDTO.RoomId;
-                        //message.Content = "Hello! Shop của tôi có thể giúp gì được cho bạn?";
-                        //message.Timestamp = DateTime.Now;
-                        //await _mess.CreateMessageFromOwner(message);
+                     
 
                         return StatusCode(200, new
                         {
@@ -201,27 +195,6 @@ namespace WebAPI.Controllers
 
         }
 
-  //      [HttpPatch("{roomId}")]
-     //   public async Task<ActionResult> UpdateContentRoom(int roomId)
-        //{
-          //  var room = await _repo.UpdateContentRoom(roomId);
-           // if (room)
-            //{
-              //  return StatusCode(200, new
-              //  {
-
-                //    Result = true,
-                  //  Message = "Update content room " + ok,
-
-                //});
-            //}
-            //return StatusCode(400, new
-            //{
-              //  StatusCode = 400,
-                //Result = false,
-                //Message = badRequest,
-            //});
-
-        //}
+       
     }
 }

@@ -11,15 +11,15 @@ namespace DataAccess.IRepository
 {
      public interface IGuestConsultationRepository
     {
-        Task<GuestConsultationDTO> GetGuestConsultationsById(int guestId);
-         Task<int> ViewGuestConsultationStatistics();
-        Task<bool> CreateGuestConsultation(GuestConsultationDTO guestConsultationDTO);
-        Task<bool> UpdateGuestConsultation(GuestConsultationDTO guestConsultationDTO);
+        Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId);
+         Task<int> ViewGuestConsultationStatisticsAsync();
+        Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
+        Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO);
 
-        Task<bool> CheckGuestConsultationExist(int guestId);
-        Task<bool> CheckGuestConsultation(GuestConsultationDTO guestConsultationDTO);
-         Task<bool> UpdateStatusGuestConsultationt(int guestId, int statusGuestId);
-        Task<List<GuestConsultationDTO>> GetAllGuestConsultations(string? searchQuery, int page, int pageSize);
+        Task<bool> CheckGuestConsultationExistAsync(int guestId);
+        Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
+        Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, int statusGuestId);
+        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize);
        
     }
 }

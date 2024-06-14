@@ -11,28 +11,29 @@ namespace DataAccess.IRepository
 {
     public interface  IStaffRepository
     {
-        Task<List<StaffDTO>> GetAllStaffs(string? searchQuery, int page, int pageSize);
-        Task<StaffDTO> GetStaffById(int staffId);
-        Task<StaffDTO> GetStaffByEmail(string ownerEmail);
+        Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize);
+        Task<StaffDTO> GetStaffByIdAsync(int staffId);
+        Task<StaffDTO> GetStaffByEmailAsync(string ownerEmail);
 
-        Task<bool> CheckStaff(StaffDTO staffDTO);
-       // Task<bool> CheckStaff(string,int staffDTO);
-
-        Task<bool> CheckProfileStaff(StaffProfileDTO staffProfileDTO);
-        Task<bool> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword);
-
-        Task<bool> CheckStaffExist(int staffId);
-
-        Task<bool> CheckProfileExist(string ownerEmail);
+     //   Task<bool> CheckStaffAsync(StaffDTO staffDTO);
+        Task<bool> CheckStaffAsync(int staffId, string email, string phone);
 
 
-        Task<bool> CreateStaff(StaffDTO staffDTO);
+        Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO);
+        Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword);
 
-        Task<bool> UpdateStaff(StaffDTO staffDTO);
-        Task<bool> UpdateProfileStaff(StaffProfileDTO staffProfileDTO);
-        Task<bool> UpdateAvatarStaff(StaffAvatarDTO staffAvatarDTO);
+        Task<bool> CheckStaffExistAsync(int staffId);
 
-        Task<bool> BanStaff(int staffId);
+        Task<bool> CheckProfileExistAsync(string ownerEmail);
+
+
+        Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO);
+
+        Task<bool> UpdateStaffAsync(StaffDTO staffDTO);
+        Task<bool> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO);
+        Task<bool> UpdateAvatarStaffAsync(StaffAvatarDTO staffAvatarDTO);
+
+        Task<bool> BanStaffAsync(int staffId);
      
 
     }

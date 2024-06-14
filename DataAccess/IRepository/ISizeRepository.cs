@@ -11,16 +11,16 @@ namespace DataAccess.IRepository
 {
     public interface ISizeRepository
     {
-        Task<List<SizeDTO>> GetAllSizes(string? searchQuery, int page, int pageSize);
-        Task<SizeDTO> GetSizeById(int sizeId);
-        Task<bool> CheckSize(SizeDTO sizeDTO);
+        Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize);
+        Task<SizeDTO> GetSizeByIdAsync(int sizeId);
+        Task<bool> CheckSizeAsync(int sizeId, int ownerId, string name);
 
-        Task<bool> CheckSizeExist(int sizeId);
-        Task<bool> CreateSize(SizeDTO sizeDTO);
+        Task<bool> CheckSizeExistAsync(int sizeId);
+        Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO);
 
-        Task<bool> UpdateSize(SizeDTO sizeDTO);
-        Task<bool> DeleteSize(int sizeId);
-        Task<bool> RestoreSize(int sizeId);
+        Task<bool> UpdateSizeAsync(SizeDTO sizeDTO);
+        Task<bool> DeleteSizeAsync(int sizeId);
+        Task<bool> RestoreSizeAsync(int sizeId);
 
     }
 }

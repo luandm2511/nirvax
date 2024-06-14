@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace DataAccess.IRepository
 {
-    public interface IRoomRepository
+    public interface IRoomRepository 
     {
-        Task<List<RoomDTO>> ViewUserHistoryChat(int accountId);
-        Task<List<RoomDTO>> ViewOwnerHistoryChat(int ownerId);
-        Task<bool> CreateRoom(RoomDTO roomDTO);
-        Task<bool> CheckRoom(RoomDTO roomDTO);
-        Task<bool> UpdateContentRoom(int roomId);
-        Task<RoomDTO> GetRoomById(int roomId);
-        Task<int> GetRoomIdByAccountIdAndOwnerId(int accountId, int ownerId);
-        Task<RoomDTO> GetRoomByAccountIdAndOwnerId(int accountId, int ownerId);
+        Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId);
+        Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId);
+        Task<bool> CreateRoomAsync(RoomCreateDTO roomCreateDTO);
+        Task<bool> CheckRoomAsync(int accountId, int ownerId);
+        Task<bool> UpdateContentRoomAsync(int roomId);
+        Task<RoomDTO> GetRoomByIdAsync(int roomId);
+        Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId);
+        Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId);
 
     }
 }

@@ -8,53 +8,57 @@ namespace WebAPI.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Login, Account>().ReverseMap();
-            CreateMap<Login, Owner>().ReverseMap();
-            CreateMap<Login, Staff>().ReverseMap();
+          
             CreateMap<Owner, OwnerDTO>().ReverseMap();
             CreateMap<Owner, OwnerAvatarDTO>().ReverseMap();
 
             CreateMap<Owner, OwnerProfileDTO>().ReverseMap();
             CreateMap<Staff, StaffDTO>().ReverseMap();
             CreateMap<Description, DescriptionDTO>().ReverseMap();
+            CreateMap<Description, DescriptionCreateDTO>().ReverseMap();
 
-            // CreateMap<Staff, StaffCreateDTO>().ReverseMap();
-            //   CreateMap<Staff, StaffBaseDTO>().ReverseMap();
+
+
 
             CreateMap<Staff, StaffAvatarDTO>().ReverseMap();
+            CreateMap<Staff, StaffCreateDTO>().ReverseMap();
 
             CreateMap<Staff, StaffProfileDTO>().ReverseMap();
             CreateMap<Size, SizeDTO>().ReverseMap();
+            CreateMap<Size, SizeCreateDTO>().ReverseMap();
+
             CreateMap<Advertisement, AdvertisementDTO>().ReverseMap();
             CreateMap<Advertisement, AdvertisementCreateDTO>().ReverseMap();
 
 
             CreateMap<GuestConsultation, GuestConsultationDTO>().ReverseMap();
+            CreateMap<GuestConsultation, GuestConsultationCreateDTO>().ReverseMap();
+
 
             CreateMap<ImportProduct, ImportProductDTO>().ReverseMap();
+            CreateMap<ImportProduct, ImportProductCreateDTO>().ReverseMap();
+
             CreateMap<ImportProductDetail, ImportProductDetailDTO>().ReverseMap();
             CreateMap<Warehouse, WarehouseDTO>().ReverseMap();
-           CreateMap<WarehouseDetail, WarehouseDetailFinalDTO>().ReverseMap();
+            CreateMap<Warehouse, WarehouseCreateDTO>().ReverseMap();
+
+            CreateMap<WarehouseDetail, WarehouseDetailFinalDTO>().ReverseMap();
             CreateMap<WarehouseDetail, WarehouseDetailDTO>().ReverseMap();
 
-            CreateMap<Product, ProductDTO>().ReverseMap();
+       
             CreateMap<ProductSize, ProductSizeDTO>().ReverseMap();
+            CreateMap<ProductSize, ProductSizeCreateDTO>().ReverseMap();
+
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<Brand, BrandDTO>().ReverseMap();
             CreateMap<Service, ServiceDTO>().ReverseMap();
             CreateMap<Voucher, VoucherDTO>().ReverseMap();
-        
-
+           
             CreateMap<Room, RoomDTO>().ReverseMap();
+            CreateMap<Room, RoomCreateDTO>().ReverseMap();
             CreateMap<Room, RoomContentDTO>().ReverseMap();
-
             CreateMap<Message, MessageDTO>().ReverseMap();
-
-
-
-
-
-
+            CreateMap<Message, MessageCreateDTO>().ReverseMap();
 
         }
     }

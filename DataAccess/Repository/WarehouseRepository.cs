@@ -24,58 +24,58 @@ namespace DataAccess.Repository
         }
 
 
-        public Task<List<ImportProduct>> GetWarehouseByImportProduct(int ownerId, int page, int pageSize)
+        public Task<List<ImportProduct>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
         {
-            return _warehouseDAO.GetWarehouseByImportProduct(ownerId, page, pageSize);
+            return _warehouseDAO.GetWarehouseByImportProductAsync(ownerId, page, pageSize);
         }
-        public Task<List<WarehouseDetail>> GetAllWarehouseDetail(int ownerId, int page, int pageSize)
+        public Task<List<WarehouseDetail>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
         {
-            return _warehouseDAO.GetAllWarehouseDetail(ownerId, page, pageSize);
-        }
-
-
-        public Task<bool> CheckWarehouse(WarehouseDTO warehouseDTO)
-        {
-            return _warehouseDAO.CheckWarehouse(warehouseDTO);
+            return _warehouseDAO.GetAllWarehouseDetailAsync(ownerId, page, pageSize);
         }
 
-        public Task<bool> CreateWarehouse(WarehouseDTO warehouseDTO)
+
+        public Task<bool> CheckWarehouseAsync(WarehouseDTO warehouseDTO)
         {
-            return _warehouseDAO.CreateWarehouse(warehouseDTO);
-        }
-        public Task<Warehouse> GetWarehouseById(int ownerId)
-        {
-            return _warehouseDAO.GetWarehouseById(ownerId);
-        }
-        public Task<bool> UpdateWarehouse(WarehouseDTO warehouseDTO)
-        {
-            return _warehouseDAO.UpdateWarehouse(warehouseDTO);
-        }
-        public Task<int> GetWarehouseIdByOwnerId(int ownerId)
-        {
-            return _warehouseDAO.GetWarehouseIdByOwnerId(ownerId);
+            return _warehouseDAO.CheckWarehouseAsync(warehouseDTO);
         }
 
-        public Task<Warehouse> UpdateQuantityAndPriceWarehouse(int ownerId)
+        public Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
         {
-            return _warehouseDAO.UpdateQuantityAndPriceWarehouse(ownerId);
+            return _warehouseDAO.CreateWarehouseAsync(warehouseCreateDTO);
+        }
+        public Task<Warehouse> GetWarehouseByIdAsync(int ownerId)
+        {
+            return _warehouseDAO.GetWarehouseByIdAsync(ownerId);
+        }
+        public Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
+        {
+            return _warehouseDAO.UpdateWarehouseAsync(warehouseDTO);
+        }
+        public Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId)
+        {
+            return _warehouseDAO.GetWarehouseIdByOwnerIdAsync(ownerId);
         }
 
-        public Task<int> ViewCountImportStatistics(int warehouseId)
+        public Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
         {
-            return _warehouseDAO.ViewCountImportStatistics(warehouseId);
+            return _warehouseDAO.UpdateQuantityAndPriceWarehouseAsync(ownerId);
         }
-        public Task<int> ViewNumberOfProductByImportStatistics(int importId, int ownerId)
+
+        public Task<int> ViewCountImportStatisticsAsync(int warehouseId)
         {
-            return _warehouseDAO.ViewNumberOfProductByImportStatistics(importId,ownerId);
+            return _warehouseDAO.ViewCountImportStatisticsAsync(warehouseId);
         }
-        public Task<double> ViewPriceByImportStatistics(int importId, int ownerId)
+        public Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId)
         {
-            return _warehouseDAO.ViewPriceByImportStatistics(importId,ownerId);
+            return _warehouseDAO.ViewNumberOfProductByImportStatisticsAsync(importId,ownerId);
         }
-        public Task<int> QuantityWarehouseStatistics(int ownerId)
+        public Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId)
         {
-            return _warehouseDAO.QuantityWarehouseStatistics(ownerId);
+            return _warehouseDAO.ViewPriceByImportStatisticsAsync(importId,ownerId);
+        }
+        public Task<int> QuantityWarehouseStatisticsAsync(int ownerId)
+        {
+            return _warehouseDAO.QuantityWarehouseStatisticsAsync(ownerId);
         }
 
     }

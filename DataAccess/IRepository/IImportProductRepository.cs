@@ -11,17 +11,17 @@ namespace DataAccess.IRepository
 {
     public interface IImportProductRepository
     {
-        Task<List<ImportProductDTO>> GetAllImportProduct(int warehouseId, DateTime? from, DateTime? to);
+        Task<List<ImportProductDTO>> GetAllImportProductAsync(int warehouseId, DateTime? from, DateTime? to);
         
-        Task<List<ImportProductDTO>> GetImportProductByWarehouse(int warehouseId);
-        Task<ImportProductDTO> GetImportProductById(int importId);
+        Task<List<ImportProductDTO>> GetImportProductByWarehouseAsync(int warehouseId);
+        Task<ImportProductDTO> GetImportProductByIdAsync(int importId);
 
         
-        Task<bool> CheckImportProductExist(int importId);
+        Task<bool> CheckImportProductExistAsync(int importId);
 
-        Task<bool> CreateImportProduct(ImportProductDTO importProductDTO);
+        Task<bool> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO);
 
-        Task<bool> UpdateImportProduct(ImportProductDTO importProductDTO);
+        Task<bool> UpdateImportProductAsync(ImportProductDTO importProductDTO);
     
       
 

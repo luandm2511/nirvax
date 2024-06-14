@@ -25,9 +25,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Size>>> GetAllSizes(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<Size>>> GetAllSizesAsync(string? searchQuery, int page, int pageSize)
         {
-            var list = await _repo.GetAllSizes(searchQuery, page, pageSize);
+            var list = await _repo.GetAllSizesAsync(searchQuery, page, pageSize);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -47,11 +47,11 @@ namespace WebAPI.Controllers
 
         [HttpGet("{sizeId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetSizeById(int sizeId)
+        public async Task<ActionResult> GetSizeByIdAsync(int sizeId)
         {
-            var checkSizeExist = await _repo.CheckSizeExist(sizeId);
+            var checkSizeExist = await _repo.CheckSizeExistAsync(sizeId);
             if (checkSizeExist == true) {
-                var size = await _repo.GetSizeById(sizeId);
+                var size = await _repo.GetSizeByIdAsync(sizeId);
             
          
                     return StatusCode(200, new
@@ -72,14 +72,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateSize(SizeDTO sizeDTO)
+        public async Task<ActionResult> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkSize = await _repo.CheckSize(sizeDTO);
+                var checkSize = await _repo.CheckSizeAsync(0, sizeCreateDTO.OwnerId, sizeCreateDTO.Name);
             if (checkSize == true)
             {
-                var size1 = await _repo.CreateSize(sizeDTO);
+                var size1 = await _repo.CreateSizeAsync(sizeCreateDTO);
                 if (size1)
                 {
                     return StatusCode(200, new
@@ -121,14 +121,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateSize(SizeDTO sizeDTO)
+        public async Task<ActionResult> UpdateSizeAsync(SizeDTO sizeDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkSize = await _repo.CheckSize(sizeDTO);
+                var checkSize = await _repo.CheckSizeAsync(sizeDTO.SizeId, sizeDTO.OwnerId, sizeDTO.Name);
             if (checkSize == true)
             {
-                var size1 = await _repo.UpdateSize(sizeDTO);
+                var size1 = await _repo.UpdateSizeAsync(sizeDTO);
                 if (size1)
                 {
                     return StatusCode(200, new
@@ -170,9 +170,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{sizeId}")]
-        public async Task<ActionResult> DeleteSize(int sizeId)
+        public async Task<ActionResult> DeleteSizeAsync(int sizeId)
         {
-            var size1 = await _repo.DeleteSize(sizeId);
+            var size1 = await _repo.DeleteSizeAsync(sizeId);
             if (size1)
             {
                 return StatusCode(200, new
@@ -193,9 +193,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{sizeId}")]
-        public async Task<ActionResult> RestoreSize(int sizeId)
+        public async Task<ActionResult> RestoreSizeAsync(int sizeId)
         {
-            var size1 = await _repo.RestoreSize(sizeId);
+            var size1 = await _repo.RestoreSizeAsync(sizeId);
             if (size1)
             {
                 return StatusCode(200, new

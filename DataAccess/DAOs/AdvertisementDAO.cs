@@ -20,17 +20,17 @@ namespace DataAccess.DAOs
 
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
-        private IFileService _fileService;
+        
 
 
-        public AdvertisementDAO(IFileService fs,NirvaxContext context, IMapper mapper)
+        public AdvertisementDAO( NirvaxContext context, IMapper mapper)
         {
-            this._fileService = fs;
+            
              _context = context;
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckAdvertisement(AdvertisementDTO advertisementDTO)
+        public async Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
 
             Advertisement? Advertisement = new Advertisement();
@@ -61,7 +61,7 @@ namespace DataAccess.DAOs
             return false;
         }
 
-        public async Task<bool> CheckAdvertisementCreate(AdvertisementCreateDTO advertisementCreateDTO)
+        public async Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO)
         { 
 
 
@@ -83,7 +83,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CheckAdvertisementExist(int adId) 
+        public async Task<bool> CheckAdvertisementExistAsync(int adId) 
         {
             Advertisement? sid = new Advertisement();
 
@@ -103,7 +103,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff or admin??
-        public async Task<List<AdvertisementDTO>> GetAllAdvertisements(string? searchQuery, int page, int pageSize) 
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
             List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
 
@@ -128,7 +128,7 @@ namespace DataAccess.DAOs
             return listStaffDTO;
         }
 
-        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsForUser(string? searchQuery)
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
             List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
 
@@ -152,7 +152,7 @@ namespace DataAccess.DAOs
         }
 
         //owner,staff 
-        public async Task<AdvertisementDTO> GetAdvertisementById(int adId)
+        public async Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId)
 
         {
             AdvertisementDTO advertisementDTO = new AdvertisementDTO();
@@ -166,7 +166,7 @@ namespace DataAccess.DAOs
         
         }
 
-        public async Task<AdvertisementDTO> GetAdvertisementByIdForUser(int adId) 
+        public async Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId) 
         {
             AdvertisementDTO advertisementDTO = new AdvertisementDTO();
             try
@@ -180,7 +180,7 @@ namespace DataAccess.DAOs
         }
 
   
-        public async Task<bool> CreateAdvertisement(AdvertisementCreateDTO advertisementCreateDTO) 
+        public async Task<bool> CreateAdvertisementAsync(AdvertisementCreateDTO advertisementCreateDTO) 
         {
            
                 Advertisement advertisement = _mapper.Map<Advertisement>(advertisementCreateDTO);
@@ -193,11 +193,8 @@ namespace DataAccess.DAOs
 
         }
 
-        //admin
-
-        //oldPass = xyz
-        //newPass =1234
-        public  async Task<bool> UpdateAdvertisement(AdvertisementDTO advertisementDTO)
+        
+        public  async Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
             
        
@@ -214,7 +211,7 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> UpdateStatusAdvertisement(int adId, int statusPostId)
+        public async Task<bool> UpdateStatusAdvertisementAsync(int adId, int statusPostId)
         {
 
             Advertisement? staffOrgin = await _context.Advertisements
@@ -229,7 +226,7 @@ namespace DataAccess.DAOs
         }
 
         //riêng
-        public async Task<int> ViewOwnerBlogStatistics(int ownerId)
+        public async Task<int> ViewOwnerBlogStatisticsAsync(int ownerId)
         {
             Advertisement ad = new Advertisement();
             var number = await _context.Advertisements.Where(i => i.OwnerId == ownerId).CountAsync();
@@ -237,7 +234,7 @@ namespace DataAccess.DAOs
         }
 
         //chung
-        public async Task<int> ViewBlogStatistics()
+        public async Task<int> ViewBlogStatisticsAsync()
         {
             Advertisement ad = new Advertisement();
             var number = await _context.Advertisements.Include(i=>i.Owner).CountAsync();

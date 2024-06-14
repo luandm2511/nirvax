@@ -23,40 +23,40 @@ namespace DataAccess.Repository
             _descriptionDAO = descriptionDAO;
         }
 
-        public Task<bool> CheckDescription(DescriptionDTO descriptionDTO)
+        public Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content)
         {
-            return _descriptionDAO.CheckDescription(descriptionDTO); 
+            return _descriptionDAO.CheckDescriptionAsync( descriptionId,  title, content);
         }
 
 
-        public Task<bool> CheckDescriptionExist(int descriptionId)
+        public Task<bool> CheckDescriptionExistAsync(int descriptionId)
         {
-            return _descriptionDAO.CheckDescriptionExist(descriptionId);
+            return _descriptionDAO.CheckDescriptionExistAsync(descriptionId);
         }
 
-        public Task<List<DescriptionDTO>> GetAllDescriptions(string? searchQuery, int page, int pageSize)
+        public Task<List<DescriptionDTO>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
         {
             
-            return _descriptionDAO.GetAllDescriptions(searchQuery, page,  pageSize);
+            return _descriptionDAO.GetAllDescriptionsAsync(searchQuery, page,  pageSize);
         }
 
-        public Task<DescriptionDTO> GetDescriptionById(int descriptionId)
+        public Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
         {
-            return (_descriptionDAO.GetDescriptionById(descriptionId));
+            return (_descriptionDAO.GetDescriptionByIdAsync(descriptionId));
         }
   
-        public Task<bool> CreateDesctiption(DescriptionDTO descriptionDTO)
+        public Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
-            return _descriptionDAO.CreateDesctiption(descriptionDTO);
+            return _descriptionDAO.CreateDesctiptionAsync(descriptionCreateDTO);
         }
 
-        public Task<bool> UpdateDesctiption(DescriptionDTO descriptionDTO)
+        public Task<bool> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
         {
-            return _descriptionDAO.UpdateDesctiption(descriptionDTO);
+            return _descriptionDAO.UpdateDesctiptionAsync(descriptionDTO);
         }
-        public Task<bool> DeleteDesctiption(int descriptionId)
+        public Task<bool> DeleteDesctiptionAsync(int descriptionId)
         {
-            return _descriptionDAO.DeleteDesctiption(descriptionId);
+            return _descriptionDAO.DeleteDesctiptionAsync(descriptionId);
         }
 
     }

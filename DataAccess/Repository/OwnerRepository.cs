@@ -23,85 +23,85 @@ namespace DataAccess.Repository
             _ownerDAO = ownerDAO;
         }
 
-        public Task<int> NumberOfOwnerStatistics()
+        public Task<int> NumberOfOwnerStatisticsAsync()
         {
 
-            return _ownerDAO.NumberOfOwnerStatistics();
+            return _ownerDAO.NumberOfOwnerStatisticsAsync();
         }
-        public Task<List<OwnerDTO>> GetAllOwners(string? searchQuery, int page, int pageSize)
+        public Task<List<OwnerDTO>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
 
-            return _ownerDAO.GetAllOwners(searchQuery, page, pageSize);
-        }
-
-        public Task<List<OwnerDTO>> GetAllOwnersForUser(string? searchQuery)
-        {
-
-            return _ownerDAO.GetAllOwnersForUser(searchQuery);
+            return _ownerDAO.GetAllOwnersAsync(searchQuery, page, pageSize);
         }
 
-
-        public Task<OwnerDTO> GetOwnerById(int staffId)
+        public Task<List<OwnerDTO>> GetAllOwnersForUserAsync(string? searchQuery)
         {
-            return (_ownerDAO.GetOwnerById(staffId));
+
+            return _ownerDAO.GetAllOwnersForUserAsync(searchQuery);
         }
 
-        public Task<OwnerDTO> GetOwnerByEmail(string ownerEmail)
+
+        public Task<OwnerDTO> GetOwnerByIdAsync(int staffId)
         {
-            return (_ownerDAO.GetOwnerByEmail(ownerEmail));
+            return (_ownerDAO.GetOwnerByIdAsync(staffId));
+        }
+
+        public Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail)
+        {
+            return (_ownerDAO.GetOwnerByEmailAsync(ownerEmail));
         }
        
 
-        public Task<bool> CheckOwner(OwnerDTO ownerDTO)
+        public Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO)
         {
-            return _ownerDAO.CheckOwner(ownerDTO);
+            return _ownerDAO.CheckOwnerAsync(ownerDTO);
         }
-        public Task<bool> CheckOwnerExist(int ownerId)
+        public Task<bool> CheckOwnerExistAsync(int ownerId)
         {
-            return _ownerDAO.CheckOwnerExist(ownerId);
+            return _ownerDAO.CheckOwnerExistAsync(ownerId);
         }
-        public Task<bool> CheckProfileOwner(OwnerProfileDTO ownerProfileDTO)
+        public Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
-            return _ownerDAO.CheckProfileOwner(ownerProfileDTO);
+            return _ownerDAO.CheckProfileOwnerAsync(ownerProfileDTO);
         }
 
-        public Task<bool> CheckProfileExist(string ownerEmail)
+        public Task<bool> CheckProfileExistAsync(string ownerEmail)
         {
-            return _ownerDAO.CheckProfileExist(ownerEmail);
+            return _ownerDAO.CheckProfileExistAsync(ownerEmail);
         }
        
-        public Task<bool> ChangePasswordOwner(int ownerId, string oldPassword, string newPasswod)
+        public Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
         {
-            return _ownerDAO.ChangePasswordOwner(ownerId, oldPassword, newPasswod); 
+            return _ownerDAO.ChangePasswordOwnerAsync(ownerId, oldPassword, newPasswod); 
         }
 
-        public Task<bool> CreateOwner(OwnerDTO ownerDTO)
+        public Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO)
         {
-            return _ownerDAO.CreateOwner(ownerDTO);
+            return _ownerDAO.CreateOwnerAsync(ownerDTO);
         }
 
-        public Task<bool> UpdateOwner(OwnerDTO ownerDTO)
+        public Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
-            return _ownerDAO.UpdateOwner(ownerDTO);
+            return _ownerDAO.UpdateOwnerAsync(ownerDTO);
         }
 
-        public Task<bool> UpdateProfileOwner(OwnerProfileDTO ownerProfileDTO)
+        public Task<bool> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
-            return _ownerDAO.UpdateProfileOwner(ownerProfileDTO);
+            return _ownerDAO.UpdateProfileOwnerAsync(ownerProfileDTO);
         }
 
-        public Task<bool> UpdateAvatarOwner(OwnerAvatarDTO ownerAvatarDTO)
+        public Task<bool> UpdateAvatarOwnerAsync(OwnerAvatarDTO ownerAvatarDTO)
         {
-            return _ownerDAO.UpdateAvatarOwner(ownerAvatarDTO);
+            return _ownerDAO.UpdateAvatarOwnerAsync(ownerAvatarDTO);
         }
-        public Task<bool> BanOwner(int ownerId)
+        public Task<bool> BanOwnerAsync(int ownerId)
         {
-            return _ownerDAO.BanOwner(ownerId);
+            return _ownerDAO.BanOwnerAsync(ownerId);
         }
 
-        public Task<bool> UnBanOwner(int ownerId)
+        public Task<bool> UnBanOwnerAsync(int ownerId)
         {
-            return _ownerDAO.UnBanOwner(ownerId);
+            return _ownerDAO.UnBanOwnerAsync(ownerId);
         }
 
     }

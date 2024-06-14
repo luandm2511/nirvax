@@ -25,57 +25,57 @@ namespace DataAccess.Repository
 
 
 
-        public Task<AdvertisementDTO> GetAdvertisementById(int adId)
+        public Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId)
         {
-            return _advertisementDAO.GetAdvertisementById(adId);
+            return _advertisementDAO.GetAdvertisementByIdAsync(adId);
         }
-        public Task<AdvertisementDTO> GetAdvertisementByIdForUser(int adId)
+        public Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId)
         {
-            return _advertisementDAO.GetAdvertisementByIdForUser(adId);
-        }
-
-        public Task<bool> CheckAdvertisementCreate(AdvertisementCreateDTO advertisementCreateDTO)
-        {
-            return _advertisementDAO.CheckAdvertisementCreate(advertisementCreateDTO);
-        }
-        public Task<bool> CreateAdvertisement(AdvertisementCreateDTO advertisementCreateDTO)
-        {
-            return _advertisementDAO.CreateAdvertisement(advertisementCreateDTO);
-        }
-        public Task<bool> UpdateAdvertisement(AdvertisementDTO advertisementDTO)
-        {
-            return _advertisementDAO.UpdateAdvertisement(advertisementDTO);
-        }
-        public Task<bool> UpdateStatusAdvertisement(int adId, int statusPostId)
-        {
-            return _advertisementDAO.UpdateStatusAdvertisement(adId, statusPostId);
+            return _advertisementDAO.GetAdvertisementByIdForUserAsync(adId);
         }
 
-        public Task<bool> CheckAdvertisementExist(int adId)
+        public Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO)
         {
-            return _advertisementDAO.CheckAdvertisementExist(adId);
+            return _advertisementDAO.CheckAdvertisementCreateAsync(advertisementCreateDTO);
         }
-        public Task<bool> CheckAdvertisement(AdvertisementDTO advertisementDTO)
+        public Task<bool> CreateAdvertisementAsync(AdvertisementCreateDTO advertisementCreateDTO)
         {
-            return _advertisementDAO.CheckAdvertisement(advertisementDTO);
+            return _advertisementDAO.CreateAdvertisementAsync(advertisementCreateDTO);
         }
-        public Task<List<AdvertisementDTO>> GetAllAdvertisements(string? searchQuery, int page, int pageSize)
+        public Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
-            return _advertisementDAO.GetAllAdvertisements(searchQuery, page, pageSize);
+            return _advertisementDAO.UpdateAdvertisementAsync(advertisementDTO);
         }
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsForUser(string? searchQuery)
+        public Task<bool> UpdateStatusAdvertisementAsync(int adId, int statusPostId)
         {
-            return _advertisementDAO.GetAllAdvertisementsForUser(searchQuery);
+            return _advertisementDAO.UpdateStatusAdvertisementAsync(adId, statusPostId);
         }
 
-       public Task<int> ViewOwnerBlogStatistics(int ownerId)
+        public Task<bool> CheckAdvertisementExistAsync(int adId)
         {
-            return _advertisementDAO.ViewOwnerBlogStatistics(ownerId);
+            return _advertisementDAO.CheckAdvertisementExistAsync(adId);
+        }
+        public Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO)
+        {
+            return _advertisementDAO.CheckAdvertisementAsync(advertisementDTO);
+        }
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _advertisementDAO.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
+        }
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery)
+        {
+            return _advertisementDAO.GetAllAdvertisementsForUserAsync(searchQuery);
+        }
+
+       public Task<int> ViewOwnerBlogStatisticsAsync(int ownerId)
+        {
+            return _advertisementDAO.ViewOwnerBlogStatisticsAsync(ownerId);
 
         }
-        public Task<int> ViewBlogStatistics()
+        public Task<int> ViewBlogStatisticsAsync()
         {
-            return _advertisementDAO.ViewBlogStatistics();
+            return _advertisementDAO.ViewBlogStatisticsAsync();
 
         }
 

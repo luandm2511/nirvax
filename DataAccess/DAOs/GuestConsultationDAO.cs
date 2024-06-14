@@ -29,25 +29,18 @@ namespace DataAccess.DAOs
         }
 
         //create
-        public async Task<bool> CheckGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+        public async Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
         {
 
-            GuestConsultation? GuestConsultation = new GuestConsultation();
-            GuestConsultation = await _context.GuestConsultations
-                .Include(i => i.Owner)
-                .Include(i => i.Ad)
-                .Include(i => i.StatusGuest)
-                .SingleOrDefaultAsync(i => i.GuestId  == guestConsultationDTO.GuestId );
-          
             
-            GuestConsultation? StaffCreate = new GuestConsultation();
-            StaffCreate = await _context.GuestConsultations
+            GuestConsultation? guestCreate = new GuestConsultation();
+            guestCreate = await _context.GuestConsultations
                    .Include(i => i.Owner)
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
-                .SingleOrDefaultAsync(i => i.Phone.Trim() == guestConsultationDTO.Phone.Trim() && i.AdId == guestConsultationDTO.AdId);
+                .SingleOrDefaultAsync(i => i.Phone.Trim() == guestConsultationCreateDTO.Phone.Trim() && i.AdId == guestConsultationCreateDTO.AdId);
 
-            if (StaffCreate == null)
+            if (guestCreate == null)
             {
                 return true;
             }
@@ -56,7 +49,7 @@ namespace DataAccess.DAOs
 
       
     //update
-        public async Task<bool> CheckGuestConsultationExist(int guestId ) 
+        public async Task<bool> CheckGuestConsultationExistAsync(int guestId ) 
         {
             GuestConsultation? sid = new GuestConsultation();
 
@@ -73,7 +66,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<int> ViewGuestConsultationStatistics()
+        public async Task<int> ViewGuestConsultationStatisticsAsync()
         {
             GuestConsultation guest = new GuestConsultation();
             var number = await _context.GuestConsultations.CountAsync();
@@ -83,7 +76,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff or admin??
-        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultations(string? searchQuery, int page, int pageSize) 
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize) 
         {
             List<GuestConsultationDTO> listStaffDTO = new List<GuestConsultationDTO>();
 
@@ -112,7 +105,7 @@ namespace DataAccess.DAOs
 
     
         //owner,staff 
-        public async Task<GuestConsultationDTO> GetGuestConsultationsById(int guestId )
+        public async Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId )
 
         {
             GuestConsultationDTO guestConsultationDTO = new GuestConsultationDTO();
@@ -129,10 +122,10 @@ namespace DataAccess.DAOs
         }
 
   
-        public async Task<bool> CreateGuestConsultation(GuestConsultationDTO guestConsultationDTO) 
+        public async Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO) 
         {
           
-            GuestConsultation guestConsultation = _mapper.Map<GuestConsultation>(guestConsultationDTO);
+            GuestConsultation guestConsultation = _mapper.Map<GuestConsultation>(guestConsultationCreateDTO);
             
             await _context.GuestConsultations.AddAsync(guestConsultation);
             int i = await _context.SaveChangesAsync();
@@ -148,7 +141,7 @@ namespace DataAccess.DAOs
 
         //oldPass = xyz
         //newPass =1234
-        public async Task<bool> UpdateGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+        public async Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO)
         {
            
             GuestConsultation? staffOrgin = await _context.GuestConsultations
@@ -162,7 +155,7 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> UpdateStatusGuestConsultationt(int guestId , int statusGuestId)
+        public async Task<bool> UpdateStatusGuestConsultationtAsync(int guestId , int statusGuestId)
         {
 
             GuestConsultation? staffOrgin = await _context.GuestConsultations

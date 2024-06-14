@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Azure;
 using Azure.Core;
+using System.Numerics;
 
 namespace DataAccess.DAOs
 {
@@ -29,21 +30,26 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckSize(SizeDTO sizeDTO)
+        public async Task<bool> CheckSizeAsync(int sizeId, int ownerId,string name)
         {
-
-            Size? size = new Size();
-            size = await _context.Sizes.Where(i => i.Isdelete == false).Where(i => i.OwnerId== sizeDTO.OwnerId).SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
-            Size? sizeCreate = new Size();
-            sizeCreate = await _context.Sizes.Where(i=>i.OwnerId== sizeDTO.OwnerId).SingleOrDefaultAsync(i => i.Name.Trim() == sizeDTO.Name.Trim());
-            if (size != null)
+            if (sizeId == 0)
+            {
+                Size? size = new Size();
+                size = await _context.Sizes.Where(i => i.Isdelete == false).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.SizeId == sizeId);
+                if (size == null)
+                {
+                    return true;
+                }
+            }
+            else
             {
                 List<Size> getList = await _context.Sizes
-                 .Where(i => i.Isdelete == false)
-                 //check khác Id`
-                 .Where(i => i.SizeId != sizeDTO.SizeId)
-                 .Where(i => i.Name == sizeDTO.Name)
-                 .ToListAsync();
+                   .Where(i => i.Isdelete == false)
+                   .Where(i => i.OwnerId == ownerId)
+                   .Where(i => i.SizeId != sizeId)
+                   .Where(i => i.Name == name)
+                   .ToListAsync();
+
                 if (getList.Count > 0)
                 {
                     return false;
@@ -52,15 +58,15 @@ namespace DataAccess.DAOs
                 {
                     return true;
                 }
+
             }
-            else if (sizeCreate == null && size == null)
-            {
-                return true;
-            }
-                return false;
+
+            return false;
+
+           
         }
 
-        public async Task<bool> CheckSizeExist(int sizeId)
+        public async Task<bool> CheckSizeExistAsync(int sizeId)
         {
             Size? sid = new Size();
 
@@ -75,7 +81,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<SizeDTO>> GetAllSizes(string? searchQuery, int page, int pageSize)
+        public async Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize)
         {
             List<SizeDTO> listSizeDTO = new List<SizeDTO>();
 
@@ -102,7 +108,7 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<SizeDTO> GetSizeById(int sizeId)
+        public async Task<SizeDTO> GetSizeByIdAsync(int sizeId)
         {
             SizeDTO sizeDTO = new SizeDTO();
             try
@@ -121,10 +127,10 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateSize(SizeDTO sizeDTO)
+        public async Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
-            sizeDTO.Isdelete = false;
-            Size size = _mapper.Map<Size>(sizeDTO);
+            sizeCreateDTO.Isdelete = false;
+            Size size = _mapper.Map<Size>(sizeCreateDTO);
             await _context.Sizes.AddAsync(size);
             int i = await _context.SaveChangesAsync();
             if (i > 0)
@@ -135,7 +141,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateSize(SizeDTO sizeDTO)
+        public async Task<bool> UpdateSizeAsync(SizeDTO sizeDTO)
         {
             Size? size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
             //ánh xạ đối tượng SizeDTO đc truyền vào cho staff
@@ -146,7 +152,7 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> DeleteSize(int sizeId)
+        public async Task<bool> DeleteSizeAsync(int sizeId)
         {
             Size? size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeId);
             //ánh xạ đối tượng SizeDTO đc truyền vào cho staff
@@ -167,7 +173,7 @@ namespace DataAccess.DAOs
 
 
         }
-        public async Task<bool> RestoreSize(int sizeId)
+        public async Task<bool> RestoreSizeAsync(int sizeId)
         {
             Size? size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeId);
             //ánh xạ đối tượng SizeDTO đc truyền vào cho staff

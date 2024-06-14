@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,21 +26,27 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckService(ServiceDTO serviceDTO)
+        public async Task<bool> CheckServiceAsync(int serviceId, string name)
         {
-
-            Service? service = new Service();
-            service = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ServiceId == serviceDTO.ServiceId);
-            Service? serviceCreate = new Service();
-            serviceCreate = await _context.Services.SingleOrDefaultAsync(i => i.Name.Trim() == serviceDTO.Name.Trim());
-            if (service != null)
+            if (serviceId == 0)
             {
+                Service? service = new Service();
+                service = await _context.Services.SingleOrDefaultAsync(i => i.Name == name);
+                if (service == null)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+
                 List<Service> getList = await _context.Services
-               
+
                  //check khác Id`
-                 .Where(i => i.ServiceId != serviceDTO.ServiceId)
-                 .Where(i => i.Name == serviceDTO.Name)
+                 .Where(i => i.ServiceId != serviceId)
+                 .Where(i => i.Name == name)
                  .ToListAsync();
+
                 if (getList.Count > 0)
                 {
                     return false;
@@ -48,15 +55,15 @@ namespace DataAccess.DAOs
                 {
                     return true;
                 }
+
             }
-            else if (serviceCreate == null && service == null)
-            {
-                return true;
-            }
+
             return false;
+           
+        
         }
 
-        public async Task<bool> CheckServiceExist(int serviceId)
+        public async Task<bool> CheckServiceExistAsync(int serviceId)
         {
             Service? sid = new Service();
 
@@ -70,7 +77,7 @@ namespace DataAccess.DAOs
         }
 
         //owner,staff
-        public async Task<List<ServiceDTO>> GetAllServices(string? searchQuery, int page, int pageSize)
+        public async Task<List<ServiceDTO>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
             List<ServiceDTO> listSizeDTO = new List<ServiceDTO>();
 
@@ -98,7 +105,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<ServiceDTO>> GetAllServiceForUser()
+        public async Task<List<ServiceDTO>> GetAllServiceForUserAsync()
         {
             List<ServiceDTO> listSizeDTO = new List<ServiceDTO>();
 
@@ -112,7 +119,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<ServiceDTO> GetServiceById(int sizeId)
+        public async Task<ServiceDTO> GetServiceByIdAsync(int sizeId)
         {
             ServiceDTO serviceDTO = new ServiceDTO();
             try
@@ -130,10 +137,10 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateService(ServiceDTO serviceDTO)
+        public async Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
         {
-            serviceDTO.Isdelete = false;
-            Service service = _mapper.Map<Service>(serviceDTO);
+            serviceCreateDTO.Isdelete = false;
+            Service service = _mapper.Map<Service>(serviceCreateDTO);
             await _context.Services.AddAsync(service);
             int i = await _context.SaveChangesAsync();
             if (i > 0)
@@ -144,7 +151,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> UpdateService(ServiceDTO serviceDTO)
+        public async Task<bool> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceDTO.ServiceId);
             //ánh xạ đối tượng ServiceDTO đc truyền vào cho staff
@@ -159,7 +166,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> DeleteService(int serviceId)
+        public async Task<bool> DeleteServiceAsync(int serviceId)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceId);
             //ánh xạ đối tượng ServiceDTO đc truyền vào cho staff
@@ -180,18 +187,15 @@ namespace DataAccess.DAOs
 
 
         }
-        public async Task<bool> RestoreService(int serviceId)
+        public async Task<bool> RestoreServiceAsync(int serviceId)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceId);
-            //ánh xạ đối tượng ServiceDTO đc truyền vào cho staff
-
-
-
+          
             if (service != null)
             {
                 service.Isdelete = false;
                 _context.Services.Update(service);
-                //    _mapper.Map(ServiceDTO, staff);
+               
 
                 await _context.SaveChangesAsync();
                 return true;

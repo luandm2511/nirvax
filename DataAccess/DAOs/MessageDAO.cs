@@ -29,10 +29,10 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckMessage(MessageDTO messageDTO) 
+        public async Task<bool> CheckMessageAsync(MessageCreateDTO messageCreateDTO) 
         {
 
-            if (messageDTO.Content.Trim() != null)
+            if (messageCreateDTO.Content.Trim() != null)
             {
                     return true;           
             }
@@ -43,7 +43,7 @@ namespace DataAccess.DAOs
        
 
         //owner,staff
-        public async Task<List<MessageDTO>> ViewAllMessageByRoom(int roomId)
+        public async Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
         {
             List<MessageDTO> listSizeDTO = new List<MessageDTO>();
                 List<Message> getList = await _context.Messages
@@ -56,11 +56,11 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<bool> CreateMessage(MessageDTO messageDTO)
+        public async Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-           messageDTO.Timestamp = DateTime.Now;
+            messageCreateDTO.Timestamp = DateTime.Now;
 
-            Message message = _mapper.Map<Message>(messageDTO);
+            Message message = _mapper.Map<Message>(messageCreateDTO);
           //  message.Room.Content = message.Content;
             await _context.Messages.AddAsync(message);
             int i = await _context.SaveChangesAsync();
@@ -72,7 +72,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> CreateMessageFromOwner(Message message)
+        public async Task<bool> CreateMessageFromOwnerAsync(Message message)
         {
            
             await _context.Messages.AddAsync(message);

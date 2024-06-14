@@ -24,40 +24,40 @@ namespace DataAccess.Repository
         }
 
 
-        public  Task<int> ViewGuestConsultationStatistics()
+        public  Task<int> ViewGuestConsultationStatisticsAsync()
         {
-            return _guestConsultationDAO.ViewGuestConsultationStatistics();
+            return _guestConsultationDAO.ViewGuestConsultationStatisticsAsync();
 
         }
-        public Task<GuestConsultationDTO> GetGuestConsultationsById(int guestId)
+        public Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId)
         {
-            return _guestConsultationDAO.GetGuestConsultationsById(guestId);
+            return _guestConsultationDAO.GetGuestConsultationsByIdAsync(guestId);
         }
 
-        public Task<bool> CreateGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+        public Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
         {
-            return _guestConsultationDAO.CreateGuestConsultation(guestConsultationDTO);
+            return _guestConsultationDAO.CreateGuestConsultationAsync(guestConsultationCreateDTO);
         }
-        public Task<bool> UpdateGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+        public Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO)
         {
-            return _guestConsultationDAO.UpdateGuestConsultation(guestConsultationDTO);
+            return _guestConsultationDAO.UpdateGuestConsultationAsync(guestConsultationDTO);
         }
 
-        public Task<bool> CheckGuestConsultationExist(int guestId)
+        public Task<bool> CheckGuestConsultationExistAsync(int guestId)
         {
-            return _guestConsultationDAO.CheckGuestConsultationExist(guestId);
+            return _guestConsultationDAO.CheckGuestConsultationExistAsync(guestId);
         }
-        public Task<bool> CheckGuestConsultation(GuestConsultationDTO guestConsultationDTO)
+        public Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
         {
-            return _guestConsultationDAO.CheckGuestConsultation(guestConsultationDTO);
+            return _guestConsultationDAO.CheckGuestConsultationAsync(guestConsultationCreateDTO);
         }
-        public Task<bool> UpdateStatusGuestConsultationt(int guestId, int statusGuestId)
+        public Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, int statusGuestId)
         {
-            return _guestConsultationDAO.UpdateStatusGuestConsultationt(guestId, statusGuestId);
+            return _guestConsultationDAO.UpdateStatusGuestConsultationtAsync(guestId, statusGuestId);
         }
-        public Task<List<GuestConsultationDTO>> GetAllGuestConsultations(string? searchQuery, int page, int pageSize)
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize)
         {
-            return _guestConsultationDAO.GetAllGuestConsultations(searchQuery, page, pageSize);
+            return _guestConsultationDAO.GetAllGuestConsultationsAsync(searchQuery, page, pageSize);
         }
 
     }

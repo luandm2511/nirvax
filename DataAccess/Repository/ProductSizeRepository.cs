@@ -23,47 +23,47 @@ namespace DataAccess.Repository
             _productSizeDAO = productSizeDAO;
         }
 
-        public Task<bool> CheckProductSizeById(string productSizeId)
+        public Task<bool> CheckProductSizeByIdAsync(string productSizeId)
         {
-            return _productSizeDAO.CheckProductSizeById(productSizeId);
+            return _productSizeDAO.CheckProductSizeByIdAsync(productSizeId);
         }
        
-        public Task<bool> CheckProductSize(ProductSizeDTO productSizeDTO)
+        public Task<bool> CheckProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
-            return _productSizeDAO.CheckProductSize(productSizeDTO);
+            return _productSizeDAO.CheckProductSizeAsync(productSizeDTO);
         }
-        public Task<bool> CheckProductSizeExist(string productSizeId)
+        public Task<bool> CheckProductSizeExistAsync(string productSizeId)
         {
-            return _productSizeDAO.CheckProductSizeExist(productSizeId);
+            return _productSizeDAO.CheckProductSizeExistAsync(productSizeId);
         }
 
        
-        public Task<List<ProductSizeDTO>> GetAllProductSizes(string? searchQuery, int page, int pageSize)
+        public Task<List<ProductSizeDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
         {
-            return _productSizeDAO.GetAllProductSizes(searchQuery, page, pageSize);
+            return _productSizeDAO.GetAllProductSizesAsync(searchQuery, page, pageSize);
         }
-        public Task<List<ProductSizeDTO>> GetProductSizeByProductId(int productId)
+        public Task<List<ProductSizeDTO>> GetProductSizeByProductIdAsync(int productId)
         {
-            return _productSizeDAO.GetProductSizeByProductId(productId);
-        }
-
-        public Task<ProductSizeDTO> GetProductSizeById(string productSizeId)
-        {
-            return _productSizeDAO.GetProductSizeById(productSizeId);
+            return _productSizeDAO.GetProductSizeByProductIdAsync(productId);
         }
 
-        public Task<bool> CreateProductSize(ProductSizeDTO productSizeDTO)
+        public Task<ProductSizeDTO> GetProductSizeByIdAsync(string productSizeId)
         {
-            return _productSizeDAO.CreateProductSize(productSizeDTO);
+            return _productSizeDAO.GetProductSizeByIdAsync(productSizeId);
         }
 
-        public Task<bool> UpdateProductSize(ProductSizeDTO productSizeDTO)
+        public Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO, int prodId, int sizeId)
         {
-            return _productSizeDAO.UpdateProductSize(productSizeDTO);
+            return _productSizeDAO.CreateProductSizeAsync(productSizeCreateDTO, prodId, sizeId);
         }
-        public Task<bool> DeleteProductSize(string productSizeId)
+
+        public Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
-            return _productSizeDAO.DeleteProductSize(productSizeId);
+            return _productSizeDAO.UpdateProductSizeAsync(productSizeDTO);
+        }
+        public Task<bool> DeleteProductSizeAsync(string productSizeId)
+        {
+            return _productSizeDAO.DeleteProductSizeAsync(productSizeId);
         }
 
     }

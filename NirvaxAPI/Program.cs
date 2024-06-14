@@ -35,7 +35,7 @@ builder.Services.AddCors(options =>
 //});
 builder.Services.AddMemoryCache();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+
 
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<StaffDAO>();
@@ -48,14 +48,7 @@ builder.Services.AddScoped<SizeDAO>();
 builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
 builder.Services.AddScoped<ProductSizeDAO>();
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ProductDAO>();
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<CategoryDAO>();
-
-builder.Services.AddScoped<IBrandRepository, BrandRepository>();
-builder.Services.AddScoped<BrandDAO>();
 
 builder.Services.AddScoped<IImportProductDetailRepository, ImportProductDetailRepository>();
 builder.Services.AddScoped<ImportProductDetailDAO>();
@@ -86,7 +79,7 @@ builder.Services.AddScoped<MessageDAO>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 builder.Services.AddScoped<AdvertisementDAO>();
 
-builder.Services.AddScoped<IFileService, FileService>();
+
 
 builder.Services.AddScoped<IDescriptionRepository, DescriptionRepository>();
 builder.Services.AddScoped<DescriptionDAO>();

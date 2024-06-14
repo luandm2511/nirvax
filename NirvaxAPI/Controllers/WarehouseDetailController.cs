@@ -25,9 +25,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<WarehouseDetailFinalDTO>>> GetAllWarehouseDetailByProductSize(int warehouseId, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<WarehouseDetailFinalDTO>>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
         {
-            var list = await _repo.GetAllWarehouseDetailByProductSize(warehouseId, page, pageSize);
+            var list = await _repo.GetAllWarehouseDetailByProductSizeAsync(warehouseId, page, pageSize);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -51,9 +51,9 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         //  [Authorize]
-        public async Task<ActionResult> CreateWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public async Task<ActionResult> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            var warehouse = await _repo.CreateWarehouseDetail(warehouseDetailDTO);
+            var warehouse = await _repo.CreateWarehouseDetailAsync(warehouseDetailDTO);
 
             if (warehouse == true)
             {
@@ -73,9 +73,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public async Task<ActionResult> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            var size1 = await _repo.UpdateWarehouseDetail(warehouseDetailDTO);
+            var size1 = await _repo.UpdateWarehouseDetailAsync(warehouseDetailDTO);
             if (size1)
             {
                 return StatusCode(200, new
@@ -96,9 +96,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> SumOfKindProdSizeStatistics(int warehouseId)
+        public async Task<ActionResult> SumOfKindProdSizeStatisticsAsync(int warehouseId)
         {
-            var number = await _repo.SumOfKindProdSizeStatistics(warehouseId);
+            var number = await _repo.SumOfKindProdSizeStatisticsAsync(warehouseId);
             if (number != null)
             {
                 return StatusCode(200, new

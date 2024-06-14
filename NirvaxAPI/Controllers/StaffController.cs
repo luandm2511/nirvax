@@ -32,9 +32,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffs(string? searchQuery, int page, int pageSize)
+        public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize)
         {
-            var list =  await _repo.GetAllStaffs(searchQuery, page, pageSize);
+            var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -56,12 +56,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{staffId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetStaffById(int staffId)
+        public async Task<ActionResult> GetStaffByIdAsync(int staffId)
         {
-            var checkStaff = await _repo.CheckStaffExist(staffId);
+            var checkStaff = await _repo.CheckStaffExistAsync(staffId);
             if (checkStaff == true)
             {
-                var staff = await _repo.GetStaffById(staffId);
+                var staff = await _repo.GetStaffByIdAsync(staffId);
                 return StatusCode(200, new
                 {
                     Result = true,
@@ -79,12 +79,12 @@ namespace WebAPI.Controllers
 
         [HttpGet("{staffEmail}")]
         //  [Authorize]
-        public async Task<ActionResult> GetStaffByEmail(string staffEmail)
+        public async Task<ActionResult> GetStaffByEmailAsync(string staffEmail)
         {
-            var checkStaff = await _repo.CheckProfileExist(staffEmail);
+            var checkStaff = await _repo.CheckProfileExistAsync(staffEmail);
             if (checkStaff == true)
             {
-                var staff = await _repo.GetStaffByEmail(staffEmail);
+                var staff = await _repo.GetStaffByEmailAsync(staffEmail);
                 return StatusCode(200, new
                 {
                     Result = true,
@@ -102,17 +102,17 @@ namespace WebAPI.Controllers
 
         //check exist
         [HttpPost]
-        public async Task<ActionResult> CreateStaff([FromForm] StaffDTO staffDTO)
+        public async Task<ActionResult> CreateStaffAsync([FromForm] StaffCreateDTO staffCreateDTO)
         {
            
             if(ModelState.IsValid)
             {
-                var checkStaff = await _repo.CheckStaff(staffDTO);
+                var checkStaff = await _repo.CheckStaffAsync(0,staffCreateDTO.Email, staffCreateDTO.Phone);
                 if (checkStaff == true)
                 {
                   
 
-                    var staff1 = await _repo.CreateStaff(staffDTO);
+                    var staff1 = await _repo.CreateStaffAsync(staffCreateDTO);
                     if (staff1 == true)
                     {
                         return StatusCode(200, new
@@ -158,14 +158,14 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> ChangePasswordStaff(int staffId, string oldPassword, string newPasswod, string confirmPassword)
+        public async Task<ActionResult> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword)
         {
             try
             {
-                var checkStaff = await _repo.CheckStaffExist(staffId);
+                var checkStaff = await _repo.CheckStaffExistAsync(staffId);
                 if (checkStaff == true)
                 {
-                    var staff1 = await _repo.ChangePasswordStaff(staffId, oldPassword, newPasswod, confirmPassword);
+                    var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPasswod, confirmPassword);
                     if (staff1 == true)
                     {
                         return StatusCode(200, new
@@ -203,15 +203,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateStaff([FromForm] StaffDTO staffDTO)
+        public async Task<ActionResult> UpdateStaffAsync([FromForm] StaffDTO staffDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkStaff = await _repo.CheckStaff(staffDTO);
+                var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone);
                 if (checkStaff == true)
                 {
                       
-                    var staff1 = await _repo.UpdateStaff(staffDTO);
+                    var staff1 = await _repo.UpdateStaffAsync(staffDTO);
                     if (staff1 == true)
                     {
                         return StatusCode(200, new
@@ -253,14 +253,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateProfileStaff(StaffProfileDTO staffProfileDTO)
+        public async Task<ActionResult> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
             if (ModelState.IsValid)
             {
-                var checkStaff = await _repo.CheckProfileStaff(staffProfileDTO);
+                var checkStaff = await _repo.CheckProfileStaffAsync(staffProfileDTO);
                 if (checkStaff == true)
                 {
-                    var staff1 = await _repo.UpdateProfileStaff(staffProfileDTO);
+                    var staff1 = await _repo.UpdateProfileStaffAsync(staffProfileDTO);
                     if (staff1 == true)
                     {
                         return StatusCode(200, new
@@ -300,14 +300,14 @@ namespace WebAPI.Controllers
 
         }
         [HttpPut]
-        public async Task<ActionResult> UpdateAvatarStaff([FromForm] StaffAvatarDTO staffAvatarDTO)
+        public async Task<ActionResult> UpdateAvatarStaffAsync([FromForm] StaffAvatarDTO staffAvatarDTO)
         {
-            var checkOwner = await _repo.CheckStaffExist(staffAvatarDTO.StaffId);
+            var checkOwner = await _repo.CheckStaffExistAsync(staffAvatarDTO.StaffId);
             if (checkOwner == true)
             {
                 
 
-                var owner1 = await _repo.UpdateAvatarStaff(staffAvatarDTO);
+                var owner1 = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);
                 if (owner1 == true)
                 {
                     return StatusCode(200, new
@@ -328,9 +328,9 @@ namespace WebAPI.Controllers
 
         }
         [HttpPatch("{staffId}")]
-        public async Task<ActionResult> BanStaff(int staffId)
+        public async Task<ActionResult> BanStaffAsync(int staffId)
         {
-            var staff1 = await _repo.BanStaff(staffId);
+            var staff1 = await _repo.BanStaffAsync(staffId);
             if (staff1 == true)
             {
                 return StatusCode(200, new

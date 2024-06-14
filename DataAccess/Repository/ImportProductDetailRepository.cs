@@ -21,36 +21,36 @@ namespace DataAccess.Repository
        {
            _importProductDetailDAO = importProductDetailDAO;
        }
-        public Task<bool> CheckImportProductDetailExist(int importProductDetailId)
+        public Task<bool> CheckImportProductDetailExistAsync(int importProductDetailId)
         {
 
-            return _importProductDetailDAO.CheckImportProductDetailExist(importProductDetailId);
+            return _importProductDetailDAO.CheckImportProductDetailExistAsync(importProductDetailId);
         }
 
-        public Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportId(int importId)
+        public Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
 
-            return _importProductDetailDAO.GetAllImportProductDetailByImportId(importId);
+            return _importProductDetailDAO.GetAllImportProductDetailByImportIdAsync(importId);
         }
 
-        public Task<List<ImportProductDetailDTO>> GetAllImportProductDetail()
+        public Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync()
         {
 
-            return _importProductDetailDAO.GetAllImportProductDetail();
+            return _importProductDetailDAO.GetAllImportProductDetailAsync();
         }
 
 
 
-        public Task<bool> CreateImportProductDetail(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
 
-            return _importProductDetailDAO.CreateImportProductDetail(importId, importProductDetailDTO);
+            return _importProductDetailDAO.CreateImportProductDetailAsync(importId, importProductDetailDTO);
         }
 
-        public Task<bool> UpdateImportProductDetail(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
 
-            return _importProductDetailDAO.UpdateImportProductDetail(importId, importProductDetailDTO);
+            return _importProductDetailDAO.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
         }
 
 

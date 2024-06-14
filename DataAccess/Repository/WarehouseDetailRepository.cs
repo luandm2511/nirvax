@@ -24,36 +24,36 @@ namespace DataAccess.Repository
         }
 
 
-        public Task<int> SumOfKindProdSizeStatistics(int warehouseId)
+        public Task<int> SumOfKindProdSizeStatisticsAsync(int warehouseId)
         {
-            return _warehouseDetailDAO.SumOfKindProdSizeStatistics(warehouseId);
+            return _warehouseDetailDAO.SumOfKindProdSizeStatisticsAsync(warehouseId);
 
         }
 
 
-        public Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSize(int warehouseId, int page, int pageSize)
+        public Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
         {
 
-            return _warehouseDetailDAO.GetAllWarehouseDetailByProductSize(warehouseId, page, pageSize);
+            return _warehouseDetailDAO.GetAllWarehouseDetailByProductSizeAsync(warehouseId, page, pageSize);
         }
 
-        public Task<bool> CheckWarehouseDetailExist(int warehouseId)
+        public Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
         {
-            return _warehouseDetailDAO.CheckWarehouseDetailExist(warehouseId);
+            return _warehouseDetailDAO.CheckWarehouseDetailExistAsync(warehouseId);
         }
-        public Task<bool> CreateWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public Task<bool> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            return _warehouseDetailDAO.CreateWarehouseDetail(warehouseDetailDTO);
-        }
-
-        public Task<bool> PatchWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
-        {
-            return _warehouseDetailDAO.PatchWarehouseDetail(warehouseDetailDTO);
+            return _warehouseDetailDAO.CreateWarehouseDetailAsync(warehouseDetailDTO);
         }
 
-        public Task<bool> UpdateWarehouseDetail(WarehouseDetailDTO warehouseDetailDTO)
+        public Task<bool> PatchWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            return _warehouseDetailDAO.UpdateWarehouseDetail(warehouseDetailDTO);
+            return _warehouseDetailDAO.PatchWarehouseDetailAsync(warehouseDetailDTO);
+        }
+
+        public Task<bool> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
+        {
+            return _warehouseDetailDAO.UpdateWarehouseDetailAsync(warehouseDetailDTO);
         }
 
     

@@ -11,16 +11,16 @@ namespace DataAccess.IRepository
 {
     public interface IServiceRepository
     {
-        Task<List<ServiceDTO>> GetAllServices(string? searchQuery, int page, int pageSize);
-        Task<List<ServiceDTO>> GetAllServiceForUser();
-        Task<ServiceDTO> GetServiceById(int serviceId);
-        Task<bool> CheckService(ServiceDTO serviceDTO);
-        Task<bool> CheckServiceExist(int serviceId);
-        Task<bool> CreateService(ServiceDTO serviceDTO);
-        Task<bool> RestoreService(int serviceId);
+        Task<List<ServiceDTO>> GetAllServicesAsync(string? searchQuery, int page, int pageSize);
+        Task<List<ServiceDTO>> GetAllServiceForUserAsync();
+        Task<ServiceDTO> GetServiceByIdAsync(int serviceId);
+        Task<bool> CheckServiceAsync(int serviceId, string name);
+        Task<bool> CheckServiceExistAsync(int serviceId);
+        Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO);
+        Task<bool> RestoreServiceAsync(int serviceId);
 
-        Task<bool> UpdateService(ServiceDTO serviceDTO);
-        Task<bool> DeleteService(int serviceId);
+        Task<bool> UpdateServiceAsync(ServiceDTO serviceDTO);
+        Task<bool> DeleteServiceAsync(int serviceId);
 
     }
 }

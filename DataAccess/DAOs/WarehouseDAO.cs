@@ -25,7 +25,7 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckWarehouse(WarehouseDTO warehouseDTO)
+        public async Task<bool> CheckWarehouseAsync(WarehouseDTO warehouseDTO)
         {
 
             Warehouse? warehouse = new Warehouse();
@@ -54,7 +54,7 @@ namespace DataAccess.DAOs
 
 
         //list ra các import thôi
-        public async Task<List<ImportProduct>> GetWarehouseByImportProduct(int ownerId, int page, int pageSize)
+        public async Task<List<ImportProduct>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i=> i.OwnerId == ownerId).FirstOrDefaultAsync();
 
@@ -71,7 +71,7 @@ namespace DataAccess.DAOs
 
        
         
-        public async Task<Warehouse> UpdateQuantityAndPriceWarehouse(int ownerId)
+        public async Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             List<ImportProduct> listImportProduct = await _context.ImportProducts
@@ -89,14 +89,14 @@ namespace DataAccess.DAOs
         }
 
         //số lần nhập kho
-        public async Task<int> ViewCountImportStatistics(int warehouseId)
+        public async Task<int> ViewCountImportStatisticsAsync(int warehouseId)
         {
           var numberCount =  await _context.ImportProducts.Where(i => i.WarehouseId == warehouseId).CountAsync();
             return numberCount;
         }
 
         //tổng số sản phẩm lần nhập đó
-        public async Task<int> ViewNumberOfProductByImportStatistics(int importId, int ownerId)
+        public async Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
 
@@ -109,7 +109,7 @@ namespace DataAccess.DAOs
         }
 
         //tổng tiền lần nhập đó
-        public async Task<double> ViewPriceByImportStatistics(int importId, int ownerId)
+        public async Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
 
@@ -123,7 +123,7 @@ namespace DataAccess.DAOs
 
 
         // thống kê tổng số lượng các sản phẩm
-        public async Task<int> QuantityWarehouseStatistics(int ownerId)
+        public async Task<int> QuantityWarehouseStatisticsAsync(int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             List<ImportProduct> listImportProduct = await _context.ImportProducts
@@ -141,7 +141,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<Warehouse> GetWarehouseById(int ownerId)
+        public async Task<Warehouse> GetWarehouseByIdAsync(int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
 
@@ -164,7 +164,7 @@ namespace DataAccess.DAOs
             return warehouse;
         }
 
-        public async Task<int> GetWarehouseIdByOwnerId(int ownerId)
+        public async Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             return warehouse.WarehouseId;
@@ -174,7 +174,7 @@ namespace DataAccess.DAOs
 
         //list ra detail nhưng mà group by theo product size giống bên warehousedetail
 
-        public async Task<List<WarehouseDetail>> GetAllWarehouseDetail(int ownerId, int page, int pageSize)
+        public async Task<List<WarehouseDetail>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
 
@@ -203,11 +203,11 @@ namespace DataAccess.DAOs
 
 
         //chỉ là create warehouse cho owner (1 lần duy nhất)
-        public async Task<bool> CreateWarehouse(WarehouseDTO warehouseDTO)
+        public async Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
         {
-            Warehouse warehouseCheck = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == warehouseDTO.OwnerId).FirstOrDefaultAsync();
+            Warehouse warehouseCheck = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == warehouseCreateDTO.OwnerId).FirstOrDefaultAsync();
             if(warehouseCheck == null) {
-                Warehouse warehouse = _mapper.Map<Warehouse>(warehouseDTO);
+                Warehouse warehouse = _mapper.Map<Warehouse>(warehouseCreateDTO);
                 await _context.Warehouses.AddAsync(warehouse);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)
@@ -224,7 +224,7 @@ namespace DataAccess.DAOs
             }
         }
 
-        public async Task<bool> UpdateWarehouse(WarehouseDTO warehouseDTO)
+        public async Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
         {
             Warehouse? warehouse = await _context.Warehouses.Include(i => i.Owner).SingleOrDefaultAsync(i => i.WarehouseId == warehouseDTO.WarehouseId);
             _mapper.Map(warehouseDTO, warehouse);
