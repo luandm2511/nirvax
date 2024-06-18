@@ -25,6 +25,8 @@ public partial class NirvaxContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<CategoryParent> CategoryParents { get; set; }
+
     public virtual DbSet<Comment> Comments { get; set; }
 
     public virtual DbSet<Description> Descriptions { get; set; }
@@ -73,7 +75,7 @@ public partial class NirvaxContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-HKH7PJO\\MSSQLSERVER01;Initial Catalog=Nirvax;User ID=sa;Password=123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -122,13 +124,13 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("gender");
             entity.Property(e => e.Image)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
             entity.Property(e => e.Password)
-                .HasMaxLength(24)
+                .HasMaxLength(60)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)
@@ -152,7 +154,6 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("content");
             entity.Property(e => e.Image)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
@@ -186,9 +187,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Brand");
 
             entity.Property(e => e.BrandId).HasColumnName("brand_id");
-            entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.Image)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
@@ -196,11 +195,6 @@ public partial class NirvaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
-
-            entity.HasOne(d => d.Category).WithMany(p => p.Brands)
-                .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_brand_category");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -210,10 +204,28 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Category");
 
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
+            entity.Property(e => e.CateParentId).HasColumnName("cate_parent_id");
             entity.Property(e => e.Image)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
+            entity.Property(e => e.Isdelete).HasColumnName("isdelete");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+
+            entity.HasOne(d => d.CateParent).WithMany(p => p.Categories)
+                .HasForeignKey(d => d.CateParentId)
+                .HasConstraintName("fk_category_categoryparent");
+        });
+
+        modelBuilder.Entity<CategoryParent>(entity =>
+        {
+            entity.HasKey(e => e.CateParentId);
+
+            entity.ToTable("CategoryParent");
+
+            entity.Property(e => e.CateParentId).HasColumnName("cate_parent_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
@@ -322,9 +334,7 @@ public partial class NirvaxContext : DbContext
 
             entity.ToTable("GuestStatus");
 
-            entity.Property(e => e.StatusGuestId)
-                .ValueGeneratedNever()
-                .HasColumnName("status_guest_id");
+            entity.Property(e => e.StatusGuestId).HasColumnName("status_guest_id");
             entity.Property(e => e.Name)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -341,19 +351,16 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.DescriptionId).HasColumnName("description_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.LinkImage)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("link_image");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
 
             entity.HasOne(d => d.Description).WithMany(p => p.Images)
                 .HasForeignKey(d => d.DescriptionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_image_description");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Images)
                 .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_image_product");
         });
 
@@ -389,7 +396,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(30)
+                .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityReceived).HasColumnName("quantity_received");
@@ -469,14 +476,29 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.AccountId).HasColumnName("account_id");
+            entity.Property(e => e.Address)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("address");
             entity.Property(e => e.CodeOrder)
                 .HasMaxLength(10)
-                .IsUnicode(false)
                 .HasColumnName("code_order");
+            entity.Property(e => e.Fullname)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("fullname");
+            entity.Property(e => e.Note)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("note");
             entity.Property(e => e.OrderDate)
                 .HasColumnType("datetime")
                 .HasColumnName("order_date");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("phone");
             entity.Property(e => e.RequiredDate)
                 .HasColumnType("datetime")
                 .HasColumnName("required_date");
@@ -512,24 +534,24 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("OrderDetail");
+            entity.HasKey(e => new { e.OrderId, e.ProductSizeId }).HasName("PK_Multi");
+
+            entity.ToTable("OrderDetail");
 
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(30)
+                .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
 
-            entity.HasOne(d => d.Order).WithMany()
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_orderdetail_order");
 
-            entity.HasOne(d => d.ProductSize).WithMany()
+            entity.HasOne(d => d.ProductSize).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductSizeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_orderdetail_productsize");
@@ -568,13 +590,13 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("fullname");
             entity.Property(e => e.Image)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
             entity.Property(e => e.Password)
-                .HasMaxLength(24)
+                .HasMaxLength(60)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)
@@ -648,7 +670,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("ProductSize");
 
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(30)
+                .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
@@ -743,13 +765,13 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("fullname");
             entity.Property(e => e.Image)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.Password)
-                .HasMaxLength(80)
+                .HasMaxLength(60)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)
@@ -792,7 +814,7 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF27394119");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF81DFF54B");
 
             entity.ToTable("Warehouse");
 
@@ -818,7 +840,7 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("location");
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(30)
+                .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityInStock).HasColumnName("quantity_in_stock");
