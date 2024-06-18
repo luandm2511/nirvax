@@ -11,6 +11,8 @@ public partial class Voucher
 
     public int Quantity { get; set; }
 
+    public int QuantityUsed { get; set; }
+
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }

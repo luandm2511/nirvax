@@ -3,6 +3,7 @@ using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,30 +56,8 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetByCategory/{cate_id}")]
-        public async Task<IActionResult> GetByCategory(int cate_id)
-        {
-            try
-            {
-                var category = await _cate.GetCategoryByIdAsync(cate_id);
-                if (category == null || category.Isdelete == true)
-                {
-                    return NotFound(new { message = "Category not found." });
-                }
-                var brands = await _repository.GetBrandsByCategoryAsync(cate_id);
-                if (brands == null)
-                {
-                    return NotFound(new { message = "Brand not found." });
-                }
-                return Ok(brands);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
-            }
-        }
-
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] BrandDTO brandDto)
         {
             try
@@ -113,6 +92,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromForm] BrandDTO brandDto)
         {
             try
@@ -155,6 +135,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try

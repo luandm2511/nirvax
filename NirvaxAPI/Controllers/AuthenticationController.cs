@@ -35,157 +35,229 @@ namespace WebAPI.Controllers
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUser request)
         {
-            if (request.Password != request.ConfirmPassword)
+            try
             {
-                return BadRequest("Passwords do not match.");
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(400, new { message = "Please pass the valid data." });
+                }
+                var existingAccount = await _repository.CheckEmailAsync(request.Email);
+                if (!existingAccount) return BadRequest("Email already in use.");
+
+                var existingPhoneAccount = await _repository.CheckPhoneAsync(request.Phone);
+                if (!existingPhoneAccount) return BadRequest("Phone number already in use.");
+
+                if (request.Password != request.ConfirmPassword)
+                {
+                    return BadRequest("Passwords do not match.");
+                }
+
+                var verificationCode = new Random().Next(100000, 999999).ToString();
+                _cache.Set(request.Email, verificationCode, TimeSpan.FromMinutes(5));
+
+                await _emailService.SendEmailAsync(request.Email, "Email Verification", $"Your verification code is: {verificationCode}");
+
+                return Ok("Verification code sent. Please check your email.");
             }
-
-            var existingAccount = await _repository.CheckEmailAsync(request.Email);
-            if (!existingAccount) return BadRequest("Email already in use.");
-
-            var existingPhoneAccount = await _repository.CheckPhoneAsync(request.Phone);
-            if (!existingPhoneAccount) return BadRequest("Phone number already in use.");
-
-            var verificationCode = new Random().Next(100000, 999999).ToString();
-            _cache.Set(request.Email, verificationCode, TimeSpan.FromMinutes(5));
-
-            await _emailService.SendEmailAsync(request.Email, "Email Verification", $"Your verification code is: {verificationCode}");
-
-            return Ok("Verification code sent. Please check your email.");
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }         
         }
 
         [HttpPost("register-owner")]
         public async Task<IActionResult> RegisterOwner([FromBody] RegisterOwner request)
         {
-            if (request.Password != request.ConfirmPassword)
+            try
             {
-                return BadRequest("Passwords do not match.");
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(400, new { message = "Please pass the valid data." });
+                }
+                var existingAccount = await _repository.CheckEmailAsync(request.Email);
+                if (!existingAccount) return BadRequest("Email already in use.");
+
+                var existingPhoneAccount = await _repository.CheckPhoneAsync(request.Phone);
+                if (!existingPhoneAccount) return BadRequest("Phone number already in use.");
+
+                if (request.Password != request.ConfirmPassword)
+                {
+                    return BadRequest("Passwords do not match.");
+                }
+
+                var verificationCode = new Random().Next(100000, 999999).ToString();
+                _cache.Set(request.Email, verificationCode, TimeSpan.FromMinutes(5));
+
+                await _emailService.SendEmailAsync(request.Email, "Email Verification", $"Your verification code is: {verificationCode}");
+
+                return Ok("Verification code sent. Please check your email.");
             }
-
-            var existingAccount = await _repository.CheckEmailAsync(request.Email);
-            if (existingAccount) return BadRequest("Email already in use.");
-
-            var existingPhoneAccount = await _repository.CheckPhoneAsync(request.Phone);
-            if (existingPhoneAccount) return BadRequest("Phone number already in use.");
-
-            var verificationCode = new Random().Next(100000, 999999).ToString();
-            _cache.Set(request.Email, verificationCode, TimeSpan.FromMinutes(5));
-
-            await _emailService.SendEmailAsync(request.Email, "Email Verification", $"Your verification code is: {verificationCode}");
-
-            return Ok("Verification code sent. Please check your email.");
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [HttpPost("verify-user")]
         public async Task<IActionResult> VerifyUser([FromBody] VerifyUser request)
         {
-            if (_cache.TryGetValue(request.Email, out string storedCode))
+            try 
             {
-                if (storedCode == request.Code)
+                if (_cache.TryGetValue(request.Email, out string storedCode))
                 {
-                    _cache.Remove(request.Email);
-                    var account = new Account
+                    if (storedCode == request.Code)
                     {
-                        Email = request.Email,
-                        Password = PasswordHasher.HashPassword(request.Password),
-                        Fullname = request.Fullname,
-                        Phone = request.Phone,
-                        Dob = request.Dob,
-                        Gender = request.Gender,
-                        Address = request.Address,
-                        Role = "User",
-                        IsBan = false
-                    };
+                        _cache.Remove(request.Email);
+                        var account = new Account
+                        {
+                            Email = request.Email,
+                            Password = PasswordHasher.HashPassword(request.Password),
+                            Fullname = request.Fullname,
+                            Phone = request.Phone,
+                            Dob = request.Dob,
+                            Gender = request.Gender,
+                            Address = request.Address,
+                            Role = "User",
+                            IsBan = false
+                        };
 
-                    await _repository.AddAccountAsync(account);
-                    return Ok("Registration successful.");
+                        await _repository.AddAccountAsync(account);
+                        return Ok("Registration successful.");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid verification code.");
+                    }
                 }
                 else
                 {
-                    return BadRequest("Invalid verification code.");
+                    return BadRequest("Verification code expired.");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Verification code expired.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
             }
         }
 
         [HttpPost("verify-owner")]
         public async Task<IActionResult> VerifyOwner([FromBody] VerifyOwner request)
         {
-            if (_cache.TryGetValue(request.Email, out string storedCode))
+            try
             {
-                if (storedCode == request.Code)
+                if (_cache.TryGetValue(request.Email, out string storedCode))
                 {
-                    _cache.Remove(request.Email);
-                    var owner = new Owner
+                    if (storedCode == request.Code)
                     {
-                        Email = request.Email,
-                        Password = PasswordHasher.HashPassword(request.Password),
-                        Fullname = request.Fullname,
-                        Phone = request.Phone,
-                        Address = request.Address,
-                        IsBan = false
-                    };
+                        _cache.Remove(request.Email);
+                        var owner = new Owner
+                        {
+                            Email = request.Email,
+                            Password = PasswordHasher.HashPassword(request.Password),
+                            Fullname = request.Fullname,
+                            Phone = request.Phone,
+                            Address = request.Address,
+                            IsBan = false
+                        };
 
-                    await _repository.AddOwnerAsync(owner);
-                    return Ok("Registration successful.");
+                        await _repository.AddOwnerAsync(owner);
+                        return Ok("Registration successful.");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid verification code.");
+                    }
                 }
                 else
                 {
-                    return BadRequest("Invalid verification code.");
+                    return BadRequest("Verification code expired.");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Verification code expired.");
-            }
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }         
         }
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
-            // Check if email exists
-            var account = await _repository.CheckEmailAsync(email);
-
-            if (account)
+            try
             {
-                return BadRequest("Email not found.");
+                // Check if email exists
+                var account = await _repository.CheckEmailAsync(email);
+
+                if (!account)
+                {
+                    return BadRequest("Email not found.");
+                }
+
+                var resetCode = new Random().Next(100000, 999999).ToString();
+                _cache.Set(email, resetCode, TimeSpan.FromMinutes(2));
+
+                await _emailService.SendEmailAsync(email, "Password Reset", $"Your password reset code is: {resetCode}");
+
+                return Ok("Password reset code sent. Please check your email.");
             }
-
-            var resetCode = new Random().Next(100000, 999999).ToString();
-            _cache.Set(email, resetCode, TimeSpan.FromMinutes(2));
-
-            await _emailService.SendEmailAsync(email, "Password Reset", $"Your password reset code is: {resetCode}");
-
-            return Ok("Password reset code sent. Please check your email.");
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }       
         }
 
         [HttpPost("verify-code")]
         public async Task<IActionResult> VerifyCode([FromBody] VerifyCode request)
         {
-            if (_cache.TryGetValue(request.Email, out string storedCode))
+            try
             {
-                if (storedCode == request.Code)
+                if (_cache.TryGetValue(request.Email, out string storedCode))
                 {
-                    _cache.Remove(request.Email);
-                    return Ok("Verify code successful.");
+                    if (storedCode == request.Code)
+                    {
+                        _cache.Remove(request.Email);
+                        return Ok("Verify code successful.");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid reset code.");
+                    }
                 }
                 else
                 {
-                    return BadRequest("Invalid reset code.");
+                    return BadRequest("Reset code expired.");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Reset code expired.");
-            }
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }          
         }
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPassword request)
         {
+            if (request.NewPassword != request.ConfirmPassword)
+            {
+                return BadRequest("Passwords do not match.");
+            }
             var account = await _repository.GetAccountByEmailAsync(request.Email);
             if (account != null)
             {
@@ -213,35 +285,142 @@ namespace WebAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login request)
+        [HttpPost("login-admin")]
+        public async Task<IActionResult> LoginAdmin([FromForm] Login request)
         {
-            if (request.Role == "User" || request.Role == "Admin")
+            try
             {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(406, new { message = "Please pass the valid data." });
+                }
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
-                if (account != null && PasswordHasher.VerifyPassword(request.Password, account.Password))
+                if (account.Role == "Admin" && PasswordHasher.VerifyPassword(request.Password, account.Password))
                 {
                     var token = GenerateJSONWebToken(account.Email, account.Role);
                     return Ok(new { token, userType = account.Role });
                 }
+                return BadRequest("Invalid email or password.");
             }
-            else if (request.Role == "Shop")
+            catch (Exception ex)
             {
-                var owner = await _repository.GetOwnerByEmailAsync(request.Email);
-                if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
+                return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    var token = GenerateJSONWebToken(owner.Email, "Owner");
-                    return Ok(new { token, userType = "Owner" });
-                }
-
-                var staff = await _repository.GetStaffByEmailAsync(request.Email);
-                if (staff != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
-                {
-                    var token = GenerateJSONWebToken(staff.Email, "Staff");
-                    return Ok(new { token, userType = "Staff" });
-                }
+                    message = ex.Message
+                });
             }
-            return BadRequest("Invalid email or password.");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login-user")]
+        public async Task<IActionResult> LoginUser([FromForm] Login request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(406, new { message = "Please pass the valid data." });
+                }
+                var account = await _repository.GetAccountByEmailAsync(request.Email);
+                if (account.Role == "User" && PasswordHasher.VerifyPassword(request.Password, account.Password))
+                {
+                    var token = GenerateJSONWebToken(account.Email, account.Role);
+                    return Ok(new { token, userType = account.Role });
+                }
+                return BadRequest("Invalid email or password.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login-shop")]
+        public async Task<IActionResult> LoginShop([FromForm] Login request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(406, new { message = "Please pass the valid data." });
+                }
+                if(request.Role == "Owner")
+                {
+                    var owner = await _repository.GetOwnerByEmailAsync(request.Email);
+                    if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
+                    {
+                        var token = GenerateJSONWebToken(owner.Email, "Owner");
+                        return Ok(new { token, userType = "Owner" });
+                    }
+                }               
+                if (request.Role == "Staff")
+                {
+                    var staff = await _repository.GetStaffByEmailAsync(request.Email);
+                    if (staff != null && PasswordHasher.VerifyPassword(request.Password, staff.Password))
+                    {
+                        var token = GenerateJSONWebToken(staff.Email, "Staff");
+                        return Ok(new { token, userType = "Staff" });
+                    }
+                }               
+                return BadRequest("Invalid email or password.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] Login request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(406, new { message = "Please pass the valid data." });
+                }
+                if (request.Role == "User" || request.Role == "Admin")
+                {
+                    var account = await _repository.GetAccountByEmailAsync(request.Email);
+                    if (account != null && PasswordHasher.VerifyPassword(request.Password, account.Password))
+                    {
+                        var token = GenerateJSONWebToken(account.Email, account.Role);
+                        return Ok(new { token, userType = account.Role });
+                    }
+                }
+                else if (request.Role == "Shop")
+                {
+                    var owner = await _repository.GetOwnerByEmailAsync(request.Email);
+                    if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
+                    {
+                        var token = GenerateJSONWebToken(owner.Email, "Owner");
+                        return Ok(new { token, userType = "Owner" });
+                    }
+
+                    var staff = await _repository.GetStaffByEmailAsync(request.Email);
+                    if (staff != null && PasswordHasher.VerifyPassword(request.Password, staff.Password))
+                    {
+                        var token = GenerateJSONWebToken(staff.Email, "Staff");
+                        return Ok(new { token, userType = "Staff" });
+                    }
+                }
+                return BadRequest("Invalid email or password.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         private string GenerateJSONWebToken(string Email, string Role)

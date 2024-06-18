@@ -14,5 +14,6 @@ namespace WebAPI.Helpers
             var value = session.GetString(key);
             return value == null ? default : JsonConvert.DeserializeObject<T>(value);
         }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("user/{id}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetByUser(int id)
         {
             try
@@ -35,6 +37,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("owner/{id}")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> GetByOwner(int id)
         {
             try
@@ -52,6 +55,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> GetByid(int id)
         {
             try

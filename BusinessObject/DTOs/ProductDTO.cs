@@ -22,7 +22,7 @@ namespace BusinessObject.DTOs
         public List<string> ImageLinks {  get; set; }
 
         [Required(ErrorMessage = " Price cannot be empty!!")]
-        [Range(0.01, 99999, ErrorMessage = "Price must be greater than 0")]
+        [Range(0.01, 99999999999, ErrorMessage = "Price must be greater than 0")]
         public double Price { get; set; }
 
         [Required(ErrorMessage = " DescriptionId cannot be empty!!")]

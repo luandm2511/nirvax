@@ -21,7 +21,7 @@ namespace DataAccess.DAOs
         {
             return await _context.Products.Include(p => p.Images).Include(p => p.Description)
                     .Include(p => p.Category).Include(p => p.Brand)
-                    .Include(p => p.Owner).Where(p => !p.Isdelete).ToListAsync();
+                    .Include(p => p.Owner).AsNoTracking().Where(p => !p.Isdelete).ToListAsync();
         }
 
         public async Task<Product> GetByIdAsync(int id)
@@ -113,7 +113,9 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId)
         {
-            return await _context.Products
+            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+                .Include(p => p.Category).Include(p => p.Brand)
+                .Include(p => p.Owner)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(5)
                 .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
@@ -122,6 +124,9 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Product>> GetTopSellingProductsAsync()
         {
             return await _context.Products
+                .Include(p => p.Images).Include(p => p.Description)
+                .Include(p => p.Category).Include(p => p.Brand)
+                .Include(p => p.Owner)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(10)
                 .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)

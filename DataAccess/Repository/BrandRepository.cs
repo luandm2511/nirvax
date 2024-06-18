@@ -20,7 +20,6 @@ namespace DataAccess.Repository
 
         public async Task<IEnumerable<Brand>> GetAllBrandAsync() => await _brandDAO.GetAllBrandAsync();
         public async Task<Brand> GetBrandByIdAsync(int id) => await _brandDAO.GetBrandByIdAsync(id);
-        public async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id) => await _brandDAO.GetBrandsByCategoryAsync(cate_id);
         public async Task<bool> CreateBrandAsync(Brand brand) 
         {
             brand.Isdelete = false;

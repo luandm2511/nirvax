@@ -20,6 +20,8 @@ namespace WebAPI.Helpers
             CreateMap<Comment, ReplyCommentDTO>().ReverseMap();
             CreateMap<Comment, CommentDTO>().ReverseMap();
             CreateMap<Voucher, VoucherDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>();
+            CreateMap<Order, OrderItemDTO>();
         }
     }
 }

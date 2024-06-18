@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.Repository
 {
@@ -17,41 +19,76 @@ namespace DataAccess.Repository
             _orderDAO = orderDAO;
         }
 
-        public async Task<bool> AddOrder(Order order)
+        public async Task<bool> AddOrderAsync(Order order)
         {
-            return await _orderDAO.AddOrder(order);
+            return await _orderDAO.AddOrderAsync(order);
         }
 
-        public async Task<bool> AddOrders(IEnumerable<Order> orders) => await _orderDAO.AddOrders(orders);
+        public async Task<bool> AddOrdersAsync(IEnumerable<Order> orders) => await _orderDAO.AddOrdersAsync(orders);
 
-        public async Task<bool> CodeOrderExists(string codeOrder)
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
-            return await _orderDAO.CodeOrderExists(codeOrder);
+            return await _orderDAO.BeginTransactionAsync();
         }
 
-        public async Task<Order> GetOrderById(int orderId)
+        public async Task<bool> CodeOrderExistsAsync(string codeOrder)
         {
-            return await _orderDAO.GetOrderById(orderId);
+            return await _orderDAO.CodeOrderExistsAsync(codeOrder);
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
+        public async Task<bool> CommitTransactionAsync()
         {
-            return await _orderDAO.GetOrdersByAccountId(accountId);
+            return await _orderDAO.CommitTransactionAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByOwnerId(int ownerId)
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            return await _orderDAO.GetOrdersByOwnerId(ownerId);
+            return await _orderDAO.GetAllOrdersAsync();
         }
 
-        public async Task<IEnumerable<Order>> SearchOrders(string codeOrder)
+        public async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            return await _orderDAO.SearchOrders(codeOrder);
+            return await _orderDAO.GetOrderByIdAsync(orderId);
         }
 
-        public async Task<bool> UpdateOrder(Order order)
+        public async Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId)
         {
-            return await _orderDAO.UpdateOrder(order);
+            return await _orderDAO.GetOrdersByAccountIdAsync(accountId);
+        }
+
+        public async Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId)
+        {
+            return await _orderDAO.GetOrdersByOwnerIdAsync(ownerId);
+        }
+
+        public async Task<OrderStatisticsDTO> GetOrderStatisticsAsync()
+        {
+            return await _orderDAO.GetOrderStatisticsAsync();
+        }
+
+        public async Task<OwnerStatisticsDTO> GetOwnerStatisticsAsync(int ownerId)
+        {
+            return await _orderDAO.GetOwnerStatisticsAsync(ownerId);
+        }
+
+        public async Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync()
+        {
+            return await _orderDAO.GetTop10ShopsAsync();
+        }
+
+        public async Task<bool> RollbackTransactionAsync()
+        {
+            return await _orderDAO.RollbackTransactionAsync();
+        }
+
+        public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)
+        {
+            return await _orderDAO.SearchOrdersAsync(codeOrder);
+        }
+
+        public async Task<bool> UpdateOrderAsync(Order order)
+        {
+            return await _orderDAO.UpdateOrderAsync(order);
         }
     }
 }

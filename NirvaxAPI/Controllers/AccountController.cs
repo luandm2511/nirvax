@@ -3,6 +3,7 @@ using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Service;
@@ -23,6 +24,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAccounts()
         {
             try
@@ -37,6 +39,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetAccountById(int id)
         {
             try
@@ -55,6 +58,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/ban")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BanAccount(int id)
         {
             try
@@ -75,6 +79,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/unban")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UnbanAccount(int id)
         {
             try
@@ -95,6 +100,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("search")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SearchAccounts([FromQuery] string keyword)
         {
             try
@@ -109,6 +115,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/change-password")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePassword changePassword)
         {
             try
@@ -137,6 +144,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/update-profile")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateAccount(int id,UpdateUserDTO model)
         {
             try
@@ -157,6 +165,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/{avatar}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateAvatar(int id, string avatar)
         {
             try

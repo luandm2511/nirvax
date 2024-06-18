@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +48,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> AddComment([FromForm] CommentDTO commentDto)
         {
             try
@@ -96,6 +98,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateComment(int commentId, string updateComment)
         {
             try
@@ -130,6 +133,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{commentId}/reply")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> ReplyComment(int commentId, [FromBody] ReplyCommentDTO replyDto)
         {
             try

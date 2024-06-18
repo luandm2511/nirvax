@@ -20,7 +20,6 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Brand>> GetAllBrandAsync()
         {
             return await _context.Brands
-                .Include(b => b.Category)
                 .Where(b => !b.Isdelete)
                 .ToListAsync();
         }
@@ -28,16 +27,7 @@ namespace DataAccess.DAOs
         public async Task<Brand> GetBrandByIdAsync(int id)
         {
             return await _context.Brands
-                .Include(b => b.Category)
                 .SingleOrDefaultAsync(b => b.BrandId == id);
-        }
-
-        public async Task<IEnumerable<Brand>> GetBrandsByCategoryAsync(int cate_id)
-        {
-            return await _context.Brands
-                .Include(b => b.Category)
-                .Where(b => !b.Isdelete && b.CategoryId == cate_id)
-                .ToListAsync();
         }
 
         public async Task<bool> CreateBrandAsync(Brand brand)

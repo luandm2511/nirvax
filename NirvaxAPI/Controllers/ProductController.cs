@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -134,6 +135,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Create([FromForm] ProductDTO productDto)
         {
             try
@@ -181,6 +183,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Update(int id, [FromForm] ProductDTO productDto)
         {
             try
@@ -245,6 +248,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -281,6 +285,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("ban/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BanProduct(int id)
         {
             try
@@ -323,6 +328,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("unban/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UnbanProduct(int id)
         {
             try
@@ -365,6 +371,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{productId}/rate")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> RateProduct(int productId, [FromBody] int rating)
         {
             try
@@ -398,6 +405,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("top5/{ownerId}")]
+        [Authorize(Roles = "Owner")]
         public async Task<IActionResult> GetTop5SellingProductsByOwner(int ownerId)
         {
             try
@@ -415,6 +423,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("top10")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetTop10SellingProducts()
         {
             try
