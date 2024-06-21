@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
             var list =await _repo.GetAllAdvertisementsForUserAsync(searchQuery);
-            if (list!=null)
+            if (list.Any())
             {
                 return StatusCode(200, new
                 {
