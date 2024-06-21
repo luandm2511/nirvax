@@ -94,40 +94,51 @@ namespace WebAPI.Controllers
 
         //check exist
         [HttpPost]
-        public async Task<ActionResult> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO, int prodId, int sizeId)
+        public async Task<ActionResult> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO)
         {
-            if (ModelState.IsValid)
+            try
             {
-
-                var productSize1 = await _repo.CreateProductSizeAsync(productSizeCreateDTO, prodId, sizeId);
-                if (productSize1)
+                if (ModelState.IsValid)
                 {
-                    return StatusCode(200, new
-                    {
 
-                        Result = true,
-                        Message = "Create productSize " + ok,
-                        Data = productSize1
-                    });
+                    var productSize1 = await _repo.CreateProductSizeAsync(productSizeCreateDTO);
+                    if (productSize1)
+                    {
+                        return StatusCode(200, new
+                        {
+
+                            Result = true,
+                            Message = "Create productSize " + ok,
+                            Data = productSize1
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(500, new
+                        {
+
+                            Result = true,
+                            Message = "Server error",
+                            Data = ""
+                        });
+                    }
+
                 }
-                else
+                return StatusCode(400, new
                 {
-                    return StatusCode(500, new
-                    {
-
-                        Result = true,
-                        Message = "Server error",
-                        Data = ""
-                    });
-                }
-
+                    StatusCode = 400,
+                    Result = false,
+                    Message = "Dont't accept empty information!",
+                });
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                StatusCode = 400,
-                Result = false,
-                Message = "Dont't accept empty information!",
-            });
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
 
         }

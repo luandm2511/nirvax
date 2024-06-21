@@ -11,7 +11,6 @@ namespace WebAPI.Helpers
           
             CreateMap<Owner, OwnerDTO>().ReverseMap();
             CreateMap<Owner, OwnerAvatarDTO>().ReverseMap();
-
             CreateMap<Owner, OwnerProfileDTO>().ReverseMap();
             CreateMap<Staff, StaffDTO>().ReverseMap();
             CreateMap<Description, DescriptionDTO>().ReverseMap();
@@ -39,6 +38,8 @@ namespace WebAPI.Helpers
             CreateMap<ImportProduct, ImportProductCreateDTO>().ReverseMap();
 
             CreateMap<ImportProductDetail, ImportProductDetailDTO>().ReverseMap();
+            
+
             CreateMap<Warehouse, WarehouseDTO>().ReverseMap();
             CreateMap<Warehouse, WarehouseCreateDTO>().ReverseMap();
 
@@ -51,12 +52,18 @@ namespace WebAPI.Helpers
 
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<Brand, BrandDTO>().ReverseMap();
+
             CreateMap<Service, ServiceDTO>().ReverseMap();
+            CreateMap<Service, ServiceCreateDTO>().ReverseMap();
+
             CreateMap<Voucher, VoucherDTO>().ReverseMap();
-           
+            
+
+
             CreateMap<Room, RoomDTO>().ReverseMap();
             CreateMap<Room, RoomCreateDTO>().ReverseMap();
             CreateMap<Room, RoomContentDTO>().ReverseMap();
+
             CreateMap<Message, MessageDTO>().ReverseMap();
             CreateMap<Message, MessageCreateDTO>().ReverseMap();
 

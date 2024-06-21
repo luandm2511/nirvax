@@ -384,10 +384,9 @@ public partial class NirvaxContext : DbContext
         modelBuilder.Entity<ImportProductDetail>(entity =>
         {
             entity
-                .HasNoKey()
                 .ToTable("ImportProductDetail");
-
-            entity.Property(e => e.ImportId).HasColumnName("import_id");
+            entity.HasKey(e => new { e.ImportId, e.ProductSizeId }); 
+           entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -810,10 +809,11 @@ public partial class NirvaxContext : DbContext
         modelBuilder.Entity<WarehouseDetail>(entity =>
         {
             entity
-                .HasNoKey()
+                
                 .ToTable("WarehouseDetail");
+            entity.HasKey(e => new { e.WarehouseId, e.ProductSizeId }); 
 
-            entity.Property(e => e.Location)
+           entity.Property(e => e.Location)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("location");

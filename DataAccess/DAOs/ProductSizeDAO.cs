@@ -135,29 +135,56 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO, int prodId, int sizeId)
+        public async Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO)
         {
-            Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == prodId);
-            Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeId);
            
-            //productSizeCreateDTO.Isdelete = false;
-            ProductSize productSize = _mapper.Map<ProductSize>(productSizeCreateDTO);
-            productSize.ProductSizeId = product.Name.Trim()+ "_" + size.Name.Trim();
-            var checkId = productSize.ProductSizeId;
-            List<ProductSize> checkProdSize = await _context.ProductSizes.Where(i => i.ProductSizeId.Trim() == checkId.Trim()).ToListAsync();
-            if(checkProdSize.Count > 0) {
-                return false;
-            } 
-            productSize.Isdelete = false;
-            productSize.ProductSizeId = product.Name.Trim() + "_" + size.Name.Trim();
-            await _context.ProductSizes.AddAsync(productSize);
+                // Fetch the product and size
+                Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == productSizeCreateDTO.ProductId);
+                Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == productSizeCreateDTO.SizeId);
+
+                // Check if product or size is null
+                if (product == null)
+                {
+                    throw new Exception($"Product with ID does not exist.");
+                }
+
+                if (size == null)
+                {
+                    throw new Exception($"Size with ID does not exist.");
+                }
+
+                ProductSize productSize = _mapper.Map<ProductSize>(productSizeCreateDTO);
+
+                
+                productSize.ProductId = product.ProductId;
+                productSize.SizeId = size.SizeId;
+
+                
+                productSize.ProductSizeId = product.Name.Trim() + "_" + size.Name.Trim();
+
+              //  var checkId = productSize.ProductSizeId;
+
+            List<ProductSize> checkProdSize = await _context.ProductSizes.Where(i => i.ProductSizeId.Trim() == productSize.ProductSizeId.Trim()).ToListAsync();
+
+            if (checkProdSize.Count > 0)
+                {
+                throw new Exception($"ProductSize with ID already exist!.");
+                }
+
+               
+                productSize.Isdelete = false;
+
+                await _context.ProductSizes.AddAsync(productSize);
+               
+
             int i = await _context.SaveChangesAsync();
-            
             if (i > 0)
             {
                 return true;
             }
             else { return false; }
+
+
 
         }
 
