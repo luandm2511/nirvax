@@ -101,7 +101,15 @@ namespace WebAPI.Controllers
                         numberOfWarehouse.TotalQuantity
                     });
                 }
-               
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        StatusCode = 400,
+                        Result = false,
+                        Message = "Can't get quantity and price of warehouse!",
+                    });
+                }
             }
             return StatusCode(500, new
             {

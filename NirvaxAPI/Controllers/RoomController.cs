@@ -149,8 +149,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+              if (ModelState.IsValid)
+              {
                     var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
                 if (checkSize == true)
                 {
@@ -184,7 +184,7 @@ namespace WebAPI.Controllers
                     Result = false,
                     Message = "Owner or User is is not exist!",
                 });
-                }
+              }
 
                 return StatusCode(400, new
                 {

@@ -61,8 +61,6 @@ namespace WebAPI.Controllers
                     Message = "Get import product by id" + ok,
                     Data = importProduct
                 });
-
-
             }
 
             return StatusCode(500, new
@@ -121,6 +119,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
+
             if (ModelState.IsValid)
             {
                 var importProduct1 = await _repo.UpdateImportProductAsync(importProductDTO);

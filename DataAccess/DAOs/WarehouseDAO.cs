@@ -227,7 +227,11 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
         {
             Warehouse? warehouse = await _context.Warehouses.Include(i => i.Owner).SingleOrDefaultAsync(i => i.WarehouseId == warehouseDTO.WarehouseId);
-            _mapper.Map(warehouseDTO, warehouse);
+            if (warehouse == null)
+            {
+                throw new Exception("Warehouse is not exist!");
+            }
+                _mapper.Map(warehouseDTO, warehouse);
             _context.Warehouses.Update(warehouse);
             await _context.SaveChangesAsync();
             return true;
