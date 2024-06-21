@@ -149,8 +149,6 @@ namespace WebAPI.Controllers
         {
             try
             {
-
-
                 if (ModelState.IsValid)
                 {
                     var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);

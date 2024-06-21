@@ -128,6 +128,14 @@ namespace WebAPI.Controllers
                         numberOfWarehouse.TotalPrice,
                         numberOfWarehouse.TotalQuantity
                     });
+                } else
+                {
+                    return StatusCode(400, new
+                    {
+                        StatusCode = 400,
+                        Result = false,
+                        Message = "Can't get quantity and price of warehouse!",
+                    });
                 }
             }
             return StatusCode(500, new
@@ -152,31 +160,37 @@ namespace WebAPI.Controllers
                 {
                     var warehouse = await _repo.CreateWarehouseAsync(warehouseCreateDTO);
 
-                if (warehouse == true)
-                {
-                    return StatusCode(200, new
+                    if (warehouse == true)
                     {
-                        Result = true,
-                        Message = "Create Warehouse" + ok,
-                        Data = warehouse
+                       return StatusCode(200, new
+                       {
+                          Result = true,
+                          Message = "Create Warehouse" + ok,
+                          Data = warehouse
+                        });
+                     }
+                    else
+                    {
+                        return StatusCode(500, new
+                        {
+
+                            Result = true,
+                            Message = "Server error",
+                            Data = ""
+                        });
+                     }
+
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        StatusCode = 400,
+                        Result = false,
+                        Message = "Please enter valid Warehouse",
                     });
                 }
-
-                return StatusCode(500, new
-                {
-                    Status = "Find fail",
-                    Message = notFound + "any Warehouse"
-                });
-            }
-
-
-            return StatusCode(400, new
-            {
-                StatusCode = 400,
-                Result = false,
-                Message = "Dont't accept empty information!",
-            });
-        }
+             }
             catch(Exception ex)
             {
                 return StatusCode(500, new
