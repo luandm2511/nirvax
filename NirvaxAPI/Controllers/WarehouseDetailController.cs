@@ -53,7 +53,9 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            var warehouse = await _repo.CreateWarehouseDetailAsync(warehouseDetailDTO);
+            if (ModelState.IsValid)
+            {
+                var warehouse = await _repo.CreateWarehouseDetailAsync(warehouseDetailDTO);
 
             if (warehouse == true)
             {
@@ -70,12 +72,22 @@ namespace WebAPI.Controllers
                 Status = "Find fail",
                 Message = notFound + "any Warehouse detail"
             });
+            }
+
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = "Dont't accept empty information!",
+            });
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            var size1 = await _repo.UpdateWarehouseDetailAsync(warehouseDetailDTO);
+                if (ModelState.IsValid)
+                {
+                    var size1 = await _repo.UpdateWarehouseDetailAsync(warehouseDetailDTO);
             if (size1)
             {
                 return StatusCode(200, new
@@ -92,8 +104,16 @@ namespace WebAPI.Controllers
                 Result = false,
                 Message = badRequest,
             });
+                }
 
-        }
+                return StatusCode(400, new
+                {
+                    StatusCode = 400,
+                    Result = false,
+                    Message = "Dont't accept empty information!",
+                });
+
+            }
 
         [HttpGet]
         public async Task<ActionResult> SumOfKindProdSizeStatisticsAsync(int warehouseId)

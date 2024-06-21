@@ -75,28 +75,37 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
         {
-            try { 
-                var importProduct1 = await _repo.CreateImportProductAsync(importProductCreateDTO);
-                if (importProduct1)
+            try {
+                if (ModelState.IsValid)
                 {
-                    return StatusCode(200, new
+                    var importProduct1 = await _repo.CreateImportProductAsync(importProductCreateDTO);
+                    if (importProduct1)
                     {
+                        return StatusCode(200, new
+                        {
 
-                        Result = true,
-                        Message = "Create import product " + ok,
-                        Data = importProduct1
-                    });
+                            Result = true,
+                            Message = "Create import product " + ok,
+                            Data = importProduct1
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(500, new
+                        {
+
+                            Result = true,
+                            Message = "Server error",
+                            Data = ""
+                        });
+                    }
                 }
-                else
+                return StatusCode(400, new
                 {
-                    return StatusCode(500, new
-                    {
-
-                        Result = true,
-                        Message = "Server error",
-                        Data = ""
-                    });
-                }
+                    StatusCode = 400,
+                    Result = false,
+                    Message = "Dont't accept empty information!",
+                });
             }
             catch (Exception ex)
             {
@@ -112,7 +121,8 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
-           
+            if (ModelState.IsValid)
+            {
                 var importProduct1 = await _repo.UpdateImportProductAsync(importProductDTO);
                 if (importProduct1)
                 {
@@ -134,7 +144,15 @@ namespace WebAPI.Controllers
                         Data = ""
                     });
                 }
-          
+            }
+
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = "Dont't accept empty information!",
+            });
+
 
         }
 

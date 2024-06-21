@@ -148,7 +148,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var warehouse = await _repo.CreateWarehouseAsync(warehouseCreateDTO);
+                if (ModelState.IsValid)
+                {
+                    var warehouse = await _repo.CreateWarehouseAsync(warehouseCreateDTO);
 
                 if (warehouse == true)
                 {
@@ -166,6 +168,15 @@ namespace WebAPI.Controllers
                     Message = notFound + "any Warehouse"
                 });
             }
+
+
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = "Dont't accept empty information!",
+            });
+        }
             catch(Exception ex)
             {
                 return StatusCode(500, new

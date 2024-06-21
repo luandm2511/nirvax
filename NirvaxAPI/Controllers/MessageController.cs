@@ -51,7 +51,9 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-            var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
+            if (ModelState.IsValid)
+            {
+                var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
             if (checkMessage == true)
             {
                 var message1 = await _repo.CreateMessageAsync(messageCreateDTO);
@@ -87,10 +89,15 @@ namespace WebAPI.Controllers
                 Result = false,
                 Message = "Please enter the word!",
             });
+        }
+               
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = "Dont't accept empty information!",
+            });
 
         }
-
-
-
     }
 }

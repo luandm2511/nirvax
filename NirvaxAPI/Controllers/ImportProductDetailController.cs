@@ -71,7 +71,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var importProductDetail = await _repo.CreateImportProductDetailAsync(importId, importProductDetailDTO);
+                if (ModelState.IsValid)
+                {
+                    var importProductDetail = await _repo.CreateImportProductDetailAsync(importId, importProductDetailDTO);
 
                 if (importProductDetail == true)
                 {
@@ -92,6 +94,15 @@ namespace WebAPI.Controllers
                     });
                 }
             }
+
+
+            return StatusCode(400, new
+            {
+                StatusCode = 400,
+                Result = false,
+                Message = "Dont't accept empty information!",
+            });
+        }
             catch (Exception ex)
             {
                 return StatusCode(500, new
@@ -108,7 +119,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var importProductDetail = await _repo.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
+                if (ModelState.IsValid)
+                {
+                    var importProductDetail = await _repo.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
 
                 if (importProductDetail == true)
                 {
@@ -128,6 +141,14 @@ namespace WebAPI.Controllers
                         Message = notFound + "any Import Product Detail"
                     });
                 }
+                }
+
+                return StatusCode(400, new
+                {
+                    StatusCode = 400,
+                    Result = false,
+                    Message = "Dont't accept empty information!",
+                });
             }
             catch (Exception ex)
             {

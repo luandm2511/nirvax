@@ -151,7 +151,9 @@ namespace WebAPI.Controllers
             {
 
 
-                var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
+                if (ModelState.IsValid)
+                {
+                    var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
                 if (checkSize == true)
                 {
                     var size1 = await _repo.CreateRoomAsync(roomCreateDTO);
@@ -184,7 +186,16 @@ namespace WebAPI.Controllers
                     Result = false,
                     Message = "Owner or User is is not exist!",
                 });
-            }catch (Exception ex)
+                }
+
+                return StatusCode(400, new
+                {
+                    StatusCode = 400,
+                    Result = false,
+                    Message = "Dont't accept empty information!",
+                });
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
