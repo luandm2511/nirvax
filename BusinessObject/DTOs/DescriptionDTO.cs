@@ -34,6 +34,6 @@ namespace BusinessObject.DTOs
         [MaxLength(4000, ErrorMessage = "Content is limited to 4000 characters!!")]
         public string Content { get; set; } = null!;
 
-        public bool Isdelete { get; set; }
+       
     }
 }

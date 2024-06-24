@@ -129,8 +129,8 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
-            sizeCreateDTO.Isdelete = false;
             Size size = _mapper.Map<Size>(sizeCreateDTO);
+            size.Isdelete = false;
             await _context.Sizes.AddAsync(size);
             int i = await _context.SaveChangesAsync();
             if (i > 0)

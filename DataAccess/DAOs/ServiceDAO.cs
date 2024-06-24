@@ -139,8 +139,9 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
         {
-            serviceCreateDTO.Isdelete = false;
+           
             Service service = _mapper.Map<Service>(serviceCreateDTO);
+            service.Isdelete = false;
             await _context.Services.AddAsync(service);
             int i = await _context.SaveChangesAsync();
             if (i > 0)

@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any warehouse"
@@ -74,7 +74,7 @@ namespace WebAPI.Controllers
                     });
                    }
                 }
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = "Error for total quantity and total price of warehouse"
@@ -111,7 +111,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any Warehouse"
@@ -146,7 +146,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any Warehouse"

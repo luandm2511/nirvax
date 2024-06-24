@@ -191,7 +191,7 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
             ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeDTO.ProductSizeId);
-            //ánh xạ đối tượng ProductSizeDTO đc truyền vào cho staff
+          
 
            productSizeDTO.Isdelete= false;
                 _mapper.Map(productSizeDTO, productSize);
@@ -204,13 +204,11 @@ namespace DataAccess.DAOs
         public async Task<bool> DeleteProductSizeAsync(string productSizeId)
         {
             ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
-            //ánh xạ đối tượng ProductSizeDTO đc truyền vào cho staff
-
+            
             if (productSize != null)
             {
                 productSize.Isdelete = true;
                  _context.ProductSizes.Update(productSize);
-                //    _mapper.Map(ProductSizeDTO, staff);
 
                 await _context.SaveChangesAsync();
                 return true;

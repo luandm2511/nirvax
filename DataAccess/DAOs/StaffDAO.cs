@@ -212,7 +212,7 @@ namespace DataAccess.DAOs
             string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(staffCreateDTO.Password);
             staffCreateDTO.Password = newpasswordHash;
             Staff staff = _mapper.Map<Staff>(staffCreateDTO);
-
+            
 
             await _context.Staff.AddAsync(staff);
             int i = await _context.SaveChangesAsync();

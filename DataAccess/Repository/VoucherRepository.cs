@@ -42,9 +42,9 @@ namespace DataAccess.Repository
         {
             return _voucherDAO.CheckVoucherByIdAsync(voucherId);
         }
-        public Task<bool> CheckVoucherAsync(VoucherDTO voucherDTO)
+        public Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId)
         {
-            return _voucherDAO.CheckVoucherAsync(voucherDTO);
+            return _voucherDAO.CheckVoucherAsync(startDate, endDate, voucherId);
         }
         public Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO)
         {
@@ -68,9 +68,9 @@ namespace DataAccess.Repository
             return _voucherDAO.GetVoucherByIdAsync(voucherId);
         }
 
-        public Task<bool> CreateVoucherAsync(VoucherDTO voucherDTO)
+        public Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
         {
-            return _voucherDAO.CreateVoucherAsync(voucherDTO);
+            return _voucherDAO.CreateVoucherAsync(voucherCreateDTO);
         }
         
         public Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO)

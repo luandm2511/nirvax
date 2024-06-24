@@ -51,14 +51,14 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> CheckVoucherAsync(VoucherDTO voucherDTO)
+        public async Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId)
         {
 
             Voucher? voucher = new Voucher();
 
-            if((voucherDTO.StartDate >= DateTime.Now) && (voucherDTO.StartDate < voucherDTO.EndDate))
+            if((startDate >= DateTime.Now) && (startDate < endDate))
             {
-                voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
+                voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherId);
                 if (voucher == null)
                 {
                     return true;
@@ -148,11 +148,11 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateVoucherAsync(VoucherDTO voucherDTO)
-        {
-            voucherDTO.Isdelete = false;
-           
-            Voucher voucher = _mapper.Map<Voucher>(voucherDTO);
+        public async Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
+        {             
+            Voucher voucher = _mapper.Map<Voucher>(voucherCreateDTO);
+            voucher.Isdelete = false;
+            voucher.QuantityUsed = 0;
             await _context.Vouchers.AddAsync(voucher);
             int i = await _context.SaveChangesAsync();
             if (i > 0)

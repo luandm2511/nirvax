@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any voucher"
@@ -57,7 +57,7 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any voucher"
@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
                     });
                 }
 
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any voucher"
@@ -96,15 +96,15 @@ namespace WebAPI.Controllers
 
             //check exist
             [HttpPost]
-            public async Task<ActionResult> CreateVoucherAsync(VoucherDTO voucherDTO)
+            public async Task<ActionResult> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
             {
             try { 
             if (ModelState.IsValid)
             {
-                var checkVoucher = await _repo.CheckVoucherAsync(voucherDTO);
+                var checkVoucher = await _repo.CheckVoucherAsync(voucherCreateDTO.StartDate, voucherCreateDTO.EndDate, voucherCreateDTO.VoucherId);
                 if (checkVoucher == true)
                 {
-                    var voucher1 = await _repo.CreateVoucherAsync(voucherDTO);
+                    var voucher1 = await _repo.CreateVoucherAsync(voucherCreateDTO);
                     if (voucher1)
                     {
                         return StatusCode(200, new

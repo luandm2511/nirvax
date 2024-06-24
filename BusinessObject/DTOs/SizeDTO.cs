@@ -33,7 +33,7 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
 
-        public bool? Isdelete { get; set; }
+       
 
     }
 

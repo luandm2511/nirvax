@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any advertisement"
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any advertisement"
@@ -95,7 +95,7 @@ namespace WebAPI.Controllers
 
                 }
 
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any advertisement"
@@ -119,7 +119,7 @@ namespace WebAPI.Controllers
                 });
             }
 
-            return StatusCode(400, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any advertisement"

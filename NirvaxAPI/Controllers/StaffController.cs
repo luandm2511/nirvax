@@ -13,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]/[Action]")]
     [ApiController]
+   
     public class StaffController : ControllerBase
     {
         private readonly IConfiguration _config;
@@ -44,7 +45,7 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any staff"
@@ -70,7 +71,7 @@ namespace WebAPI.Controllers
                 });
             }
 
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any staff"
@@ -93,7 +94,7 @@ namespace WebAPI.Controllers
                 });
             }
 
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any staff"

@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any guest consultation"
@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
 
                 }
 
-                return StatusCode(500, new
+                return StatusCode(404, new
                 {
                     Status = "Find fail",
                     Message = notFound + "any guest consultation"

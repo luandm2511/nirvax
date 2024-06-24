@@ -128,8 +128,9 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
-            descriptionCreateDTO.Isdelete = false;
+
             Description description = _mapper.Map<Description>(descriptionCreateDTO);
+            description.Isdelete = false;
             await _context.Descriptions.AddAsync(description);
             int i = await _context.SaveChangesAsync();
             if (i > 0)

@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any room"
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any room"
@@ -76,7 +76,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet()]
+        [HttpGet]
         //  [Authorize]
         public async Task<ActionResult> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
@@ -91,14 +91,14 @@ namespace WebAPI.Controllers
                     Data = room
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any room"
             });
         }
 
-        [HttpGet()]
+        [HttpGet]
         //  [Authorize]
         public async Task<ActionResult> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
@@ -113,7 +113,7 @@ namespace WebAPI.Controllers
                     Data = room
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any room"
@@ -137,7 +137,7 @@ namespace WebAPI.Controllers
                     Data = size
                 });
             }
-            return StatusCode(500, new
+            return StatusCode(404, new
             {
                 Status = "Find fail",
                 Message = notFound + "any room"
