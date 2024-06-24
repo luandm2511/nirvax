@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessObject.DTOs;
+using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 
@@ -17,7 +18,7 @@ namespace DataAccess.Repository
             _voucherDAO = voucherDAO;
         }
 
-        public Task<VoucherDTO> GetVoucherById(string voucherId)
+        public Task<Voucher> GetVoucherById(string voucherId)
         {
             return _voucherDAO.GetVoucherById(voucherId);
         }

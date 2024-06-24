@@ -9,6 +9,5 @@ namespace DataAccess.IRepository
 {
     public interface IOwnerRepository
     {
-        Task<IEnumerable<Owner>> SearchOwnersAsync(string? searchQuery);
     }
 }

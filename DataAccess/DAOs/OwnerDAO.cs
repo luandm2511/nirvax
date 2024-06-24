@@ -13,25 +13,6 @@ namespace DataAccess.DAOs
 {
     public class OwnerDAO
     {
-        private readonly NirvaxContext _context;
-        private readonly IMapper _mapper;
-
-        public OwnerDAO(NirvaxContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
-
-        public async Task<IEnumerable<Owner>> SearchOwnersAsync(string? searchQuery)
-        {
-            if (!string.IsNullOrEmpty(searchQuery))
-            {
-                return await _context.Owners
-                   .Where(i => i.Fullname.Contains(searchQuery))
-                   .Where(i => i.IsBan == false)
-                   .ToListAsync();
-            }
-            return null;
-        }
+       
     }
 }

@@ -13,26 +13,14 @@ namespace DataAccess.DAOs
     public class VoucherDAO
     {
         private readonly NirvaxContext _context;
-        private readonly IMapper _mapper;
 
-        public VoucherDAO(NirvaxContext context, IMapper mapper)
+        public VoucherDAO(NirvaxContext context)
         {
-
             _context = context;
-            _mapper = mapper;
         }
-        public async Task<VoucherDTO> GetVoucherById(string voucherId)
+        public async Task<Voucher> GetVoucherById(string voucherId)
         {
-            VoucherDTO voucherDTO = new VoucherDTO();
-            try
-            {
-                Voucher? sid = await _context.Vouchers.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-
-                voucherDTO = _mapper.Map<VoucherDTO>(sid);
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-            return voucherDTO;
+            return await _context.Vouchers.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
         }
     }
 }
