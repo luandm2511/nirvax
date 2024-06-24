@@ -116,24 +116,6 @@ namespace WebAPI.Controllers
                 });
             }
         }
-
-        [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string productName, [FromQuery] float? minPrice, [FromQuery] float? maxPrice, [FromQuery] int? categoryId, [FromQuery] int? brandId, [FromQuery] int? ownerId)
-        {
-            try
-            { 
-                var products = await _productRepository.SearchProductsAsync(productName, minPrice, maxPrice, categoryId, brandId, ownerId);
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-
         [HttpPost]
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Create([FromForm] ProductDTO productDto)
@@ -438,6 +420,23 @@ namespace WebAPI.Controllers
                     message = ex.Message
                 });
             }
+        }
+
+        [HttpGet("searchs")]
+        public async Task<IActionResult> Searchs(string searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<int> sizeIds)
+        {
+            try
+            {
+                var result = await _productRepository.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizeIds);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }   
         }
     }
 

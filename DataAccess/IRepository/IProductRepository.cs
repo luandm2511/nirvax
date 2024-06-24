@@ -14,7 +14,7 @@ namespace DataAccess.IRepository
         Task<IEnumerable<Product>> GetByOwnerAsync(int ownerId);
         Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId);
         Task<IEnumerable<Product>> GetByBrandAsync(int brandId);
-        Task<IEnumerable<Product>> SearchProductsAsync(string? searchTerm, double? minPrice = null, double? maxPrice = null, int? categoryId = null, int? brandId = null, int? sizeId = null);
+        Task<(List<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds);
         Task<bool> CreateAsync(Product product);
         Task<bool> UpdateAsync(Product product);
         Task<bool> DeleteAsync(Product product);

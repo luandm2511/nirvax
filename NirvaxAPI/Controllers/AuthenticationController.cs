@@ -2,9 +2,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,13 +26,15 @@ namespace WebAPI.Controllers
         private readonly IAuthenticationRepository _repository;
         private readonly IEmailService _emailService;
         private readonly IMemoryCache _cache;
+        private readonly IMapper _mapper;
 
-        public AuthenticationController(IConfiguration config, IAuthenticationRepository repo, IMemoryCache cache, IEmailService emailService)
+        public AuthenticationController(IConfiguration config, IAuthenticationRepository repo, IMemoryCache cache, IEmailService emailService, IMapper mapper)
         {       
             _config = config;
             _repository = repo;
             _emailService = emailService;
             _cache = cache;
+            _mapper = mapper;
         }
 
         [HttpPost("register-user")]
@@ -205,7 +210,7 @@ namespace WebAPI.Controllers
                 }
 
                 var resetCode = new Random().Next(100000, 999999).ToString();
-                _cache.Set(email, resetCode, TimeSpan.FromMinutes(2));
+                _cache.Set(email, resetCode, TimeSpan.FromMinutes(5));
 
                 await _emailService.SendEmailAsync(email, "Password Reset", $"Your password reset code is: {resetCode}");
 
@@ -284,7 +289,6 @@ namespace WebAPI.Controllers
             return BadRequest("Email not found");
         }
 
-        [AllowAnonymous]
         [HttpPost("login-admin")]
         public async Task<IActionResult> LoginAdmin([FromForm] Login request)
         {
@@ -297,7 +301,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
                 if (account.Role == "Admin" && PasswordHasher.VerifyPassword(request.Password, account.Password))
                 {
-                    var token = GenerateJSONWebToken(account.Email, account.Role);
+                    var token = GenerateJSONWebToken(account.AccountId, account.Email, account.Role);
                     return Ok(new { token, userType = account.Role });
                 }
                 return BadRequest("Invalid email or password.");
@@ -311,7 +315,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("login-user")]
         public async Task<IActionResult> LoginUser([FromForm] Login request)
         {
@@ -324,7 +327,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
                 if (account.Role == "User" && PasswordHasher.VerifyPassword(request.Password, account.Password))
                 {
-                    var token = GenerateJSONWebToken(account.Email, account.Role);
+                    var token = GenerateJSONWebToken(account.AccountId,account.Email, account.Role);
                     return Ok(new { token, userType = account.Role });
                 }
                 return BadRequest("Invalid email or password.");
@@ -338,7 +341,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("login-shop")]
         public async Task<IActionResult> LoginShop([FromForm] Login request)
         {
@@ -353,7 +355,7 @@ namespace WebAPI.Controllers
                     var owner = await _repository.GetOwnerByEmailAsync(request.Email);
                     if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
                     {
-                        var token = GenerateJSONWebToken(owner.Email, "Owner");
+                        var token = GenerateJSONWebToken(owner.OwnerId,owner.Email, "Owner");
                         return Ok(new { token, userType = "Owner" });
                     }
                 }               
@@ -362,7 +364,7 @@ namespace WebAPI.Controllers
                     var staff = await _repository.GetStaffByEmailAsync(request.Email);
                     if (staff != null && PasswordHasher.VerifyPassword(request.Password, staff.Password))
                     {
-                        var token = GenerateJSONWebToken(staff.Email, "Staff");
+                        var token = GenerateJSONWebToken(staff.StaffId, staff.Email, "Staff");
                         return Ok(new { token, userType = "Staff" });
                     }
                 }               
@@ -377,53 +379,59 @@ namespace WebAPI.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login request)
+        [HttpGet("signin-google")]
+        public IActionResult SignInGoogle()
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(406, new { message = "Please pass the valid data." });
-                }
-                if (request.Role == "User" || request.Role == "Admin")
-                {
-                    var account = await _repository.GetAccountByEmailAsync(request.Email);
-                    if (account != null && PasswordHasher.VerifyPassword(request.Password, account.Password))
-                    {
-                        var token = GenerateJSONWebToken(account.Email, account.Role);
-                        return Ok(new { token, userType = account.Role });
-                    }
-                }
-                else if (request.Role == "Shop")
-                {
-                    var owner = await _repository.GetOwnerByEmailAsync(request.Email);
-                    if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
-                    {
-                        var token = GenerateJSONWebToken(owner.Email, "Owner");
-                        return Ok(new { token, userType = "Owner" });
-                    }
-
-                    var staff = await _repository.GetStaffByEmailAsync(request.Email);
-                    if (staff != null && PasswordHasher.VerifyPassword(request.Password, staff.Password))
-                    {
-                        var token = GenerateJSONWebToken(staff.Email, "Staff");
-                        return Ok(new { token, userType = "Staff" });
-                    }
-                }
-                return BadRequest("Invalid email or password.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    message = ex.Message
-                });
-            }
+            var redirectUrl = Url.Action("GoogleResponse", "GoogleLogin");
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
-        private string GenerateJSONWebToken(string Email, string Role)
+        [HttpGet("google-response")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync();
+            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var picture = claims.FirstOrDefault(c => c.Type == "urn:google:picture")?.Value;
+            var phoneNumber = claims.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value;
+            var address = claims.FirstOrDefault(c => c.Type == ClaimTypes.StreetAddress)?.Value;
+
+            Account user = await _repository.GetAccountByEmailAsync(email);
+
+            if (user == null)
+            {
+                var userGG = new AccountGoogle
+                {
+                    Email = email,
+                    Fullname = name,
+                    Phone = phoneNumber,
+                    Image = picture,
+                    Address = address,
+                    Role = "User",
+                    IsBan = false
+                };
+                var account = _mapper.Map<Account>(userGG);
+                await _repository.AddAccountAsync(account);
+                var tokenn = GenerateJSONWebToken(account.AccountId, email, "User");
+                return Ok(new { token = tokenn });
+            }
+
+            var tokenString = GenerateJSONWebToken(user.AccountId, email, "User");
+
+            return Ok(new { token = tokenString });
+        }
+
+        private string GenerateJSONWebToken(int id, string Email, string Role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Secret"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -431,6 +439,7 @@ namespace WebAPI.Controllers
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, Email),
+                new Claim(ClaimTypes.NameIdentifier, id.ToString()),
                 new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, Role.ToString())
             };
@@ -439,7 +448,7 @@ namespace WebAPI.Controllers
                 issuer: _config["JWT:ValidIssuer"],
                 audience: _config["JWT:ValidAudience"],
                 claims: authClaims,
-                expires: DateTime.Now.AddMinutes(120),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

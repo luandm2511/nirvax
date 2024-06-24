@@ -11,8 +11,6 @@ namespace BusinessObject.DTOs
     {
         [Required(ErrorMessage = "Email cannot be empty!!")]
         [DataType(DataType.EmailAddress)]
-        [MinLength(2, ErrorMessage = "Email to be at least 2 characters!!")]
-        [MaxLength(50, ErrorMessage = "Email is limited to 50 characters!!")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "ConfirmPassword cannot be empty!!")]
@@ -20,7 +18,7 @@ namespace BusinessObject.DTOs
         public string Code { get; set; }
 
         [Required(ErrorMessage = "Password cannot be empty!!")]
-        [MinLength(2, ErrorMessage = "Password to be at least 2 characters!!")]
+        [MinLength(6, ErrorMessage = "Password to be at least 6 characters!!")]
         [MaxLength(24, ErrorMessage = "Password is limited to 24 characters!!")]
         public string Password { get; set; }
 

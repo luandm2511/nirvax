@@ -44,6 +44,7 @@ builder.Services.AddScoped<AccountDAO>();
 builder.Services.AddScoped<AuthenticationDAO>();
 builder.Services.AddScoped<BrandDAO>();
 builder.Services.AddScoped<CategoryDAO>();
+builder.Services.AddScoped<CategoryParentDAO>();
 builder.Services.AddScoped<CommentDAO>();
 builder.Services.AddScoped<ImageDAO>();
 builder.Services.AddScoped<NotificationDAO>();
@@ -59,6 +60,7 @@ builder.Services.AddScoped<AccessLogDAO>();
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICateParentRepository, CateParentRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
@@ -72,7 +74,6 @@ builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 builder.Services.AddScoped<IAccessLogService, AccessLogService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -92,6 +93,13 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero, // Không chấp nhận độ chệch thời gian
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
+}).AddCookie()
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.CallbackPath = "/api/GoogleLogin/GoogleResponse";
+    options.SaveTokens = true;
 });
 builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

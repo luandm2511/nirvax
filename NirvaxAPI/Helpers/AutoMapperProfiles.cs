@@ -10,10 +10,12 @@ namespace WebAPI.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<Login, Account>().ReverseMap();
+            CreateMap<AccountGoogle, Account>().ReverseMap();
             CreateMap<Login, Owner>().ReverseMap();
             CreateMap<Login, Staff>().ReverseMap();
             CreateMap<Account, UpdateUserDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<CategoryParent, CateParentDTO>().ReverseMap();
             CreateMap<Brand, BrandDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Image, ImageDTO>().ReverseMap();

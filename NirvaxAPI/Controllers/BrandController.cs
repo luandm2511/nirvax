@@ -71,12 +71,7 @@ namespace WebAPI.Controllers
                 if (!check)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
-                }
-                var category = await _cate.GetCategoryByIdAsync(brandDto.CategoryId);
-                if(category == null || category.Isdelete == true)
-                {
-                    return NotFound(new { message = "Category not found." });
-                }    
+                }   
                 var result = await _repository.CreateBrandAsync(brand);
                 if (result)
                 {
@@ -113,11 +108,6 @@ namespace WebAPI.Controllers
                 if (!check)
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
-                }
-                var category = await _cate.GetCategoryByIdAsync(brandDto.CategoryId);
-                if (category == null || category.Isdelete == true)
-                {
-                    return NotFound(new { message = "Category not found." });
                 }
 
                 var result = await _repository.UpdateBrandAsync(brand);

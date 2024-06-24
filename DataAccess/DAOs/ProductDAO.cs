@@ -30,6 +30,7 @@ namespace DataAccess.DAOs
                     .Include(p => p.Description)
                     .Include(p => p.Category)
                     .Include(p => p.Brand)
+                    .Include(p => p.Comments)
                     .Include(p => p.Owner)
                     .Include(p => p.ProductSizes)
                     .FirstOrDefaultAsync(p => p.ProductId == id);
@@ -57,44 +58,50 @@ namespace DataAccess.DAOs
                     .Include(p => p.Owner).Where(p => p.BrandId == brandId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> SearchProductsAsync(string? searchTerm, double? minPrice = null, double? maxPrice = null, int? categoryId = null, int? brandId = null, int? sizeId = null)
+        public async Task<(List<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds)
         {
-            var query = _context.Products.Include(p => p.ProductSizes)
-                .Include(p => p.Images).Include(p => p.Description)
-                    .Include(p => p.Category).Include(p => p.Brand)
-                    .Include(p => p.Owner).Where(p => p.BrandId == brandId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).AsQueryable();
+            var productsQuery = _context.Products
+                .Include(p => p.Owner)
+                .Where(p => !p.Isdelete && !p.Isban);
+
+            var ownersQuery = _context.Owners
+                .Where(o => !o.IsBan);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(p => p.Name.Contains(searchTerm) || p.ShortDescription.Contains(searchTerm));
+                productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm));
+                ownersQuery = ownersQuery.Where(o => o.Fullname.Contains(searchTerm) || o.Email.Contains(searchTerm) || o.Phone.Contains(searchTerm));
             }
 
             if (minPrice.HasValue)
             {
-                query = query.Where(p => p.Price >= minPrice.Value);
+                productsQuery = productsQuery.Where(p => p.Price >= minPrice.Value);
             }
 
             if (maxPrice.HasValue)
             {
-                query = query.Where(p => p.Price <= maxPrice.Value);
+                productsQuery = productsQuery.Where(p => p.Price <= maxPrice.Value);
             }
 
-            if (categoryId.HasValue)
+            if (categoryIds != null && categoryIds.Count > 0)
             {
-                query = query.Where(p => p.CategoryId == categoryId.Value);
+                productsQuery = productsQuery.Where(p => categoryIds.Contains(p.CategoryId));
             }
 
-            if (brandId.HasValue)
+            if (brandIds != null && brandIds.Count > 0)
             {
-                query = query.Where(p => p.BrandId == brandId.Value);
+                productsQuery = productsQuery.Where(p => brandIds.Contains(p.BrandId.Value));
             }
 
-            if (sizeId.HasValue)
+            if (sizeIds != null && sizeIds.Count > 0)
             {
-                query = query.Where(p => p.ProductSizes.Any(ps => ps.SizeId == sizeId.Value && ps.Quantity > 0) && !p.Isdelete);
+                productsQuery = productsQuery.Where(p => p.ProductSizes.Any(ps => sizeIds.Contains(ps.SizeId)));
             }
 
-            return await query.ToListAsync();
+            var products = await productsQuery.ToListAsync();
+            var owners = await ownersQuery.ToListAsync();
+
+            return (products, owners);
         }
 
         public async Task<bool> CreateAsync(Product product)

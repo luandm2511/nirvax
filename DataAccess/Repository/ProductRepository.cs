@@ -68,9 +68,9 @@ namespace DataAccess.Repository
             return await _pro.UpdateAsync(product);
         }
 
-        public async Task<IEnumerable<Product>> SearchProductsAsync(string? searchTerm, double? minPrice = null, double? maxPrice = null, int? categoryId = null, int? brandId = null, int? sizeId = null)
+        public async Task<(List<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds)
         {
-            return await _pro.SearchProductsAsync(searchTerm, minPrice, maxPrice, categoryId, brandId, sizeId);
+            return await _pro.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizeIds);
         }
     }
 }
