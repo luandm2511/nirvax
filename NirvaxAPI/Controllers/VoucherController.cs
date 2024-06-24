@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get list voucher " + ok,
                         Data = list
                     });
@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get list voucher " + ok,
                     Data = list
                 });
@@ -81,7 +81,7 @@ namespace WebAPI.Controllers
                     var voucher = await _repo.GetVoucherByIdAsync(voucherId);
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get voucher by id " + ok,
                         Data = voucher
                     });
@@ -110,7 +110,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Create voucher " + ok,
                             Data = voucher1
                         });
@@ -120,7 +120,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -132,7 +132,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "There already exists a voucher with that information",
                 });
             }
@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Please enter valid Staff",
             });
             }
@@ -172,7 +172,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Update voucher" + ok,
                             Data = voucher1
                         });
@@ -182,7 +182,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -193,7 +193,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "There already exists a voucher with that information",
                 });
             }
@@ -201,7 +201,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Please enter valid Staff",
             });
             }
@@ -228,7 +228,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Delete voucher " + ok,
 
                     });
@@ -236,7 +236,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = badRequest,
                 });
 
@@ -253,7 +253,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = number,
 
                     });
@@ -261,7 +261,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = badRequest,
                 });
             }
@@ -286,7 +286,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = number,
 
                 });
@@ -294,7 +294,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
             }
@@ -318,7 +318,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Update voucher after used success!",
 
                     });
@@ -326,7 +326,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = badRequest,
                 });
             }

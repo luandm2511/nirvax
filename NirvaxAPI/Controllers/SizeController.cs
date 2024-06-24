@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get list size " + ok,
                     Data = list
                 });
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
          
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get size by id" + ok,
                         Data = size
                     });
@@ -85,7 +85,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Create size " + ok,
                         Data = size1
                     });
@@ -95,7 +95,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -106,7 +106,7 @@ namespace WebAPI.Controllers
                     return StatusCode(400, new
                     {
                         StatusCode = 400,
-                        Result = false,
+                        
                         Message = "There already exists a size with that information",
                     });
                 }
@@ -114,7 +114,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Please enter valid Staff",
             });
 
@@ -134,7 +134,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Update size" + ok,
                         Data = size1
                     });
@@ -144,7 +144,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -155,7 +155,7 @@ namespace WebAPI.Controllers
                     return StatusCode(400, new
                     {
                         StatusCode = 400,
-                        Result = false,
+                        
                         Message = "There already exists a staff with that information",
                     });
                 }
@@ -163,7 +163,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Please enter valid Staff",
             });
 
@@ -178,7 +178,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = "Delete size " + ok,
 
                 });
@@ -186,7 +186,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 
@@ -201,7 +201,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = "Restore size " + ok,
 
                 });
@@ -209,7 +209,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 

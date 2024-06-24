@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get list advertisement " + ok,
                         Data = list
                     });
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get list advertisement for user" + ok,
                     Data = list
                 });
@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
 
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get advertisement by id" + ok,
                         Data = advertisement
                     });
@@ -113,7 +113,7 @@ namespace WebAPI.Controllers
 
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get advertisement for user" + ok,
                     Data = advertisement
                 });
@@ -141,7 +141,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Create advertisement " + ok,
                             Data = advertisement1
                         });
@@ -151,7 +151,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -162,7 +162,7 @@ namespace WebAPI.Controllers
                     return StatusCode(400, new
                     {
                         StatusCode = 400,
-                        Result = false,
+                        
                         Message = "There already exists a Advertisement with that information",
                     });
                 }
@@ -171,7 +171,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
         }
@@ -192,7 +192,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Update advertisement" + ok,
                             Data = advertisement1
                         });
@@ -202,7 +202,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -213,7 +213,7 @@ namespace WebAPI.Controllers
                     return StatusCode(400, new
                     {
                         StatusCode = 400,
-                        Result = false,
+                        
                         Message = "There already exists a Advertisement with that information",
                     });
                 }
@@ -223,7 +223,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
 
@@ -241,7 +241,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Update advertisement" + ok,
                         Data = advertisement1
                     });
@@ -251,7 +251,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -260,7 +260,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "The name advertisement is already exist",
             });
 
@@ -274,7 +274,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = number,
 
                 });
@@ -282,7 +282,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 
@@ -297,7 +297,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = number,
 
                 });
@@ -305,7 +305,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 

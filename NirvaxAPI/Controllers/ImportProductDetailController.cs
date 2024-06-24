@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get list Import Product Detail " + ok,
                     Data = list
                 });
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get list Import Product Detail " + ok,
                     Data = list
                 });
@@ -79,7 +79,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Create Import Product Detail " + ok,
                         Data = importProductDetail
                     });
@@ -99,7 +99,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
         }
@@ -127,7 +127,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Update Import Product Detail " + ok,
                         Data = importProductDetail
                     });
@@ -146,7 +146,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "Dont't accept empty information!",
                 });
             }

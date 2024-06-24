@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200,new
                 {
-                    Result = true,
+                    
                     Message = "Get list productSize " + ok,
                     Data = list
                 });
@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200,new
                 {
-                    Result = true,
+                    
                     Message = "Get list productSize " + ok,
                     Data = list
                 });
@@ -79,7 +79,7 @@ namespace WebAPI.Controllers
                 var productSize = await _repo.GetProductSizeByIdAsync(productSizeId);
                 return StatusCode(200,new
                 {
-                    Result = true,
+                    
                     Message = "Get productSize by id " + ok,
                     Data = productSize
                 });
@@ -89,6 +89,7 @@ namespace WebAPI.Controllers
             {
                 Status = "Find fail",
                 Message = notFound + "any productSize"
+
             });
         }
 
@@ -107,7 +108,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Create productSize " + ok,
                             Data = productSize1
                         });
@@ -117,7 +118,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -127,7 +128,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "Dont't accept empty information!",
                 });
             }
@@ -160,7 +161,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Update productSize" + ok,
                         Data = productSize1
                     });
@@ -170,7 +171,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -181,7 +182,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "There already exists a productSize with that information",
                 });
             }
@@ -191,7 +192,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
 
@@ -209,7 +210,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = "Delete productSize " + ok,
 
                 });
@@ -217,7 +218,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 

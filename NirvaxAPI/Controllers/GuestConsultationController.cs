@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get list guest consultation " + ok,
                         Data = list
                     });
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
 
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get guest consultation by id" + ok,
                         Data = guestConsultation
                     });
@@ -93,7 +93,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Create guest consultation " + ok,
                             Data = guestConsultation1
                         });
@@ -103,7 +103,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -114,7 +114,7 @@ namespace WebAPI.Controllers
                     return StatusCode(400, new
                     {
                         StatusCode = 400,
-                        Result = false,
+                        
                         Message = "There already exists a staff with that information",
                     });
                 }
@@ -124,7 +124,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
 
@@ -143,7 +143,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Update guest consultation" + ok,
                             Data = guestConsultation1
                         });
@@ -153,7 +153,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -162,7 +162,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "The name guest consultation is already exist",
                 });
 
@@ -180,7 +180,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Update guest consultation" + ok,
                             Data = guestConsultation1
                         });
@@ -190,7 +190,7 @@ namespace WebAPI.Controllers
                         return StatusCode(500, new
                         {
 
-                            Result = true,
+                            
                             Message = "Server error",
                             Data = ""
                         });
@@ -199,7 +199,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "The name guest consultation is already exist",
                 });
 
@@ -213,7 +213,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = number,
 
                 });
@@ -221,7 +221,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 

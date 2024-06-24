@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Result = true,
+                        
                         Message = "Get all message of this room " + ok,
                         Data = list
                     });
@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
 
-                            Result = true,
+                            
                             Message = "Create messgae " + ok,
                             Data = message1
                         });
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -86,7 +86,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Please enter the word!",
             });
         }
@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
 

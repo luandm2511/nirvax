@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get list description " + ok,
                     Data = list
                 });
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
 
                 return StatusCode(200, new
                 {
-                    Result = true,
+                    
                     Message = "Get description by id" + ok,
                     Data = description
                 });
@@ -86,7 +86,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Create description " + ok,
                         Data = description1
                     });
@@ -96,7 +96,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -107,7 +107,7 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new
                 {
                     StatusCode = 400,
-                    Result = false,
+                    
                     Message = "There already exists a description with that information",
                 });
             }
@@ -117,7 +117,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "Dont't accept empty information!",
             });
 
@@ -135,7 +135,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
 
-                        Result = true,
+                        
                         Message = "Update description" + ok,
                         Data = description1
                     });
@@ -145,7 +145,7 @@ namespace WebAPI.Controllers
                     return StatusCode(500, new
                     {
 
-                        Result = true,
+                        
                         Message = "Server error",
                         Data = ""
                     });
@@ -154,7 +154,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = "The name description is already exist",
             });
 
@@ -169,7 +169,7 @@ namespace WebAPI.Controllers
                 return StatusCode(200, new
                 {
 
-                    Result = true,
+                    
                     Message = "Delete description " + ok,
 
                 });
@@ -177,7 +177,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 StatusCode = 400,
-                Result = false,
+                
                 Message = badRequest,
             });
 
