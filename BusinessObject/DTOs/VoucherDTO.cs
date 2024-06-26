@@ -21,7 +21,7 @@ namespace BusinessObject.DTOs
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-        public int? QuantityUsed { get; set; }
+        public int QuantityUsed { get; set; }
 
         public bool? Isdelete { get; set; }
    

@@ -11,11 +11,11 @@ public partial class Image
 
     public bool Isdelete { get; set; }
 
-    public int ProductId { get; set; }
+    public int? ProductId { get; set; }
 
-    public int DescriptionId { get; set; }
+    public int? DescriptionId { get; set; }
 
-    public virtual Description Description { get; set; } = null!;
+    public virtual Description? Description { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Product? Product { get; set; }
 }

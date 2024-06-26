@@ -15,6 +15,8 @@ public partial class ProductSize
 
     public bool Isdelete { get; set; }
 
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+
     public virtual Product Product { get; set; } = null!;
 
     public virtual Size Size { get; set; } = null!;
