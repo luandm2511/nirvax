@@ -405,7 +405,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("top10")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetTop10SellingProducts()
         {
             try

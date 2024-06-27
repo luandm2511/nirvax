@@ -204,7 +204,7 @@ namespace WebAPI.Controllers
                 // Check if email exists
                 var account = await _repository.CheckEmailAsync(email);
 
-                if (!account)
+                if (account)
                 {
                     return BadRequest("Email not found.");
                 }
