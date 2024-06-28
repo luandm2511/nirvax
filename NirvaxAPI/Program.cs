@@ -13,34 +13,41 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
 using WebAPI.Helpers;
-
+using WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
+builder.Services.AddDbContext<NirvaxContext>(options =>
+                                                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors(options =>
-                         options.AddDefaultPolicy(policy => policy.AllowAnyOrigin()
-                                                                  .AllowAnyHeader()
-                                                                  .AllowAnyMethod()));
-//builder.Services.AddStackExchangeRedisCache(redisOptions =>
-//{
-//   string connection = builder.Configuration.GetConnectionString("Redis");
-//  redisOptions.Configuration = connection;
-//});
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-
 
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<OwnerDAO>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddScoped<ISizeRepository, SizeRepository>();
 builder.Services.AddScoped<SizeDAO>();
@@ -83,12 +90,8 @@ builder.Services.AddScoped<AdvertisementDAO>();
 
 builder.Services.AddScoped<IDescriptionRepository, DescriptionRepository>();
 builder.Services.AddScoped<DescriptionDAO>();
-
-
-
-
-
-
+builder.Services.AddScoped<NotificationDAO>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IGuestConsultationRepository, GuestConsultationRepository>();
 builder.Services.AddScoped<GuestConsultationDAO>();
 

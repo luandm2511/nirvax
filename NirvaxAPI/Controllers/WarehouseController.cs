@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                       
                         
                         Message = "Can't get quantity and price of warehouse!",
                     });
@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                       
                         
                         Message = "Can't get quantity and price of warehouse!",
                     });
@@ -193,7 +193,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                       
                         
                         Message = "Please enter valid Warehouse",
                     });
@@ -228,7 +228,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                   
                     
                     Message = badRequest,
                 });
@@ -261,7 +261,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });
@@ -284,7 +284,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });
@@ -307,7 +307,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });
@@ -330,7 +330,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });

@@ -3,7 +3,7 @@ using BusinessObject.Models;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
-
+using WebAPI.Service;
 
 namespace WebAPI.Controllers
 {
@@ -13,7 +13,8 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IOwnerRepository  _repo;
-      
+        private readonly IEmailService _emailService;
+
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
@@ -133,7 +134,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });
@@ -162,7 +163,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });
@@ -191,7 +192,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(500, new
                     {
-                        StatusCode = 500,
+                        
                         
                         Message = "Internet server error",
 
@@ -202,7 +203,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                    
                     
                     Message = "There already exists a owner with that information",
                 });
@@ -212,7 +213,7 @@ namespace WebAPI.Controllers
                
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = "Dont't accept empty information!",
             });
@@ -241,7 +242,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            StatusCode = 500,
+                            
                             
                             Message = "Internet server error",
                         });
@@ -251,7 +252,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                        
                         
                         Message = "There already exists a owner with that information",
                     });
@@ -261,7 +262,7 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = "Dont't accept empty information!",
             });
@@ -291,7 +292,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });
@@ -302,23 +303,33 @@ namespace WebAPI.Controllers
         [HttpPatch("{ownerId}")]
         public async Task<ActionResult> BanOwnerAsync(int ownerId)
         {
-            var owner1 = await _repo.BanOwnerAsync(ownerId);
-            if (owner1)
+            try
             {
-                return StatusCode(200, new
+                var owner1 = await _repo.BanOwnerAsync(ownerId);
+                if (owner1)
+                {
+                    var email = await _repo.GetEmailAsync(ownerId);
+                    await _emailService.SendEmailAsync(email, "Ban", "Your account violates the policy, so we temporarily and permanently block your account!");
+                    return StatusCode(200, new
+                    {
+                        Message = "Ban owner " + ok
+                    });
+                }
+                return StatusCode(400, new
                 {
 
-                    
-                    Message = "Ban owner " + ok,
 
+                    Message = badRequest,
                 });
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                StatusCode = 400,
-                
-                Message = badRequest,
-            });
+                return StatusCode(500, new
+                {
+                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
@@ -338,7 +349,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });
@@ -361,7 +372,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });

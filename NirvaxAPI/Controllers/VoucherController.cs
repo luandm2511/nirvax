@@ -131,7 +131,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                   
                     
                     Message = "There already exists a voucher with that information",
                 });
@@ -139,7 +139,7 @@ namespace WebAPI.Controllers
         }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "Please enter valid Staff",
             });
@@ -192,7 +192,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                   
                     
                     Message = "There already exists a voucher with that information",
                 });
@@ -200,7 +200,7 @@ namespace WebAPI.Controllers
         }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "Please enter valid Staff",
             });
@@ -235,7 +235,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                   
                     
                     Message = badRequest,
                 });
@@ -260,7 +260,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                   
                     
                     Message = badRequest,
                 });
@@ -293,7 +293,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });
@@ -325,7 +325,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                   
                     
                     Message = badRequest,
                 });

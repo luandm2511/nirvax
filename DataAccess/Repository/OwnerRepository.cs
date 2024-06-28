@@ -80,6 +80,10 @@ namespace DataAccess.Repository
             return _ownerDAO.CreateOwnerAsync(ownerDTO);
         }
 
+        public Task<string> GetEmailAsync(int ownerId)
+        {
+            return _ownerDAO.GetEmailAsync(ownerId);
+        }
         public Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
             return _ownerDAO.UpdateOwnerAsync(ownerDTO);

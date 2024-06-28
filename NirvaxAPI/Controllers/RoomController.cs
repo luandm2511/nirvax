@@ -180,7 +180,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                    
                     
                     Message = "Owner or User is is not exist!",
                 });
@@ -188,7 +188,7 @@ namespace WebAPI.Controllers
 
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                    
                     
                     Message = "Dont't accept empty information!",
                 });

@@ -25,10 +25,4 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\ads\" />
-    <Folder Include="wwwroot\images\owners\" />
-    <Folder Include="wwwroot\images\staffs\" />
-  </ItemGroup>
-
 </Project>

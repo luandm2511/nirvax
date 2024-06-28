@@ -113,7 +113,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                        
                         
                         Message = "There already exists a staff with that information",
                     });
@@ -123,7 +123,7 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = "Dont't accept empty information!",
             });
@@ -161,7 +161,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                    
                     
                     Message = "The name guest consultation is already exist",
                 });
@@ -198,7 +198,7 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                    
                     
                     Message = "The name guest consultation is already exist",
                 });
@@ -220,7 +220,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });

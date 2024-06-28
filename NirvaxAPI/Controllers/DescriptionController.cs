@@ -106,7 +106,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                    StatusCode = 400,
+                    
                     
                     Message = "There already exists a description with that information",
                 });
@@ -116,7 +116,7 @@ namespace WebAPI.Controllers
                
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = "Dont't accept empty information!",
             });
@@ -153,7 +153,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = "The name description is already exist",
             });
@@ -176,7 +176,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+                
                 
                 Message = badRequest,
             });

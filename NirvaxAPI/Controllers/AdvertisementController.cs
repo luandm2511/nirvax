@@ -161,7 +161,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                       
                         
                         Message = "There already exists a Advertisement with that information",
                     });
@@ -170,7 +170,7 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "Dont't accept empty information!",
             });
@@ -212,7 +212,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        StatusCode = 400,
+                       
                         
                         Message = "There already exists a Advertisement with that information",
                     });
@@ -222,7 +222,7 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "Dont't accept empty information!",
             });
@@ -259,7 +259,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "The name advertisement is already exist",
             });
@@ -281,7 +281,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });
@@ -304,7 +304,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = badRequest,
             });

@@ -1,6 +1,7 @@
 ﻿using AutoMapper.Execution;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
+using Pipelines.Sockets.Unofficial.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace DataAccess.IRepository
 
         Task<bool> CheckProfileExistAsync(string ownerEmail);
 
-
+        Task<string> GetEmailAsync(int ownerId);
         Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO);
 
         Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO);

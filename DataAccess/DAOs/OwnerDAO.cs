@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections;
 using DataAccess.IRepository;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
@@ -298,12 +299,20 @@ namespace DataAccess.DAOs
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
-
-
         }
-        
+
+        public async Task<string> GetEmailAsync(int ownerId)
+        {
+          var owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerId);
+            var ownerEmail = owner.Email;
+            if (ownerEmail == null)
+            {
+                throw new Exception("Email không tồn tại!");
+            }
+            return ownerEmail;
+        }
+
 
         public async Task<bool> UnBanOwnerAsync(int ownerId)
         {

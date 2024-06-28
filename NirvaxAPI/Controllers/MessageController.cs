@@ -2,6 +2,7 @@
 using BusinessObject.Models;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace WebAPI.Controllers
 {
@@ -60,7 +61,9 @@ namespace WebAPI.Controllers
                 if (message1)
                 {
                     var result = await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
-                    if (result)
+                       
+
+                        if (result)
                     {
                         return StatusCode(200, new
                         {
@@ -85,7 +88,7 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "Please enter the word!",
             });
@@ -93,7 +96,7 @@ namespace WebAPI.Controllers
                
             return StatusCode(400, new
             {
-                StatusCode = 400,
+               
                 
                 Message = "Dont't accept empty information!",
             });
