@@ -43,6 +43,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
+
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
