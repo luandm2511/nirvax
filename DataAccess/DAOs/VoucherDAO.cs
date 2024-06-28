@@ -35,7 +35,11 @@ namespace DataAccess.DAOs
             _memoryCache = memoryCache;
         }
 
-       
+        public async Task<Voucher> GetVoucherById(string voucherId)
+        {
+            return await _context.Vouchers.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
+        }
+
         public async Task<bool> CheckVoucherByIdAsync(string voucherId)
         {
 
@@ -130,7 +134,7 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<VoucherDTO> GetVoucherByIdAsync(string voucherId)
+        public async Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId)
         {
             VoucherDTO voucherDTO = new VoucherDTO();
             try
@@ -232,7 +236,7 @@ namespace DataAccess.DAOs
         {
             List<Voucher> voucher = await _context.Vouchers.Where(i => i.OwnerId == ownerId).ToListAsync();
             var totalQuantity = voucher.Sum(i => i.QuantityUsed);
-            return totalQuantity ?? 0;
+            return totalQuantity ;
         }
 
        
@@ -242,7 +246,7 @@ namespace DataAccess.DAOs
             List<Voucher> voucher = await _context.Vouchers.Where(i => i.OwnerId == ownerId).ToListAsync();
             //  var totalPrice = voucher.Sum(i => i.TotalPriceUsed);
             var totalPrice = voucher.Sum(v => (v.QuantityUsed) * v.Price);
-            return totalPrice ?? 0 ;
+            return totalPrice;
         }
 
 

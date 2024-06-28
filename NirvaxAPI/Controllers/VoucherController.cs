@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
                 var checkVoucher = await _repo.CheckVoucherByIdAsync(voucherId);
                 if (checkVoucher == true)
                 {
-                    var voucher = await _repo.GetVoucherByIdAsync(voucherId);
+                    var voucher = await _repo.GetVoucherDTOByIdAsync(voucherId);
                     return StatusCode(200, new
                     {
                         

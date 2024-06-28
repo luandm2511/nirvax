@@ -31,6 +31,19 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
+        public async Task<ProductSize> GetByIdAsync(string id)
+        {
+            return await _context.ProductSizes.Include(p => p.Product)
+                   .Include(p => p.Size)
+                   .FirstOrDefaultAsync(p => p.ProductSizeId == id);
+        }
+
+        public async Task<bool> UpdateAsync(ProductSize productSize)
+        {
+            _context.ProductSizes.Update(productSize);
+            await _context.SaveChangesAsync();
+            return true;
+        }
         public async Task<bool> CheckProductSizeExistAsync(string productSizeId)
         {
 

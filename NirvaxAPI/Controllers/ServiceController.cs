@@ -21,10 +21,9 @@ namespace WebAPI.Controllers
                  _repo = repo;
             }
 
-
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Service>>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
             {
                 var list = await _repo.GetAllServicesAsync(searchQuery, page, pageSize);
                 if (list.Any())
@@ -46,7 +45,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Service>>> GetAllServiceForUserAsync()
+        public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync()
         {
             var list = await _repo.GetAllServiceForUserAsync();
             if (list.Any())

@@ -52,8 +52,8 @@ namespace WebAPI.Helpers
 
 
 
-            CreateMap<Service, ServiceDTO>().ReverseMap();
-            CreateMap<Service, ServiceCreateDTO>().ReverseMap();
+            CreateMap<BusinessObject.Models.Service, ServiceDTO>().ReverseMap();
+            CreateMap<BusinessObject.Models.Service, ServiceCreateDTO>().ReverseMap();
 
             CreateMap<Voucher, VoucherDTO>().ReverseMap();
             CreateMap<Voucher, VoucherCreateDTO>().ReverseMap();

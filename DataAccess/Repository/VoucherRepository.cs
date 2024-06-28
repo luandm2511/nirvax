@@ -12,6 +12,7 @@ using DataAccess.IRepository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Azure;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.Repository
 {
@@ -28,7 +29,10 @@ namespace DataAccess.Repository
             return _voucherDAO.QuantityVoucherUsedStatisticsAsync(ownerId);
 
         }
-
+       public Task<Voucher> GetVoucherById(string voucherId)
+        {
+            return _voucherDAO.GetVoucherById(voucherId);
+        }
         public Task<bool> PriceAndQuantityByOrderAsync( string voucherId, int quantity)
         {
             return _voucherDAO.PriceAndQuantityByOrderAsync( voucherId, quantity);
@@ -63,9 +67,9 @@ namespace DataAccess.Repository
         }
 
      
-        public Task<VoucherDTO> GetVoucherByIdAsync(string voucherId)
+        public Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId)
         {
-            return _voucherDAO.GetVoucherByIdAsync(voucherId);
+            return _voucherDAO.GetVoucherDTOByIdAsync(voucherId);
         }
 
         public Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)

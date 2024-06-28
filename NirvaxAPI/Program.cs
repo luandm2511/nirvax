@@ -43,7 +43,39 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
+builder.Services.AddScoped<AccountDAO>();
+builder.Services.AddScoped<AuthenticationDAO>();
+builder.Services.AddScoped<BrandDAO>();
+builder.Services.AddScoped<CategoryDAO>();
+builder.Services.AddScoped<CategoryParentDAO>();
+builder.Services.AddScoped<CommentDAO>();
+builder.Services.AddScoped<ImageDAO>();
+builder.Services.AddScoped<NotificationDAO>();
+builder.Services.AddScoped<OrderDAO>();
+builder.Services.AddScoped<OrderDetailDAO>();
+builder.Services.AddScoped<OwnerDAO>();
+builder.Services.AddScoped<ProductDAO>();
+builder.Services.AddScoped<ProductSizeDAO>();
+builder.Services.AddScoped<VoucherDAO>();
+builder.Services.AddScoped<StaffDAO>();
+builder.Services.AddScoped<AccessLogDAO>();
 
+builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICateParentRepository, CateParentRepository>();
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
+builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
+builder.Services.AddScoped<IAccessLogService, AccessLogService>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
@@ -98,18 +130,6 @@ builder.Services.AddScoped<GuestConsultationDAO>();
 
 
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
-builder.Services.AddDbContext<NirvaxContext>(options =>
-    options.UseSqlServer(configuration.GetConnectionString("YourConnectionString")));
-
-
-
-
-
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -129,36 +149,19 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero, // Không chấp nhận độ chệch thời gian
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
+}).AddCookie()
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.CallbackPath = "/api/GoogleLogin/GoogleResponse";
+    options.SaveTokens = true;
 });
+builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt =>
-{
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
-    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please enter token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
@@ -168,12 +171,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
-app.UseStaticFiles(); // Phục vụ các tệp tĩnh
 
+app.UseHttpsRedirection();
+
+
+app.UseCors("AllowAll");
+
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseAccessLogMiddleware();
 
 app.MapControllers();
 

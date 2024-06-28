@@ -20,7 +20,8 @@ namespace DataAccess.IRepository
         Task<bool> PriceAndQuantityByOrderAsync( string voucherId, int quantity);
         Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize);
 
-        Task<VoucherDTO> GetVoucherByIdAsync(string voucherId);
+        Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId);
+        Task<Voucher> GetVoucherById(string voucherId);
 
         Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO);
 
