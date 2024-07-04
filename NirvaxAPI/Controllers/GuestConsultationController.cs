@@ -41,8 +41,7 @@ namespace WebAPI.Controllers
                     });
                 }
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {               
                     Message = notFound + "any guest consultation"
                 });
             }
@@ -66,13 +65,10 @@ namespace WebAPI.Controllers
                         Message = "Get guest consultation by id" + ok,
                         Data = guestConsultation
                     });
-
-
                 }
 
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {      
                     Message = notFound + "any guest consultation"
                 });
             }
@@ -91,9 +87,7 @@ namespace WebAPI.Controllers
                     if (guestConsultation1)
                     {
                         return StatusCode(200, new
-                        {
-
-                            
+                        {                      
                             Message = "Create guest consultation " + ok,
                             Data = guestConsultation1
                         });
@@ -101,20 +95,15 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        {                           
+                            Message = "Server error",                       
                         });
                     }
                 }
                 else
                 {
                     return StatusCode(400, new
-                    {
-                        
-                        
+                    {  
                         Message = "There already exists a staff with that information",
                     });
                 }
@@ -123,8 +112,6 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-                
-                
                 Message = "Dont't accept empty information!",
             });
 
@@ -142,8 +129,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                            
                             Message = "Update guest consultation" + ok,
                             Data = guestConsultation1
                         });
@@ -151,18 +136,13 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        {     
+                            Message = "Server error",                         
                         });
                     }
                 }
                 return StatusCode(400, new
                 {
-                    
-                    
                     Message = "The name guest consultation is already exist",
                 });
 
@@ -179,8 +159,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                            
                             Message = "Update guest consultation" + ok,
                             Data = guestConsultation1
                         });
@@ -188,18 +166,13 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        {      
+                            Message = "Server error",   
                         });
                     }
                 }
                 return StatusCode(400, new
                 {
-                    
-                    
                     Message = "The name guest consultation is already exist",
                 });
 
@@ -212,21 +185,14 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 
-        }
-
-      
+        } 
     }
     }

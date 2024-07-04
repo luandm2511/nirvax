@@ -41,15 +41,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {                   
                     Message = "Get list room of this account " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {                
                 Message = notFound + "any room"
             });
         }
@@ -62,15 +60,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {               
                     Message = "Get list room of this owner " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {               
                 Message = notFound + "any room"
             });
         }
@@ -85,15 +81,13 @@ namespace WebAPI.Controllers
             if (room != null)
             {
                 return StatusCode(200, new
-                {
-                    
+                {                 
                     Message = "Get room" + ok,
                     Data = room
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {       
                 Message = notFound + "any room"
             });
         }
@@ -107,15 +101,13 @@ namespace WebAPI.Controllers
             if (room != null)
             {
                 return StatusCode(200, new
-                {
-                    
+                {                  
                     Message = "Get room" + ok,
                     Data = room
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {              
                 Message = notFound + "any room"
             });
         }
@@ -128,18 +120,14 @@ namespace WebAPI.Controllers
                 var size = await _repo.GetRoomByIdAsync(roomId);
             if (size != null)
             {
-
-
                 return StatusCode(200, new
-                {
-                    
+                {                  
                     Message = "Get room by id" + ok,
                     Data = size
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {              
                 Message = notFound + "any room"
             });
         }
@@ -157,12 +145,8 @@ namespace WebAPI.Controllers
                     var size1 = await _repo.CreateRoomAsync(roomCreateDTO);
                     if (size1)
                     {
-                     
-
                         return StatusCode(200, new
                         {
-
-                            
                             Message = "Create new room " + ok,
                             Data = size1
                         });
@@ -170,26 +154,19 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        { 
+                            Message = "Server error",                        
                         });
                     }
                 }
                 return StatusCode(400, new
                 {
-                    
-                    
                     Message = "Owner or User is is not exist!",
                 });
               }
 
                 return StatusCode(400, new
-                {
-                    
-                    
+                { 
                     Message = "Dont't accept empty information!",
                 });
             }
@@ -197,7 +174,6 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }

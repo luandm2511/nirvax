@@ -31,15 +31,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {                 
                     Message = "Get list Warehouse detail " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {            
                 Message = notFound + "any Warehouse detail"
             });
         }
@@ -60,8 +58,7 @@ namespace WebAPI.Controllers
             if (warehouse == true)
             {
                 return StatusCode(200, new
-                {
-                    
+                { 
                     Message = "Create Warehouse detail" + ok,
                     Data = warehouse
                 });
@@ -69,15 +66,12 @@ namespace WebAPI.Controllers
 
             return StatusCode(500, new
             {
-                Status = "Find fail",
                 Message = notFound + "any Warehouse detail"
             });
             }
 
             return StatusCode(400, new
             {
-                
-                
                 Message = "Dont't accept empty information!",
             });
         }
@@ -92,24 +86,17 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = "Update Warehouse detail" + ok,
-
                 });
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
                 }
 
                 return StatusCode(400, new
                 {
-                    
-                    
                     Message = "Dont't accept empty information!",
                 });
 
@@ -122,22 +109,17 @@ namespace WebAPI.Controllers
             if (number != null)
             {
                 return StatusCode(200, new
-                {
-
-                    
+                { 
                     Message = number,
 
                 });
             }
             return StatusCode(400, new
-            {
-                
-                
+            { 
                 Message = badRequest,
             });
 
         }
-
 
     }
 }

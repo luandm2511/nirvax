@@ -26,8 +26,7 @@ namespace WebAPI.Controllers
         public StaffController(IConfiguration config, IStaffRepository repo)
         {
             _config = config;
-             _repo = repo;
-           
+             _repo = repo;           
         }
 
 
@@ -39,15 +38,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-           
+                {         
                     Message = "Get list staff " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {               
                 Message = notFound + "any staff"
             });
         }
@@ -64,16 +61,14 @@ namespace WebAPI.Controllers
             {
                 var staff = await _repo.GetStaffByIdAsync(staffId);
                 return StatusCode(200, new
-                {
-                   
+                {                  
                     Message = "Get staff by id " + ok,
                     Data = staff
                 });
             }
 
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {                
                 Message = notFound + "any staff"
             });
         }
@@ -87,16 +82,14 @@ namespace WebAPI.Controllers
             {
                 var staff = await _repo.GetStaffByEmailAsync(staffEmail);
                 return StatusCode(200, new
-                {
-                   
+                {                  
                     Message = "Get staff by email " + ok,
                     Data = staff
                 });
             }
 
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {           
                 Message = notFound + "any staff"
             });
         }
@@ -118,8 +111,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                         
                             Message = "Create staff " + ok,
                             Data = staff1
                         });
@@ -128,10 +119,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(500, new
                         {
-
-                           
-                            Message = "Server error",
-                            Data = ""
+                            Message = "Server error",                         
                         });
                     }
                 }
@@ -139,8 +127,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        
-                       
                         Message = "There already exists a staff with that information",
                     });
                 }
@@ -149,8 +135,6 @@ namespace WebAPI.Controllers
                
             return StatusCode(400, new
             {
-                
-                
                 Message = "Dont't accept empty information!",
             });
 
@@ -171,32 +155,24 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                           
                             Message = "Change password of staff" + ok,
                             Data = staff1
                         });
                     }
                     return StatusCode(500, new
                     {
-
-                       
-                        Message = "Internet error"
-                        // Data = staff1
+                        Message = "Internet error"                       
                     });
                 }
                 return StatusCode(400, new
-                {
-                    
-                    
+                {    
                     Message = "Staff not exist",
                 });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                 
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -217,8 +193,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                           
                             Message = "Update staff" + ok,
                             Data = staff1
                         });
@@ -227,10 +201,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(500, new
                         {
-
-                           
-                            Message = "Server error",
-                            Data = ""
+                            Message = "Server error",                        
                         });
                     }
                 }
@@ -238,16 +209,12 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        
-                        
                         Message = "There already exists a staff with that information",
                     });
                 }
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = "Please enter valid Staff",
             });
 
@@ -266,8 +233,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                           
                             Message = "Update profile staff" + ok,
                             Data = staff1
                         });
@@ -275,27 +240,20 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                           
-                            Message = "Server error",
-                            Data = "Internet server"
+                        { 
+                            Message = "Server error",                           
                         });
                     }
                 }else
                 {
                      return StatusCode(400, new
-            {
-                
-                
-                Message = "There already exists a staff with that information",
-            });
+                     {
+                         Message = "There already exists a staff with that information",
+                     });
                 }
             } 
             return StatusCode(400, new
             {
-                
-                
                 Message = "Please fill in all information",
             });
 
@@ -306,46 +264,35 @@ namespace WebAPI.Controllers
             var checkOwner = await _repo.CheckStaffExistAsync(staffAvatarDTO.StaffId);
             if (checkOwner == true)
             {
-                
-
                 var owner1 = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);
                 if (owner1 == true)
                 {
                     return StatusCode(200, new
                     {
-
-                       
                         Message = "Update avatar staff " + ok,
                         Data = owner1
                     });
                 }
             }
             return StatusCode(400, new
-            {
-                
-                
+            { 
                 Message = badRequest,
             });
 
         }
         [HttpPatch("{staffId}")]
-        public async Task<ActionResult> BanStaffAsync(int staffId)
+        public async Task<ActionResult> DeleteStaffAsync(int staffId)
         {
-            var staff1 = await _repo.BanStaffAsync(staffId);
+            var staff1 = await _repo.DeleteStaffAsync(staffId);
             if (staff1 == true)
             {
                 return StatusCode(200, new
-                {
-
-                   
+                { 
                     Message = "Ban staff " + ok,
-
                 });
             }
             return StatusCode(400, new
-            {
-                
-                
+            {  
                 Message = badRequest,
             });
 

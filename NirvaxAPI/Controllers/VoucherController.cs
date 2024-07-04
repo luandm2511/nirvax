@@ -31,14 +31,12 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get list voucher " + ok,
                         Data = list
                     });
                 }
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                { 
                     Message = notFound + "any voucher"
                 });
             }
@@ -52,14 +50,12 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    
                     Message = "Get list voucher " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
                 Message = notFound + "any voucher"
             });
         }
@@ -81,15 +77,13 @@ namespace WebAPI.Controllers
                     var voucher = await _repo.GetVoucherDTOByIdAsync(voucherId);
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get voucher by id " + ok,
                         Data = voucher
                     });
                 }
 
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {                   
                     Message = notFound + "any voucher"
                 });
             }
@@ -109,8 +103,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(200, new
                         {
-
-                            
                             Message = "Create voucher " + ok,
                             Data = voucher1
                         });
@@ -119,10 +111,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(500, new
                         {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                            Message = "Server error",                           
                         });
                     }
                 }
@@ -131,16 +120,12 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                   
-                    
                     Message = "There already exists a voucher with that information",
                 });
             }
         }
             return StatusCode(400, new
-            {
-               
-                
+            { 
                 Message = "Please enter valid Staff",
             });
             }
@@ -148,7 +133,6 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -170,9 +154,7 @@ namespace WebAPI.Controllers
                     if (voucher1)
                     {
                         return StatusCode(200, new
-                        {
-
-                            
+                        {  
                             Message = "Update voucher" + ok,
                             Data = voucher1
                         });
@@ -181,10 +163,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(500, new
                         {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                            Message = "Server error",                           
                         });
                     }
                 }
@@ -192,16 +171,12 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                   
-                    
                     Message = "There already exists a voucher with that information",
                 });
             }
         }
             return StatusCode(400, new
             {
-               
-                
                 Message = "Please enter valid Staff",
             });
             }
@@ -209,7 +184,6 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -227,16 +201,11 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Delete voucher " + ok,
-
                     });
                 }
                 return StatusCode(400, new
                 {
-                   
-                    
                     Message = badRequest,
                 });
 
@@ -252,16 +221,11 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = number,
-
                     });
                 }
                 return StatusCode(400, new
-                {
-                   
-                    
+                { 
                     Message = badRequest,
                 });
             }
@@ -269,7 +233,6 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -285,27 +248,54 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
             {
-               
-                
                 Message = badRequest,
             });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                 
                     Message = "An error occurred: " + ex.Message
                 });
             }
         }
+<<<<<<< HEAD
+=======
+
+        [HttpGet]
+        public async Task<ActionResult> PriceAndQuantityByOrderAsync(string voucherId, int quantity)
+        {
+            try {
+                var result = await _repo.PriceAndQuantityByOrderAsync( voucherId, quantity);
+                if (result == true)
+                {
+                    return StatusCode(200, new
+                    { 
+                        Message = "Update voucher after used success!",
+                    });
+                }
+                return StatusCode(400, new
+                {   
+                    Message = badRequest,
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {                 
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
+
+        }
+
+>>>>>>> e0cb4fd (chi)
     }
 }

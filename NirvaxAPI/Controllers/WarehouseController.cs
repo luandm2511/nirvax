@@ -43,8 +43,7 @@ namespace WebAPI.Controllers
             else
             {
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {                 
                     Message = notFound + "any warehouse"
                 });
             }
@@ -65,8 +64,7 @@ namespace WebAPI.Controllers
                    if (result != null)
                    {
                     return StatusCode(200, new
-                    {
-                        
+                    {  
                         Message = "Get warehouse by owner" + ok,
                         Data = wh,
                         result.TotalPrice,
@@ -76,7 +74,6 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(404, new
                 {
-                    Status = "Find fail",
                     Message = "Error for total quantity and total price of warehouse"
                 });
            
@@ -93,8 +90,7 @@ namespace WebAPI.Controllers
                 if(numberOfWarehouse != null)
                 {
                     return StatusCode(200, new
-                    {
-                        
+                    {  
                         Message = "Get list Warehouse " + ok,
                         Data = list,
                         numberOfWarehouse.TotalPrice,
@@ -104,16 +100,13 @@ namespace WebAPI.Controllers
                 else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    {  
                         Message = "Can't get quantity and price of warehouse!",
                     });
                 }
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
                 Message = notFound + "any Warehouse"
             });
         }
@@ -130,7 +123,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get list Warehouse " + ok,
                         Data = list,
                         numberOfWarehouse.TotalPrice,
@@ -139,16 +131,14 @@ namespace WebAPI.Controllers
                 } else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    { 
                         Message = "Can't get quantity and price of warehouse!",
                     });
                 }
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
+               
                 Message = notFound + "any Warehouse"
             });
         }
@@ -171,8 +161,7 @@ namespace WebAPI.Controllers
                     if (warehouse == true)
                     {
                        return StatusCode(200, new
-                       {
-                          
+                       { 
                           Message = "Create Warehouse" + ok,
                           Data = warehouse
                         });
@@ -180,11 +169,8 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        { 
+                            Message = "Server error",                          
                         });
                      }
 
@@ -192,9 +178,7 @@ namespace WebAPI.Controllers
                 else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    {         
                         Message = "Please enter valid Warehouse",
                     });
                 }
@@ -219,25 +203,19 @@ namespace WebAPI.Controllers
                 if (size1)
                 {
                     return StatusCode(200, new
-                    {
-
-                        
+                    {  
                         Message = "Update warehouse " + ok,
-
                     });
                 }
                 return StatusCode(400, new
-                {
-                   
-                    
+                {  
                     Message = badRequest,
                 });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                    
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -253,16 +231,11 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
-            {
-               
-                
+            { 
                 Message = badRequest,
             });
 
@@ -276,16 +249,11 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
-            {
-               
-                
+            { 
                 Message = badRequest,
             });
 
@@ -298,17 +266,12 @@ namespace WebAPI.Controllers
             if (number != null)
             {
                 return StatusCode(200, new
-                {
-
-                    
+                { 
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
             {
-               
-                
                 Message = badRequest,
             });
 
@@ -321,17 +284,12 @@ namespace WebAPI.Controllers
             if (number != null)
             {
                 return StatusCode(200, new
-                {
-
-                    
+                { 
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
             {
-               
-                
                 Message = badRequest,
             });
 

@@ -122,9 +122,6 @@ namespace DataAccess.DAOs
           
         }
 
-      
-
-
 
         public async Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
@@ -155,16 +152,11 @@ namespace DataAccess.DAOs
         public async Task<bool> DeleteDesctiptionAsync(int descriptionId)
         {
             Description? description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);
-            //ánh xạ đối tượng DescriptionDTO đc truyền vào cho staff
-
-               
 
             if (description != null)
             {
                 description.Isdelete = true;
-                 _context.Descriptions.Update(description);
-                //    _mapper.Map(DescriptionDTO, staff);
-
+                _context.Descriptions.Update(description);
                 await _context.SaveChangesAsync();
                 return true;
             }

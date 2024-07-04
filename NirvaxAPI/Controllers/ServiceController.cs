@@ -36,33 +36,30 @@ namespace WebAPI.Controllers
                     });
                 }
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {                  
                     Message = notFound + "any service"
                 });
             }
 
 
-        [HttpGet]
+            [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync()
-        {
-            var list = await _repo.GetAllServiceForUserAsync();
-            if (list.Any())
+            public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync()
             {
-                return StatusCode(200, new
-                {
-                    
-                    Message = "Get list service " + ok,
-                    Data = list
-                });
+                 var list = await _repo.GetAllServiceForUserAsync();
+                 if (list.Any())
+                 {
+                     return StatusCode(200, new
+                     {                
+                         Message = "Get list service " + ok,
+                         Data = list
+                     });
+                 }
+                 return StatusCode(404, new
+                 {           
+                     Message = notFound + "any service"
+                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any service"
-            });
-        }
 
 
         [HttpGet("{serviceId}")]
@@ -73,21 +70,15 @@ namespace WebAPI.Controllers
                 if (checkServiceExist == true)
                 {
                     var service = await _repo.GetServiceByIdAsync(serviceId);
-
-
                     return StatusCode(200, new
-                    {
-                        
+                    {                       
                         Message = "Get service by id" + ok,
                         Data = service
                     });
-
-
                 }
 
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {                  
                     Message = notFound + "any service"
                 });
             }
@@ -104,9 +95,7 @@ namespace WebAPI.Controllers
                     if (service1)
                     {
                         return StatusCode(200, new
-                        {
-
-                            
+                        {                        
                             Message = "Create service " + ok,
                             Data = service1
                         });
@@ -114,20 +103,15 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        {                           
+                            Message = "Server error",                          
                         });
                     }
                 }
                 else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    {                                            
                         Message = "There already exists a service with that information",
                     });
                 }
@@ -136,9 +120,7 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-               
-                
-                Message = "Dont't accept empty information!",
+              Message = "Dont't accept empty information!",
             });
 
         }
@@ -155,9 +137,7 @@ namespace WebAPI.Controllers
                     if (service1)
                     {
                         return StatusCode(200, new
-                        {
-
-                            
+                        {                           
                             Message = "Update service" + ok,
                             Data = service1
                         });
@@ -165,20 +145,15 @@ namespace WebAPI.Controllers
                     else
                     {
                         return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                        {                           
+                            Message = "Server error",                           
                         });
                     }
                 }
             else
             {
                 return StatusCode(400, new
-                {
-                   
-                    
+                {                                 
                     Message = "There already exists a service with that information",
                 });
             }
@@ -200,17 +175,13 @@ namespace WebAPI.Controllers
                 if (service1)
                 {
                     return StatusCode(200, new
-                    {
-
-                        
+                    {                
                         Message = "Delete service " + ok,
 
                     });
                 }
                 return StatusCode(400, new
-                {
-                   
-                    
+                { 
                     Message = badRequest,
                 });
 
@@ -223,17 +194,12 @@ namespace WebAPI.Controllers
             if (service1)
             {
                 return StatusCode(200, new
-                {
-
-                    
+                { 
                     Message = "Restore service " + ok,
-
                 });
             }
             return StatusCode(400, new
-            {
-               
-                
+            { 
                 Message = badRequest,
             });
 

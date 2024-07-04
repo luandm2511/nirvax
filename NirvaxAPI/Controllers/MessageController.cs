@@ -37,14 +37,12 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get all message of this room " + ok,
                         Data = list
                     });
                 }
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {                   
                     Message = notFound + "all message of this room"
                 });
             }
@@ -61,43 +59,32 @@ namespace WebAPI.Controllers
                 if (message1)
                 {
                     var result = await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
-                       
-
-                        if (result)
-                    {
-                        return StatusCode(200, new
-                        {
-
-                            
+                      if (result)
+                      {
+                          return StatusCode(200, new
+                          {
                             Message = "Create messgae " + ok,
                             Data = message1
-                        });
-                    }
+                          });
+                      }
                 
                 }
                 else
                 {
                     return StatusCode(500, new
-                    {
-
-                        
-                        Message = "Server error",
-                        Data = ""
+                    {  
+                        Message = "Server error",                       
                     });
                 }
             }
             return StatusCode(400, new
             {
-               
-                
                 Message = "Please enter the word!",
             });
         }
                
             return StatusCode(400, new
-            {
-               
-                
+            {               
                 Message = "Dont't accept empty information!",
             });
 

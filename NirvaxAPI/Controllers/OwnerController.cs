@@ -35,15 +35,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {                
                     Message = "Get list owner " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {               
                 Message = notFound + "any owner"
             });
         }
@@ -57,15 +55,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {           
                     Message = "Get list owner " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {               
                 Message = notFound + "any owner"
             });
         }
@@ -88,8 +84,7 @@ namespace WebAPI.Controllers
             }
           
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {               
                 Message = notFound + "any owner"
             });
         }
@@ -103,16 +98,14 @@ namespace WebAPI.Controllers
             {
                 var owner = await _repo.GetOwnerByEmailAsync(ownerEmail);
                 return StatusCode(200, new
-                {
-                    
+                {                   
                     Message = "Get owner by email " + ok,
                     Data = owner
                 });
             }
 
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {              
                 Message = notFound + "any owner"
             });
         }
@@ -125,17 +118,13 @@ namespace WebAPI.Controllers
             if (owner1)
             {
                 return StatusCode(200, new
-                {
-
-                    
+                {                  
                     Message = "Create owner " + ok,
                     Data = owner1
                 });
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 
@@ -154,8 +143,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Change password of owner" + ok,
                         Data = owner1
                     });
@@ -163,8 +150,6 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 
@@ -183,8 +168,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Update owner" + ok,
                         Data = owner1
                     });
@@ -192,10 +175,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(500, new
                     {
-                        
-                        
                         Message = "Internet server error",
-
                     });
                 }
             }
@@ -203,8 +183,6 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                    
-                    
                     Message = "There already exists a owner with that information",
                 });
             }
@@ -212,9 +190,7 @@ namespace WebAPI.Controllers
         }
                
             return StatusCode(400, new
-            {
-                
-                
+            {  
                 Message = "Dont't accept empty information!",
             });
 
@@ -232,9 +208,7 @@ namespace WebAPI.Controllers
                 if (owner1)
                 {
                     return StatusCode(200, new
-                    {
-
-                        
+                    { 
                         Message = "Update profile owner" + ok,
                         Data = owner1
                     });
@@ -242,8 +216,6 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            
-                            
                             Message = "Internet server error",
                         });
                     }
@@ -251,9 +223,7 @@ namespace WebAPI.Controllers
                 else
                 {
                     return StatusCode(400, new
-                    {
-                        
-                        
+                    {   
                         Message = "There already exists a owner with that information",
                     });
                 }
@@ -262,8 +232,6 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-                
-                
                 Message = "Dont't accept empty information!",
             });
 
@@ -283,8 +251,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Update avatar owner" + ok,
                         Data = owner1
                     });
@@ -292,8 +258,6 @@ namespace WebAPI.Controllers
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 
@@ -317,16 +281,13 @@ namespace WebAPI.Controllers
                 }
                 return StatusCode(400, new
                 {
-
-
                     Message = badRequest,
                 });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                   
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -341,16 +302,11 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = "UnBan owner " + ok,
-
                 });
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 
@@ -364,16 +320,11 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 

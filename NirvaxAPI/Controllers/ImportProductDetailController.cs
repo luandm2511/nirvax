@@ -32,14 +32,12 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-                    
                     Message = "Get list Import Product Detail " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
                 Message = notFound + "any Import Product Detail"
             });
         }
@@ -60,7 +58,6 @@ namespace WebAPI.Controllers
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
                 Message = notFound + "any Import Product Detail"
             });
         }
@@ -79,7 +76,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        
                         Message = "Create Import Product Detail " + ok,
                         Data = importProductDetail
                     });
@@ -89,7 +85,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(500, new
                     {
-                        Status = "Find fail",
                         Message = notFound + "any Import Product Detail"
                     });
                 }
@@ -98,8 +93,6 @@ namespace WebAPI.Controllers
 
             return StatusCode(400, new
             {
-               
-                
                 Message = "Dont't accept empty information!",
             });
         }
@@ -107,7 +100,6 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -126,8 +118,7 @@ namespace WebAPI.Controllers
                 if (importProductDetail == true)
                 {
                     return StatusCode(200, new
-                    {
-                        
+                    {                       
                         Message = "Update Import Product Detail " + ok,
                         Data = importProductDetail
                     });
@@ -137,24 +128,20 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(500, new
                     {
-                        Status = "Find fail",
                         Message = notFound + "any Import Product Detail"
                     });
                 }
                 }
 
                 return StatusCode(400, new
-                {
-                   
-                    
+                { 
                     Message = "Dont't accept empty information!",
                 });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                    
                     Message = "An error occurred: " + ex.Message
                 });
             }

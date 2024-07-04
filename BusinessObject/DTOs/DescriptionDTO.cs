@@ -18,6 +18,7 @@ namespace BusinessObject.DTOs
         [MinLength(2, ErrorMessage = " Content to be at least 2 characters!!")]
         [MaxLength(4000, ErrorMessage = "Content is limited to 4000 characters!!")]
         public string Content { get; set; } = null!;
+        public List<string> ImageLinks { get; set; }
 
         public bool Isdelete { get; set; }
     }
@@ -33,7 +34,8 @@ namespace BusinessObject.DTOs
         [MinLength(2, ErrorMessage = " Content to be at least 2 characters!!")]
         [MaxLength(4000, ErrorMessage = "Content is limited to 4000 characters!!")]
         public string Content { get; set; } = null!;
+        public List<string> ImageLinks { get; set; }
 
-       
+
     }
 }

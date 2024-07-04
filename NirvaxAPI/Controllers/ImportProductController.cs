@@ -31,15 +31,13 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                { 
                     Message = "Get list import product " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {           
                 Message = notFound + "any import product"
             });
         }
@@ -57,16 +55,14 @@ namespace WebAPI.Controllers
 
                 return StatusCode(200, new
                 {
-                    
                     Message = "Get import product by id" + ok,
                     Data = importProduct
                 });
             }
 
             return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any import product"
+            {              
+               Message = notFound + "any import product"
             });
         }
 
@@ -80,9 +76,7 @@ namespace WebAPI.Controllers
                     if (importProduct1)
                     {
                         return StatusCode(200, new
-                        {
-
-                            
+                        {   
                             Message = "Create import product " + ok,
                             Data = importProduct1
                         });
@@ -91,10 +85,8 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(500, new
                         {
-
-                            
                             Message = "Server error",
-                            Data = ""
+                            
                         });
                     }
                 }
@@ -127,8 +119,6 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Update import product" + ok,
                         Data = importProduct1
                     });
@@ -137,18 +127,14 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(500, new
                     {
-
-                        
                         Message = "Server error",
-                        Data = ""
+                        
                     });
                 }
             }
 
             return StatusCode(400, new
-            {
-                
-                
+            { 
                 Message = "Dont't accept empty information!",
             });
 

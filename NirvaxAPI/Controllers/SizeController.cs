@@ -31,15 +31,14 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {  
                     Message = "Get list size " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
+               
                 Message = notFound + "any size"
             });
         }
@@ -52,11 +51,8 @@ namespace WebAPI.Controllers
             var checkSizeExist = await _repo.CheckSizeExistAsync(sizeId);
             if (checkSizeExist == true) {
                 var size = await _repo.GetSizeByIdAsync(sizeId);
-            
-         
                     return StatusCode(200, new
-                    {
-                        
+                    { 
                         Message = "Get size by id" + ok,
                         Data = size
                     });
@@ -65,8 +61,7 @@ namespace WebAPI.Controllers
             }
          
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {  
                 Message = notFound + "any size"
             });
         }
@@ -83,9 +78,7 @@ namespace WebAPI.Controllers
                 if (size1)
                 {
                     return StatusCode(200, new
-                    {
-
-                        
+                    { 
                         Message = "Create size " + ok,
                         Data = size1
                     });
@@ -93,11 +86,8 @@ namespace WebAPI.Controllers
                 else
                 {
                     return StatusCode(500, new
-                    {
-
-                        
-                        Message = "Server error",
-                        Data = ""
+                    { 
+                        Message = "Server error",                       
                     });
                 }
              }
@@ -105,16 +95,12 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        
-                        
                         Message = "There already exists a size with that information",
                     });
                 }
             }
             return StatusCode(400, new
-            {
-                
-                
+            { 
                 Message = "Please enter valid Staff",
             });
 
@@ -132,9 +118,7 @@ namespace WebAPI.Controllers
                 if (size1)
                 {
                     return StatusCode(200, new
-                    {
-
-                        
+                    { 
                         Message = "Update size" + ok,
                         Data = size1
                     });
@@ -143,10 +127,8 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(500, new
                     {
-
-                        
                         Message = "Server error",
-                        Data = ""
+                        
                     });
                 }
             }
@@ -154,16 +136,12 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        
-                        
                         Message = "There already exists a staff with that information",
                     });
                 }
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = "Please enter valid Staff",
             });
 
@@ -176,17 +154,12 @@ namespace WebAPI.Controllers
             if (size1)
             {
                 return StatusCode(200, new
-                {
-
-                    
+                { 
                     Message = "Delete size " + ok,
-
                 });
             }
             return StatusCode(400, new
             {
-                
-                
                 Message = badRequest,
             });
 
@@ -200,21 +173,14 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = "Restore size " + ok,
-
                 });
             }
             return StatusCode(400, new
-            {
-                
-                
+            { 
                 Message = badRequest,
             });
 
         }
-
-
     }
 }

@@ -88,9 +88,9 @@ public Task<bool> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
             return _staffDAO.UpdateAvatarStaffAsync(staffAvatarDTO);
         }
-public Task<bool> BanStaffAsync(int staffId)
+public Task<bool> DeleteStaffAsync(int staffId)
 {
-    return _staffDAO.BanStaffAsync(staffId);
+    return _staffDAO.DeleteStaffAsync(staffId);
 }
 
 
