@@ -96,11 +96,8 @@ namespace WebAPI.Controllers
                                 LinkImage = link,
                                 DescriptionId = des.DescriptionId
                             };
-                            var result2 = await _imageRepository.AddImagesAsync(image);
-                            if (!result2)
-                            {
-                                StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to add the image." });
-                            }
+                            await _imageRepository.AddImagesAsync(image);
+                          
                         }
                         return StatusCode(200, new
                         {  
@@ -147,11 +144,8 @@ namespace WebAPI.Controllers
                     foreach (BusinessObject.Models.Image img in images)
                     {
                         // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                        var resultDelete = await _imageRepository.DeleteImagesAsync(img);
-                        if (!resultDelete)
-                        {
-                            StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to delete the image." });
-                        }
+                        await _imageRepository.DeleteImagesAsync(img);
+                       
                     }
                     foreach (var link in descriptionDTO.ImageLinks)
                     {
@@ -161,11 +155,7 @@ namespace WebAPI.Controllers
                             LinkImage = link,
                             DescriptionId = des.DescriptionId
                         };
-                        var resultAdd = await _imageRepository.AddImagesAsync(image);
-                        if (!resultAdd)
-                        {
-                            StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to update the image." });
-                        }
+                        await _imageRepository.AddImagesAsync(image);                      
                     }
                     return StatusCode(200, new
                     { 
@@ -195,11 +185,7 @@ namespace WebAPI.Controllers
             foreach (BusinessObject.Models.Image img in images)
             {
                 // Xóa ảnh cũ trước khi xóa ảnh mới
-                var resultDelete = await _imageRepository.DeleteImagesAsync(img);
-                if (!resultDelete)
-                {
-                    StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to delete the image." });
-                }
+                await _imageRepository.DeleteImagesAsync(img);
             }
             var description1 = await _repo.DeleteDesctiptionAsync(descriptionId);
             if (description1)

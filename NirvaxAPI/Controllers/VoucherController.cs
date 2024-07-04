@@ -264,14 +264,13 @@ namespace WebAPI.Controllers
                 });
             }
         }
-<<<<<<< HEAD
-=======
+
 
         [HttpGet]
-        public async Task<ActionResult> PriceAndQuantityByOrderAsync(string voucherId, int quantity)
+        public async Task<ActionResult> PriceAndQuantityByOrderAsync(string voucherId)
         {
             try {
-                var result = await _repo.PriceAndQuantityByOrderAsync( voucherId, quantity);
+                var result = await _repo.PriceAndQuantityByOrderAsync( voucherId);
                 if (result == true)
                 {
                     return StatusCode(200, new
@@ -296,6 +295,6 @@ namespace WebAPI.Controllers
 
         }
 
->>>>>>> e0cb4fd (chi)
+
     }
 }
