@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] CategoryDTO categoryDto)
         {
             try
@@ -69,13 +69,8 @@ namespace WebAPI.Controllers
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The category name has been duplicated." });
                 }
 
-                var result = await _repository.CreateCategoryAsync(category);
-                if (result)
-                {
-                    return Ok(new { message = "Category added successfully." });
-                }
-
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the category." });
+                await _repository.CreateCategoryAsync(category);
+                return Ok(new { message = "Category added successfully." });
             }
             catch (Exception ex)
             {
@@ -106,13 +101,8 @@ namespace WebAPI.Controllers
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The category name has been duplicated." });
                 }
 
-                var result = await _repository.UpdateAsync(category);
-                if (result)
-                {
-                    return Ok(new { message = "Category updated successfully." });
-                }
-
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to update the category." });
+                await _repository.UpdateAsync(category);
+                return Ok(new { message = "Category updated successfully." });
             }
             catch (Exception ex)
             {
@@ -131,12 +121,27 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Category not found." });
                 }
-                var result = await _repository.DeleteCategoryAsync(category);
-                if (result)
+                await _repository.DeleteCategoryAsync(category);
+                return Ok(new { message = "Category deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCategories(string keyword)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
                 {
-                    return Ok(new { message = "Category deleted successfully." });
+                    return BadRequest(new { message = "Keyword must not be empty" });
                 }
-                return NotFound(new { message = "Category not found." });
+
+                var categories = await _repository.SearchCategoriesAsync(keyword);
+                return Ok(categories);
             }
             catch (Exception ex)
             {

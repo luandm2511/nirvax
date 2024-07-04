@@ -17,35 +17,35 @@ namespace DataAccess.Repository
             _pro = pro;
         }
 
-        public async Task<bool> AddRatingAsync(Product product, int rating) 
+        public async Task AddRatingAsync(Product product, int rating) 
         {
             product.RateCount++;
             product.RatePoint = (product.RatePoint * (product.RateCount - 1) + rating) / product.RateCount;
-            return await _pro.UpdateAsync(product);
+            await _pro.UpdateAsync(product);
         }
 
-        public async Task<bool> BanProductAsync(Product product) 
+        public async Task BanProductAsync(Product product) 
         { 
             product.Isban = true;
-            return await _pro.UpdateAsync(product);
+            await _pro.UpdateAsync(product);
         } 
 
         public async Task<bool> CheckProductAsync(Product product) => await _pro.CheckProductAsync(product);
 
-        public async Task<bool> CreateAsync(Product product)
+        public async Task CreateAsync(Product product)
         {
             product.RatePoint = 0;
             product.RateCount = 0;
             product.QuantitySold = 0;
             product.Isban = false;
             product.Isdelete = false;
-            return await _pro.CreateAsync(product);
+            await _pro.CreateAsync(product);
         }
 
-        public async Task<bool> DeleteAsync(Product product)
+        public async Task DeleteAsync(Product product)
         {
             product.Isdelete = true;
-            return await _pro.UpdateAsync(product);
+            await _pro.UpdateAsync(product);
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync() => await _pro.GetAllAsync();
@@ -60,12 +60,15 @@ namespace DataAccess.Repository
 
         public async Task<IEnumerable<Product>> GetTopSellingProductsAsync() => await _pro.GetTopSellingProductsAsync();
         public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId) => await _pro.GetTopSellingProductsByOwnerAsync(ownerId);
-        public async Task<bool> UpdateAsync(Product product) => await _pro.UpdateAsync(product);
+        public async Task UpdateAsync(Product product)
+        {
+            await _pro.UpdateAsync(product);
+        }
 
-        public async Task<bool> UnbanProductAsync(Product product)
+        public async Task UnbanProductAsync(Product product)
         {
             product.Isban = false;
-            return await _pro.UpdateAsync(product);
+            await _pro.UpdateAsync(product);
         }
 
         public async Task<(List<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds)

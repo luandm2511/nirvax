@@ -17,7 +17,7 @@ namespace DataAccess.IRepository
         Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId);
         Task<double> PriceVoucherUsedStatisticsAsync(int ownerId);
         Task<List<VoucherDTO>> GetAllVoucherForUserAsync();
-        Task<bool> PriceAndQuantityByOrderAsync( string voucherId, int quantity);
+        Task<bool> PriceAndQuantityByOrderAsync( string voucherId);
         Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize);
 
         Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId);

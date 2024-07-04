@@ -17,16 +17,18 @@ namespace DataAccess.DAOs
             _context = context;
         }
 
-        public async Task<bool> AddOrderDetailAsync(OrderDetail orderDetail)
+        public async Task AddOrderDetailAsync(OrderDetail orderDetail)
         {
             _context.OrderDetails.Add(orderDetail);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId)
         {
             return await _context.OrderDetails
+                .Include(o => o.Order)
+                .Include(o => o.ProductSize.Product)
+                .Include(o => o.ProductSize.Size)
                 .Where(od => od.OrderId == orderId)
                 .ToListAsync();
         }

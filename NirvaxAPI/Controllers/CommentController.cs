@@ -64,11 +64,7 @@ namespace WebAPI.Controllers
                 }
                 var comment = _mapper.Map<Comment>(commentDto);
                 
-                var result = await _commentRepository.AddCommentAsync(comment);
-                if (!result)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the comment." });
-                }
+                await _commentRepository.AddCommentAsync(comment);
                 var notification = new Notification
                 {
                     AccountId = comment.AccountId,
@@ -79,12 +75,7 @@ namespace WebAPI.Controllers
                     CreateDate = DateTime.UtcNow
                 };
 
-                var notificationResult = await _notificationRepository.AddNotificationAsync(notification);
-                if (!notificationResult)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the notification." });
-                }
-                
+                await _notificationRepository.AddNotificationAsync(notification);               
                 return Ok(new { message = "Comment is created successfully." });
                 
             }
@@ -104,10 +95,6 @@ namespace WebAPI.Controllers
             try
             {
                 var comment = await _commentRepository.GetCommentByIdAsync(commentId);
-                if (comment == null)
-                {
-                    return NotFound(new { message = "Comment is not found." });
-                }
                 var product = await _productRepository.GetByIdAsync(comment.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
@@ -116,11 +103,7 @@ namespace WebAPI.Controllers
                 
                 
                 comment.Content = updateComment;
-                var result = await _commentRepository.UpdateCommentAsync(comment);
-                if (result)
-                {
-                    return Ok(new { message = "Comment is updated successfully." });
-                }
+                await _commentRepository.UpdateCommentAsync(comment);
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the comment." });
             }
             catch (Exception ex)
@@ -144,10 +127,6 @@ namespace WebAPI.Controllers
                 }
 
                 var comment = await _commentRepository.GetCommentByIdAsync(commentId);
-                if (comment == null)
-                {
-                    return NotFound(new { message = "Comment is not found." });
-                }
 
                 var product = await _productRepository.GetByIdAsync(comment.ProductId);
 
@@ -161,12 +140,7 @@ namespace WebAPI.Controllers
                 _mapper.Map(replyDto, comment);
                 comment.ReplyTimestamp = DateTime.UtcNow;
 
-                var result = await _commentRepository.UpdateCommentAsync(comment);
-                if (!result)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to reply the comment." });
-                }
-
+                await _commentRepository.UpdateCommentAsync(comment);
                 var notification = new Notification
                 {
                     AccountId = comment.AccountId,
@@ -177,11 +151,7 @@ namespace WebAPI.Controllers
                     CreateDate = DateTime.UtcNow
                 };
 
-                var notificationResult = await _notificationRepository.AddNotificationAsync(notification);
-                if (!notificationResult)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the notification." });
-                }
+                await _notificationRepository.AddNotificationAsync(notification);
                 return Ok(new { message = "Reply successfully." });
             }
             catch (Exception ex)

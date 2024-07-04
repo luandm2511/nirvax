@@ -133,11 +133,7 @@ namespace WebAPI.Controllers
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The product name has been duplicated." });
                 }
 
-                var result1 = await _productRepository.CreateAsync(product);
-                if (!result1)
-                {
-                    StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the product." });
-                }
+                await _productRepository.CreateAsync(product);
 
                 foreach (var link in productDto.ImageLinks)
                 {
@@ -147,11 +143,7 @@ namespace WebAPI.Controllers
                             LinkImage = link,
                             ProductId = product.ProductId
                         };
-                        var result2 = await _imageRepository.AddImagesAsync(image);
-                        if (!result2)
-                        {
-                            StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to add the image." });
-                        }
+                        await _imageRepository.AddImagesAsync(image);
                 }
                 return Ok(new { message = "Product is created successfully." });
             }
@@ -187,21 +179,13 @@ namespace WebAPI.Controllers
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The product name has been duplicated." });
                 }
 
-                var resultUpdate = await _productRepository.UpdateAsync(product);
-                if (!resultUpdate)
-                {
-                    StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to update the product." });
-                }
+                await _productRepository.UpdateAsync(product);
 
                 IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByProductAsync(id);
                 foreach(BusinessObject.Models.Image img in images)
                 {
                     // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                    var resultDelete = await _imageRepository.DeleteImagesAsync(img);
-                    if (!resultDelete)
-                    {
-                        StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to delete the image." });
-                    }
+                    await _imageRepository.DeleteImagesAsync(img);
                 }
                 // Handle image upload
                 foreach (var link in productDto.ImageLinks)
@@ -212,11 +196,7 @@ namespace WebAPI.Controllers
                         LinkImage = link,
                         ProductId = product.ProductId
                     };
-                    var resultAdd = await _imageRepository.AddImagesAsync(image);
-                    if (!resultAdd)
-                    {
-                        StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to update the image." });
-                    }
+                    await _imageRepository.AddImagesAsync(image);
                 }
                 return Ok(new { message = "Product is updated successfully." });
             }
@@ -244,18 +224,10 @@ namespace WebAPI.Controllers
                 foreach (BusinessObject.Models.Image img in images)
                 {
                     // Xóa ảnh cũ trước khi xóa ảnh mới
-                    var resultDelete = await _imageRepository.DeleteImagesAsync(img);
-                    if (!resultDelete)
-                    {
-                        StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to delete the image." });
-                    }
+                    await _imageRepository.DeleteImagesAsync(img);
                 }
-                var result = await _productRepository.DeleteAsync(product);
-                if (result)
-                {
-                    return Ok(new { message = "Product is deleted successfully." });
-                }
-                return NoContent();
+                await _productRepository.DeleteAsync(product);
+                return Ok(new { message = "Product is deleted successfully"});
             }
             catch (Exception ex)
             {
@@ -277,7 +249,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Product not found." });
                 }
-                var result = await _productRepository.BanProductAsync(product);
+                await _productRepository.BanProductAsync(product);
                 var notification = new Notification
                 {
                     AccountId = null,
@@ -288,17 +260,8 @@ namespace WebAPI.Controllers
                     CreateDate = DateTime.UtcNow
                 };
 
-                var notificationResult = await _notificationRepository.AddNotificationAsync(notification);
-                if (!notificationResult)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the notification." });
-                }
-                if (result)
-                {
-                    return Ok(new { message = "Product is banned successfully." });
-                }
-                
-                return NoContent();
+                await _notificationRepository.AddNotificationAsync(notification);
+                return Ok(new { message = "Product is banned successfully." });
             }
             catch (Exception ex)
             {
@@ -320,7 +283,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Product not found." });
                 }
-                var result = await _productRepository.UnbanProductAsync(product);
+                await _productRepository.UnbanProductAsync(product);
                 var notification = new Notification
                 {
                     AccountId = null,
@@ -331,17 +294,8 @@ namespace WebAPI.Controllers
                     CreateDate = DateTime.UtcNow
                 };
 
-                var notificationResult = await _notificationRepository.AddNotificationAsync(notification);
-                if (!notificationResult)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the notification." });
-                }
-                if (result)
-                {
-                    return Ok(new { message = "Product has been unbanned successfully." });
-                }
-
-                return NoContent();
+                await _notificationRepository.AddNotificationAsync(notification);
+                return Ok(new { message = "Product has been unbanned successfully." });
             }
             catch (Exception ex)
             {
@@ -369,11 +323,7 @@ namespace WebAPI.Controllers
                     return NotFound(new { message = "Product is not found." });
                 }
 
-                var result = await _productRepository.AddRatingAsync(product, rating);
-                if (!result)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to add the rating." });
-                }
+                await _productRepository.AddRatingAsync(product, rating);
 
                 return Ok(new { message = "Product is rated successfully." });
             }

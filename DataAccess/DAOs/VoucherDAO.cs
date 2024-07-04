@@ -204,7 +204,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> PriceAndQuantityByOrderAsync(string voucherId, int quantity)
+        public async Task<bool> PriceAndQuantityByOrderAsync(string voucherId)
         {
             Voucher? voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherId);
             
@@ -213,17 +213,9 @@ namespace DataAccess.DAOs
                 throw new Exception("Voucher is not exist!");
             }
            // int ownerId = voucher.OwnerId;
-            if (quantity <=0)
-            {
-                throw new Exception("Quantity voucher used should above 0!");
-
-            }
-            voucher.Quantity = voucher.Quantity - quantity;
-            double price = voucher.Price * quantity;
-            if(voucher.QuantityUsed == null) { voucher.QuantityUsed = 0; }
-           // if (voucher.TotalPriceUsed == null) { voucher.TotalPriceUsed = 0.0; }
-
-            voucher.QuantityUsed = voucher.QuantityUsed + quantity;
+          
+            voucher.Quantity = voucher.Quantity--;
+            voucher.QuantityUsed = voucher.QuantityUsed + 1;
           //  voucher.TotalPriceUsed = voucher.TotalPriceUsed + price;
 
             _context.Vouchers.Update(voucher);

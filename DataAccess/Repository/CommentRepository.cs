@@ -17,12 +17,18 @@ namespace DataAccess.Repository
             _commentDAO = commentDAO;
         }
 
-        public async Task<bool> AddCommentAsync(Comment comment) => await _commentDAO.AddCommentAsync(comment);
+        public async Task AddCommentAsync(Comment comment)
+        {
+            await _commentDAO.AddCommentAsync(comment);
+        }
 
         public async Task<Comment> GetCommentByIdAsync(int commentId) => await _commentDAO.GetCommentByIdAsync(commentId);
 
         public async Task<IEnumerable<Comment>> GetCommentsByProductIdAsync(int productId) => await _commentDAO.GetCommentsByProductIdAsync(productId);
 
-        public async Task<bool> UpdateCommentAsync(Comment comment) => await _commentDAO.UpdateCommentAsync(comment);
+        public async Task UpdateCommentAsync(Comment comment)
+        {
+            await _commentDAO.UpdateCommentAsync(comment);
+        }
     }
 }

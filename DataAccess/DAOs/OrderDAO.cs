@@ -26,29 +26,19 @@ namespace DataAccess.DAOs
             return _transaction;
         }
 
-        public async Task<bool> CommitTransactionAsync()
+        public async Task CommitTransactionAsync()
         {
             await _transaction.CommitAsync();
-            return true;
         }
 
-        public async Task<bool> RollbackTransactionAsync()
+        public async Task RollbackTransactionAsync()
         {
             await _transaction.RollbackAsync();
-            return true;
         }
-
-        public async Task<bool> AddOrdersAsync(IEnumerable<Order> orders)
-        {
-            await _context.Orders.AddRangeAsync(orders);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        public async Task<bool> AddOrderAsync(Order order)
+        public async Task AddOrderAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId)
@@ -83,11 +73,10 @@ namespace DataAccess.DAOs
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
 
-        public async Task<bool> UpdateOrderAsync(Order order)
+        public async Task UpdateOrderAsync(Order order)
         {
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<bool> CodeOrderExistsAsync(string codeOrder)

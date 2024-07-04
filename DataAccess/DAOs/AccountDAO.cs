@@ -18,9 +18,9 @@ namespace DataAccess.DAOs
             _context = context;
         }
 
-        public async Task<List<Account>> GetAllAccountAsync()
+        public async Task<IEnumerable<Account>> GetAllAccountAsync()
         {
-            return await _context.Accounts.ToListAsync();
+            return await _context.Accounts.Where( a => !a.Role.Equals("Admin")).ToListAsync();
         }
 
         public async Task<Account> GetAccountByIdAsync(int id)
@@ -28,11 +28,10 @@ namespace DataAccess.DAOs
             return await _context.Accounts.FindAsync(id);
         }
 
-        public async Task<bool> UpdateAccountAsync(Account account)
+        public async Task UpdateAccountAsync(Account account)
         {
             _context.Accounts.Update(account);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<IEnumerable<Account>> SearchAccountAsync(string keyword)

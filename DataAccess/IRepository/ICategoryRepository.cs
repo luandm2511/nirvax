@@ -11,9 +11,10 @@ namespace DataAccess.IRepository
     {
         Task<IEnumerable<Category>> GetAllCategoryAsync();
         Task<Category> GetCategoryByIdAsync(int id);
-        Task<bool> CreateCategoryAsync(Category category);
-        Task<bool> UpdateAsync(Category category);
-        Task<bool> DeleteCategoryAsync(Category category);
+        Task CreateCategoryAsync(Category category);
+        Task UpdateAsync(Category category);
+        Task DeleteCategoryAsync(Category category);
         Task<bool> CheckCategoryAsync(Category category);
+        Task<IEnumerable<Category>> SearchCategoriesAsync(string keyword);
     }
 }

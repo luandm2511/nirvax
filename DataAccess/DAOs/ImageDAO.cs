@@ -34,25 +34,22 @@ namespace DataAccess.DAOs
                 .Where(i => i.DescriptionId == desId && i.Isdelete).ToListAsync();
         }
 
-        public async Task<bool> AddImagesAsync(Image image)
+        public async Task AddImagesAsync(Image image)
         {
             await _context.Images.AddAsync(image);
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateImagesAsync(List<Image> images)
+        public async Task UpdateImagesAsync(List<Image> images)
         {
             _context.Images.UpdateRange(images);
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> DeleteImagesAsync(Image image)
+        public async Task DeleteImagesAsync(Image image)
         {
             image.Isdelete = true;
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

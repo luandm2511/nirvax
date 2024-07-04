@@ -10,11 +10,11 @@ namespace DataAccess.IRepository
 {
     public interface IAccountRepository
     {
-        Task<List<Account>> GetAllAccountAsync();
+        Task<IEnumerable<Account>> GetAllAccountAsync();
         Task<Account> GetAccountByIdAsync(int id);
-        Task<bool> BanAccountAsync(Account account);
-        Task<bool> UnbanAccountAsync(Account account);
-        Task<bool> UpdateAccountAsync(Account account);
+        Task BanAccountAsync(Account account);
+        Task UnbanAccountAsync(Account account);
+        Task UpdateAccountAsync(Account account);
         Task<IEnumerable<Account>> SearchAccountAsync(string keyword);
     }
 }

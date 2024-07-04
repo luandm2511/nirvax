@@ -30,23 +30,28 @@ namespace DataAccess.DAOs
                 .SingleOrDefaultAsync(b => b.BrandId == id);
         }
 
-        public async Task<bool> CreateBrandAsync(Brand brand)
+        public async Task CreateBrandAsync(Brand brand)
         {
             _context.Brands.Add(brand);
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateBrandAsync(Brand brand)
+        public async Task UpdateBrandAsync(Brand brand)
         {
             _context.Brands.Update(brand);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<bool> CheckBrandAsync(Brand brand)
         {
             return !await _context.Brands.AnyAsync(b => b.Name == brand.Name && b.BrandId != brand.BrandId && !b.Isdelete);
+        }
+
+        public async Task<IEnumerable<Brand>> SearchBrandsAsync(string keyword)
+        {
+            return await _context.Brands
+                                 .Where(b => !b.Isdelete && b.Name.Contains(keyword))
+                                 .ToListAsync();
         }
     }
 }

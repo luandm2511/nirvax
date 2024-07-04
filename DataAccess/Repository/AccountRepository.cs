@@ -19,21 +19,23 @@ namespace DataAccess.Repository
             _accountDAO = accountDAO;
         }
 
-        public async Task<List<Account>> GetAllAccountAsync() => await _accountDAO.GetAllAccountAsync();
+        public async Task<IEnumerable<Account>> GetAllAccountAsync() => await _accountDAO.GetAllAccountAsync();
         public async Task<Account> GetAccountByIdAsync(int id) => await _accountDAO.GetAccountByIdAsync(id);
-        public async Task<bool> BanAccountAsync(Account account) 
+        public async Task BanAccountAsync(Account account) 
         {
             account.IsBan = true;
-            return await _accountDAO.UpdateAccountAsync(account); 
+            await _accountDAO.UpdateAccountAsync(account); 
         }
-        public async Task<bool> UpdateAccountAsync(Account account) => await _accountDAO.UpdateAccountAsync(account);
+        public async Task UpdateAccountAsync(Account account)
+        {
+            await _accountDAO.UpdateAccountAsync(account);
+        }
         public async Task<IEnumerable<Account>> SearchAccountAsync(string keyword) => await _accountDAO.SearchAccountAsync(keyword);
 
-        public async Task<bool> UnbanAccountAsync(Account account)
+        public async Task UnbanAccountAsync(Account account)
         {
             account.IsBan = false;
-            return await _accountDAO.UpdateAccountAsync(account);
+            await _accountDAO.UpdateAccountAsync(account);
         }
-
     }
 }

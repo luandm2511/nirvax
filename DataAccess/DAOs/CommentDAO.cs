@@ -33,19 +33,17 @@ namespace DataAccess.DAOs
                     .FirstOrDefaultAsync(c => c.CommentId == commentId);
         }
 
-        public async Task<bool> AddCommentAsync(Comment comment)
+        public async Task AddCommentAsync(Comment comment)
         {
             comment.Timestamp = DateTime.Now;
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateCommentAsync(Comment comment)
+        public async Task UpdateCommentAsync(Comment comment)
         {
             _context.Comments.Update(comment);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

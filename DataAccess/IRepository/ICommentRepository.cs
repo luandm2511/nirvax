@@ -11,7 +11,7 @@ namespace DataAccess.IRepository
     {
         Task<IEnumerable<Comment>> GetCommentsByProductIdAsync(int productId);
         Task<Comment> GetCommentByIdAsync(int commentId);
-        Task<bool> AddCommentAsync(Comment comment);
-        Task<bool> UpdateCommentAsync(Comment comment);
+        Task AddCommentAsync(Comment comment);
+        Task UpdateCommentAsync(Comment comment);
     }
 }

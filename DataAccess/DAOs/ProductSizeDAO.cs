@@ -34,6 +34,7 @@ namespace DataAccess.DAOs
         public async Task<ProductSize> GetByIdAsync(string id)
         {
             return await _context.ProductSizes.Include(p => p.Product)
+                   .ThenInclude(p => p.Images)
                    .Include(p => p.Size)
                    .FirstOrDefaultAsync(p => p.ProductSizeId == id);
         }
