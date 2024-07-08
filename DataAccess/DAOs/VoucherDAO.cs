@@ -62,6 +62,13 @@ namespace DataAccess.DAOs
 
             if((startDate.Date >= DateTime.Now.Date) && (endDate.Date >= startDate.Date))
             {
+                if (startDate.Date == endDate.Date)
+                {
+                    if (endDate.TimeOfDay <= startDate.TimeOfDay)
+                    {
+                        throw new Exception("EndDate phải sau StartDate về mặt thời gian trong cùng ngày!");
+                    }
+                }
                 voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherId);
                 if (voucher == null)
                 {
