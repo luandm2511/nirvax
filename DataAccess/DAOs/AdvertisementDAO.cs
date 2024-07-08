@@ -106,28 +106,36 @@ namespace DataAccess.DAOs
         //get all for owner,staff 
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdvertisementDTO = new List<AdvertisementDTO>();
 
+            // Tạo truy vấn cơ bản bao gồm các bảng liên quan
+            IQueryable<Advertisement> query = _context.Advertisements
+                                                       .Include(i => i.Owner)
+                                                       .Include(i => i.Service)
+                                                       .Include(i => i.StatusPost);
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i=>i.Service).Include(i => i.StatusPost)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-               
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                query = query.Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery));
             }
-            else
-            {
-                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
-            }
-            return listStaffDTO;
+
+            // Sử dụng conditional operator để xác định thứ tự sắp xếp
+            query = query.OrderBy(i =>
+                i.StatusPost.Name == "WAITING" ? 1 :
+                i.StatusPost.Name == "ACCEPT" ? 2 :
+                i.StatusPost.Name == "DENY" ? 3 :
+                4 // Giá trị mặc định cho các trạng thái không xác định
+            );
+
+            // Áp dụng phân trang
+            List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
+                                                     .Take(pageSize)
+                                                     .ToListAsync();
+
+            // Ánh xạ từ Advertisement sang AdvertisementDTO
+            listAdvertisementDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+
+            return listAdvertisementDTO;
         }
 
         // get status waiting
