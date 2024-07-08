@@ -116,18 +116,18 @@ namespace WebAPI.Controllers
                     }
                 }
 
-            else
-            {
-                return StatusCode(400, new
+                else
                 {
-                    Message = "There already exists a voucher with that information",
-                });
+                   return StatusCode(400, new
+                   {
+                       Message = "There already exists a voucher with that information",
+                   });
+                 }
             }
-        }
-            return StatusCode(400, new
-            { 
-                Message = "Please enter valid Staff",
-            });
+                return StatusCode(400, new
+                { 
+                     Message = "Please enter valid Staff",
+                });
             }
             catch (Exception ex)
             {

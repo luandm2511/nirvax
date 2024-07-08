@@ -21,12 +21,6 @@ namespace BusinessObject.DTOs
         public string Content { get; set; } = null!;
 
         public string? Image { get; set; } = null!;
-      
-        //  public string ImageSrc { get; set; } = null!;
-        [Required(ErrorMessage = " StatusPostId cannot be empty!!")]
-
-        public int StatusPostId { get; set; }
-        [Required(ErrorMessage = " ServiceId cannot be empty!!")]
 
         public int ServiceId { get; set; }
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]

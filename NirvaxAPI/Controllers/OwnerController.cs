@@ -19,11 +19,11 @@ namespace WebAPI.Controllers
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public OwnerController(IConfiguration config, IOwnerRepository repo)
+        public OwnerController(IConfiguration config, IOwnerRepository repo, IEmailService emailService)
         {
             _config = config;
              _repo = repo;
-      
+            _emailService = emailService;
         }
 
 

@@ -40,7 +40,9 @@ namespace WebAPI.Helpers
             CreateMap<Size, SizeDTO>().ReverseMap();
             CreateMap<Size, SizeCreateDTO>().ReverseMap();
 
-            CreateMap<Advertisement, AdvertisementDTO>().ReverseMap();
+            CreateMap<Advertisement, AdvertisementDTO>()
+                .ForMember(dest => dest.StatusPostName, opt => opt.MapFrom(src => src.StatusPost.Name))
+                .ReverseMap();
             CreateMap<Advertisement, AdvertisementCreateDTO>().ReverseMap();
 
 

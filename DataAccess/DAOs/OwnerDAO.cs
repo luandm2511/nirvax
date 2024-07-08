@@ -186,7 +186,7 @@ namespace DataAccess.DAOs
             else
             {
                 List<Owner> getList = await _context.Owners
-
+                     .Where(i => i.IsBan == false)
                     .ToListAsync();
                 listOwnerDTO = _mapper.Map<List<OwnerDTO>>(getList);
             }

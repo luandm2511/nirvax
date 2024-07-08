@@ -46,9 +46,13 @@ namespace DataAccess.Repository
         {
             return _advertisementDAO.UpdateAdvertisementAsync(advertisementDTO);
         }
-        public Task<bool> UpdateStatusAdvertisementAsync(int adId, int statusPostId)
+        public Task<bool> UpdateStatusAdvertisementByIdAsync(int adId, int statusPostId)
         {
-            return _advertisementDAO.UpdateStatusAdvertisementAsync(adId, statusPostId);
+            return _advertisementDAO.UpdateStatusAdvertisementByIdAsync(adId, statusPostId);
+        }
+        public Task<bool> UpdateStatusAdvertisementAsync(int adId, string statusPost)
+        {
+            return _advertisementDAO.UpdateStatusAdvertisementAsync(adId, statusPost);
         }
 
         public Task<bool> CheckAdvertisementExistAsync(int adId)
@@ -62,6 +66,19 @@ namespace DataAccess.Repository
         public Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
+        }
+
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _advertisementDAO.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
+        }
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _advertisementDAO.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
+        }
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _advertisementDAO.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
         }
         public Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {

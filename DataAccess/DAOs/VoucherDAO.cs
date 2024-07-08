@@ -60,7 +60,7 @@ namespace DataAccess.DAOs
 
             Voucher? voucher = new Voucher();
 
-            if((startDate >= DateTime.Now) && (startDate < endDate))
+            if((startDate.Date >= DateTime.Now.Date) && (endDate.Date >= startDate.Date))
             {
                 voucher = await _context.Vouchers.SingleOrDefaultAsync(i => i.VoucherId == voucherId);
                 if (voucher == null)
@@ -70,11 +70,14 @@ namespace DataAccess.DAOs
                 }
                 else
                 {
-                    throw new Exception("StartDate should >= Today and StartDate should bottom EndDate!");
+                    throw new Exception("Already has this voucher!");
                 };
+            } else
+            {
+                return false;
+                throw new Exception("StartDate should >= Today and StartDate should bottom EndDate!");
             }
             
-            return false;
         }
 
         public async Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO)

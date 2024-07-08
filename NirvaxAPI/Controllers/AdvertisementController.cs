@@ -51,6 +51,63 @@ namespace WebAPI.Controllers
                 });
             }
 
+            [HttpGet]
+            //  [Authorize]
+            public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+            {
+                var list =await _repo.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    { 
+                        Message = "Get list advertisement " + ok,
+                        Data = list
+                    });
+                }
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any advertisement"
+                });
+            }
+
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        {
+            var list = await _repo.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
+            if (list.Any())
+            {
+                return StatusCode(200, new
+                {
+                    Message = "Get list advertisement " + ok,
+                    Data = list
+                });
+            }
+            return StatusCode(404, new
+            {
+                Message = notFound + "any advertisement"
+            });
+        }
+
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        {
+            var list = await _repo.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
+            if (list.Any())
+            {
+                return StatusCode(200, new
+                {
+                    Message = "Get list advertisement " + ok,
+                    Data = list
+                });
+            }
+            return StatusCode(404, new
+            {
+                Message = notFound + "any advertisement"
+            });
+        }
+
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsForUserAsync(string? searchQuery)
@@ -204,12 +261,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, int StatusPostId)
+        public async Task<ActionResult> UpdateStatusAdvertisementByIdAsync(int adId, int StatusPostId)
         { 
             var checkAd =await _repo.CheckAdvertisementExistAsync(adId);
             if (checkAd == true)
             {
-                var advertisement1 =await _repo.UpdateStatusAdvertisementAsync(adId, StatusPostId);
+                var advertisement1 =await _repo.UpdateStatusAdvertisementByIdAsync(adId, StatusPostId);
                 if (advertisement1)
                 {
                     return StatusCode(200, new
@@ -232,6 +289,37 @@ namespace WebAPI.Controllers
             });
 
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
+        {
+            var checkAd = await _repo.CheckAdvertisementExistAsync(adId);
+            if (checkAd == true)
+            {
+                var advertisement1 = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);
+                if (advertisement1)
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Update advertisement" + ok,
+                        Data = advertisement1
+                    });
+                }
+                else
+                {
+                    return StatusCode(500, new
+                    {
+                        Message = "Server error",
+                    });
+                }
+            }
+            return StatusCode(400, new
+            {
+                Message = "The name advertisement is already exist",
+            });
+
+        }
+
         [HttpGet]
         public async Task<ActionResult> ViewOwnerBlogStatisticsAsync(int ownerId)
         {

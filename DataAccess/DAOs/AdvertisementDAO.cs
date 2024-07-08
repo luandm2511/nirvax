@@ -12,6 +12,7 @@ using Azure;
 using Azure.Core;
 using System.Security.Cryptography;
 using DataAccess.IRepository;
+using System.Runtime.InteropServices;
 
 namespace DataAccess.DAOs
 {
@@ -102,7 +103,7 @@ namespace DataAccess.DAOs
     
 
 
-        //owner,staff or admin??
+        //get all for owner,staff 
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
             List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
@@ -115,11 +116,94 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
+               
                 listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             else
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            return listStaffDTO;
+        }
+
+        // get status waiting
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        {
+            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.StatusPost.Name.Contains("WAITING"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            else
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                   .Where(i => i.StatusPost.Name.Contains("WAITING"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            return listStaffDTO;
+        }
+        //get status deny
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        {
+            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.StatusPost.Name.Contains("DENY"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            else
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                   .Where(i => i.StatusPost.Name.Contains("DENY"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            return listStaffDTO;
+        }
+        //get status accept
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        {
+            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            else
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -182,8 +266,9 @@ namespace DataAccess.DAOs
   
         public async Task<bool> CreateAdvertisementAsync(AdvertisementCreateDTO advertisementCreateDTO) 
         {
-           
+                PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == "WAITING");                
                 Advertisement advertisement = _mapper.Map<Advertisement>(advertisementCreateDTO);
+                advertisement.StatusPostId = postStatus.StatusPostId;
                 await _context.Advertisements.AddAsync(advertisement);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)
@@ -197,33 +282,48 @@ namespace DataAccess.DAOs
         public  async Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
             
-       
-            Advertisement? staffOrgin = await _context.Advertisements
+         
+            Advertisement? adOrgin = await _context.Advertisements
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
                 .SingleOrDefaultAsync(i => i.AdId == advertisementDTO.AdId);
             
-            _mapper.Map(advertisementDTO, staffOrgin);
-                 _context.Advertisements.Update(staffOrgin);
+            _mapper.Map(advertisementDTO, adOrgin);
+                 _context.Advertisements.Update(adOrgin);
                 await _context.SaveChangesAsync();
          
                 return true;
         }
 
-        public async Task<bool> UpdateStatusAdvertisementAsync(int adId, int statusPostId)
+        public async Task<bool> UpdateStatusAdvertisementByIdAsync(int adId, int statusPostId)
         {
 
-            Advertisement? staffOrgin = await _context.Advertisements
+            Advertisement? adOrgin = await _context.Advertisements
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
                 .SingleOrDefaultAsync(i => i.AdId == adId);
-            staffOrgin.StatusPostId = statusPostId;
-             _context.Advertisements.Update(staffOrgin);
+            adOrgin.StatusPostId = statusPostId;
+             _context.Advertisements.Update(adOrgin);
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> UpdateStatusAdvertisementAsync(int adId, string statusPost)
+        {
+            PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusPost.Trim());
+            Advertisement? adOrgin = await _context.Advertisements
+                .Include(i => i.Owner)
+                .Include(i => i.Service)
+                .Include(i => i.StatusPost)
+                .SingleOrDefaultAsync(i => i.AdId == adId);
+            adOrgin.StatusPostId = postStatus.StatusPostId;
+            _context.Advertisements.Update(adOrgin);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
         //riêng
         public async Task<int> ViewOwnerBlogStatisticsAsync(int ownerId)
