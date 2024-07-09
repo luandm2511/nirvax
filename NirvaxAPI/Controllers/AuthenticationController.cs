@@ -325,6 +325,11 @@ namespace WebAPI.Controllers
                     return StatusCode(406, new { message = "Please pass the valid data." });
                 }
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
+                if (account.IsBan)
+                {
+                    return BadRequest("Your account is banned.");
+                }
+
                 if (account.Role == "User" && PasswordHasher.VerifyPassword(request.Password, account.Password))
                 {
                     var token = GenerateJSONWebToken(account.AccountId,account.Email, account.Role);
@@ -353,6 +358,10 @@ namespace WebAPI.Controllers
                 if(request.Role == "Owner")
                 {
                     var owner = await _repository.GetOwnerByEmailAsync(request.Email);
+                    if (owner.IsBan)
+                    {
+                        return BadRequest("Your account is banned.");
+                    }
                     if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
                     {
                         var token = GenerateJSONWebToken(owner.OwnerId,owner.Email, "Owner");

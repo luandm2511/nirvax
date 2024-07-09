@@ -18,14 +18,14 @@ namespace DataAccess.Repository
         {
             _authen = authen;
         }
-        async Task<bool> IAuthenticationRepository.AddAccountAsync(Account account)
+        async Task IAuthenticationRepository.AddAccountAsync(Account account)
         {
-            return await _authen.AddAccountAsync(account);
+            await _authen.AddAccountAsync(account);
         }
 
-        async Task<bool> IAuthenticationRepository.AddOwnerAsync(Owner owner)
+        async Task IAuthenticationRepository.AddOwnerAsync(Owner owner)
         {
-            return await _authen.AddOwnerAsync(owner);
+            await _authen.AddOwnerAsync(owner);
         }
 
         async Task<Account> IAuthenticationRepository.GetAccountByEmailAsync(string email)
@@ -52,9 +52,9 @@ namespace DataAccess.Repository
         {
             return await _authen.GetStaffByEmailAsync(email);
         }
-        public async Task<bool> SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            return await _authen.SaveChangesAsync();
+            await _authen.SaveChangesAsync();
         }
     }
 }

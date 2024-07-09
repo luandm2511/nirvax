@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{orderId}")]
-        [Authorize(Roles = "User,Owner,Staff")]
+        //[Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> GetOrderDetail(int orderId)
         {
             try

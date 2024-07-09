@@ -72,13 +72,8 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
                 }   
-                var result = await _repository.CreateBrandAsync(brand);
-                if (result)
-                {
-                    return Ok(new { message = "Brand added successfully." });
-                }
-
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the brand." });
+                await _repository.CreateBrandAsync(brand);
+                return Ok(new { message = "Brand added successfully." });
             }
             catch (Exception ex)
             {
@@ -110,13 +105,8 @@ namespace WebAPI.Controllers
                     return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
                 }
 
-                var result = await _repository.UpdateBrandAsync(brand);
-                if (result)
-                {
-                    return Ok(new { message = "Brand updated successfully." });
-                }
-
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to update the brand." });
+                await _repository.UpdateBrandAsync(brand);
+                return Ok(new { message = "Brand updated successfully." });
             }
             catch (Exception ex)
             {
@@ -135,17 +125,32 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Brand not found." });
                 }
-                var result = await _repository.DeleteBrandAsync(brand);
-                if (result)
-                {
-                    return Ok(new { message = "Brand deleted successfully." });
-                }
-                return NotFound(new { message = "Brand not found." });
+                await _repository.DeleteBrandAsync(brand);
+                return Ok(new { message = "Brand deleted successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchBrands(string keyword)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    return BadRequest(new { message = "Keyword must not be empty" });
+                }
+
+                var brands = await _repository.SearchBrandsAsync(keyword);
+                return Ok(brands);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }  
         }
     }
 }

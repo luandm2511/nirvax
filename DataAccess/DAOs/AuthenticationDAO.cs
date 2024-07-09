@@ -29,18 +29,16 @@ namespace DataAccess.DAOs
 
         public async Task<Owner> GetOwnerByPhoneAsync(string phone) => await _context.Owners.FirstOrDefaultAsync(o => o.Phone == phone);
 
-        public async Task<bool> AddAccountAsync(Account account)
+        public async Task AddAccountAsync(Account account)
         {
             await _context.Accounts.AddAsync(account);
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> AddOwnerAsync(Owner owner)
+        public async Task AddOwnerAsync(Owner owner)
         {
             await _context.Owners.AddAsync(owner);
-            await _context.SaveChangesAsync();
-            return true;
+            await _context.SaveChangesAsync();  
         }
         public async Task<bool> CheckPhoneAsync(string phone)
         {
@@ -61,10 +59,9 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

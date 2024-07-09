@@ -104,18 +104,16 @@ namespace DataAccess.DAOs
             return (products, owners);
         }
 
-        public async Task<bool> CreateAsync(Product product)
+        public async Task CreateAsync(Product product)
         {
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateAsync(Product product)
+        public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId)

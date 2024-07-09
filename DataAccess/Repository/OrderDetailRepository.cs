@@ -17,9 +17,9 @@ namespace DataAccess.Repository
             _dao = dao;
         }
 
-        public async Task<bool> AddOrderDetailAsync(OrderDetail orderDetail)
+        public async Task AddOrderDetailAsync(OrderDetail orderDetail)
         {
-            return await _dao.AddOrderDetailAsync(orderDetail);
+            await _dao.AddOrderDetailAsync(orderDetail);
         }
 
         public async Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId)

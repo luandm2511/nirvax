@@ -9,7 +9,7 @@ namespace DataAccess.IRepository
 {
     public interface INotificationRepository
     {
-        Task<bool> AddNotificationAsync(Notification notification);
+        Task AddNotificationAsync(Notification notification);
         Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id);
         Task<IEnumerable<Notification>> GetNotificationsByOwnerAsync(int id);
         Task<Notification> GetNotificationByidAsync(int id);

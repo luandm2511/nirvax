@@ -1,10 +1,15 @@
-﻿using System.Text;
+﻿using System.Runtime.ConstrainedExecution;
+using System.Text;
+using AutoMapper;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SqlServer.Server;
@@ -13,8 +18,6 @@ using WebAPI.Helpers;
 using WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -73,7 +76,60 @@ builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 builder.Services.AddScoped<IAccessLogService, AccessLogService>();
+builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<StaffDAO>();
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+builder.Services.AddScoped<OwnerDAO>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+builder.Services.AddScoped<ISizeRepository, SizeRepository>();
+builder.Services.AddScoped<SizeDAO>();
+
+builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
+builder.Services.AddScoped<ProductSizeDAO>();
+
+
+
+builder.Services.AddScoped<IImportProductDetailRepository, ImportProductDetailRepository>();
+builder.Services.AddScoped<ImportProductDetailDAO>();
+
+builder.Services.AddScoped<IImportProductRepository, ImportProductRepository>();
+builder.Services.AddScoped<ImportProductDAO>();
+
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<WarehouseDAO>();
+
+
+builder.Services.AddScoped<IWarehouseDetailRepository, WarehouseDetailRepository>();
+builder.Services.AddScoped<WarehouseDetailDAO>();
+
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<ServiceDAO>();
+
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
+builder.Services.AddScoped<VoucherDAO>();
+
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<RoomDAO>();
+
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<MessageDAO>();
+
+
+builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
+builder.Services.AddScoped<AdvertisementDAO>();
+
+
+
+builder.Services.AddScoped<IDescriptionRepository, DescriptionRepository>();
+builder.Services.AddScoped<DescriptionDAO>();
+builder.Services.AddScoped<NotificationDAO>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IGuestConsultationRepository, GuestConsultationRepository>();
+builder.Services.AddScoped<GuestConsultationDAO>();
+
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,7 +160,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();   
+builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();

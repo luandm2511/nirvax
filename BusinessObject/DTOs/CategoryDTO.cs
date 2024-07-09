@@ -17,6 +17,6 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " Image cannot be empty!!")]
         public string Image { get; set; }
         [Required(ErrorMessage = " CategoryParentId cannot be empty!!")]
-        public int CategoryParentId { get; set; }
+        public int CateParentId { get; set; }
     }
 }

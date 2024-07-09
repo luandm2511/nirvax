@@ -17,7 +17,10 @@ namespace DataAccess.Repository
             _noti = noti;
         }
 
-        public async Task<bool> AddNotificationAsync(Notification notification) => await _noti.AddNotificationAsync(notification);
+        public async Task AddNotificationAsync(Notification notification)
+        {
+            await _noti.AddNotificationAsync(notification);
+        }
 
         public async Task<Notification> GetNotificationByidAsync(int id)
         {

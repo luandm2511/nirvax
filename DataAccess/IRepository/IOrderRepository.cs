@@ -12,14 +12,13 @@ namespace DataAccess.IRepository
     public interface IOrderRepository
     {
         Task<IDbContextTransaction> BeginTransactionAsync();
-        Task<bool> CommitTransactionAsync();
-        Task<bool> RollbackTransactionAsync();
-        Task<bool> AddOrdersAsync(IEnumerable<Order> orders);
-        Task<bool> AddOrderAsync(Order order);
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
+        Task AddOrderAsync(Order order);
         Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId);
         Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId);
         Task<Order> GetOrderByIdAsync(int orderId);
-        Task<bool> UpdateOrderAsync(Order order);
+        Task UpdateOrderAsync(Order order);
         Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder);
         Task<bool> CodeOrderExistsAsync(string codeOrder);
         Task<IEnumerable<Order>> GetAllOrdersAsync();

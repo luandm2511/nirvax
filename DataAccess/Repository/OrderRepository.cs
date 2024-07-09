@@ -19,12 +19,10 @@ namespace DataAccess.Repository
             _orderDAO = orderDAO;
         }
 
-        public async Task<bool> AddOrderAsync(Order order)
+        public async Task AddOrderAsync(Order order)
         {
-            return await _orderDAO.AddOrderAsync(order);
+            await _orderDAO.AddOrderAsync(order);
         }
-
-        public async Task<bool> AddOrdersAsync(IEnumerable<Order> orders) => await _orderDAO.AddOrdersAsync(orders);
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
@@ -36,9 +34,9 @@ namespace DataAccess.Repository
             return await _orderDAO.CodeOrderExistsAsync(codeOrder);
         }
 
-        public async Task<bool> CommitTransactionAsync()
+        public async Task CommitTransactionAsync()
         {
-            return await _orderDAO.CommitTransactionAsync();
+            await _orderDAO.CommitTransactionAsync();
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -76,9 +74,9 @@ namespace DataAccess.Repository
             return await _orderDAO.GetTop10ShopsAsync();
         }
 
-        public async Task<bool> RollbackTransactionAsync()
+        public async Task RollbackTransactionAsync()
         {
-            return await _orderDAO.RollbackTransactionAsync();
+            await _orderDAO.RollbackTransactionAsync();
         }
 
         public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)
@@ -86,9 +84,9 @@ namespace DataAccess.Repository
             return await _orderDAO.SearchOrdersAsync(codeOrder);
         }
 
-        public async Task<bool> UpdateOrderAsync(Order order)
+        public async Task UpdateOrderAsync(Order order)
         {
-            return await _orderDAO.UpdateOrderAsync(order);
+            await _orderDAO.UpdateOrderAsync(order);
         }
     }
 }

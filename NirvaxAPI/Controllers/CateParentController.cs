@@ -112,7 +112,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -122,8 +122,27 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Category parent not found." });
                 }
-                var result = await _repository.CheckCategoryParentAsync(cateparent);
+                await _repository.DeleteCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCateParent(string keyword)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    return BadRequest(new { message = "Keyword must not be empty" });
+                }
+
+                var categoryParents = await _repository.SearchCateParentsAsync(keyword);
+                return Ok(categoryParents);
             }
             catch (Exception ex)
             {

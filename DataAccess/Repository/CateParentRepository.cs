@@ -22,9 +22,14 @@ namespace DataAccess.Repository
             return await _dao.CheckCategoryParentAsync(category);
         }
 
-        public async Task<bool> CreateCategoryParentAsync(CategoryParent category)
+        public async Task CreateCategoryParentAsync(CategoryParent category)
         {
-            return await _dao.CreateCategoryParentAsync(category);
+             await _dao.CreateCategoryParentAsync(category);
+        }
+
+        public async Task DeleteCategoryParentAsync(CategoryParent categoryParent)
+        {
+             await _dao.DeleteCategoryParentAsync(categoryParent);
         }
 
         public async Task<IEnumerable<CategoryParent>> GetAllCategoryParentAsync()
@@ -37,9 +42,14 @@ namespace DataAccess.Repository
             return await _dao.GetCategoryParentByIdAsync(id);
         }
 
-        public async Task<bool> UpdateCategoryParentAsync(CategoryParent category)
+        public async Task<IEnumerable<CategoryParent>> SearchCateParentsAsync(string keyword)
         {
-            return await _dao.UpdateCategoryParentAsync(category);
+            return await _dao.SearchCateParentsAsync(keyword);
+        }
+
+        public async Task UpdateCategoryParentAsync(CategoryParent category)
+        {
+            await _dao.UpdateCategoryParentAsync(category);
         }
     }
 }

@@ -11,9 +11,10 @@ namespace DataAccess.IRepository
     {
         Task<IEnumerable<Brand>> GetAllBrandAsync();
         Task<Brand> GetBrandByIdAsync(int id);
-        Task<bool> CreateBrandAsync(Brand brand);
-        Task<bool> UpdateBrandAsync(Brand brand);
-        Task<bool> DeleteBrandAsync(Brand brand);
+        Task CreateBrandAsync(Brand brand);
+        Task UpdateBrandAsync(Brand brand);
+        Task DeleteBrandAsync(Brand brand);
         Task<bool> CheckBrandAsync(Brand brand);
+        Task<IEnumerable<Brand>> SearchBrandsAsync(string keyword);
     }
 }

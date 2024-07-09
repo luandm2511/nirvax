@@ -20,17 +20,25 @@ namespace DataAccess.Repository
 
         public async Task<IEnumerable<Brand>> GetAllBrandAsync() => await _brandDAO.GetAllBrandAsync();
         public async Task<Brand> GetBrandByIdAsync(int id) => await _brandDAO.GetBrandByIdAsync(id);
-        public async Task<bool> CreateBrandAsync(Brand brand) 
+        public async Task CreateBrandAsync(Brand brand) 
         {
             brand.Isdelete = false;
-            return await _brandDAO.CreateBrandAsync(brand);
+            await _brandDAO.CreateBrandAsync(brand);
         }
-        public async Task<bool> UpdateBrandAsync(Brand brand) => await _brandDAO.UpdateBrandAsync(brand);
-        public async Task<bool> DeleteBrandAsync(Brand brand)
+        public async Task UpdateBrandAsync(Brand brand)
+        {
+            await _brandDAO.UpdateBrandAsync(brand);
+        }
+        public async Task DeleteBrandAsync(Brand brand)
         {
             brand.Isdelete = true;
-            return await _brandDAO.UpdateBrandAsync(brand);
+            await _brandDAO.UpdateBrandAsync(brand);
         }
         public async Task<bool> CheckBrandAsync(Brand brand) => await _brandDAO.CheckBrandAsync(brand);
+
+        public async Task<IEnumerable<Brand>> SearchBrandsAsync(string keyword)
+        {
+            return await _brandDAO.SearchBrandsAsync(keyword);
+        }
     }
 }

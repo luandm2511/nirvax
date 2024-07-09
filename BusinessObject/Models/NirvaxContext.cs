@@ -210,6 +210,7 @@ public partial class NirvaxContext : DbContext
 
             entity.HasOne(d => d.CateParent).WithMany(p => p.Categories)
                 .HasForeignKey(d => d.CateParentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_category_categoryparent");
         });
 

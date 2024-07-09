@@ -16,9 +16,15 @@ namespace DataAccess.Repository
         {
             _img = img;
         }
-        public async Task<bool> AddImagesAsync(Image image) => await _img.AddImagesAsync(image);
+        public async Task AddImagesAsync(Image image)
+        {
+            await _img.AddImagesAsync(image);
+        }
 
-        public async Task<bool> DeleteImagesAsync(Image image) => await _img.DeleteImagesAsync(image);
+        public async Task DeleteImagesAsync(Image image)
+        {
+            await _img.DeleteImagesAsync(image);
+        }
 
         public async Task<IEnumerable<Image>> GetByDescriptionAsync(int desId) => await _img.GetByDescriptionAsync(desId);
 

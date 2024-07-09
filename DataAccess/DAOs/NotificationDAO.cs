@@ -16,11 +16,10 @@ namespace DataAccess.DAOs
         {
             _context = context;
         }
-        public async Task<bool> AddNotificationAsync(Notification notification)
+        public async Task AddNotificationAsync(Notification notification)
         {
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id)

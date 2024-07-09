@@ -89,7 +89,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO createOrderDTO)
         {
             using var transaction = await _orderRepository.BeginTransactionAsync();
@@ -101,12 +101,15 @@ namespace WebAPI.Controllers
                 var groupedItems = createOrderDTO.Items.GroupBy(item => item.OwnerId);
 
                 // Validate vouchers
-                foreach (var voucherDto in createOrderDTO.Vouchers)
+                if (createOrderDTO.Vouchers != null && createOrderDTO.Vouchers.Any())
                 {
-                    var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
-                    if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate > DateTime.UtcNow)
+                    foreach (var voucherDto in createOrderDTO.Vouchers)
                     {
-                        return BadRequest($"{voucherDto.OwnerId} is invalid.");
+                        var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
+                        if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.UtcNow)
+                        {
+                            return BadRequest($"{voucherDto.OwnerId} is invalid.");
+                        }
                     }
                 }
 
@@ -141,6 +144,8 @@ namespace WebAPI.Controllers
 
                     await _orderRepository.AddOrderAsync(order);
 
+                    await _voucherRepository.PriceAndQuantityByOrderAsync(voucher.VoucherId);
+
                     foreach (var cartItem in group)
                     {
                         var productSize = await _productSizeRepository.GetByIdAsync(cartItem.ProductSizeId);
@@ -161,7 +166,10 @@ namespace WebAPI.Controllers
                             productSize.Quantity -= cartItem.Quantity;
                             await _productSizeRepository.UpdateAsync(productSize);
                             // Remove item from session cart
-                            RemoveCartItemFromSession(createOrderDTO.AccountId, cartItem.ProductSizeId);
+                            if (!createOrderDTO.IsOrderNow)
+                            {
+                                RemoveCartItemFromSession(createOrderDTO.AccountId, cartItem.ProductSizeId);
+                            }
                         }
                         else
                         {
@@ -178,12 +186,7 @@ namespace WebAPI.Controllers
                         Url = null,
                         CreateDate = DateTime.UtcNow
                     };
-
-                    var notificationResult = await _notificationRepository.AddNotificationAsync(notification);
-                    if (!notificationResult)
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the notification." });
-                    }
+                     await _notificationRepository.AddNotificationAsync(notification);
                 }
 
                 await _orderRepository.CommitTransactionAsync();
@@ -198,7 +201,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("history/{accountId}")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> ViewOrderHistory(int accountId)
         {
             try
@@ -273,12 +276,51 @@ namespace WebAPI.Controllers
                     CreateDate = DateTime.UtcNow
                 };
 
-                var notificationResult = await _notificationRepository.AddNotificationAsync(notification);
-                if (!notificationResult)
+                await _notificationRepository.AddNotificationAsync(notification);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("cancel/{orderId}")]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            try
+            {
+                var order = await _orderRepository.GetOrderByIdAsync(orderId);
+                if (order == null)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the notification." });
+                    return NotFound();
                 }
 
+                var orderDetails = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
+                foreach (var detail in orderDetails)
+                {
+                    var productSize = await _productSizeRepository.GetByIdAsync(detail.ProductSizeId);
+                    if (productSize != null)
+                    {
+                        productSize.Quantity += detail.Quantity;
+                        await _productSizeRepository.UpdateAsync(productSize);
+                    }
+                }
+
+                order.StatusId = 5;
+                await _orderRepository.UpdateOrderAsync(order);
+
+                var notification = new Notification
+                {
+                    AccountId = null,
+                    OwnerId = order.OwnerId, 
+                    Content = $"The order with order code {order.CodeOrder} has been canceled by user.",
+                    IsRead = false,
+                    Url = null,
+                    CreateDate = DateTime.UtcNow
+                };
+
+                await _notificationRepository.AddNotificationAsync(notification);
                 return Ok();
             }
             catch (Exception ex)
@@ -316,7 +358,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> ViewOrder(int id)
+        public async Task<IActionResult> GetOrderById(int id)
         {
             try
             {

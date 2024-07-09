@@ -4,13 +4,14 @@ using DataAccess.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using WebAPI.Helpers;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "User")]
+    //[Authorize(Roles = "User")]
     public class CartController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -68,6 +69,7 @@ namespace WebAPI.Controllers
                         Size = productsize.Size.Name,
                         Price = productsize.Product.Price,
                         Quantity = quantity,
+                        TotalPrice = quantity*productsize.Product.Price,
                         Image = productsize.Product.Images.FirstOrDefault()?.LinkImage,
                         OwnerId = ownerId
                     });
@@ -117,7 +119,7 @@ namespace WebAPI.Controllers
 
 
                 _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
-                return Ok(cart);
+                return Ok(new { message = "You have just updated product form cart successfully." });
             }
             catch (Exception ex)
             {
@@ -147,7 +149,7 @@ namespace WebAPI.Controllers
                 }
 
                 _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
-                return Ok(cart);
+                return Ok(new { message = "You have just deleted product form cart successfully." });
             }
             catch (Exception ex)
             {

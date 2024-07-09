@@ -9,7 +9,7 @@ namespace DataAccess.IRepository
 {
     public interface IOrderDetailRepository
     {
-        Task<bool> AddOrderDetailAsync(OrderDetail orderDetail);
+        Task AddOrderDetailAsync(OrderDetail orderDetail);
         Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId);
     }
 }
