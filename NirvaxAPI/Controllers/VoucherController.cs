@@ -212,6 +212,32 @@ namespace WebAPI.Controllers
             }
 
         [HttpGet]
+        public async Task<ActionResult> VoucherStatisticsAsync(int ownerId)
+        {
+            try
+            {
+                var total = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
+                var total2 = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);
+             
+
+                return StatusCode(200, new
+                    {
+                        totalQuantityVoucherUsed = total,
+                    totalPriceVoucherUsed = total2
+                });
+                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> QuantityVoucherUsedStatisticsAsync(int ownerId)
         {
             try

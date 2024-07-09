@@ -321,6 +321,21 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> BlogStatisticsAsync(int ownerId)
+        {
+            var total2 = await _repo.ViewOwnerBlogStatisticsAsync(ownerId);
+            var total = await _repo.ViewBlogStatisticsAsync();
+
+            return StatusCode(200, new
+                {
+                    totalBlog = total,
+                    totalOwnerBlog = total2,
+                });
+            
+
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ViewOwnerBlogStatisticsAsync(int ownerId)
         {
             var number = await _repo.ViewOwnerBlogStatisticsAsync(ownerId);

@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace WebAPI.Controllers
 {
@@ -221,6 +222,23 @@ namespace WebAPI.Controllers
             }
            
 
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> WarehouseStatisticsAsync(int warehouseId,int importId, int ownerId)
+        {
+            var total = await _repo.ViewCountImportStatisticsAsync(warehouseId);
+            var total2 = await _repo.ViewNumberOfProductByImportStatisticsAsync(importId, ownerId);
+            var total3 = await _repo.ViewPriceByImportStatisticsAsync(importId, ownerId);
+            var total4 = await _repo.QuantityWarehouseStatisticsAsync(ownerId);
+           
+                return StatusCode(200, new
+                {
+                    totalImportProduct = total,
+                    totalProductByImport = total2,
+                    totalPriceByImport = total3,
+                    totalQuantityByImport = total4
+                });        
         }
 
         [HttpGet]
