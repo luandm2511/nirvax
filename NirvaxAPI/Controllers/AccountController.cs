@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
@@ -16,15 +17,17 @@ namespace WebAPI.Controllers
     {
         private readonly IAccountRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public AccountController(IAccountRepository repository, IMapper mapper)
+        public AccountController(IAccountRepository repository, IMapper mapper, IEmailService emailService)
         {
             _repository = repository;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAccounts()
         {
             try
@@ -58,7 +61,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/ban")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> BanAccount(int id)
         {
             try
@@ -70,6 +73,7 @@ namespace WebAPI.Controllers
                 }
 
                 await _repository.BanAccountAsync(account);
+                await _emailService.SendEmailAsync(account.Email, "Ban Account", "Your account violates the policy, so we temporarily and permanently block your account!");
                 return Ok(new { message = "Account banned successfully." });
             }
             catch (Exception ex)
@@ -79,7 +83,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}/unban")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UnbanAccount(int id)
         {
             try
@@ -91,6 +95,7 @@ namespace WebAPI.Controllers
                 }
 
                 await _repository.UnbanAccountAsync(account);
+                await _emailService.SendEmailAsync(account.Email, "UnBan Account", "Through re-checking, we found that you have violated online trading standards but the impact is not too large, so we decided to re-unlock your account. Congratulations!!!");
                 return Ok(new { message = "Account unbanned successfully." });
             }
             catch (Exception ex)
@@ -178,6 +183,20 @@ namespace WebAPI.Controllers
                 account.Image = avatar;
                 await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Avatar updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("account-statistics")]
+        public async Task<IActionResult> AccountStatistics()
+        {
+            try
+            {
+                var statis = await _repository.AccountStatistics();
+                return Ok(statis);
             }
             catch (Exception ex)
             {

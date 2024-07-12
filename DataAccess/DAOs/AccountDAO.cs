@@ -38,5 +38,20 @@ namespace DataAccess.DAOs
         {
             return await _context.Accounts.Where(a => a.Fullname.Contains(keyword) || a.Email.Contains(keyword)).ToListAsync();
         }
+
+        public async Task<AccountStatisticDTO> AccountStatistics()
+        {
+            var totalAccount = await _context.Accounts.CountAsync();
+            var totalAccountBanned = await _context.Accounts.CountAsync(a => a.IsBan);
+            var totalOwner = await _context.Owners.CountAsync();
+            var totalOwnerBanned = await _context.Owners.CountAsync(o => o.IsBan);
+            return new AccountStatisticDTO
+            {
+                TotalAccount = totalAccount,
+                TotalAccountBanned = totalAccountBanned,
+                TotalOwner = totalOwner,
+                TotalOwnerBanned = totalOwnerBanned
+            };
+        }
     }
 }

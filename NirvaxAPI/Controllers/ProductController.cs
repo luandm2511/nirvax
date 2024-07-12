@@ -242,6 +242,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BanProduct(int id)
         {
+
             try
             { 
                 var product = await _productRepository.GetByIdAsync(id);
@@ -256,8 +257,8 @@ namespace WebAPI.Controllers
                     OwnerId = product.OwnerId, // Assuming Product model has OwnerId field
                     Content = $"Your product '{product.Name}' has been banned.",
                     IsRead = false,
-                    Url = null,
-                    CreateDate = DateTime.UtcNow
+                    Url = "abcd",
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
@@ -290,8 +291,8 @@ namespace WebAPI.Controllers
                     OwnerId = product.OwnerId, // Assuming Product model has OwnerId field
                     Content = $"Your product '{product.Name}' has been unbanned.",
                     IsRead = false,
-                    Url = null,
-                    CreateDate = DateTime.UtcNow
+                    Url = "abcd",
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
@@ -373,7 +374,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("searchs")]
-        public async Task<IActionResult> Searchs(string searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<int> sizeIds)
+        public async Task<IActionResult> Searchs(string? searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<int> sizeIds)
         {
             try
             {
@@ -391,3 +392,4 @@ namespace WebAPI.Controllers
     }
 
 }
+  

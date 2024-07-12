@@ -58,7 +58,7 @@ namespace DataAccess.DAOs
                     .Include(p => p.Owner).Where(p => p.BrandId == brandId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
 
-        public async Task<(List<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds)
+        public async Task<(List<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string? searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds)
         {
             var productsQuery = _context.Products
                 .Include(p => p.Owner)

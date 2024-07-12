@@ -4,8 +4,11 @@ using DataAccess.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
-using WebAPI.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WebAPI.Service;
 
 namespace WebAPI.Controllers
 {
@@ -16,21 +19,21 @@ namespace WebAPI.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IProductSizeRepository _productSizeRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICartService _cartService;
 
-        public CartController(IProductRepository productRepository,IProductSizeRepository productSizeRepository, IHttpContextAccessor httpContextAccessor)
+        public CartController(IProductRepository productRepository, IProductSizeRepository productSizeRepository, ICartService cartService)
         {
             _productRepository = productRepository;
             _productSizeRepository = productSizeRepository;
-            _httpContextAccessor = httpContextAccessor;
+            _cartService = cartService;
         }
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetCart(int userId)
         {
             try
-            { 
-                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
+            {
+                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -50,7 +53,7 @@ namespace WebAPI.Controllers
                     return NotFound(new { message = "Product is not found." });
                 }
 
-                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
+                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
 
                 var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
                 if (ownerCart == null)
@@ -69,7 +72,7 @@ namespace WebAPI.Controllers
                         Size = productsize.Size.Name,
                         Price = productsize.Product.Price,
                         Quantity = quantity,
-                        TotalPrice = quantity*productsize.Product.Price,
+                        TotalPrice = quantity * productsize.Product.Price,
                         Image = productsize.Product.Images.FirstOrDefault()?.LinkImage,
                         OwnerId = ownerId
                     });
@@ -82,7 +85,7 @@ namespace WebAPI.Controllers
                 cart.Remove(ownerCart);
                 cart.Insert(0, ownerCart);
 
-                _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
+                _cartService.SaveCartToCookie(userId, cart);
 
                 return Ok(new { message = "Product is add to cart successfully." });
             }
@@ -97,8 +100,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
-                
+                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
+
                 var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
                 if (ownerCart != null)
                 {
@@ -117,8 +120,7 @@ namespace WebAPI.Controllers
                     }
                 }
 
-
-                _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
+                _cartService.SaveCartToCookie(userId, cart);
                 return Ok(new { message = "You have just updated product form cart successfully." });
             }
             catch (Exception ex)
@@ -132,7 +134,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
+                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
 
                 foreach (var ownerCart in cart)
                 {
@@ -148,15 +150,12 @@ namespace WebAPI.Controllers
                     }
                 }
 
-                _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
+                _cartService.SaveCartToCookie(userId, cart);
                 return Ok(new { message = "You have just deleted product form cart successfully." });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    message = ex.Message
-                });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
     }
