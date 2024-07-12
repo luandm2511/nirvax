@@ -78,7 +78,36 @@ namespace DataAccess.DAOs
         //owner,staff or admin??
         public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize) 
         {
-            List<GuestConsultationDTO> listStaffDTO = new List<GuestConsultationDTO>();
+            List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
+            IQueryable<GuestConsultation> query = _context.GuestConsultations.Include(i => i.Owner)
+                                                       .Include(i => i.Ad)
+                                                       .Include(i => i.StatusGuest);
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(i => i.Content.Trim().Contains(searchQuery) || i.Fullname.Trim().Contains(searchQuery) || i.Phone.Trim().Contains(searchQuery));
+            }
+
+            query = query.OrderBy(i =>
+               i.StatusGuest.Name == "WAITING" ? 1 :
+               i.StatusGuest.Name == "ACCEPT" ? 2 :
+               i.StatusGuest.Name == "DENY" ? 3 :
+               4
+           );
+
+            List<GuestConsultation> getList = await query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            
+            return listGuestDTO;
+        }
+
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize)
+        {
+            List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -87,23 +116,83 @@ namespace DataAccess.DAOs
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
                     .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
+                    .Where(i => i.StatusGuest.Name.Contains("ACCEPT"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
             }
             else
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner).Include(i => i.Ad).Include(i => i.StatusGuest)
+                    .Where(i => i.StatusGuest.Name.Contains("ACCEPT"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
             }
-            return listStaffDTO;
+            return listGuestDTO;
         }
 
-    
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize)
+        {
+            List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
+                .Include(i => i.Ad)
+                .Include(i => i.StatusGuest)
+                    .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
+                      .Where(i => i.StatusGuest.Name.Contains("WAITING"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            }
+            else
+            {
+                List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner).Include(i => i.Ad).Include(i => i.StatusGuest)
+                    .Where(i => i.StatusGuest.Name.Contains("WAITING"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            }
+            return listGuestDTO;
+        }
+
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize)
+        {
+            List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
+                .Include(i => i.Ad)
+                .Include(i => i.StatusGuest)
+                    .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
+                      .Where(i => i.StatusGuest.Name.Contains("DENY"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            }
+            else
+            {
+                List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner).Include(i => i.Ad).Include(i => i.StatusGuest)
+                     .Where(i => i.StatusGuest.Name.Contains("DENY"))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            }
+            return listGuestDTO;
+        }
+
+
         //owner,staff 
         public async Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId )
 
@@ -155,7 +244,7 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> UpdateStatusGuestConsultationtAsync(int guestId , int statusGuestId)
+        public async Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId , int statusGuestId)
         {
 
             GuestConsultation? staffOrgin = await _context.GuestConsultations
@@ -165,6 +254,21 @@ namespace DataAccess.DAOs
                 .SingleOrDefaultAsync(i => i.GuestId  == guestId );
             staffOrgin.StatusGuestId = statusGuestId;
              _context.GuestConsultations.Update(staffOrgin);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
+        {
+            GuestStatus guestStatus = await _context.GuestStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusGuest.Trim());
+
+            GuestConsultation? staffOrgin = await _context.GuestConsultations
+                .Include(i => i.Owner)
+                .Include(i => i.Ad)
+                .Include(i => i.StatusGuest)
+                .SingleOrDefaultAsync(i => i.GuestId == guestId);
+            staffOrgin.StatusGuestId = guestStatus.StatusGuestId;
+            _context.GuestConsultations.Update(staffOrgin);
             await _context.SaveChangesAsync();
             return true;
         }

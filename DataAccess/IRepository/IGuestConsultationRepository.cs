@@ -18,8 +18,12 @@ namespace DataAccess.IRepository
 
         Task<bool> CheckGuestConsultationExistAsync(int guestId);
         Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
-        Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, int statusGuestId);
+        Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId);
         Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize);
-       
+        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize);
+        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize);
+        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize);
+       Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest);
+
     }
 }

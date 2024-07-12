@@ -53,12 +53,103 @@ namespace WebAPI.Controllers
                     Message = "An error occurred: " + ex.Message
                 });
             }
+            }
+
+
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize)
+        {
+            try
+            {
+                var list = await _repo.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+
+                        Message = "Get list guest consultation " + ok,
+                        Data = list
+                    });
+                }
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any guest consultation"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
-    
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize)
+        {
+            try
+            {
+                var list = await _repo.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+
+                        Message = "Get list guest consultation " + ok,
+                        Data = list
+                    });
+                }
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any guest consultation"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize)
+        {
+            try
+            {
+                var list = await _repo.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+
+                        Message = "Get list guest consultation " + ok,
+                        Data = list
+                    });
+                }
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any guest consultation"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
 
 
-            [HttpGet("{guestId}")]
+
+
+        [HttpGet("{guestId}")]
             //  [Authorize]
             public async Task<ActionResult> GetGuestConsultationsByIdAsync(int guestId)
             {
@@ -180,13 +271,13 @@ namespace WebAPI.Controllers
         }
 
             [HttpPut]
-            public async Task<ActionResult> UpdateStatusGuestConsultationtAsync(int guestId, int statusGuestId)
+            public async Task<ActionResult> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId)
             {
             try { 
                 var checkGuestConsultation = await _repo.CheckGuestConsultationExistAsync(guestId);
                 if (checkGuestConsultation == true)
                 {
-                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtAsync(guestId, statusGuestId);
+                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtByIdAsync(guestId, statusGuestId);
                         return StatusCode(200, new
                         {
                             Message = "Update guest consultation" + ok,
@@ -207,6 +298,37 @@ namespace WebAPI.Controllers
             }
 
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
+        {
+            try
+            {
+                var checkGuestConsultation = await _repo.CheckGuestConsultationExistAsync(guestId);
+                if (checkGuestConsultation == true)
+                {
+                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtAsync(guestId, statusGuest);
+                    return StatusCode(200, new
+                    {
+                        Message = "Update guest consultation" + ok,
+                        Data = guestConsultation1
+                    });
+                }
+                return StatusCode(400, new
+                {
+                    Message = "The name guest consultation is already exist",
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
+        }
+
         [HttpGet]
         public async Task<ActionResult> ViewGuestConsultationStatisticsAsync()
         {

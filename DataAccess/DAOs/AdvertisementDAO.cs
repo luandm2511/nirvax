@@ -140,7 +140,7 @@ namespace DataAccess.DAOs
         // get status waiting
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -151,7 +151,7 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             else
             {
@@ -160,14 +160,14 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
-            return listStaffDTO;
+            return listAdDTO;
         }
         //get status deny
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -178,7 +178,7 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             else
             {
@@ -187,14 +187,14 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
-            return listStaffDTO;
+            return listAdDTO;
         }
         //get status accept
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -205,7 +205,7 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             else
             {
@@ -214,14 +214,14 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
-            return listStaffDTO;
+            return listAdDTO;
         }
 
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -230,21 +230,21 @@ namespace DataAccess.DAOs
                     .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             else
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
-            return listStaffDTO;
+            return listAdDTO;
         }
 
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsByOwnerAsync(string? searchQuery, int ownerId)
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -254,7 +254,7 @@ namespace DataAccess.DAOs
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i=> i.OwnerId == ownerId)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             else
             {
@@ -262,22 +262,22 @@ namespace DataAccess.DAOs
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i => i.OwnerId == ownerId)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
-            return listStaffDTO;
+            return listAdDTO;
         }
 
         //service
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
-            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+            List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i => i.ServiceId == serviceId)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+                listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             
-            return listStaffDTO;
+            return listAdDTO;
         }
 
         //owner,staff 
