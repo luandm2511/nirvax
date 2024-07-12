@@ -19,22 +19,19 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
         public int Quantity { get; set; }
-
+        public string? SizeName { get; set; }
         public bool? Isdelete { get; set; }
     }
     public class ProductSizeCreateDTO
     {
        
         [Required(ErrorMessage = " SizeId cannot be empty!!")]
-
         public int SizeId { get; set; }
         [Required(ErrorMessage = " ProductId cannot be empty!!")]
 
         public int ProductId { get; set; }
-        [Required(ErrorMessage = " Quantity cannot be empty!!")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
-        public int Quantity { get; set; }
 
- 
+        [Required(ErrorMessage = " WarehouseId cannot be empty!!")]
+        public int WarehouseId { get; set; }
     }
 }

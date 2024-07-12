@@ -2,7 +2,9 @@
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using DataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace WebAPI.Controllers
 {
@@ -29,8 +31,8 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetWarehouseIdByOwnerIdAsync(int ownerId)
         {
-            
-            var warehouse = await _repo.GetWarehouseIdByOwnerIdAsync(ownerId);
+            try { 
+                var warehouse = await _repo.GetWarehouseIdByOwnerIdAsync(ownerId);
             if (warehouse != null)
             {
                 return StatusCode(200, new
@@ -43,12 +45,19 @@ namespace WebAPI.Controllers
             else
             {
                 return StatusCode(404, new
-                {
-                    Status = "Find fail",
+                {                 
                     Message = notFound + "any warehouse"
                 });
             }
-           
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
         }
 
 
@@ -56,45 +65,53 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetWarehouseByOwnerAsync(int ownerId)
         {
-          
+            try { 
                 var wh = await _repo.GetWarehouseByIdAsync(ownerId);
 
                 if (wh != null)
                 {
-                   var result = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
-                   if (result != null)
-                   {
-                    return StatusCode(200, new
-                    {
-                        
-                        Message = "Get warehouse by owner" + ok,
-                        Data = wh,
-                        result.TotalPrice,
-                        result.TotalQuantity
-                    });
-                   }
+                    var result = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
+                        return StatusCode(200, new
+                        {
+                            Message = "Get warehouse by owner" + ok,
+                            Data = wh,
+                            result.TotalPrice,
+                            result.TotalQuantity
+                        });                  
                 }
-                return StatusCode(404, new
+                else
                 {
-                    Status = "Find fail",
-                    Message = "Error for total quantity and total price of warehouse"
+                    return StatusCode(404, new
+                    {
+                        Message = "Error for total quantity and total price of warehouse"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
-           
+            }
+
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProduct>>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
         {
-            var list = await _repo.GetWarehouseByImportProductAsync(ownerId,  page,  pageSize);
+            try {
+                
+                var list = await _repo.GetWarehouseByImportProductAsync(ownerId,  page,  pageSize);
             if (list.Any())
             {
                 var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
                 if(numberOfWarehouse != null)
                 {
-                    return StatusCode(200, new
-                    {
-                        
+                 
+                        return StatusCode(200, new
+                    {  
                         Message = "Get list Warehouse " + ok,
                         Data = list,
                         numberOfWarehouse.TotalPrice,
@@ -104,33 +121,38 @@ namespace WebAPI.Controllers
                 else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    {  
                         Message = "Can't get quantity and price of warehouse!",
                     });
                 }
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
                 Message = notFound + "any Warehouse"
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<WarehouseDetail>>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
         {
+            try { 
             var list = await _repo.GetAllWarehouseDetailAsync(ownerId, page, pageSize);
-            if (list.Any())
+            if (list.Any() && list!= null)
             {
                 var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
                 if (numberOfWarehouse != null)
                 {
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get list Warehouse " + ok,
                         Data = list,
                         numberOfWarehouse.TotalPrice,
@@ -139,16 +161,26 @@ namespace WebAPI.Controllers
                 } else
                 {
                     return StatusCode(400, new
-                    {                        
+                    { 
+                       
+                        
                         Message = "Can't get quantity and price of warehouse!",
                     });
                 }
             }
             return StatusCode(404, new
             {
-                Status = "Find fail",
-                Message = notFound + "any Warehouse"
+               
+                Message = "Warehouse is empty!"
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
 
@@ -165,34 +197,16 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     var warehouse = await _repo.CreateWarehouseAsync(warehouseCreateDTO);
-
-                    if (warehouse == true)
-                    {
                        return StatusCode(200, new
-                       {
-                          
+                       { 
                           Message = "Create Warehouse" + ok,
                           Data = warehouse
-                        });
-                     }
-                    else
-                    {
-                        return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
-                        });
-                     }
-
+                        });           
                 }
                 else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    {         
                         Message = "Please enter valid Warehouse",
                     });
                 }
@@ -201,7 +215,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
+                  
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -218,29 +232,43 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Update warehouse " + ok,
-
                     });
                 }
-                return StatusCode(400, new
+                else
                 {
-                   
-                    
-                    Message = badRequest,
-                });
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                    
                     Message = "An error occurred: " + ex.Message
                 });
             }
            
 
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> WarehouseStatisticsAsync(int warehouseId,int importId, int ownerId)
+        {
+            var total = await _repo.ViewCountImportStatisticsAsync(warehouseId);
+            var total2 = await _repo.ViewNumberOfProductByImportStatisticsAsync(importId, ownerId);
+            var total3 = await _repo.ViewPriceByImportStatisticsAsync(importId, ownerId);
+            var total4 = await _repo.QuantityWarehouseStatisticsAsync(ownerId);
+           
+                return StatusCode(200, new
+                {
+                    totalImportProduct = total,
+                    totalProductByImport = total2,
+                    totalPriceByImport = total3,
+                    totalQuantityByImport = total4
+                });        
         }
 
         [HttpGet]
@@ -251,18 +279,16 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
-            return StatusCode(400, new
+            else
             {
-               
-                
-                Message = badRequest,
-            });
+                return StatusCode(200, new
+                {
+                    Message = 0,
+                });
+            }
 
         }
 
@@ -274,18 +300,16 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
-            return StatusCode(400, new
+            else
             {
-               
-                
-                Message = badRequest,
-            });
+                return StatusCode(200, new
+                {
+                    Message = 0,
+                });
+            }
 
         }
 
@@ -297,18 +321,16 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
-            return StatusCode(400, new
+            else
             {
-               
-                
-                Message = badRequest,
-            });
+                return StatusCode(200, new
+                {
+                    Message = 0,
+                });
+            }
 
         }
 
@@ -320,18 +342,16 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(200, new
                 {
-
-                    
                     Message = number,
-
                 });
             }
-            return StatusCode(400, new
+            else
             {
-               
-                
-                Message = badRequest,
-            });
+                return StatusCode(200, new
+                {
+                    Message = 0,
+                });
+            }
 
         }
 

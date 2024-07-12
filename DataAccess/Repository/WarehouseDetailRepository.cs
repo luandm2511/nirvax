@@ -31,19 +31,19 @@ namespace DataAccess.Repository
         }
 
 
-        public Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
+        public Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int ownerId, int page, int pageSize)
         {
 
-            return _warehouseDetailDAO.GetAllWarehouseDetailByProductSizeAsync(warehouseId, page, pageSize);
+            return _warehouseDetailDAO.GetAllWarehouseDetailByProductSizeAsync(ownerId, page, pageSize);
         }
 
         public Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
         {
             return _warehouseDetailDAO.CheckWarehouseDetailExistAsync(warehouseId);
         }
-        public Task<bool> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
+        public Task<bool> CreateWarehouseDetailAsync(WarehouseDetail warehouseDetail)
         {
-            return _warehouseDetailDAO.CreateWarehouseDetailAsync(warehouseDetailDTO);
+            return _warehouseDetailDAO.CreateWarehouseDetailAsync(warehouseDetail);
         }
 
         public Task<bool> PatchWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)

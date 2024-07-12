@@ -28,6 +28,7 @@ namespace BusinessObject.DTOs
 
     public class WarehouseDetailFinalDTO
     {
+
         public int WarehouseId { get; set; }
         [Required(ErrorMessage = " ProductSizeId cannot be empty!!")]
 

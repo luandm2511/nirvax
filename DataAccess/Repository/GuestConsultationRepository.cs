@@ -51,14 +51,30 @@ namespace DataAccess.Repository
         {
             return _guestConsultationDAO.CheckGuestConsultationAsync(guestConsultationCreateDTO);
         }
-        public Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, int statusGuestId)
+        public Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId)
         {
-            return _guestConsultationDAO.UpdateStatusGuestConsultationtAsync(guestId, statusGuestId);
+            return _guestConsultationDAO.UpdateStatusGuestConsultationtByIdAsync(guestId, statusGuestId);
         }
         public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize)
         {
             return _guestConsultationDAO.GetAllGuestConsultationsAsync(searchQuery, page, pageSize);
         }
 
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _guestConsultationDAO.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize);
+        }
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _guestConsultationDAO.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize);
+        }
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize)
+        {
+            return _guestConsultationDAO.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize);
+        }
+        public Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
+        {
+            return _guestConsultationDAO.UpdateStatusGuestConsultationtAsync(guestId, statusGuest);
+        }
     }
 }

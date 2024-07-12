@@ -283,7 +283,7 @@ namespace DataAccess.DAOs
 
 
         }
-        public async Task<bool> BanStaffAsync(int staffId)
+        public async Task<bool> DeleteStaffAsync(int staffId)
         {
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
             //ánh xạ đối tượng staffdto đc truyền vào cho Staff

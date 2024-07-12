@@ -20,6 +20,8 @@ namespace BusinessObject.DTOs
         [MinLength(2, ErrorMessage = " Content to be at least 2 characters!!")]
         [MaxLength(500, ErrorMessage = "Content is limited to 500 characters!!")]
         public string Content { get; set; } = null!;
+        public string? OwnerName { get; set; }
+        public string? AccountName { get; set; }
 
         public DateTime Timestamp { get; set; }
     }

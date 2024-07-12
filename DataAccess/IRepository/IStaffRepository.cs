@@ -33,7 +33,7 @@ namespace DataAccess.IRepository
         Task<bool> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO);
         Task<bool> UpdateAvatarStaffAsync(StaffAvatarDTO staffAvatarDTO);
 
-        Task<bool> BanStaffAsync(int staffId);
+        Task<bool> DeleteStaffAsync(int staffId);
      
 
     }

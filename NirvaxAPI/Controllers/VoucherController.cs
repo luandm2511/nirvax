@@ -26,42 +26,62 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize)
             {
+            try { 
                 var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize);
-                if (list.Any())
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        
-                        Message = "Get list voucher " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list voucher " + ok,
+                    Data = list
+                });
+            }
+            else
+            {
                 return StatusCode(404, new
                 {
-                    Status = "Find fail",
                     Message = notFound + "any voucher"
                 });
             }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherForUserAsync()
         {
+            try { 
             var list = await _repo.GetAllVoucherForUserAsync();
-            if (list.Any())
-            {
-                return StatusCode(200, new
+                if (list.Any())
                 {
-                    
-                    Message = "Get list voucher " + ok,
-                    Data = list
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list voucher " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any voucher"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any voucher"
-            });
         }
 
 
@@ -75,80 +95,72 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetProductSizeByIdAsync(string voucherId)
             {
+            try { 
                 var checkVoucher = await _repo.CheckVoucherByIdAsync(voucherId);
                 if (checkVoucher == true)
                 {
                     var voucher = await _repo.GetVoucherDTOByIdAsync(voucherId);
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get voucher by id " + ok,
                         Data = voucher
                     });
                 }
-
-                return StatusCode(404, new
+                else
                 {
-                    Status = "Find fail",
-                    Message = notFound + "any voucher"
-                });
-            }
-
-            //check exist
-            [HttpPost]
-            public async Task<ActionResult> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
-            {
-            try { 
-            if (ModelState.IsValid)
-            {
-                var checkVoucher = await _repo.CheckVoucherAsync(voucherCreateDTO.StartDate, voucherCreateDTO.EndDate, voucherCreateDTO.VoucherId);
-                if (checkVoucher == true)
-                {
-                    var voucher1 = await _repo.CreateVoucherAsync(voucherCreateDTO);
-                    if (voucher1)
+                    return StatusCode(404, new
                     {
-                        return StatusCode(200, new
-                        {
-
-                            
-                            Message = "Create voucher " + ok,
-                            Data = voucher1
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
-                        });
-                    }
+                        Message = notFound + "any voucher"
+                    });
                 }
-
-            else
-            {
-                return StatusCode(400, new
-                {
-                   
-                    
-                    Message = "There already exists a voucher with that information",
-                });
-            }
-        }
-            return StatusCode(400, new
-            {
-               
-                
-                Message = "Please enter valid Staff",
-            });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
+
+            //check exist
+            [HttpPost]
+            public async Task<ActionResult> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
+            {
+            try {
+                if (ModelState.IsValid)
+                {
+                    var checkVoucher = await _repo.CheckVoucherAsync(voucherCreateDTO.StartDate, voucherCreateDTO.EndDate, voucherCreateDTO.VoucherId);
+                    if (checkVoucher == true)
+                    {
+                        var voucher1 = await _repo.CreateVoucherAsync(voucherCreateDTO);
+                        return StatusCode(200, new
+                        {
+                            Message = "Create voucher " + ok,
+                            Data = voucher1
+                        });
+                    }
+
+                    else
+                    {
+                        return StatusCode(400, new
+                        {
+                            Message = "There already exists a voucher with that information",
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Voucher",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -167,49 +179,29 @@ namespace WebAPI.Controllers
                 if (checkVoucher == true)
                 {
                     var voucher1 = await _repo.UpdateVoucherAsync(voucherDTO);
-                    if (voucher1)
-                    {
                         return StatusCode(200, new
-                        {
-
-                            
+                        {  
                             Message = "Update voucher" + ok,
                             Data = voucher1
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(500, new
-                        {
-
-                            
-                            Message = "Server error",
-                            Data = ""
-                        });
-                    }
+                        });                
                 }
             else
             {
                 return StatusCode(400, new
                 {
-                   
-                    
                     Message = "There already exists a voucher with that information",
                 });
             }
         }
             return StatusCode(400, new
             {
-               
-                
-                Message = "Please enter valid Staff",
+                Message = "Please enter valid Voucher",
             });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -222,90 +214,116 @@ namespace WebAPI.Controllers
             [HttpPatch("{voucherId}")]
             public async Task<ActionResult> DeleteVoucherAsync(string voucherId)
             {
+            try { 
                 var voucher1 = await _repo.DeleteVoucherAsync(voucherId);
                 if (voucher1)
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = "Delete voucher " + ok,
-
                     });
                 }
-                return StatusCode(400, new
+                else
                 {
-                   
-                    
-                    Message = badRequest,
-                });
-
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> VoucherStatisticsAsync(int ownerId)
+        {
+                var total = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
+                var total2 = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);          
+                return StatusCode(200, new
+                    {
+                        totalQuantityVoucherUsed = total,
+                    totalPriceVoucherUsed = total2
+                });                  
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> QuantityVoucherUsedStatisticsAsync(int ownerId)
         {
-            try
-            {
                 var number = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
                 if (number != null)
                 {
                     return StatusCode(200, new
                     {
-
-                        
                         Message = number,
-
                     });
                 }
-                return StatusCode(400, new
-                {
-                   
-                    
-                    Message = badRequest,
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Status = "Error",
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
+                return StatusCode(200, new
+                { 
+                    Message = 0,
+                });         
         }
 
         [HttpGet]
         public async Task<ActionResult> PriceVoucherUsedStatisticsAsync(int ownerId)
         {
-            try { 
             var number = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);
-            if (number != null)
-            {
-                return StatusCode(200, new
+                if (number != null)
                 {
+                    return StatusCode(200, new
+                    {
+                        Message = number,
+                    });
+                }
+                else
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = 0,
+                    });
+                }         
+        }
 
-                    
-                    Message = number,
 
-                });
+        [HttpGet]
+        public async Task<ActionResult> PriceAndQuantityByOrderAsync(string voucherId)
+        {
+            try {
+                var result = await _repo.PriceAndQuantityByOrderAsync( voucherId);
+                if (result == true)
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Update voucher after used success!",
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
             }
-            return StatusCode(400, new
-            {
-               
-                
-                Message = badRequest,
-            });
-            }
+
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                 
                     Message = "An error occurred: " + ex.Message
                 });
             }
+
+
         }
+
+
     }
 }

@@ -26,8 +26,7 @@ namespace WebAPI.Controllers
         public StaffController(IConfiguration config, IStaffRepository repo)
         {
             _config = config;
-             _repo = repo;
-           
+             _repo = repo;           
         }
 
 
@@ -35,21 +34,31 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize)
         {
+            try { 
             var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize);
-            if (list.Any())
-            {
-                return StatusCode(200, new
+                if (list.Any())
                 {
-           
-                    Message = "Get list staff " + ok,
-                    Data = list
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list staff " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any staff"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any staff"
-            });
         }
 
 
@@ -59,100 +68,108 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetStaffByIdAsync(int staffId)
         {
+            try { 
             var checkStaff = await _repo.CheckStaffExistAsync(staffId);
-            if (checkStaff == true)
-            {
-                var staff = await _repo.GetStaffByIdAsync(staffId);
-                return StatusCode(200, new
+                if (checkStaff == true)
                 {
-                   
-                    Message = "Get staff by id " + ok,
-                    Data = staff
+                    var staff = await _repo.GetStaffByIdAsync(staffId);
+                    return StatusCode(200, new
+                    {
+                        Message = "Get staff by id " + ok,
+                        Data = staff
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any staff"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any staff"
-            });
         }
 
         [HttpGet("{staffEmail}")]
         //  [Authorize]
         public async Task<ActionResult> GetStaffByEmailAsync(string staffEmail)
         {
+            try { 
             var checkStaff = await _repo.CheckProfileExistAsync(staffEmail);
-            if (checkStaff == true)
-            {
-                var staff = await _repo.GetStaffByEmailAsync(staffEmail);
-                return StatusCode(200, new
+                if (checkStaff == true)
                 {
-                   
-                    Message = "Get staff by email " + ok,
-                    Data = staff
+                    var staff = await _repo.GetStaffByEmailAsync(staffEmail);
+                    return StatusCode(200, new
+                    {
+                        Message = "Get staff by email " + ok,
+                        Data = staff
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any staff"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any staff"
-            });
         }
 
         //check exist
         [HttpPost]
         public async Task<ActionResult> CreateStaffAsync([FromForm] StaffCreateDTO staffCreateDTO)
         {
-           
-            if(ModelState.IsValid)
-            {
-                var checkStaff = await _repo.CheckStaffAsync(0,staffCreateDTO.Email, staffCreateDTO.Phone);
-                if (checkStaff == true)
+            try {
+                if (ModelState.IsValid)
                 {
-                  
-
-                    var staff1 = await _repo.CreateStaffAsync(staffCreateDTO);
-                    if (staff1 == true)
+                    var checkStaff = await _repo.CheckStaffAsync(0, staffCreateDTO.Email, staffCreateDTO.Phone);
+                    if (checkStaff == true)
                     {
-                        return StatusCode(200, new
-                        {
+                        var staff1 = await _repo.CreateStaffAsync(staffCreateDTO);
 
-                         
-                            Message = "Create staff " + ok,
-                            Data = staff1
-                        });
+                            return StatusCode(200, new
+                            {
+                                Message = "Create staff " + ok,
+                                Data = staff1
+                            });
                     }
                     else
                     {
-                        return StatusCode(500, new
+                        return StatusCode(400, new
                         {
-
-                           
-                            Message = "Server error",
-                            Data = ""
+                            Message = "There already exists a staff with that information",
                         });
                     }
+
                 }
                 else
                 {
                     return StatusCode(400, new
                     {
-                        
-                       
-                        Message = "There already exists a staff with that information",
+                        Message = "Dont't accept empty information!",
                     });
                 }
-          
             }
-               
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                
-                
-                Message = "Dont't accept empty information!",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
@@ -167,36 +184,24 @@ namespace WebAPI.Controllers
                 if (checkStaff == true)
                 {
                     var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPasswod, confirmPassword);
-                    if (staff1 == true)
+                    return StatusCode(200, new
                     {
-                        return StatusCode(200, new
-                        {
-
-                           
-                            Message = "Change password of staff" + ok,
-                            Data = staff1
-                        });
-                    }
-                    return StatusCode(500, new
-                    {
-
-                       
-                        Message = "Internet error"
-                        // Data = staff1
+                        Message = "Change password of staff" + ok,
+                        Data = staff1
                     });
                 }
-                return StatusCode(400, new
+                else
                 {
-                    
-                    
-                    Message = "Staff not exist",
-                });
+                    return StatusCode(400, new
+                    {
+                        Message = "Staff not exist",
+                    });
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                 
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -206,31 +211,25 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateStaffAsync([FromForm] StaffDTO staffDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone);
-                if (checkStaff == true)
+            try {
+                if (ModelState.IsValid)
                 {
-                      
-                    var staff1 = await _repo.UpdateStaffAsync(staffDTO);
-                    if (staff1 == true)
+                    var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone);
+                    if (checkStaff == true)
                     {
+
+                        var staff1 = await _repo.UpdateStaffAsync(staffDTO);
                         return StatusCode(200, new
                         {
-
-                           
                             Message = "Update staff" + ok,
                             Data = staff1
                         });
                     }
                     else
                     {
-                        return StatusCode(500, new
+                        return StatusCode(400, new
                         {
-
-                           
-                            Message = "Server error",
-                            Data = ""
+                            Message = "Please enter valid Staff!",
                         });
                     }
                 }
@@ -238,117 +237,119 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        
-                        
-                        Message = "There already exists a staff with that information",
+                        Message = "Please enter valid Staff",
                     });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                
-                
-                Message = "Please enter valid Staff",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var checkStaff = await _repo.CheckProfileStaffAsync(staffProfileDTO);
-                if (checkStaff == true)
+            try {
+                if (ModelState.IsValid)
                 {
-                    var staff1 = await _repo.UpdateProfileStaffAsync(staffProfileDTO);
-                    if (staff1 == true)
+                    var checkStaff = await _repo.CheckProfileStaffAsync(staffProfileDTO);
+                    if (checkStaff == true)
                     {
-                        return StatusCode(200, new
-                        {
-
-                           
-                            Message = "Update profile staff" + ok,
-                            Data = staff1
-                        });
+                        var staff1 = await _repo.UpdateProfileStaffAsync(staffProfileDTO);
+                            return StatusCode(200, new
+                            {
+                                Message = "Update profile staff" + ok,
+                                Data = staff1
+                            });                  
                     }
                     else
                     {
-                        return StatusCode(500, new
+                        return StatusCode(400, new
                         {
-
-                           
-                            Message = "Server error",
-                            Data = "Internet server"
+                            Message = "There already exists a staff with that information",
                         });
                     }
-                }else
-                {
-                     return StatusCode(400, new
-            {
-                
-                
-                Message = "There already exists a staff with that information",
-            });
                 }
-            } 
-            return StatusCode(400, new
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Staff",
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                
-                
-                Message = "Please fill in all information",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
         [HttpPut]
         public async Task<ActionResult> UpdateAvatarStaffAsync([FromForm] StaffAvatarDTO staffAvatarDTO)
         {
+            try { 
             var checkOwner = await _repo.CheckStaffExistAsync(staffAvatarDTO.StaffId);
-            if (checkOwner == true)
-            {
-                
-
-                var owner1 = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);
-                if (owner1 == true)
+                if (checkOwner == true)
                 {
-                    return StatusCode(200, new
+                    var owner1 = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);  
+                        return StatusCode(200, new
+                        {
+                            Message = "Update avatar staff " + ok,
+                            Data = owner1
+                        });                 
+                }
+                else
+                {
+                    return StatusCode(400, new
                     {
-
-                       
-                        Message = "Update avatar staff " + ok,
-                        Data = owner1
+                        Message = badRequest,
                     });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                
-                
-                Message = badRequest,
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
         [HttpPatch("{staffId}")]
-        public async Task<ActionResult> BanStaffAsync(int staffId)
+        public async Task<ActionResult> DeleteStaffAsync(int staffId)
         {
-            var staff1 = await _repo.BanStaffAsync(staffId);
-            if (staff1 == true)
-            {
-                return StatusCode(200, new
+            try { 
+            var staff1 = await _repo.DeleteStaffAsync(staffId);
+                if (staff1 == true)
                 {
-
-                   
-                    Message = "Ban staff " + ok,
-
+                    return StatusCode(200, new
+                    {
+                        Message = "Ban staff " + ok,
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(400, new
-            {
-                
-                
-                Message = badRequest,
-            });
-
         }
 
       

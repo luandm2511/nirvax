@@ -84,10 +84,10 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
+        public async Task<bool> CreateWarehouseDetailAsync(WarehouseDetail warehouseDetail)
         {
           
-            WarehouseDetail warehouseDetail = _mapper.Map<WarehouseDetail>(warehouseDetailDTO);
+         
             await _context.WarehouseDetails.AddAsync(warehouseDetail);
             int i = await _context.SaveChangesAsync();
             if (i > 0)

@@ -27,42 +27,63 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailAsync()
         {
+            try { 
             var list = await _repo.GetAllImportProductDetailAsync();
-            if (list.Any())
-            {
-                return StatusCode(200, new
+                if (list.Any())
                 {
-                    
-                    Message = "Get list Import Product Detail " + ok,
-                    Data = list
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list Import Product Detail " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any Import Product Detail"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any Import Product Detail"
-            });
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
+            try { 
             var list = await _repo.GetAllImportProductDetailByImportIdAsync(importId);
-            if (list.Any())
-            {
-                return StatusCode(200, new
+                if (list.Any())
                 {
-                    
-                    Message = "Get list Import Product Detail " + ok,
-                    Data = list
+                    return StatusCode(200, new
+                    {
+
+                        Message = "Get list Import Product Detail " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any Import Product Detail"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any Import Product Detail"
-            });
         }
 
         [HttpPost]
@@ -74,40 +95,21 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     var importProductDetail = await _repo.CreateImportProductDetailAsync(importId, importProductDetailDTO);
-
-                if (importProductDetail == true)
-                {
                     return StatusCode(200, new
                     {
-                        
                         Message = "Create Import Product Detail " + ok,
                         Data = importProductDetail
-                    });
-                }
-
-                else
-                {
-                    return StatusCode(500, new
-                    {
-                        Status = "Find fail",
-                        Message = notFound + "any Import Product Detail"
-                    });
-                }
+                    });              
             }
-
-
             return StatusCode(400, new
             {
-               
-                
-                Message = "Dont't accept empty information!",
+                Message = "Please enter valid ImportProduct Detail!",
             });
         }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }
@@ -123,38 +125,25 @@ namespace WebAPI.Controllers
                 {
                     var importProductDetail = await _repo.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
 
-                if (importProductDetail == true)
-                {
+
                     return StatusCode(200, new
                     {
-                        
                         Message = "Update Import Product Detail " + ok,
                         Data = importProductDetail
                     });
                 }
-
                 else
                 {
-                    return StatusCode(500, new
+                    return StatusCode(400, new
                     {
-                        Status = "Find fail",
-                        Message = notFound + "any Import Product Detail"
+                        Message = "Please enter valid ImportProduct Detail!",
                     });
                 }
-                }
-
-                return StatusCode(400, new
-                {
-                   
-                    
-                    Message = "Dont't accept empty information!",
-                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {
-                    Status = "Error",
+                {                    
                     Message = "An error occurred: " + ex.Message
                 });
             }

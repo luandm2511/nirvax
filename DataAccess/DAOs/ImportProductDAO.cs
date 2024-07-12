@@ -123,8 +123,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
-            ImportProduct? importProduct = await _context.ImportProducts.SingleOrDefaultAsync(i => i.ImportId == importProductDTO.ImportId);
-            //ánh xạ đối tượng staffdto đc truyền vào cho staff
+            ImportProduct? importProduct = await _context.ImportProducts.SingleOrDefaultAsync(i => i.ImportId == importProductDTO.ImportId);      
 
             if (importProduct != null)
             {

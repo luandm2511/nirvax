@@ -37,42 +37,56 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> ViewUserHistoryChatAsync(int accountId)
         {
+            try { 
             var list = await _repo.ViewUserHistoryChatAsync(accountId);
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {                   
                     Message = "Get list room of this account " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {                
                 Message = notFound + "any room"
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> ViewOwnerHistoryChatAsync(int ownerId)
         {
+            try { 
             var list = await _repo.ViewOwnerHistoryChatAsync(ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new
-                {
-                    
+                {               
                     Message = "Get list room of this owner " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
-            {
-                Status = "Find fail",
+            {               
                 Message = notFound + "any room"
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {                   
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
 
@@ -80,68 +94,94 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-
+            try { 
             var room = await _repo.GetRoomIdByAccountIdAndOwnerIdAsync(accountId, ownerId);
-            if (room != null)
-            {
-                return StatusCode(200, new
+                if (room != null)
                 {
-                    
-                    Message = "Get room" + ok,
-                    Data = room
+                    return StatusCode(200, new
+                    {
+                        Message = "Get room" + ok,
+                        Data = room
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any room"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any room"
-            });
+
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-            
-                var room = await _repo.GetRoomByAccountIdAndOwnerIdAsync(accountId, ownerId);
-            if (room != null)
-            {
-                return StatusCode(200, new
+            try { 
+            var room = await _repo.GetRoomByAccountIdAndOwnerIdAsync(accountId, ownerId);
+                if (room != null)
                 {
-                    
-                    Message = "Get room" + ok,
-                    Data = room
+                    return StatusCode(200, new
+                    {
+                        Message = "Get room" + ok,
+                        Data = room
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any room"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any room"
-            });
         }
 
         [HttpGet("{roomId}")]
         //  [Authorize]
         public async Task<ActionResult> GetRoomByIdAsync(int roomId)
         {
-           
+            try { 
                 var size = await _repo.GetRoomByIdAsync(roomId);
-            if (size != null)
-            {
-
-
-                return StatusCode(200, new
+                if (size != null)
                 {
-                    
-                    Message = "Get room by id" + ok,
-                    Data = size
+                    return StatusCode(200, new
+                    {
+                        Message = "Get room by id" + ok,
+                        Data = size
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any room"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any room"
-            });
         }
 
         [HttpPost]
@@ -149,55 +189,38 @@ namespace WebAPI.Controllers
         {
             try
             {
-              if (ModelState.IsValid)
-              {
-                    var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
-                if (checkSize == true)
+                if (ModelState.IsValid)
                 {
-                    var size1 = await _repo.CreateRoomAsync(roomCreateDTO);
-                    if (size1)
+                    var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
+                    if (checkSize == true)
                     {
-                     
-
+                        var size1 = await _repo.CreateRoomAsync(roomCreateDTO);
                         return StatusCode(200, new
                         {
-
-                            
                             Message = "Create new room " + ok,
                             Data = size1
                         });
                     }
                     else
                     {
-                        return StatusCode(500, new
+                        return StatusCode(400, new
                         {
-
-                            
-                            Message = "Server error",
-                            Data = ""
+                            Message = "Owner or User is is not exist!",
                         });
                     }
                 }
-                return StatusCode(400, new
+                else
                 {
-                    
-                    
-                    Message = "Owner or User is is not exist!",
-                });
-              }
-
-                return StatusCode(400, new
-                {
-                    
-                    
-                    Message = "Dont't accept empty information!",
-                });
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Room!",
+                    });
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Status = "Error",
                     Message = "An error occurred: " + ex.Message
                 });
             }

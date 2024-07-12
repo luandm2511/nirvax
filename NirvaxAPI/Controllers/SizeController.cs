@@ -27,21 +27,32 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Size>>> GetAllSizesAsync(string? searchQuery, int page, int pageSize)
         {
+            try { 
             var list = await _repo.GetAllSizesAsync(searchQuery, page, pageSize);
-            if (list.Any())
-            {
-                return StatusCode(200, new
+                if (list.Any())
                 {
-                    
-                    Message = "Get list size " + ok,
-                    Data = list
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list size " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+
+                        Message = notFound + "any size"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {
-                Status = "Find fail",
-                Message = notFound + "any size"
-            });
         }
 
 
@@ -49,172 +60,177 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetSizeByIdAsync(int sizeId)
         {
+            try { 
             var checkSizeExist = await _repo.CheckSizeExistAsync(sizeId);
-            if (checkSizeExist == true) {
-                var size = await _repo.GetSizeByIdAsync(sizeId);
-            
-         
+                if (checkSizeExist == true)
+                {
+                    var size = await _repo.GetSizeByIdAsync(sizeId);
                     return StatusCode(200, new
                     {
-                        
                         Message = "Get size by id" + ok,
                         Data = size
                     });
-                
 
+
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any size"
+                    });
+                }
             }
-         
-            return StatusCode(404, new
+            catch (Exception ex)
             {
-                Status = "Find fail",
-                Message = notFound + "any size"
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var checkSize = await _repo.CheckSizeAsync(0, sizeCreateDTO.OwnerId, sizeCreateDTO.Name);
-            if (checkSize == true)
-            {
-                var size1 = await _repo.CreateSizeAsync(sizeCreateDTO);
-                if (size1)
+            try {
+                if (ModelState.IsValid)
                 {
-                    return StatusCode(200, new
+                    var checkSize = await _repo.CheckSizeAsync(0, sizeCreateDTO.OwnerId, sizeCreateDTO.Name);
+                    if (checkSize == true)
                     {
-
-                        
-                        Message = "Create size " + ok,
-                        Data = size1
-                    });
-                }
-                else
-                {
-                    return StatusCode(500, new
+                        var size1 = await _repo.CreateSizeAsync(sizeCreateDTO);                    
+                            return StatusCode(200, new
+                            {
+                                Message = "Create size " + ok,
+                                Data = size1
+                            });                      
+                    }
+                    else
                     {
-
-                        
-                        Message = "Server error",
-                        Data = ""
-                    });
+                        return StatusCode(400, new
+                        {
+                            Message = "There already exists a size with that information",
+                        });
+                    }
                 }
-             }
                 else
                 {
                     return StatusCode(400, new
                     {
-                        
-                        
-                        Message = "There already exists a size with that information",
+                        Message = "Please enter valid Size",
                     });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                
-                
-                Message = "Please enter valid Staff",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateSizeAsync(SizeDTO sizeDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var checkSize = await _repo.CheckSizeAsync(sizeDTO.SizeId, sizeDTO.OwnerId, sizeDTO.Name);
-            if (checkSize == true)
-            {
-                var size1 = await _repo.UpdateSizeAsync(sizeDTO);
-                if (size1)
+            try {
+                if (ModelState.IsValid)
                 {
-                    return StatusCode(200, new
+                    var checkSize = await _repo.CheckSizeAsync(sizeDTO.SizeId, sizeDTO.OwnerId, sizeDTO.Name);
+                    if (checkSize == true)
                     {
-
-                        
-                        Message = "Update size" + ok,
-                        Data = size1
-                    });
-                }
-                else
-                {
-                    return StatusCode(500, new
+                        var size1 = await _repo.UpdateSizeAsync(sizeDTO);
+                        return StatusCode(200, new
+                        {
+                            Message = "Update size" + ok,
+                            Data = size1
+                        });
+                    }
+                    else
                     {
-
-                        
-                        Message = "Server error",
-                        Data = ""
-                    });
+                        return StatusCode(400, new
+                        {
+                            Message = "There already exists a size with that information",
+                        });
+                    }
                 }
-            }
                 else
                 {
                     return StatusCode(400, new
                     {
-                        
-                        
-                        Message = "There already exists a staff with that information",
+                        Message = "Please enter valid Size",
                     });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                
-                
-                Message = "Please enter valid Staff",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpPatch("{sizeId}")]
         public async Task<ActionResult> DeleteSizeAsync(int sizeId)
         {
+            try { 
             var size1 = await _repo.DeleteSizeAsync(sizeId);
-            if (size1)
-            {
-                return StatusCode(200, new
+                if (size1)
                 {
-
-                    
-                    Message = "Delete size " + ok,
-
+                    return StatusCode(200, new
+                    {
+                        Message = "Delete size " + ok,
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(400, new
-            {
-                
-                
-                Message = badRequest,
-            });
-
         }
 
         [HttpPatch("{sizeId}")]
         public async Task<ActionResult> RestoreSizeAsync(int sizeId)
         {
+            try { 
             var size1 = await _repo.RestoreSizeAsync(sizeId);
-            if (size1)
-            {
-                return StatusCode(200, new
+                if (size1)
                 {
-
-                    
-                    Message = "Restore size " + ok,
-
+                    return StatusCode(200, new
+                    {
+                        Message = "Restore size " + ok,
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(400, new
-            {
-                
-                
-                Message = badRequest,
-            });
 
         }
-
-
     }
 }

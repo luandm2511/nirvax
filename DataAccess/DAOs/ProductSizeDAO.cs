@@ -119,16 +119,24 @@ namespace DataAccess.DAOs
         }
 
         //user,guest
+       
         public async Task<List<ProductSizeDTO>> GetProductSizeByProductIdAsync(int productId)
         {
             List<ProductSizeDTO> listProductSizeDTO = new List<ProductSizeDTO>();
 
-                List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
-                    .Where(i => i.Isdelete == false)
-                    .Where(i => i.ProductId == productId)
-                    .ToListAsync();
-                listProductSizeDTO = _mapper.Map<List<ProductSizeDTO>>(getList);
-            
+            List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
+                .Where(i => i.Isdelete == false)
+                .Where(i => i.ProductId == productId)
+                .ToListAsync();
+
+
+            listProductSizeDTO = _mapper.Map<List<ProductSizeDTO>>(getList);
+            foreach (var productSizeDTO in listProductSizeDTO)
+            {
+               
+                var productSize = getList.Where(i => i.SizeId == productSizeDTO.SizeId).FirstOrDefault(ps => ps.ProductSizeId == productSizeDTO.ProductSizeId);              
+            }
+
             return listProductSizeDTO;
         }
 
@@ -149,7 +157,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO)
+        public async Task<ProductSize> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO)
         {
            
                 // Fetch the product and size
@@ -167,18 +175,22 @@ namespace DataAccess.DAOs
                     throw new Exception($"Size with ID does not exist.");
                 }
 
-                ProductSize productSize = _mapper.Map<ProductSize>(productSizeCreateDTO);
+                if (size.OwnerId != product.OwnerId)
+                {
+                   throw new Exception($"Size and Product do not share the same Owner.");
+                }
+            ProductSize productSize = _mapper.Map<ProductSize>(productSizeCreateDTO);
 
                 
                 productSize.ProductId = product.ProductId;
                 productSize.SizeId = size.SizeId;
 
-                
-                productSize.ProductSizeId = product.Name.Trim() + "_" + size.Name.Trim();
+
+            productSize.ProductSizeId = product.ProductId + "_" + size.SizeId;
 
               //  var checkId = productSize.ProductSizeId;
 
-            List<ProductSize> checkProdSize = await _context.ProductSizes.Where(i => i.ProductSizeId.Trim() == productSize.ProductSizeId.Trim()).ToListAsync();
+            List<ProductSize> checkProdSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).Where(i => i.ProductSizeId.Trim() == productSize.ProductSizeId.Trim()).ToListAsync();
 
             if (checkProdSize.Count > 0)
                 {
@@ -194,22 +206,20 @@ namespace DataAccess.DAOs
             int i = await _context.SaveChangesAsync();
             if (i > 0)
             {
-                return true;
+                return productSize;
             }
-            else { return false; }
+            else { return productSize; }
 
 
 
         }
 
-        public async Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
+        public async Task<bool> UpdateProductSizeAsync(string productSizeId, int quantity)
         {
-            ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeDTO.ProductSizeId);
-          
-
-           productSizeDTO.Isdelete= false;
-                _mapper.Map(productSizeDTO, productSize);
-                 _context.ProductSizes.Update(productSize);
+            ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
+                productSize.Isdelete= false;
+                productSize.Quantity = quantity;
+                _context.ProductSizes.Update(productSize);
                 await _context.SaveChangesAsync();
                 return true;
           

@@ -19,7 +19,7 @@ namespace DataAccess.IRepository
 
         Task<int> SumOfKindProdSizeStatisticsAsync(int warehouseId);
 
-        Task<bool> CreateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO);
+        Task<bool> CreateWarehouseDetailAsync(WarehouseDetail warehouseDetail);
 
         Task<bool> PatchWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO);
         Task<bool> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO);
