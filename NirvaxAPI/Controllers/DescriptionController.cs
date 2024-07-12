@@ -32,6 +32,7 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
         {
+            try { 
             var list = await _repo.GetAllDescriptionsAsync(searchQuery, page, pageSize);
             if (list.Any())
             {
@@ -47,6 +48,14 @@ namespace WebAPI.Controllers
                 
                 Message = notFound + "any description"
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
 
@@ -54,6 +63,7 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetDescriptionByIdAsync(int sizeId)
         {
+            try { 
             var checkSizeExist = await _repo.CheckDescriptionExistAsync(sizeId);
             if (checkSizeExist == true)
             {
@@ -75,112 +85,134 @@ namespace WebAPI.Controllers
                 
                 Message = notFound + "any description"
             });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateDesctiptionAsync([FromForm]DescriptionCreateDTO descriptionCreateDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var des = _mapper.Map<Description>(descriptionCreateDTO);
-                var checkDescription = await _repo.CheckDescriptionAsync(0,descriptionCreateDTO.Title, descriptionCreateDTO.Content);
-                if (checkDescription == true)
+            try {
+                if (ModelState.IsValid)
                 {
-                    var description1 = await _repo.CreateDesctiptionAsync(descriptionCreateDTO);
-                    if (description1)
+                    var des = _mapper.Map<Description>(descriptionCreateDTO);
+                    var checkDescription = await _repo.CheckDescriptionAsync(0, descriptionCreateDTO.Title, descriptionCreateDTO.Content);
+                    if (checkDescription == true)
                     {
+                        var description1 = await _repo.CreateDesctiptionAsync(descriptionCreateDTO);
                         foreach (var link in descriptionCreateDTO.ImageLinks)
-                        {                  
+                        {
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
                                 DescriptionId = des.DescriptionId
                             };
                             await _imageRepository.AddImagesAsync(image);
-                          
+
                         }
                         return StatusCode(200, new
-                        {  
+                        {
                             Message = "Create description " + ok,
                             Data = description1
                         });
+
                     }
                     else
                     {
-                        return StatusCode(500, new
-                        { 
-                            Message = "Server error",                       
-                         });
+                        return StatusCode(400, new
+                        {
+                            Message = "There already exists a description with that information",
+                        });
                     }
+
                 }
                 else
                 {
-                     return StatusCode(400, new
-                     {
-                         Message = "There already exists a description with that information",
-                     });
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Description!",
+                    });
                 }
-
             }
-               
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                Message = "Dont't accept empty information!",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateDesctiptionAsync([FromForm] DescriptionDTO descriptionDTO)
         {
+            try {
+                if (ModelState.IsValid) { 
             var des = _mapper.Map<Description>(descriptionDTO);
             var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
-            if (checkDescription == true)
-            {
-                var description1 = await _repo.UpdateDesctiptionAsync(descriptionDTO);
-                if (description1)
-                {
-                    IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByDescriptionAsync(descriptionDTO.DescriptionId);
-                    foreach (BusinessObject.Models.Image img in images)
+                    if (checkDescription == true)
                     {
-                        // Xóa ảnh cũ trước khi cập nhật ảnh mới
-                        await _imageRepository.DeleteImagesAsync(img);
-                       
-                    }
-                    foreach (var link in descriptionDTO.ImageLinks)
-                    {
-                        // Save image information to database
-                        var image = new BusinessObject.Models.Image
+                        var description1 = await _repo.UpdateDesctiptionAsync(descriptionDTO);
+                        IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByDescriptionAsync(descriptionDTO.DescriptionId);
+                        foreach (BusinessObject.Models.Image img in images)
                         {
-                            LinkImage = link,
-                            DescriptionId = des.DescriptionId
-                        };
-                        await _imageRepository.AddImagesAsync(image);                      
+                            // Xóa ảnh cũ trước khi cập nhật ảnh mới
+                            await _imageRepository.DeleteImagesAsync(img);
+
+                        }
+                        foreach (var link in descriptionDTO.ImageLinks)
+                        {
+                            // Save image information to database
+                            var image = new BusinessObject.Models.Image
+                            {
+                                LinkImage = link,
+                                DescriptionId = des.DescriptionId
+                            };
+                            await _imageRepository.AddImagesAsync(image);
+                        }
+                        return StatusCode(200, new
+                        {
+                            Message = "Update description" + ok,
+                            Data = description1
+                        });
                     }
-                    return StatusCode(200, new
-                    { 
-                        Message = "Update description" + ok,
-                        Data = description1
-                    });
+                    else
+                    {
+                        return StatusCode(400, new
+                        {
+                            Message = "The name description is already exist",
+                        });
+                    }
                 }
                 else
                 {
-                    return StatusCode(500, new
-                    { 
-                        Message = "Server error",                     
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Description!",
                     });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                Message = "The name description is already exist",
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpPatch("{sizeId}")]
         public async Task<ActionResult> DeleteDesctiptionAsync(int descriptionId)
         {
+            try { 
             IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByDescriptionAsync(descriptionId);
             foreach (BusinessObject.Models.Image img in images)
             {
@@ -188,17 +220,28 @@ namespace WebAPI.Controllers
                 await _imageRepository.DeleteImagesAsync(img);
             }
             var description1 = await _repo.DeleteDesctiptionAsync(descriptionId);
-            if (description1)
-            {
-                return StatusCode(200, new
+                if (description1)
                 {
-                    Message = "Delete description " + ok,
+                    return StatusCode(200, new
+                    {
+                        Message = "Delete description " + ok,
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(400, new
-            { 
-                Message = badRequest,
-            });
 
         }
 

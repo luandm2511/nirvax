@@ -22,9 +22,9 @@ namespace DataAccess.IRepository
 
         Task<ProductSizeDTO> GetProductSizeByIdAsync(string productSizeId);
 
-        Task<bool> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO);
+        Task<ProductSize> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO);
 
-        Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO);
+        Task<bool> UpdateProductSizeAsync(string productSizeId, int quantity);
         Task<bool> DeleteProductSizeAsync(string productSizeId);
 
     }

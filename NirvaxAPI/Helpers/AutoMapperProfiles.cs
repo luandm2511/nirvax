@@ -37,11 +37,15 @@ namespace WebAPI.Helpers
             CreateMap<Staff, StaffCreateDTO>().ReverseMap();
 
             CreateMap<Staff, StaffProfileDTO>().ReverseMap();
-            CreateMap<Size, SizeDTO>().ReverseMap();
+            CreateMap<Size, SizeDTO>()
+              .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+                .ReverseMap();
             CreateMap<Size, SizeCreateDTO>().ReverseMap();
 
             CreateMap<Advertisement, AdvertisementDTO>()
                 .ForMember(dest => dest.StatusPostName, opt => opt.MapFrom(src => src.StatusPost.Name))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name))
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
                 .ReverseMap();
             CreateMap<Advertisement, AdvertisementCreateDTO>().ReverseMap();
 
@@ -54,16 +58,23 @@ namespace WebAPI.Helpers
             CreateMap<ImportProduct, ImportProductCreateDTO>().ReverseMap();
 
             CreateMap<ImportProductDetail, ImportProductDetailDTO>().ReverseMap();
-            
 
-            CreateMap<Warehouse, WarehouseDTO>().ReverseMap();
+
+            CreateMap<Warehouse, WarehouseDTO>()
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+                .ReverseMap();
             CreateMap<Warehouse, WarehouseCreateDTO>().ReverseMap();
 
             CreateMap<WarehouseDetail, WarehouseDetailFinalDTO>().ReverseMap();
             CreateMap<WarehouseDetail, WarehouseDetailDTO>().ReverseMap();
-
        
-            CreateMap<ProductSize, ProductSizeDTO>().ReverseMap();
+
+            
+
+            CreateMap<ProductSize, ProductSizeDTO>()
+                .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.Size.Name))
+                .ReverseMap();
+
             CreateMap<ProductSize, ProductSizeCreateDTO>().ReverseMap();
 
 
@@ -71,11 +82,16 @@ namespace WebAPI.Helpers
             CreateMap<BusinessObject.Models.Service, ServiceDTO>().ReverseMap();
             CreateMap<BusinessObject.Models.Service, ServiceCreateDTO>().ReverseMap();
 
-            CreateMap<Voucher, VoucherDTO>().ReverseMap();
+            CreateMap<Voucher, VoucherDTO>()
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+                .ReverseMap();
             CreateMap<Voucher, VoucherCreateDTO>().ReverseMap();
 
 
-            CreateMap<Room, RoomDTO>().ReverseMap();
+            CreateMap<Room, RoomDTO>()
+            .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.Fullname))             
+            .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+                .ReverseMap();
             CreateMap<Room, RoomCreateDTO>().ReverseMap();
             CreateMap<Room, RoomContentDTO>().ReverseMap();
 

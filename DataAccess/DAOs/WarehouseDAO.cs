@@ -74,11 +74,21 @@ namespace DataAccess.DAOs
         public async Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (warehouse == null)
+            {
+                throw new Exception("This owner does not have a warehouse yet");
+            }
+
             List<ImportProduct> listImportProduct = await _context.ImportProducts
               .Where(i => i.WarehouseId == warehouse.WarehouseId)
               .ToListAsync();
 
-             var totalQuantity = listImportProduct.Sum(p => p.Quantity);
+            if (listImportProduct == null || !listImportProduct.Any()) 
+            {
+                throw new Exception("This owner has never imported products!");
+            }
+
+            var totalQuantity = listImportProduct.Sum(p => p.Quantity);
             var totalPrice = listImportProduct.Sum(p => p.TotalPrice);
              warehouse.TotalQuantity = totalQuantity;
             warehouse.TotalPrice = totalPrice;
@@ -177,20 +187,28 @@ namespace DataAccess.DAOs
         public async Task<List<WarehouseDetail>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (warehouse == null) 
+            {
+                throw new Exception("This owner does not have a warehouse yet");
+            }
 
             var result = await _context.WarehouseDetails
                 .Where(wd => wd.WarehouseId == warehouse.WarehouseId)
 
-            .GroupBy(w => new { w.ProductSizeId})
+            .GroupBy(w => new { w.ProductSizeId, w.UnitPrice})
 
         .Select(g => new WarehouseDetail
         {
             ProductSizeId = g.Key.ProductSizeId,
             Location = g.Select(i => i.Location).FirstOrDefault(),
             QuantityInStock = g.Sum(wd => wd.QuantityInStock),
-            UnitPrice = g.Sum(wd => wd.UnitPrice)
+            UnitPrice = g.Key.UnitPrice
         })
         .ToListAsync();
+            if (result == null) 
+            {
+                throw new Exception("This owner does not have a warehouse yet");
+            }
 
             var paginatedResult = result
         .Skip((page - 1) * pageSize)

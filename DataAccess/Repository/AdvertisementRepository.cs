@@ -68,6 +68,12 @@ namespace DataAccess.Repository
             return _advertisementDAO.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
         }
 
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsByOwnerAsync(string? searchQuery, int ownerId)
+        {
+            return _advertisementDAO.GetAllAdvertisementsByOwnerAsync(searchQuery, ownerId);
+        }
+
+
         public Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);

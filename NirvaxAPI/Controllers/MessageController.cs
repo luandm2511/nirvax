@@ -32,6 +32,7 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<Message>>> ViewUserHistoryChatAsync(int roomId)
             {
+            try { 
                 var list = await _repo.ViewAllMessageByRoomAsync(roomId);
                 if (list.Any())
                 {
@@ -41,52 +42,73 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
-                {                   
-                    Message = notFound + "all message of this room"
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "all message of this room"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
+        }
 
         [HttpPost]
         public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
+            try { 
             if (ModelState.IsValid)
             {
                 var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
-            if (checkMessage == true)
-            {
-                var message1 = await _repo.CreateMessageAsync(messageCreateDTO);
-                if (message1)
+                if (checkMessage == true)
                 {
-                    var result = await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
-                      if (result)
-                      {
-                          return StatusCode(200, new
-                          {
+                    var message1 = await _repo.CreateMessageAsync(messageCreateDTO);
+                    if (message1)
+                    {
+                        await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
+                        return StatusCode(200, new
+                        {
                             Message = "Create messgae " + ok,
                             Data = message1
-                          });
-                      }
-                
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(400, new
+                        {
+                            Message = "Error for send message!",
+                        });
+                    }
                 }
                 else
                 {
-                    return StatusCode(500, new
-                    {  
-                        Message = "Server error",                       
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter the word!",
                     });
                 }
             }
-            return StatusCode(400, new
+            else
             {
-                Message = "Please enter the word!",
-            });
-        }
-               
-            return StatusCode(400, new
-            {               
-                Message = "Dont't accept empty information!",
-            });
+                return StatusCode(400, new
+                {
+                    Message = "Please enter valid Message !",
+                });
+            }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
     }

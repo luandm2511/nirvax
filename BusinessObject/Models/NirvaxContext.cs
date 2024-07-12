@@ -75,7 +75,8 @@ public partial class NirvaxContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-HKH7PJO\\MSSQLSERVER01;Initial Catalog=Nirvax;User ID=sa;Password=123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -800,8 +801,10 @@ public partial class NirvaxContext : DbContext
         modelBuilder.Entity<WarehouseDetail>(entity =>
         {
             entity
-                .HasNoKey()
-                .ToTable("WarehouseDetail");
+                .HasKey(e => new { e.WarehouseId, e.ProductSizeId });
+               
+                
+            entity.ToTable("WarehouseDetail");
 
             entity.Property(e => e.Location)
                 .HasMaxLength(50)

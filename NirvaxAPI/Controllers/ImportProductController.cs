@@ -12,6 +12,7 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IImportProductRepository _repo;
+        
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
@@ -20,6 +21,7 @@ namespace WebAPI.Controllers
         {
             _config = config;
             _repo = repo;
+           
         }
         
 
@@ -27,19 +29,31 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
         {
+            try { 
             var list = await _repo.GetAllImportProductAsync(warehouseId,from, to);
-            if (list.Any())
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list import product " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any import product"
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                return StatusCode(200, new
-                { 
-                    Message = "Get list import product " + ok,
-                    Data = list
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {           
-                Message = notFound + "any import product"
-            });
         }
 
 
@@ -47,23 +61,32 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetImportProductByIdAsync(int importId)
         {
+            try { 
             var checkSizeExist = await _repo.CheckImportProductExistAsync(importId);
             if (checkSizeExist == true)
             {
                 var importProduct = await _repo.GetImportProductByIdAsync(importId);
-
-
                 return StatusCode(200, new
                 {
                     Message = "Get import product by id" + ok,
                     Data = importProduct
                 });
             }
-
-            return StatusCode(404, new
-            {              
-               Message = notFound + "any import product"
-            });
+            else
+            {
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any import product"
+                });
+            }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
         [HttpPost]
@@ -73,29 +96,21 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     var importProduct1 = await _repo.CreateImportProductAsync(importProductCreateDTO);
-                    if (importProduct1)
+                    return StatusCode(200, new
                     {
-                        return StatusCode(200, new
-                        {   
-                            Message = "Create import product " + ok,
-                            Data = importProduct1
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(500, new
-                        {
-                            Message = "Server error",
-                            
-                        });
-                    }
+                        Message = "Create import product " + ok,
+                        Data = importProduct1
+                    });
                 }
-                return StatusCode(400, new
+                else
                 {
-                    
-                    
-                    Message = "Dont't accept empty information!",
-                });
+                    return StatusCode(400, new
+                    {
+
+
+                        Message = "Dont't accept empty information!",
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -111,37 +126,32 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
-
+            try
+            {          
             if (ModelState.IsValid)
             {
                 var importProduct1 = await _repo.UpdateImportProductAsync(importProductDTO);
-                if (importProduct1)
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Update import product" + ok,
-                        Data = importProduct1
-                    });
-                }
-                else
-                {
-                    return StatusCode(500, new
-                    {
-                        Message = "Server error",
-                        
-                    });
-                }
+                    Message = "Update import product" + ok,
+                    Data = importProduct1
+                });
             }
-
-            return StatusCode(400, new
-            { 
-                Message = "Dont't accept empty information!",
-            });
-
-
-        }
-
-   
-        
+            else
+            {
+                return StatusCode(400, new
+                {
+                    Message = "Dont't accept empty information!",
+                });
+            }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }       
     }
 }

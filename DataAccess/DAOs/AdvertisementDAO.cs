@@ -108,7 +108,6 @@ namespace DataAccess.DAOs
         {
             List<AdvertisementDTO> listAdvertisementDTO = new List<AdvertisementDTO>();
 
-            // Tạo truy vấn cơ bản bao gồm các bảng liên quan
             IQueryable<Advertisement> query = _context.Advertisements
                                                        .Include(i => i.Owner)
                                                        .Include(i => i.Service)
@@ -119,12 +118,12 @@ namespace DataAccess.DAOs
                 query = query.Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery));
             }
 
-            // Sử dụng conditional operator để xác định thứ tự sắp xếp
+           
             query = query.OrderBy(i =>
                 i.StatusPost.Name == "WAITING" ? 1 :
                 i.StatusPost.Name == "ACCEPT" ? 2 :
                 i.StatusPost.Name == "DENY" ? 3 :
-                4 // Giá trị mặc định cho các trạng thái không xác định
+                4 
             );
 
             // Áp dụng phân trang
@@ -237,6 +236,31 @@ namespace DataAccess.DAOs
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            return listStaffDTO;
+        }
+
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsByOwnerAsync(string? searchQuery, int ownerId)
+        {
+            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
+                    .Where(i=> i.OwnerId == ownerId)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            }
+            else
+            {
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
+                    .Where(i => i.OwnerId == ownerId)
                     .ToListAsync();
                 listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }

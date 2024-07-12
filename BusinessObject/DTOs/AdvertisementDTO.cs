@@ -28,6 +28,9 @@ namespace BusinessObject.DTOs
         public int StatusPostId { get; set; }
         [Required(ErrorMessage = " ServiceId cannot be empty!!")]
         public string? StatusPostName { get; set; }
+        public string? ServiceName { get; set; }
+        public string? OwnerName { get; set; }
+
         public int ServiceId { get; set; }
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }

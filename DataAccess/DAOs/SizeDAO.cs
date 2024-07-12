@@ -35,7 +35,7 @@ namespace DataAccess.DAOs
             if (sizeId == 0)
             {
                 Size? size = new Size();
-                size = await _context.Sizes.Where(i => i.Isdelete == false).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.SizeId == sizeId);
+                size = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.SizeId == sizeId);
                 if (size == null)
                 {
                     return true;
@@ -45,6 +45,7 @@ namespace DataAccess.DAOs
             {
                 List<Size> getList = await _context.Sizes
                    .Where(i => i.Isdelete == false)
+                   .Include(i => i.Owner)
                    .Where(i => i.OwnerId == ownerId)
                    .Where(i => i.SizeId != sizeId)
                    .Where(i => i.Name == name)
@@ -70,7 +71,7 @@ namespace DataAccess.DAOs
         {
             Size? sid = new Size();
 
-            sid = await _context.Sizes.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId); ;
+            sid = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId); ;
 
             if (sid == null)
             {
@@ -90,6 +91,7 @@ namespace DataAccess.DAOs
             {
                 List<Size> getList = await _context.Sizes
                     .Where(i => i.Isdelete == false)
+                    .Include(i => i.Owner)
                     .Where(i => i.Name.Contains(searchQuery))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -100,6 +102,7 @@ namespace DataAccess.DAOs
             {
                 List<Size> getList = await _context.Sizes
                     .Where(i => i.Isdelete == false)
+                    .Include(i => i.Owner)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -113,7 +116,7 @@ namespace DataAccess.DAOs
             SizeDTO sizeDTO = new SizeDTO();
             try
             {
-                Size? sid = await _context.Sizes.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId);
+                Size? sid = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId);
                
                     sizeDTO = _mapper.Map<SizeDTO>(sid);
                 return sizeDTO;
@@ -143,7 +146,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateSizeAsync(SizeDTO sizeDTO)
         {
-            Size? size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
+            Size? size = await _context.Sizes.Include(i => i.Owner).SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
             //ánh xạ đối tượng SizeDTO đc truyền vào cho staff
             sizeDTO.Isdelete = false;
                 _mapper.Map(sizeDTO, size);
@@ -184,7 +187,7 @@ namespace DataAccess.DAOs
             {
                 size.Isdelete = false;
                 _context.Sizes.Update(size);
-                //    _mapper.Map(SizeDTO, staff);
+       
 
                 await _context.SaveChangesAsync();
                 return true;

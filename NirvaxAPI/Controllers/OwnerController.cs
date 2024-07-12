@@ -31,19 +31,31 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
+            try { 
             var list = await _repo.GetAllOwnersAsync( searchQuery, page,  pageSize);
-            if (list.Any())
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list owner " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any owner"
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                return StatusCode(200, new
-                {                
-                    Message = "Get list owner " + ok,
-                    Data = list
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {               
-                Message = notFound + "any owner"
-            });
         }
 
 
@@ -51,19 +63,31 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersForUserAsync(string? searchQuery)
         {
+            try { 
             var list = await _repo.GetAllOwnersForUserAsync(searchQuery);
-            if (list.Any())
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list owner " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any owner"
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                return StatusCode(200, new
-                {           
-                    Message = "Get list owner " + ok,
-                    Data = list
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(404, new
-            {               
-                Message = notFound + "any owner"
-            });
         }
 
 
@@ -71,62 +95,96 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetOwnerByIdAsync(int ownerId)
         {
+            try { 
             var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
-            if(checkOwner == true)
-            {
-                var owner = await _repo.GetOwnerByIdAsync(ownerId);
-                return StatusCode(200, new
+                if (checkOwner == true)
                 {
-                    
-                    Message = "Get owner by id " + ok,
-                    Data = owner
+                    var owner = await _repo.GetOwnerByIdAsync(ownerId);
+                    return StatusCode(200, new
+                    {
+
+                        Message = "Get owner by id " + ok,
+                        Data = owner
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any owner"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-          
-            return StatusCode(404, new
-            {               
-                Message = notFound + "any owner"
-            });
         }
 
         [HttpGet("{ownerEmail}")]
         //  [Authorize]
         public async Task<ActionResult> GetOwnerByEmailAsync(string ownerEmail)
         {
+            try { 
             var checkOwner = await _repo.CheckProfileExistAsync(ownerEmail);
-            if (checkOwner == true)
+                if (checkOwner == true)
+                {
+                    var owner = await _repo.GetOwnerByEmailAsync(ownerEmail);
+                    return StatusCode(200, new
+                    {
+                        Message = "Get owner by email " + ok,
+                        Data = owner
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any owner"
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                var owner = await _repo.GetOwnerByEmailAsync(ownerEmail);
-                return StatusCode(200, new
-                {                   
-                    Message = "Get owner by email " + ok,
-                    Data = owner
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-
-            return StatusCode(404, new
-            {              
-                Message = notFound + "any owner"
-            });
         }
 
         //check exist
         [HttpPost]
         public async Task<ActionResult> CreateOwnerAsync(OwnerDTO ownerDTO)
         {
+            try { 
             var owner1 = await _repo.CreateOwnerAsync(ownerDTO);
-            if (owner1)
+                if (owner1)
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Create owner " + ok,
+                        Data = owner1
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                return StatusCode(200, new
-                {                  
-                    Message = "Create owner " + ok,
-                    Data = owner1
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(400, new
-            {
-                Message = badRequest,
-            });
 
         }
 
@@ -135,131 +193,150 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
         {
+            try { 
             var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
-            if (checkOwner == true)
-            {
-                var owner1 = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPasswod);
-                if (owner1)
+                if (checkOwner == true)
                 {
+                    var owner1 = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPasswod);
                     return StatusCode(200, new
                     {
                         Message = "Change password of owner" + ok,
                         Data = owner1
                     });
+
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                Message = badRequest,
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
-            if (ModelState.IsValid)
-            {
-                var checkOwner = await _repo.CheckOwnerAsync(ownerDTO);
-            if (checkOwner == true)
-            {
-                var owner1 = await _repo.UpdateOwnerAsync(ownerDTO);
-                if (owner1)
+            try {
+                if (ModelState.IsValid)
                 {
-                    return StatusCode(200, new
+                    var checkOwner = await _repo.CheckOwnerAsync(ownerDTO);
+                    if (checkOwner == true)
                     {
-                        Message = "Update owner" + ok,
-                        Data = owner1
-                    });
-                } else
-                {
-                    return StatusCode(500, new
-                    {
-                        Message = "Internet server error",
-                    });
-                }
-            }
-            else
-            {
-                return StatusCode(400, new
-                {
-                    Message = "There already exists a owner with that information",
-                });
-            }
-
-        }
-               
-            return StatusCode(400, new
-            {  
-                Message = "Dont't accept empty information!",
-            });
-
-        }
-
-        [HttpPut]
-        public async Task<ActionResult> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                var checkOwner = await _repo.CheckProfileOwnerAsync(ownerProfileDTO);
-            if (checkOwner == true)
-            {
-                var owner1 = await _repo.UpdateProfileOwnerAsync(ownerProfileDTO);
-                if (owner1)
-                {
-                    return StatusCode(200, new
-                    { 
-                        Message = "Update profile owner" + ok,
-                        Data = owner1
-                    });
-                } else
+                        var owner1 = await _repo.UpdateOwnerAsync(ownerDTO);
+                            return StatusCode(200, new
+                            {
+                                Message = "Update owner" + ok,
+                                Data = owner1
+                            });                    
+                    }
+                    else
                     {
                         return StatusCode(400, new
                         {
-                            Message = "Internet server error",
+                            Message = "There already exists a owner with that information",
                         });
                     }
                 }
                 else
                 {
                     return StatusCode(400, new
-                    {   
-                        Message = "There already exists a owner with that information",
+                    {
+                        Message = "Please enter valid Owner!",
                     });
                 }
-
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
             }
 
-            return StatusCode(400, new
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
+        {
+            try {
+                if (ModelState.IsValid)
+                {
+                    var checkOwner = await _repo.CheckProfileOwnerAsync(ownerProfileDTO);
+                    if (checkOwner == true)
+                    {
+                        var owner1 = await _repo.UpdateProfileOwnerAsync(ownerProfileDTO);
+                        return StatusCode(200, new
+                        {
+                            Message = "Update profile owner" + ok,
+                            Data = owner1
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(400, new
+                        {
+                            Message = "There already exists a owner with that information",
+                        });
+                    }
+
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Owner!",
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                Message = "Dont't accept empty information!",
-            });
-
-
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
 
 
         [HttpPut]
         public async Task<ActionResult> UpdateAvatarOwnerAsync([FromForm] OwnerAvatarDTO ownerAvatarDTO)
         {
+            try { 
             var checkOwner = await _repo.CheckOwnerExistAsync(ownerAvatarDTO.OwnerId);
-            if (checkOwner == true)
-            {
-                
-                var owner1 = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
-                if (owner1)
+                if (checkOwner == true)
                 {
-                    return StatusCode(200, new
+                    var owner1 = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
+                        return StatusCode(200, new
+                        {
+                            Message = "Update avatar owner" + ok,
+                            Data = owner1
+                        });                  
+                }
+                else
+                {
+                    return StatusCode(400, new
                     {
-                        Message = "Update avatar owner" + ok,
-                        Data = owner1
+                        Message = badRequest,
                     });
                 }
             }
-            return StatusCode(400, new
+            catch (Exception ex)
             {
-                Message = badRequest,
-            });
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
 
         }
         
@@ -279,10 +356,13 @@ namespace WebAPI.Controllers
                         Message = "Ban owner " + ok
                     });
                 }
-                return StatusCode(400, new
+                else
                 {
-                    Message = badRequest,
-                });
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -297,18 +377,30 @@ namespace WebAPI.Controllers
         [HttpPatch("{ownerId}")]
         public async Task<ActionResult> UnBanOwnerAsync(int ownerId)
         {
+            try { 
             var owner1 = await _repo.UnBanOwnerAsync(ownerId);
-            if (owner1)
-            {
-                return StatusCode(200, new
+                if (owner1)
                 {
-                    Message = "UnBan owner " + ok,
+                    return StatusCode(200, new
+                    {
+                        Message = "UnBan owner " + ok,
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
-            return StatusCode(400, new
-            {
-                Message = badRequest,
-            });
 
         }
 
