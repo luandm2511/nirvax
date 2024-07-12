@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> GetWarehouseIdByOwnerIdAsync(int ownerId)
         {
             
-                var warehouse = await _repo.GetWarehouseIdByOwnerIdAsync(ownerId);
+            var warehouse = await _repo.GetWarehouseIdByOwnerIdAsync(ownerId);
             if (warehouse != null)
             {
                 return StatusCode(200, new
@@ -139,9 +139,7 @@ namespace WebAPI.Controllers
                 } else
                 {
                     return StatusCode(400, new
-                    {
-                       
-                        
+                    {                        
                         Message = "Can't get quantity and price of warehouse!",
                     });
                 }

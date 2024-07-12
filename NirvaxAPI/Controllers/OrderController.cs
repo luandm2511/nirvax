@@ -3,6 +3,7 @@ using AutoMapper;
 using Azure.Core;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
+using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Helpers;
+using WebAPI.Service;
 
 namespace WebAPI.Controllers
 {
@@ -21,8 +23,10 @@ namespace WebAPI.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly IProductSizeRepository _productSizeRepository;
+        private readonly IProductRepository _productRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IVoucherRepository _voucherRepository;
+        ICartService _cartService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -30,16 +34,20 @@ namespace WebAPI.Controllers
             IOrderRepository orderRepository,
             IOrderDetailRepository orderDetailRepository,
             IProductSizeRepository productSizeRepository,
+            IProductRepository productRepository,
             INotificationRepository notificationRepository,
             IVoucherRepository voucherRepository,
+            ICartService cartService,
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor)
         {
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
             _productSizeRepository = productSizeRepository;
+            _productRepository = productRepository;
             _notificationRepository = notificationRepository;
             _voucherRepository = voucherRepository;
+            _cartService = cartService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -80,9 +88,10 @@ namespace WebAPI.Controllers
         {
             var voucher = await _voucherRepository.GetVoucherById(request.VoucherId);
 
-            if (voucher == null || voucher.OwnerId != request.OwnerId || voucher.EndDate > DateTime.UtcNow)
+            if (voucher != null&& (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now 
+                || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed))
             {
-                return BadRequest("Invalid voucher");
+                return BadRequest($"{request.OwnerId} is invalid.");
             }
 
             return Ok();
@@ -106,7 +115,8 @@ namespace WebAPI.Controllers
                     foreach (var voucherDto in createOrderDTO.Vouchers)
                     {
                         var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
-                        if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.UtcNow)
+                        if (voucher != null && (voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.Now
+                            || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed))
                         {
                             return BadRequest($"{voucherDto.OwnerId} is invalid.");
                         }
@@ -132,7 +142,7 @@ namespace WebAPI.Controllers
                         CodeOrder = codeOrder,
                         Fullname = createOrderDTO.FullName,
                         Phone = createOrderDTO.Phone,
-                        OrderDate = DateTime.UtcNow,
+                        OrderDate = DateTime.Now,
                         Address = createOrderDTO.Address,
                         Note = createOrderDTO.Note,
                         TotalAmount = group.Sum(item => item.Quantity * item.UnitPrice) - voucher.Price,
@@ -168,7 +178,7 @@ namespace WebAPI.Controllers
                             // Remove item from session cart
                             if (!createOrderDTO.IsOrderNow)
                             {
-                                RemoveCartItemFromSession(createOrderDTO.AccountId, cartItem.ProductSizeId);
+                                _cartService.RemoveCartItemFromCookie(createOrderDTO.AccountId, cartItem.ProductSizeId);
                             }
                         }
                         else
@@ -184,7 +194,7 @@ namespace WebAPI.Controllers
                         Content = $"You has just had a order with code order {codeOrder}.",
                         IsRead = false,
                         Url = null,
-                        CreateDate = DateTime.UtcNow
+                        CreateDate = DateTime.Now
                     };
                      await _notificationRepository.AddNotificationAsync(notification);
                 }
@@ -234,6 +244,7 @@ namespace WebAPI.Controllers
 
         public async Task<IActionResult> ConfirmOrder(int orderId, int statusId)
         {
+            using var transaction = await _orderRepository.BeginTransactionAsync();
             try
             {
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
@@ -244,7 +255,22 @@ namespace WebAPI.Controllers
 
                 if(statusId == 2)
                 {
-                    order.RequiredDate = DateTime.UtcNow;
+                    order.RequiredDate = DateTime.Now;
+                }
+
+                if (statusId == 3)
+                {
+                    var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
+                    foreach (var detail in orderDetail)
+                    {
+                        var product = await _productRepository.GetByIdAsync(detail.ProductSize.ProductId);
+                        if (product != null)
+                        {
+                            product.QuantitySold += detail.Quantity;
+                            await _productRepository.UpdateAsync(product);
+                        }
+                    }
+                    order.ShippedDate = DateTime.Now;
                 }
 
                 if (statusId > 3) // Assuming > 3 means order is canceled or returned
@@ -259,7 +285,7 @@ namespace WebAPI.Controllers
                             await _productSizeRepository.UpdateAsync(productSize);
                         }
                     }
-                    order.ShippedDate = DateTime.UtcNow;
+                    order.ShippedDate = DateTime.Now;
                 }
 
                 order.StatusId = statusId; 
@@ -272,15 +298,17 @@ namespace WebAPI.Controllers
                     OwnerId = null, // Assuming Product model has OwnerId field
                     Content = $"You have an order with order code {order.CodeOrder} being in {order.Status.Name} status  .",
                     IsRead = false,
-                    Url = null,
-                    CreateDate = DateTime.UtcNow
+                    Url = "abcd",
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
+                await _orderRepository.CommitTransactionAsync();
                 return Ok();
             }
             catch (Exception ex)
             {
+                await _orderRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -288,6 +316,7 @@ namespace WebAPI.Controllers
         [HttpPut("cancel/{orderId}")]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
+            using var transaction = await _orderRepository.BeginTransactionAsync();
             try
             {
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
@@ -316,15 +345,17 @@ namespace WebAPI.Controllers
                     OwnerId = order.OwnerId, 
                     Content = $"The order with order code {order.CodeOrder} has been canceled by user.",
                     IsRead = false,
-                    Url = null,
-                    CreateDate = DateTime.UtcNow
+                    Url = "abcd",
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
+                await _orderRepository.CommitTransactionAsync();
                 return Ok();
             }
             catch (Exception ex)
             {
+                await _orderRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -416,26 +447,6 @@ namespace WebAPI.Controllers
         {
             var random = new Random();
             return new string(Enumerable.Repeat("0123456789", 10).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-        private void RemoveCartItemFromSession(int userId, string productSizeId)
-        {
-            var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{userId}") ?? new List<CartOwner>();
-
-            foreach (var ownerCart in cart)
-            {
-                var existingItem = ownerCart.CartItems.FirstOrDefault(i => i.ProductSizeId == productSizeId);
-                if (existingItem != null)
-                {
-                    ownerCart.CartItems.Remove(existingItem);
-                    if (ownerCart.CartItems.Count == 0)
-                    {
-                        cart.Remove(ownerCart);
-                    }
-                    break;
-                }
-            }
-
-            _httpContextAccessor.HttpContext.Session.SetObjectAsJson($"Cart_{userId}", cart);
         }
     }
 }

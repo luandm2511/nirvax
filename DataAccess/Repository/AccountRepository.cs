@@ -38,5 +38,9 @@ namespace DataAccess.Repository
             await _accountDAO.UpdateAccountAsync(account);
         }
 
+        public async Task<AccountStatisticDTO> AccountStatistics()
+        {
+            return await _accountDAO.AccountStatistics();
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace WebAPI.Controllers
                     Content = $"Your product has just been commented.",
                     IsRead = false,
                     Url = null,
-                    CreateDate = DateTime.UtcNow
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);               
@@ -138,7 +138,7 @@ namespace WebAPI.Controllers
                 
 
                 _mapper.Map(replyDto, comment);
-                comment.ReplyTimestamp = DateTime.UtcNow;
+                comment.ReplyTimestamp = DateTime.Now;
 
                 await _commentRepository.UpdateCommentAsync(comment);
                 var notification = new Notification
@@ -148,7 +148,7 @@ namespace WebAPI.Controllers
                     Content = $"Your comment has just been replied.",
                     IsRead = false,
                     Url = null,
-                    CreateDate = DateTime.UtcNow
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
