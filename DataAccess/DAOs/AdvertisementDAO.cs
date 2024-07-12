@@ -267,6 +267,19 @@ namespace DataAccess.DAOs
             return listStaffDTO;
         }
 
+        //service
+        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        {
+            List<AdvertisementDTO> listStaffDTO = new List<AdvertisementDTO>();
+                List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
+                    .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
+                    .Where(i => i.ServiceId == serviceId)
+                    .ToListAsync();
+                listStaffDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            
+            return listStaffDTO;
+        }
+
         //owner,staff 
         public async Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId)
 

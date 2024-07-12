@@ -11,6 +11,7 @@ using DataAccess.DAOs;
 using DataAccess.IRepository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.Repository
 {
@@ -73,6 +74,10 @@ namespace DataAccess.Repository
             return _advertisementDAO.GetAllAdvertisementsByOwnerAsync(searchQuery, ownerId);
         }
 
+        public Task<List<AdvertisementDTO>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        {
+            return _advertisementDAO.GetAllAdvertisementsByServiceAsync(serviceId);
+        }
 
         public Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {

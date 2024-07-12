@@ -200,6 +200,35 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        {
+            try
+            {
+                var list = await _repo.GetAllAdvertisementsByServiceAsync(serviceId);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list advertisement by service" + ok,
+                        Data = list
+                    });
+                }
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any advertisement"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
+
 
         [HttpGet("{adId}")]
             //  [Authorize]
