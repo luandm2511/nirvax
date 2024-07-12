@@ -50,7 +50,12 @@ namespace WebAPI.Helpers
             CreateMap<Advertisement, AdvertisementCreateDTO>().ReverseMap();
 
 
-            CreateMap<GuestConsultation, GuestConsultationDTO>().ReverseMap();
+            CreateMap<GuestConsultation, GuestConsultationDTO>()
+                .ForMember(dest => dest.StatusGuestName, opt => opt.MapFrom(src => src.StatusGuest.Name))
+                .ForMember(dest => dest.AdvertisementTitle, opt => opt.MapFrom(src => src.Ad.Title))
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+                .ReverseMap();
+
             CreateMap<GuestConsultation, GuestConsultationCreateDTO>().ReverseMap();
 
 

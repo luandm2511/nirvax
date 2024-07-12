@@ -213,9 +213,10 @@ namespace DataAccess.DAOs
   
         public async Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO) 
         {
-          
+            GuestStatus guestStatus = await _context.GuestStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == "WAITING");
             GuestConsultation guestConsultation = _mapper.Map<GuestConsultation>(guestConsultationCreateDTO);
-            
+             guestConsultation.StatusGuestId = guestStatus.StatusGuestId;
+
             await _context.GuestConsultations.AddAsync(guestConsultation);
             int i = await _context.SaveChangesAsync();
             if (i > 0)

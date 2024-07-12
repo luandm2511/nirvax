@@ -19,6 +19,9 @@ namespace BusinessObject.DTOs
         public int StatusGuestId { get; set; }
 
         public int AdId { get; set; }
+        public string? OwnerName { get; set; }
+        public string? AdvertisementTitle { get; set; }
+        public string? StatusGuestName { get; set; }
 
         public int OwnerId { get; set; }
     }
@@ -32,8 +35,6 @@ namespace BusinessObject.DTOs
         public string Phone { get; set; } = null!;
 
         public string Content { get; set; } = null!;
-
-        public int StatusGuestId { get; set; }
 
         public int AdId { get; set; }
 
