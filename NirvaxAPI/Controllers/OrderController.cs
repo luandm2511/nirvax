@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
                 return BadRequest($"{request.OwnerId} is invalid.");
             }
 
-            return Ok();
+            return Ok(voucher);
         }
 
         [HttpPost]
