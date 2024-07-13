@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Azure;
 using Azure.Core;
 using System.Security.Cryptography;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
@@ -38,6 +39,7 @@ namespace DataAccess.DAOs
                    .Include(i => i.Owner)
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
+                .Where( i => i.OwnerId == guestConsultationCreateDTO.OwnerId )
                 .SingleOrDefaultAsync(i => i.Phone.Trim() == guestConsultationCreateDTO.Phone.Trim() && i.AdId == guestConsultationCreateDTO.AdId);
 
             if (guestCreate == null)
@@ -76,12 +78,14 @@ namespace DataAccess.DAOs
 
 
         //owner,staff or admin??
-        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize) 
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId) 
         {
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
             IQueryable<GuestConsultation> query = _context.GuestConsultations.Include(i => i.Owner)
                                                        .Include(i => i.Ad)
-                                                       .Include(i => i.StatusGuest);
+                                                       .Include(i => i.StatusGuest)
+                                                       .Where(i => i.OwnerId == ownerId);
+ 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -101,11 +105,10 @@ namespace DataAccess.DAOs
                     .ToListAsync();
 
                 listGuestDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
-            
             return listGuestDTO;
         }
 
-        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
@@ -117,6 +120,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.StatusGuest)
                     .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
                     .Where(i => i.StatusGuest.Name.Contains("ACCEPT"))
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -126,6 +130,7 @@ namespace DataAccess.DAOs
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner).Include(i => i.Ad).Include(i => i.StatusGuest)
                     .Where(i => i.StatusGuest.Name.Contains("ACCEPT"))
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -134,7 +139,7 @@ namespace DataAccess.DAOs
             return listGuestDTO;
         }
 
-        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
@@ -146,6 +151,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.StatusGuest)
                     .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
                       .Where(i => i.StatusGuest.Name.Contains("WAITING"))
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -155,6 +161,7 @@ namespace DataAccess.DAOs
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner).Include(i => i.Ad).Include(i => i.StatusGuest)
                     .Where(i => i.StatusGuest.Name.Contains("WAITING"))
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -163,7 +170,7 @@ namespace DataAccess.DAOs
             return listGuestDTO;
         }
 
-        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
@@ -175,6 +182,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.StatusGuest)
                     .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
                       .Where(i => i.StatusGuest.Name.Contains("DENY"))
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -184,6 +192,7 @@ namespace DataAccess.DAOs
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner).Include(i => i.Ad).Include(i => i.StatusGuest)
                      .Where(i => i.StatusGuest.Name.Contains("DENY"))
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

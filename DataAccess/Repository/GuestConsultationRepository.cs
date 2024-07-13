@@ -55,22 +55,22 @@ namespace DataAccess.Repository
         {
             return _guestConsultationDAO.UpdateStatusGuestConsultationtByIdAsync(guestId, statusGuestId);
         }
-        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            return _guestConsultationDAO.GetAllGuestConsultationsAsync(searchQuery, page, pageSize);
+            return _guestConsultationDAO.GetAllGuestConsultationsAsync(searchQuery, page, pageSize, ownerId);
         }
 
-        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            return _guestConsultationDAO.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize);
+            return _guestConsultationDAO.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize, ownerId);
         }
-        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            return _guestConsultationDAO.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize);
+            return _guestConsultationDAO.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize, ownerId);
         }
-        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            return _guestConsultationDAO.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize);
+            return _guestConsultationDAO.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize, ownerId);
         }
         public Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
         {

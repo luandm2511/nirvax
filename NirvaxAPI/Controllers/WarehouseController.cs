@@ -66,7 +66,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> GetWarehouseByOwnerAsync(int ownerId)
         {
             try { 
-                var wh = await _repo.GetWarehouseByIdAsync(ownerId);
+                var wh = await _repo.GetWarehouseByOwnerIdAsync(ownerId);
 
                 if (wh != null)
                 {

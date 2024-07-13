@@ -147,7 +147,7 @@ namespace DataAccess.DAOs
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
-                    .Where(i => i.StatusPost.Name.Contains("WAITING"))
+                    .Where(i => i.StatusPost.Name.Contains("WAITING"))               
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -242,7 +242,8 @@ namespace DataAccess.DAOs
             return listAdDTO;
         }
 
-        public async Task<List<AdvertisementDTO>> GetAllAdvertisementsByOwnerAsync(string? searchQuery, int ownerId)
+        //user
+        public async Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
@@ -265,6 +266,41 @@ namespace DataAccess.DAOs
                 listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
             }
             return listAdDTO;
+        }
+
+        public async Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        {
+
+            List<AdvertisementDTO> listAdvertisementDTO = new List<AdvertisementDTO>();
+
+            IQueryable<Advertisement> query = _context.Advertisements
+                                                       .Include(i => i.Owner)
+                                                       .Include(i => i.Service)
+                                                       .Include(i => i.StatusPost)
+                                                       .Where(i => i.OwnerId == ownerId);
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery));
+            }
+
+
+            query = query.OrderBy(i =>
+                i.StatusPost.Name == "WAITING" ? 1 :
+                i.StatusPost.Name == "ACCEPT" ? 2 :
+                i.StatusPost.Name == "DENY" ? 3 :
+                4
+            );
+
+            // Áp dụng phân trang
+            List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
+                                                     .Take(pageSize)
+                                                     .ToListAsync();
+
+            // Ánh xạ từ Advertisement sang AdvertisementDTO
+            listAdvertisementDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+
+            return listAdvertisementDTO;
         }
 
         //service

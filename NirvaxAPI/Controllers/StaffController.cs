@@ -32,10 +32,10 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize)
+        public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try { 
-            var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize);
+            var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -135,7 +135,7 @@ namespace WebAPI.Controllers
             try {
                 if (ModelState.IsValid)
                 {
-                    var checkStaff = await _repo.CheckStaffAsync(0, staffCreateDTO.Email, staffCreateDTO.Phone);
+                    var checkStaff = await _repo.CheckStaffAsync(0, staffCreateDTO.Email, staffCreateDTO.Phone, staffCreateDTO.OwnerId);
                     if (checkStaff == true)
                     {
                         var staff1 = await _repo.CreateStaffAsync(staffCreateDTO);
@@ -214,7 +214,7 @@ namespace WebAPI.Controllers
             try {
                 if (ModelState.IsValid)
                 {
-                    var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone);
+                    var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone, staffDTO.OwnerId);
                     if (checkStaff == true)
                     {
 

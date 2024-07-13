@@ -151,7 +151,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<Warehouse> GetWarehouseByIdAsync(int ownerId)
+        public async Task<Warehouse> GetWarehouseByOwnerIdAsync(int ownerId)
         {
             Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
 

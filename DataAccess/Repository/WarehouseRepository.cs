@@ -43,18 +43,20 @@ namespace DataAccess.Repository
         {
             return _warehouseDAO.CreateWarehouseAsync(warehouseCreateDTO);
         }
-        public Task<Warehouse> GetWarehouseByIdAsync(int ownerId)
+        public Task<Warehouse> GetWarehouseByOwnerIdAsync(int ownerId)
         {
-            return _warehouseDAO.GetWarehouseByIdAsync(ownerId);
+            return _warehouseDAO.GetWarehouseByOwnerIdAsync(ownerId);
+        }
+
+        public Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId)
+        {
+            return _warehouseDAO.GetWarehouseIdByOwnerIdAsync(ownerId);
         }
         public Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
         {
             return _warehouseDAO.UpdateWarehouseAsync(warehouseDTO);
         }
-        public Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId)
-        {
-            return _warehouseDAO.GetWarehouseIdByOwnerIdAsync(ownerId);
-        }
+        
 
         public Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
         {

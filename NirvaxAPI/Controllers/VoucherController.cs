@@ -24,10 +24,10 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
             {
             try { 
-                var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize);
+                var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -84,14 +84,41 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherByOwnerAsync(int ownerId)
+        {
+            try
+            {
+                var list = await _repo.GetAllVoucherByOwnerAsync(ownerId);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list voucher " + ok,
+                        Data = list
+                    });
+                }
+                else
+                {
+                    return StatusCode(404, new
+                    {
+                        Message = notFound + "any voucher"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
 
-     
-          
 
 
-
-
-            [HttpGet("{voucherId}")]
+        [HttpGet("{voucherId}")]
             //  [Authorize]
             public async Task<ActionResult> GetProductSizeByIdAsync(string voucherId)
             {

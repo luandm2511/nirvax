@@ -174,10 +174,39 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsByOwnerAsync(string? searchQuery, int ownerId)
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
+        {
+            try
+            {
+                var list = await _repo.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list advertisement by owner" + ok,
+                        Data = list
+                    });
+                }
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any advertisement"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try { 
-            var list = await _repo.GetAllAdvertisementsByOwnerAsync(searchQuery, ownerId);
+            var list = await _repo.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new

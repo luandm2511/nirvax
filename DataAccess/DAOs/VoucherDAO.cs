@@ -104,7 +104,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
 
@@ -114,6 +114,7 @@ namespace DataAccess.DAOs
                 List<Voucher> getList = await _context.Vouchers
                     .Include(i => i.Owner)
                     .Where(i => i.Isdelete == false)
+                    .Where(i => i.OwnerId == ownerId)
                     .Where(i => i.VoucherId.Contains(searchQuery))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -125,6 +126,7 @@ namespace DataAccess.DAOs
                 List<Voucher> getList = await _context.Vouchers
                     .Include(i => i.Owner)
                     .Where(i => i.Isdelete == false)
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -140,10 +142,22 @@ namespace DataAccess.DAOs
               List<Voucher> getList = await _context.Vouchers
                 .Include(i => i.Owner)
                     .Where(i => i.Isdelete == false)
-  
                     .ToListAsync();
                 listSizeDTO = _mapper.Map<List<VoucherDTO>>(getList);
             
+            return listSizeDTO;
+        }
+
+        public async Task<List<VoucherDTO>> GetAllVoucherByOwnerAsync(int ownerId)
+        {
+            List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
+            List<Voucher> getList = await _context.Vouchers
+              .Include(i => i.Owner)
+                  .Where(i => i.Isdelete == false)
+                    .Where(i => i.OwnerId == ownerId)
+                  .ToListAsync();
+            listSizeDTO = _mapper.Map<List<VoucherDTO>>(getList);
+
             return listSizeDTO;
         }
 

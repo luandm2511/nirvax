@@ -11,7 +11,7 @@ namespace DataAccess.IRepository
 {
     public interface ISizeRepository
     {
-        Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize);
+        Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<SizeDTO> GetSizeByIdAsync(int sizeId);
         Task<bool> CheckSizeAsync(int sizeId, int ownerId, string name);
 

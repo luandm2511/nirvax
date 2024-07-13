@@ -31,13 +31,13 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckStaffAsync(int staffId, string email, string phone)
+        public async Task<bool> CheckStaffAsync(int staffId, string email, string phone, int ownerId)
         {
            
             if (staffId == 0)
             {
                 Staff? Staff = new Staff();
-                Staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == email || i.Phone == phone);
+                Staff = await _context.Staff.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.Email == email || i.Phone == phone);
                 if(Staff == null)
                 {
                     return true;
@@ -46,6 +46,7 @@ namespace DataAccess.DAOs
             {       
                     List<Staff> getList = await _context.Staff
                      .Where(i => i.StaffId != staffId)
+                     .Where(i => i.OwnerId == ownerId)
                      .Where(i => i.Email == email || i.Phone == phone)
                      .ToListAsync();
 
@@ -68,12 +69,14 @@ namespace DataAccess.DAOs
             // StaffDTO checkownerDTO = new StaffDTO();
             Staff? Staff = new Staff();
             Staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffProfileDTO.StaffId);
+            var ownerId = Staff.OwnerId;
             if (Staff != null)
             {
                 List<Staff> getList = await _context.Staff
                 
                  //check khác Id
                  .Where(i => i.StaffId != staffProfileDTO.StaffId)
+                 .Where(i => i.OwnerId == ownerId)
                  .Where(i => i.Email == staffProfileDTO.Email || i.Phone == staffProfileDTO.Phone)
                  .ToListAsync();
                 if (getList.Count > 0)
@@ -149,7 +152,7 @@ namespace DataAccess.DAOs
 
 
         //owner
-        public async Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List<StaffDTO> listStaffDTO = new List<StaffDTO>();
 
@@ -158,7 +161,7 @@ namespace DataAccess.DAOs
             {
                 List<Staff> getList = await _context.Staff.Include(i => i.Owner)
                     .Where(i => i.Fullname.Trim().Contains(searchQuery) || i.Email.Trim().Contains(searchQuery) || i.Phone.Trim().Contains(searchQuery))
-                   
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -167,7 +170,7 @@ namespace DataAccess.DAOs
             else
             {
                 List<Staff> getList = await _context.Staff.Include(i => i.Owner)
-                
+                    .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

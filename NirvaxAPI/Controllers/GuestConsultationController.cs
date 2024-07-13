@@ -28,10 +28,10 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize)
+            public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
             {
             try { 
-                var list = await _repo.GetAllGuestConsultationsAsync(searchQuery, page, pageSize);
+                var list = await _repo.GetAllGuestConsultationsAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -58,11 +58,11 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try
             {
-                var list = await _repo.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize);
+                var list = await _repo.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -88,11 +88,11 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try
             {
-                var list = await _repo.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize);
+                var list = await _repo.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -118,11 +118,11 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try
             {
-                var list = await _repo.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize);
+                var list = await _repo.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
