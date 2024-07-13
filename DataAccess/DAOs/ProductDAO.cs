@@ -24,6 +24,8 @@ namespace DataAccess.DAOs
                     .Include(p => p.Owner).AsNoTracking().Where(p => !p.Isdelete).ToListAsync();
         }
 
+
+
         public async Task<Product> GetByIdAsync(int id)
         {
             return await _context.Products.Include(p => p.Images)
