@@ -105,17 +105,29 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<ServiceDTO>> GetAllServiceForUserAsync()
+        public async Task<List<ServiceDTO>> GetAllServiceForUserAsync(string? searchQuery)
         {
             List<ServiceDTO> listSizeDTO = new List<ServiceDTO>();
-
-
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
                 List<Service> getList = await _context.Services
                     .Where(i => i.Isdelete == false)
+                    .Where(i => i.Name.Contains(searchQuery))
                     .ToListAsync();
                 listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
-            
+            }
+            else
+            {
+                List<Service> getList = await _context.Services
+                               .Where(i => i.Isdelete == false)
+                               .ToListAsync();
+                listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
+            }
             return listSizeDTO;
+
+            
+            
+          
         }
 
 

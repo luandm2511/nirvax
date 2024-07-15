@@ -150,7 +150,7 @@ namespace DataAccess.DAOs
             {
                 List<Owner> getList = await _context.Owners
                     .Where(i => i.Fullname.Contains(searchQuery))
-                    .Where(i => i.IsBan == false)
+                   
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                       
@@ -160,7 +160,7 @@ namespace DataAccess.DAOs
             else
             {
                 List<Owner> getList = await _context.Owners
-                    .Where(i => i.IsBan == false)
+                 
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
