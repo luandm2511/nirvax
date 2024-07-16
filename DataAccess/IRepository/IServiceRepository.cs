@@ -12,7 +12,7 @@ namespace DataAccess.IRepository
     public interface IServiceRepository
     {
         Task<List<ServiceDTO>> GetAllServicesAsync(string? searchQuery, int page, int pageSize);
-        Task<List<ServiceDTO>> GetAllServiceForUserAsync();
+        Task<List<ServiceDTO>> GetAllServiceForUserAsync(string? searchQuery);
         Task<ServiceDTO> GetServiceByIdAsync(int serviceId);
         Task<bool> CheckServiceAsync(int serviceId, string name);
         Task<bool> CheckServiceExistAsync(int serviceId);

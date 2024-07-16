@@ -56,10 +56,10 @@ namespace WebAPI.Controllers
 
             [HttpGet]
         //  [Authorize]
-            public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync()
+            public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync(string? searchQuery)
             {
             try { 
-                 var list = await _repo.GetAllServiceForUserAsync();
+                 var list = await _repo.GetAllServiceForUserAsync(searchQuery);
                 if (list.Any())
                 {
                     return StatusCode(200, new

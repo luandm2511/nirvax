@@ -39,10 +39,10 @@ namespace DataAccess.Repository
             return _serviceDAO.GetAllServicesAsync(searchQuery, page,  pageSize);
         }
        
-             public Task<List<ServiceDTO>> GetAllServiceForUserAsync()
+             public Task<List<ServiceDTO>> GetAllServiceForUserAsync(string? searchQuery)
         {
 
-            return _serviceDAO.GetAllServiceForUserAsync();
+            return _serviceDAO.GetAllServiceForUserAsync(searchQuery);
         }
 
         public Task<ServiceDTO> GetServiceByIdAsync(int serviceId)
