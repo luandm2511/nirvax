@@ -99,7 +99,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
-                    .Where(i => i.Isdelete == false)
+                  //  .Where(i => i.Isdelete == false)
                     .Where(i => i.ProductSizeId.Contains(searchQuery))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -109,7 +109,7 @@ namespace DataAccess.DAOs
             else
             {
                 List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
-                    .Where(i => i.Isdelete == false)
+                  //  .Where(i => i.Isdelete == false)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

@@ -85,7 +85,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Service> getList = await _context.Services
-                    .Where(i => i.Isdelete == false)
+               //     .Where(i => i.Isdelete == false)
                     .Where(i => i.Name.Contains(searchQuery))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -95,7 +95,7 @@ namespace DataAccess.DAOs
             else
             {
                 List<Service> getList = await _context.Services
-                    .Where(i => i.Isdelete == false)
+                 //   .Where(i => i.Isdelete == false)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

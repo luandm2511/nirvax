@@ -113,7 +113,7 @@ namespace DataAccess.DAOs
             {
                 List<Voucher> getList = await _context.Vouchers
                     .Include(i => i.Owner)
-                    .Where(i => i.Isdelete == false)
+                 //   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
                     .Where(i => i.VoucherId.Contains(searchQuery))
                     .Skip((page - 1) * pageSize)
@@ -125,7 +125,7 @@ namespace DataAccess.DAOs
             {
                 List<Voucher> getList = await _context.Vouchers
                     .Include(i => i.Owner)
-                    .Where(i => i.Isdelete == false)
+                  //  .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
