@@ -32,6 +32,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader()
                           .AllowAnyMethod());
 });
+builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
