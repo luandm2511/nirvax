@@ -16,19 +16,20 @@ namespace WebAPI.Controllers
             private readonly IConfiguration _config;
 
             private readonly IAdvertisementRepository _repo;
-        private readonly IWebHostEnvironment _hostEnvironment;
+            private readonly INotificationRepository _notificationRepository;
+            private readonly IWebHostEnvironment _hostEnvironment;
    
 
-        private readonly string ok = "successfully";
+            private readonly string ok = "successfully";
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment)
+            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, INotificationRepository notificationRepository)
             {
                 _config = config;
-            
-            _repo = repo;
-            this._hostEnvironment = hostEnvironment;
+                _repo = repo;
+                this._hostEnvironment = hostEnvironment;
+            _notificationRepository = notificationRepository;
             }
 
 
@@ -439,24 +440,40 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
+            using var transaction = await _repo.BeginTransactionAsync();
             try { 
             var checkAd = await _repo.CheckAdvertisementExistAsync(adId);
             if (checkAd == true)
-            {
-                var advertisement1 = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);          
+            {                
+                    var advertisement = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);
+                    
+                    var notification = new Notification
+                    {
+                        AccountId = null,
+                        OwnerId = advertisement.OwnerId,
+                        Content = $"Your new Advertisement has been moderated and its status changed to {advertisement.StatusPost.Name}",
+                        IsRead = false,
+                        Url = null,
+                        CreateDate = DateTime.UtcNow
+                    };
+                    await _notificationRepository.AddNotificationAsync(notification);
+
+                    await _repo.CommitTransactionAsync();
                     return StatusCode(200, new
                     {
                         Message = "Update advertisement" + ok,
-                        Data = advertisement1
+                        Data = advertisement
                     });            
             }
             return StatusCode(400, new
             {
+                
                 Message = "The name advertisement is already exist",
             });
             }
             catch (Exception ex)
             {
+                await _repo.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message

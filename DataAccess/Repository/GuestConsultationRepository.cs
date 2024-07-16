@@ -11,6 +11,7 @@ using DataAccess.DAOs;
 using DataAccess.IRepository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.Repository
 {
@@ -23,6 +24,20 @@ namespace DataAccess.Repository
             _guestConsultationDAO = guestConsultationDAO;
         }
 
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _guestConsultationDAO.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            await _guestConsultationDAO.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _guestConsultationDAO.RollbackTransactionAsync();
+        }
 
         public  Task<int> ViewGuestConsultationStatisticsAsync()
         {

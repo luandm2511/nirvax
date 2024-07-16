@@ -13,6 +13,8 @@ using Azure.Core;
 using System.Security.Cryptography;
 using DataAccess.IRepository;
 using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.DAOs
 {
@@ -21,7 +23,7 @@ namespace DataAccess.DAOs
 
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
-        
+        private IDbContextTransaction _transaction;
 
 
         public AdvertisementDAO( NirvaxContext context, IMapper mapper)
@@ -29,6 +31,21 @@ namespace DataAccess.DAOs
             
              _context = context;
             _mapper = mapper;
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+            return _transaction;
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            await _transaction.CommitAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _transaction.RollbackAsync();
         }
 
         public async Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO)
@@ -391,7 +408,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> UpdateStatusAdvertisementAsync(int adId, string statusPost)
+        public async Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusPost.Trim());
             Advertisement? adOrgin = await _context.Advertisements
@@ -402,7 +419,7 @@ namespace DataAccess.DAOs
             adOrgin.StatusPostId = postStatus.StatusPostId;
             _context.Advertisements.Update(adOrgin);
             await _context.SaveChangesAsync();
-            return true;
+            return adOrgin;
         }
 
 

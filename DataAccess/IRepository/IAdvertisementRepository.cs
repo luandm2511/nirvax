@@ -1,6 +1,7 @@
 ﻿using AutoMapper.Execution;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace DataAccess.IRepository
 {
      public interface IAdvertisementRepository
     {
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
         Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId);
         Task<int> ViewOwnerBlogStatisticsAsync(int ownerId);
         Task<int> ViewBlogStatisticsAsync();
@@ -23,7 +27,7 @@ namespace DataAccess.IRepository
         Task<bool> CheckAdvertisementExistAsync(int adId);
         Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO);
          Task<bool> UpdateStatusAdvertisementByIdAsync(int adId, int statusPostId);
-        Task<bool> UpdateStatusAdvertisementAsync(int adId, string statusPost);
+        Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost);
         Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);
         Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId);
         Task<List<AdvertisementDTO>> GetAllAdvertisementsByServiceAsync(int serviceId);

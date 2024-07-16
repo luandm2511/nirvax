@@ -12,6 +12,7 @@ using DataAccess.IRepository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Pipelines.Sockets.Unofficial.Buffers;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.Repository
 {
@@ -24,7 +25,20 @@ namespace DataAccess.Repository
             _advertisementDAO = advertisementDAO;
         }
 
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _advertisementDAO.BeginTransactionAsync();
+        }
 
+        public async Task CommitTransactionAsync()
+        {
+            await _advertisementDAO.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _advertisementDAO.RollbackTransactionAsync();
+        }
 
         public Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId)
         {
@@ -51,7 +65,7 @@ namespace DataAccess.Repository
         {
             return _advertisementDAO.UpdateStatusAdvertisementByIdAsync(adId, statusPostId);
         }
-        public Task<bool> UpdateStatusAdvertisementAsync(int adId, string statusPost)
+        public Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             return _advertisementDAO.UpdateStatusAdvertisementAsync(adId, statusPost);
         }

@@ -12,6 +12,7 @@ using Azure;
 using Azure.Core;
 using System.Security.Cryptography;
 using Pipelines.Sockets.Unofficial.Buffers;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.DAOs
 {
@@ -20,6 +21,8 @@ namespace DataAccess.DAOs
 
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
+        private IDbContextTransaction _transaction;
+
 
 
         public GuestConsultationDAO(NirvaxContext context, IMapper mapper)
@@ -27,6 +30,22 @@ namespace DataAccess.DAOs
 
              _context = context;
             _mapper = mapper;
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+            return _transaction;
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            await _transaction.CommitAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _transaction.RollbackAsync();
         }
 
         //create

@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using DataAccess.IRepository;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace WebAPI.Controllers
 {
@@ -14,14 +15,16 @@ namespace WebAPI.Controllers
 
             private readonly IConfiguration _config;
             private readonly IGuestConsultationRepository  _repo;
+            private readonly INotificationRepository _notificationRepository;
             private readonly string ok = "successfully";
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public GuestConsultationController(IConfiguration config, IGuestConsultationRepository repo)
+            public GuestConsultationController(IConfiguration config, IGuestConsultationRepository repo, INotificationRepository notificationRepository)
             {
                 _config = config;
-                 _repo = repo;
+                _repo = repo;
+                _notificationRepository = notificationRepository;
             }
 
           
@@ -185,16 +188,32 @@ namespace WebAPI.Controllers
            
 
             [HttpPost]
-            public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
+            public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO, int ownerId)
             {
-            try {
+            using var transaction = await _repo.BeginTransactionAsync();
+
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkGuestConsultation = await _repo.CheckGuestConsultationAsync(guestConsultationCreateDTO);
                     if (checkGuestConsultation == true)
                     {
-                        var guestConsultation1 = await _repo.CreateGuestConsultationAsync(guestConsultationCreateDTO);                    
-                            return StatusCode(200, new
+                        var guestConsultation1 = await _repo.CreateGuestConsultationAsync(guestConsultationCreateDTO);
+                        var notification = new Notification
+                        {
+                            AccountId = null,
+                            OwnerId = ownerId, // Assuming Product model has OwnerId field
+                            Content = $"You have just received a registration for a new consultation about products in the store",
+                            IsRead = false,
+                            Url = null,
+                            CreateDate = DateTime.UtcNow
+                        };
+
+                        await _notificationRepository.AddNotificationAsync(notification);
+                        await _repo.CommitTransactionAsync();
+
+                        return StatusCode(200, new
                             {
                                 Message = "Create guest consultation " + ok,
                                 Data = guestConsultation1
@@ -218,6 +237,8 @@ namespace WebAPI.Controllers
                 }
             }
             catch (Exception ex)
+                await _repo.RollbackTransactionAsync();
+
             {
                 return StatusCode(500, new
                 {

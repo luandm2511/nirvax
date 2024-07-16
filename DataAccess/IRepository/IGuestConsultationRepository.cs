@@ -1,6 +1,7 @@
 ﻿using AutoMapper.Execution;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
+using Microsoft.EntityFrameworkCore.Storage;
 using Pipelines.Sockets.Unofficial.Buffers;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,9 @@ namespace DataAccess.IRepository
 {
      public interface IGuestConsultationRepository
     {
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
         Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId);
          Task<int> ViewGuestConsultationStatisticsAsync();
         Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);

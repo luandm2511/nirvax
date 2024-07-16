@@ -3,6 +3,7 @@ using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using DataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -98,6 +99,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateDesctiptionAsync([FromForm]DescriptionCreateDTO descriptionCreateDTO)
         {
+            using var transaction = await _repo.BeginTransactionAsync();
             try {
                 if (ModelState.IsValid)
                 {
@@ -116,6 +118,8 @@ namespace WebAPI.Controllers
                             await _imageRepository.AddImagesAsync(image);
 
                         }
+                        await _repo.CommitTransactionAsync();
+
                         return StatusCode(200, new
                         {
                             Message = "Create description " + ok,
@@ -142,6 +146,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                await _repo.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
@@ -153,7 +158,10 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateDesctiptionAsync([FromForm] DescriptionDTO descriptionDTO)
         {
-            try {
+            using var transaction = await _repo.BeginTransactionAsync();
+
+            try
+            {
                 if (ModelState.IsValid) { 
             var des = _mapper.Map<Description>(descriptionDTO);
             var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
@@ -177,6 +185,8 @@ namespace WebAPI.Controllers
                             };
                             await _imageRepository.AddImagesAsync(image);
                         }
+                        await _repo.CommitTransactionAsync();
+
                         return StatusCode(200, new
                         {
                             Message = "Update description" + ok,
@@ -201,6 +211,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                await _repo.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
@@ -212,7 +223,10 @@ namespace WebAPI.Controllers
         [HttpPatch("{sizeId}")]
         public async Task<ActionResult> DeleteDesctiptionAsync(int descriptionId)
         {
-            try { 
+            using var transaction = await _repo.BeginTransactionAsync();
+
+            try
+            { 
             IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByDescriptionAsync(descriptionId);
             foreach (BusinessObject.Models.Image img in images)
             {
@@ -222,6 +236,8 @@ namespace WebAPI.Controllers
             var description1 = await _repo.DeleteDesctiptionAsync(descriptionId);
                 if (description1)
                 {
+                    await _repo.CommitTransactionAsync();
+
                     return StatusCode(200, new
                     {
                         Message = "Delete description " + ok,
@@ -237,6 +253,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                await _repo.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message

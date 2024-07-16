@@ -9,6 +9,7 @@ using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.EntityFrameworkCore.Storage;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,21 @@ namespace DataAccess.Repository
         public DescriptionRepository(DescriptionDAO descriptionDAO)
         {
             _descriptionDAO = descriptionDAO;
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _descriptionDAO.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            await _descriptionDAO.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _descriptionDAO.RollbackTransactionAsync();
         }
 
         public Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content)
