@@ -24,19 +24,9 @@ namespace DataAccess.Repository
             await _orderDAO.AddOrderAsync(order);
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            return await _orderDAO.BeginTransactionAsync();
-        }
-
         public async Task<bool> CodeOrderExistsAsync(string codeOrder)
         {
             return await _orderDAO.CodeOrderExistsAsync(codeOrder);
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            await _orderDAO.CommitTransactionAsync();
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -72,11 +62,6 @@ namespace DataAccess.Repository
         public async Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync()
         {
             return await _orderDAO.GetTop10ShopsAsync();
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            await _orderDAO.RollbackTransactionAsync();
         }
 
         public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)

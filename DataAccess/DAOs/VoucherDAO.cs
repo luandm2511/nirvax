@@ -217,23 +217,16 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> PriceAndQuantityByOrderAsync(string voucherId)
+        public async Task<Voucher> PriceAndQuantityByOrderAsync(string voucherId)
         {
             Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-            
-            if (voucher == null) {
-              
-                throw new Exception("Voucher is not exist!");
-            }
            // int ownerId = voucher.OwnerId;
           
-            voucher.Quantity = voucher.Quantity--;
-            voucher.QuantityUsed = voucher.QuantityUsed + 1;
-          //  voucher.TotalPriceUsed = voucher.TotalPriceUsed + price;
-
+            voucher.Quantity = --voucher.Quantity;
+            voucher.QuantityUsed = ++voucher.QuantityUsed;
             _context.Vouchers.Update(voucher);
             await _context.SaveChangesAsync();
-            return true;
+            return voucher;
         }
 
       

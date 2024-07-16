@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{id}/ban")]
+        [HttpPut("ban/{id}")]
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> BanAccount(int id)
         {
@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{id}/unban")]
+        [HttpPut("unban/{id}")]
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UnbanAccount(int id)
         {
@@ -148,7 +148,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{id}/update-profile")]
+        [HttpPut("update-profile/{id}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateAccount(int id,UpdateUserDTO model)
         {
@@ -169,7 +169,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{id}/{avatar}")]
+        [HttpPut("update-avatar/{id}/{avatar}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateAvatar(int id, string avatar)
         {

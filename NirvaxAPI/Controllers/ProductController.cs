@@ -21,22 +21,38 @@ namespace WebAPI.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IImageRepository _imageRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public ProductController(IProductRepository productRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository)
+        public ProductController(IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository)
         {
             _productRepository = productRepository;
+            _transactionRepository = transactionRepository;
             _mapper = mapper;
             _imageRepository = imageRepository;
             _notificationRepository = notificationRepository;
         }
 
-        [HttpGet]
+        [HttpGet("dashboard-admin")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
                 var products = await _productRepository.GetAllAsync();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("home")]
+        public async Task<IActionResult> GetAllInHome()
+        {
+            try
+            {
+                var products = await _productRepository.GetProductsInHomeAsync();
                 return Ok(products);
             }
             catch (Exception ex)
@@ -66,7 +82,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("owner/{ownerId}")]
+        [HttpGet("home/owner/{ownerId}")]
         public async Task<IActionResult> GetByOwner(int ownerId)
         {
             try 
@@ -83,7 +99,24 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("category/{categoryId}")]
+        [HttpGet("dashboard-owner/{ownerId}")]
+        public async Task<IActionResult> GetByOwnerInDashboard(int ownerId)
+        {
+            try
+            {
+                var products = await _productRepository.GetByOwnerInDashboardAsync(ownerId);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("home/category/{categoryId}")]
         public async Task<IActionResult> GetByCategory(int categoryId)
         {
             try
@@ -100,7 +133,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("brand/{brandId}")]
+        [HttpGet("home/brand/{brandId}")]
         public async Task<IActionResult> GetByBrand(int brandId)
         {
             try
@@ -120,6 +153,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Create([FromForm] ProductDTO productDto)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 if (!ModelState.IsValid)
@@ -145,10 +179,12 @@ namespace WebAPI.Controllers
                         };
                         await _imageRepository.AddImagesAsync(image);
                 }
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is created successfully." });
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -160,6 +196,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Update(int id, [FromForm] ProductDTO productDto)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 if (!ModelState.IsValid)
@@ -198,10 +235,12 @@ namespace WebAPI.Controllers
                     };
                     await _imageRepository.AddImagesAsync(image);
                 }
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is updated successfully." });
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -213,6 +252,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Delete(int id)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             { 
                 var product = await _productRepository.GetByIdAsync(id);
@@ -227,10 +267,12 @@ namespace WebAPI.Controllers
                     await _imageRepository.DeleteImagesAsync(img);
                 }
                 await _productRepository.DeleteAsync(product);
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is deleted successfully"});
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -242,7 +284,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BanProduct(int id)
         {
-
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             { 
                 var product = await _productRepository.GetByIdAsync(id);
@@ -262,10 +304,12 @@ namespace WebAPI.Controllers
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is banned successfully." });
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -277,6 +321,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UnbanProduct(int id)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 var product = await _productRepository.GetByIdAsync(id);
@@ -296,10 +341,12 @@ namespace WebAPI.Controllers
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product has been unbanned successfully." });
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -307,7 +354,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{productId}/rate")]
+        [HttpPut("rate/{productId}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> RateProduct(int productId, [FromBody] int rating)
         {
@@ -338,7 +385,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("top5/{ownerId}")]
-        [Authorize(Roles = "Owner")]
         public async Task<IActionResult> GetTop5SellingProductsByOwner(int ownerId)
         {
             try
@@ -356,7 +402,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("top10")]
-        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetTop10SellingProducts()
         {
             try
@@ -373,7 +418,41 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("searchs")]
+        [HttpGet("admin/searchs")]
+        public async Task<IActionResult> SearchsProductsInAdmin(string? searchTerm)
+        {
+            try
+            {
+                var result = await _productRepository.SearchProductsInAdminAsync(searchTerm);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }   
+        }
+
+        [HttpGet("owner/searchs/{ownerId}")]
+        public async Task<IActionResult> SearchsProductsInOwner(string? searchTerm, int ownerId)
+        {
+            try
+            {
+                var result = await _productRepository.SearchProductsInOwnerAsync(searchTerm, ownerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("home/searchs")]
         public async Task<IActionResult> Searchs(string? searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<int> sizeIds)
         {
             try
@@ -387,7 +466,7 @@ namespace WebAPI.Controllers
                 {
                     message = ex.Message
                 });
-            }   
+            }
         }
     }
 

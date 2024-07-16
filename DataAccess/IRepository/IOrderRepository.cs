@@ -11,9 +11,6 @@ namespace DataAccess.IRepository
 {
     public interface IOrderRepository
     {
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
         Task AddOrderAsync(Order order);
         Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId);
         Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId);

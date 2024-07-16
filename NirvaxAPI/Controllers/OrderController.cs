@@ -26,6 +26,7 @@ namespace WebAPI.Controllers
         private readonly IProductRepository _productRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly ITransactionRepository _transactionRepository;
         ICartService _cartService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -37,6 +38,7 @@ namespace WebAPI.Controllers
             IProductRepository productRepository,
             INotificationRepository notificationRepository,
             IVoucherRepository voucherRepository,
+            ITransactionRepository transactionRepository,
             ICartService cartService,
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor)
@@ -47,6 +49,7 @@ namespace WebAPI.Controllers
             _productRepository = productRepository;
             _notificationRepository = notificationRepository;
             _voucherRepository = voucherRepository;
+            _transactionRepository = transactionRepository;
             _cartService = cartService;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
@@ -101,7 +104,7 @@ namespace WebAPI.Controllers
         //[Authorize(Roles = "User")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO createOrderDTO)
         {
-            using var transaction = await _orderRepository.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{createOrderDTO.AccountId}") ?? new List<CartOwner>();
@@ -110,15 +113,14 @@ namespace WebAPI.Controllers
                 var groupedItems = createOrderDTO.Items.GroupBy(item => item.OwnerId);
 
                 // Validate vouchers
-                if (createOrderDTO.Vouchers != null && createOrderDTO.Vouchers.Any())
+                if (createOrderDTO.Vouchers != null)
                 {
                     foreach (var voucherDto in createOrderDTO.Vouchers)
                     {
                         var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
-                        if (voucher != null && (voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.Now
-                            || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed))
+                        if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.UtcNow)
                         {
-                            return BadRequest($"{voucherDto.OwnerId} is invalid.");
+                            return BadRequest($"Voucher for OwnerId {voucherDto.OwnerId} is invalid.");
                         }
                     }
                 }
@@ -128,8 +130,12 @@ namespace WebAPI.Controllers
                 foreach (var group in groupedItems)
                 {
                     var ownerVoucher = createOrderDTO.Vouchers.FirstOrDefault(v => v.OwnerId == group.Key)?.VoucherId;
-
-                    var voucher = await _voucherRepository.GetVoucherById(ownerVoucher);
+                    double voucherPrice = 0;
+                    if(ownerVoucher != null)
+                    {
+                        Voucher voucher = await _voucherRepository.PriceAndQuantityByOrderAsync(ownerVoucher);
+                        voucherPrice = voucher.Price;
+                    }
 
                     string codeOrder;
                     do
@@ -145,7 +151,7 @@ namespace WebAPI.Controllers
                         OrderDate = DateTime.Now,
                         Address = createOrderDTO.Address,
                         Note = createOrderDTO.Note,
-                        TotalAmount = group.Sum(item => item.Quantity * item.UnitPrice) - voucher.Price,
+                        TotalAmount = group.Sum(item => item.Quantity * item.UnitPrice) - voucherPrice,
                         AccountId = createOrderDTO.AccountId,
                         OwnerId = group.Key,
                         StatusId = 1,
@@ -153,9 +159,6 @@ namespace WebAPI.Controllers
                     };
 
                     await _orderRepository.AddOrderAsync(order);
-
-                    await _voucherRepository.PriceAndQuantityByOrderAsync(voucher.VoucherId);
-
                     foreach (var cartItem in group)
                     {
                         var productSize = await _productSizeRepository.GetByIdAsync(cartItem.ProductSizeId);
@@ -183,6 +186,7 @@ namespace WebAPI.Controllers
                         }
                         else
                         {
+                            await _transactionRepository.RollbackTransactionAsync();
                             return BadRequest($"Insufficient quantity for ProductSizeId {cartItem.ProductSizeId}");
                         }
                     }
@@ -199,13 +203,13 @@ namespace WebAPI.Controllers
                      await _notificationRepository.AddNotificationAsync(notification);
                 }
 
-                await _orderRepository.CommitTransactionAsync();
+                await _transactionRepository.CommitTransactionAsync();
 
-                return Ok(new { Orders = _mapper.Map<IEnumerable<OrderDTO>>(orders) });
+                return Ok(new { message = "Order successfull!" });
             }
             catch (Exception ex)
             {
-                await _orderRepository.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -244,7 +248,7 @@ namespace WebAPI.Controllers
 
         public async Task<IActionResult> ConfirmOrder(int orderId, int statusId)
         {
-            using var transaction = await _orderRepository.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
@@ -303,12 +307,12 @@ namespace WebAPI.Controllers
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
-                await _orderRepository.CommitTransactionAsync();
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok();
             }
             catch (Exception ex)
             {
-                await _orderRepository.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -316,7 +320,7 @@ namespace WebAPI.Controllers
         [HttpPut("cancel/{orderId}")]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
-            using var transaction = await _orderRepository.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
@@ -350,12 +354,12 @@ namespace WebAPI.Controllers
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
-                await _orderRepository.CommitTransactionAsync();
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok();
             }
             catch (Exception ex)
             {
-                await _orderRepository.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
