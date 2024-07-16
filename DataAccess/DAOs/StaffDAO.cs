@@ -157,10 +157,10 @@ namespace DataAccess.DAOs
             List<StaffDTO> listStaffDTO = new List<StaffDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<Staff> getList = await _context.Staff.Include(i => i.Owner)
-                    .Where(i => i.Fullname.Trim().Contains(searchQuery) || i.Email.Trim().Contains(searchQuery) || i.Phone.Trim().Contains(searchQuery))
+                    .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Email.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)

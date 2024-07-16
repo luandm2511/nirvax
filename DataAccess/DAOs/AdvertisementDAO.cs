@@ -113,9 +113,9 @@ namespace DataAccess.DAOs
                                                        .Include(i => i.Service)
                                                        .Include(i => i.StatusPost);
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
-                query = query.Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery));
+                query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()));
             }
 
            
@@ -143,10 +143,10 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                   .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("WAITING"))               
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -170,10 +170,10 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("DENY"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -197,10 +197,10 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -224,10 +224,10 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                   .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .ToListAsync();
                 listAdDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
@@ -248,10 +248,10 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery))
+                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i=> i.OwnerId == ownerId)
                     .ToListAsync();
@@ -279,9 +279,9 @@ namespace DataAccess.DAOs
                                                        .Include(i => i.StatusPost)
                                                        .Where(i => i.OwnerId == ownerId);
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
-                query = query.Where(i => i.Content.Contains(searchQuery) || i.Title.Contains(searchQuery));
+                query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()));
             }
 
 

@@ -149,7 +149,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Owner> getList = await _context.Owners
-                    .Where(i => i.Fullname.Contains(searchQuery))
+                    .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()))
                    
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -178,7 +178,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Owner> getList = await _context.Owners
-                    .Where(i => i.Fullname.Contains(searchQuery))
+                   .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.IsBan == false)
                     .ToListAsync();
                 listOwnerDTO = _mapper.Map<List<OwnerDTO>>(getList);

@@ -87,9 +87,9 @@ namespace DataAccess.DAOs
                                                        .Where(i => i.OwnerId == ownerId);
  
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
-                query = query.Where(i => i.Content.Trim().Contains(searchQuery) || i.Fullname.Trim().Contains(searchQuery) || i.Phone.Trim().Contains(searchQuery));
+                query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()));
             }
 
             query = query.OrderBy(i =>
@@ -113,12 +113,12 @@ namespace DataAccess.DAOs
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
+                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusGuest.Name.Contains("ACCEPT"))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
@@ -144,12 +144,12 @@ namespace DataAccess.DAOs
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
+                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
                       .Where(i => i.StatusGuest.Name.Contains("WAITING"))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
@@ -175,12 +175,12 @@ namespace DataAccess.DAOs
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrEmpty(searchQuery.Trim()))
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
-                    .Where(i => i.Content.Contains(searchQuery) || i.Phone.Contains(searchQuery) || i.Fullname.Contains(searchQuery))
+                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
                       .Where(i => i.StatusGuest.Name.Contains("DENY"))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)

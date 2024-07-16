@@ -92,7 +92,7 @@ namespace DataAccess.DAOs
                 List<Size> getList = await _context.Sizes
                 //    .Where(i => i.Isdelete == false)
                     .Include(i => i.Owner)
-                    .Where(i => i.Name.Contains(searchQuery))
+                    .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)

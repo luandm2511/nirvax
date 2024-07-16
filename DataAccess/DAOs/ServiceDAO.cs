@@ -86,7 +86,7 @@ namespace DataAccess.DAOs
             {
                 List<Service> getList = await _context.Services
                //     .Where(i => i.Isdelete == false)
-                    .Where(i => i.Name.Contains(searchQuery))
+                    .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -112,7 +112,7 @@ namespace DataAccess.DAOs
             {
                 List<Service> getList = await _context.Services
                     .Where(i => i.Isdelete == false)
-                    .Where(i => i.Name.Contains(searchQuery))
+                    .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .ToListAsync();
                 listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
             }

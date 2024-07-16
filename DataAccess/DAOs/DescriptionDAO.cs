@@ -89,7 +89,7 @@ namespace DataAccess.DAOs
             {
                 List<Description> getList = await _context.Descriptions
                  //   .Where(i => i.Isdelete == false)
-                    .Where(i => i.Title.Contains(searchQuery))
+                    .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
