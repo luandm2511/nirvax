@@ -147,9 +147,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Advertisement");
 
             entity.Property(e => e.AdId).HasColumnName("ad_id");
-            entity.Property(e => e.Content)
-                .HasColumnType("text")
-                .HasColumnName("content");
+            entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Image)
                 .IsUnicode(false)
                 .HasColumnName("image");
@@ -270,9 +268,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Description");
 
             entity.Property(e => e.DescriptionId).HasColumnName("description_id");
-            entity.Property(e => e.Content)
-                .HasColumnType("text")
-                .HasColumnName("content");
+            entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.Title)
                 .HasMaxLength(100)
@@ -376,9 +372,9 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<ImportProductDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ImportProductDetail");
+            entity.HasKey(e => new { e.ImportId, e.ProductSizeId }).HasName("PK_MultiImport");
+
+            entity.ToTable("ImportProductDetail");
 
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
@@ -387,12 +383,12 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.QuantityReceived).HasColumnName("quantity_received");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
 
-            entity.HasOne(d => d.Import).WithMany()
+            entity.HasOne(d => d.Import).WithMany(p => p.ImportProductDetails)
                 .HasForeignKey(d => d.ImportId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_importproductdetail_importproduct");
 
-            entity.HasOne(d => d.ProductSize).WithMany()
+            entity.HasOne(d => d.ProductSize).WithMany(p => p.ImportProductDetails)
                 .HasForeignKey(d => d.ProductSizeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_importproductdetail_productsize");
@@ -782,7 +778,7 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF6D120585");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF5C3BE346");
 
             entity.ToTable("Warehouse");
 
@@ -799,26 +795,26 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<WarehouseDetail>(entity =>
         {
-            entity.HasKey(e => new { e.WarehouseId, e.ProductSizeId });
-            entity              
-                .ToTable("WarehouseDetail");
+            entity.HasKey(e => new { e.WarehouseId, e.ProductSizeId }).HasName("PK_MultiWarehouse");
 
-            entity.Property(e => e.Location)
-                .HasMaxLength(50)
-                .HasColumnName("location");
+            entity.ToTable("WarehouseDetail");
+
+            entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
                 .HasColumnName("product_size_id");
+            entity.Property(e => e.Location)
+                .HasMaxLength(50)
+                .HasColumnName("location");
             entity.Property(e => e.QuantityInStock).HasColumnName("quantity_in_stock");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
-            entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
 
-            entity.HasOne(d => d.ProductSize).WithMany()
+            entity.HasOne(d => d.ProductSize).WithMany(p => p.WarehouseDetails)
                 .HasForeignKey(d => d.ProductSizeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_warehousedetail_productsize");
 
-            entity.HasOne(d => d.Warehouse).WithMany()
+            entity.HasOne(d => d.Warehouse).WithMany(p => p.WarehouseDetails)
                 .HasForeignKey(d => d.WarehouseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_warehousedetail_warehouse");

@@ -16,4 +16,6 @@ public partial class Warehouse
     public virtual ICollection<ImportProduct> ImportProducts { get; set; } = new List<ImportProduct>();
 
     public virtual Owner Owner { get; set; } = null!;
+
+    public virtual ICollection<WarehouseDetail> WarehouseDetails { get; set; } = new List<WarehouseDetail>();
 }
