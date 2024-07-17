@@ -237,9 +237,10 @@ namespace WebAPI.Controllers
                 }
             }
             catch (Exception ex)
-                await _repo.RollbackTransactionAsync();
+
 
             {
+                await _repo.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message

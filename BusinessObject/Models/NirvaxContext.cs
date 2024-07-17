@@ -77,7 +77,6 @@ public partial class NirvaxContext : DbContext
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccessLog>(entity =>
@@ -149,7 +148,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.AdId).HasColumnName("ad_id");
             entity.Property(e => e.Content)
-                .HasMaxLength(4000)
+                .HasColumnType("text")
                 .HasColumnName("content");
             entity.Property(e => e.Image)
                 .IsUnicode(false)
@@ -272,7 +271,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.DescriptionId).HasColumnName("description_id");
             entity.Property(e => e.Content)
-                .HasMaxLength(4000)
+                .HasColumnType("text")
                 .HasColumnName("content");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.Title)
@@ -383,7 +382,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(70)
+                .HasMaxLength(30)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityReceived).HasColumnName("quantity_received");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -521,7 +520,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(70)
+                .HasMaxLength(30)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -644,7 +643,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("ProductSize");
 
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(70)
+                .HasMaxLength(30)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
@@ -783,7 +782,7 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF81DFF54B");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF6D120585");
 
             entity.ToTable("Warehouse");
 
@@ -800,17 +799,15 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<WarehouseDetail>(entity =>
         {
-            entity
-                .HasKey(e => new { e.WarehouseId, e.ProductSizeId });
-               
-                
-            entity.ToTable("WarehouseDetail");
+            entity.HasKey(e => new { e.WarehouseId, e.ProductSizeId });
+            entity              
+                .ToTable("WarehouseDetail");
 
             entity.Property(e => e.Location)
                 .HasMaxLength(50)
                 .HasColumnName("location");
             entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(70)
+                .HasMaxLength(30)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityInStock).HasColumnName("quantity_in_stock");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
