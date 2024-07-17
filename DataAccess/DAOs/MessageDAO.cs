@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Azure;
 using Azure.Core;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DataAccess.DAOs
 {
@@ -18,6 +19,7 @@ namespace DataAccess.DAOs
 
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
+       // private readonly IHubContext<ChatHub> _hubContext;
 
 
 
@@ -66,6 +68,17 @@ namespace DataAccess.DAOs
             int i = await _context.SaveChangesAsync();
             if (i > 0)
             {
+                //Room room = await _context.Rooms.FindAsync(messageCreateDTO.RoomId);
+              //  if (room != null)
+              //  {
+                //    room.Content = message.Content; // Update room content to latest message
+                //    _context.Rooms.Update(room);
+                  //  await _context.SaveChangesAsync();
+              //  }
+
+                // Notify clients in the room about new message
+           //    await chatHub.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", message.SenderId, message.Content);
+
                 return true;
             }
             else { return false; }

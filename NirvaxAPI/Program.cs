@@ -128,6 +128,7 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IGuestConsultationRepository, GuestConsultationRepository>();
 builder.Services.AddScoped<GuestConsultationDAO>();
 
+builder.Services.AddSignalR();
 
 
 builder.Services.AddAuthentication(options =>
@@ -173,16 +174,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
 app.UseCors("AllowAll");
 
 app.UseSession();
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAccessLogMiddleware();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<ChatHub>("/chatHub"); // Đăng ký Hub của bạn tại endpoint "/chatHub"
+});
 
 app.Run();

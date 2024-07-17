@@ -2,7 +2,9 @@
 using BusinessObject.Models;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using StackExchange.Redis;
+using WebAPI.Service;
 
 namespace WebAPI.Controllers
 {
@@ -12,23 +14,25 @@ namespace WebAPI.Controllers
     {
         
        
-            private readonly IConfiguration _config;
-            private readonly IMessageRepository  _repo;
+        private readonly IConfiguration _config;
+        private readonly IMessageRepository  _repo;
         private readonly IRoomRepository _room;
+        private readonly IHubContext<ChatHub> _hubContext;
 
         private readonly string ok = "successfully";
-            private readonly string notFound = "Not found";
-            private readonly string badRequest = "Failed!";
+        private readonly string notFound = "Not found";
+        private readonly string badRequest = "Failed!";
 
-            public MessageController(IConfiguration config, IMessageRepository repo, IRoomRepository room)
-            {
-                _config = config;
+        public MessageController(IConfiguration config, IMessageRepository repo, IRoomRepository room, IHubContext<ChatHub> hubContext)
+        {
+            _config = config;
+            _repo = repo;
             _room = room;
-                 _repo = repo;
-            }
+            _hubContext = hubContext;
+        }
 
 
-            [HttpGet]
+        [HttpGet]
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<Message>>> ViewUserHistoryChatAsync(int roomId)
             {
@@ -62,27 +66,41 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-            try { 
-            if (ModelState.IsValid)
+            try
             {
-                var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
-                if (checkMessage == true)
+                if (ModelState.IsValid)
                 {
-                    var message1 = await _repo.CreateMessageAsync(messageCreateDTO);
-                    if (message1)
+                    var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
+                    if (checkMessage)
                     {
-                        await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
-                        return StatusCode(200, new
+                        var messageCreated = await _repo.CreateMessageAsync(messageCreateDTO);
+                        if (messageCreated)
                         {
-                            Message = "Create messgae " + ok,
-                            Data = message1
-                        });
+                            // Gửi tin nhắn tới các client trong phòng chat
+                            await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
+
+                            // Cập nhật nội dung của Room
+                            await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
+
+                            return StatusCode(200, new
+                            {
+                                Message = "Create message " + ok,
+                                Data = messageCreated
+                            });
+                        }
+                        else
+                        {
+                            return StatusCode(400, new
+                            {
+                                Message = "Failed to send message!"
+                            });
+                        }
                     }
                     else
                     {
                         return StatusCode(400, new
                         {
-                            Message = "Error for send message!",
+                            Message = "Please enter the message content!"
                         });
                     }
                 }
@@ -90,17 +108,9 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter the word!",
+                        Message = "Please enter valid Message!"
                     });
                 }
-            }
-            else
-            {
-                return StatusCode(400, new
-                {
-                    Message = "Please enter valid Message !",
-                });
-            }
             }
             catch (Exception ex)
             {
