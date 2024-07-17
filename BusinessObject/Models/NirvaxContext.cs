@@ -147,9 +147,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Advertisement");
 
             entity.Property(e => e.AdId).HasColumnName("ad_id");
-            entity.Property(e => e.Content)
-                .HasColumnType("text")
-                .HasColumnName("content");
+            entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Image)
                 .IsUnicode(false)
                 .HasColumnName("image");
@@ -270,9 +268,7 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Description");
 
             entity.Property(e => e.DescriptionId).HasColumnName("description_id");
-            entity.Property(e => e.Content)
-                .HasColumnType("text")
-                .HasColumnName("content");
+            entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.Title)
                 .HasMaxLength(100)

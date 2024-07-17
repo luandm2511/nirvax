@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
 
                 _cartService.SaveCartToCookie(userId, cart);
 
-                return Ok(new { message = "Product is add to cart successfully." });
+                return Ok(new { Count = cart.Count(), message = "Product is add to cart successfully." });
             }
             catch (Exception ex)
             {
