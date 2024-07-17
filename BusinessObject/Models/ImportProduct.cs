@@ -17,5 +17,7 @@ public partial class ImportProduct
 
     public double TotalPrice { get; set; }
 
+    public virtual ICollection<ImportProductDetail> ImportProductDetails { get; set; } = new List<ImportProductDetail>();
+
     public virtual Warehouse Warehouse { get; set; } = null!;
 }
