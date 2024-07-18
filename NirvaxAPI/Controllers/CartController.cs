@@ -58,7 +58,11 @@ namespace WebAPI.Controllers
                 var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
                 if (ownerCart == null)
                 {
-                    ownerCart = new CartOwner { OwnerId = ownerId };
+                    ownerCart = new CartOwner {
+                        OwnerId = ownerId,
+                        OwnerName = productsize.Product.Owner.Fullname
+                    };
+                    
                     cart.Add(ownerCart);
                 }
 
