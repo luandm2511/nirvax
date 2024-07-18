@@ -318,39 +318,5 @@ namespace WebAPI.Controllers
                 }         
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult> PriceAndQuantityByOrderAsync(string voucherId)
-        {
-            try {
-                var result = await _repo.PriceAndQuantityByOrderAsync( voucherId);
-                if (result == true)
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = "Update voucher after used success!",
-                    });
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
-            }
-
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {                 
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
-
-        }
-
-
     }
 }

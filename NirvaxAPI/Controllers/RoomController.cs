@@ -15,11 +15,6 @@ namespace WebAPI.Controllers
         private readonly IRoomRepository  _repo;
         private readonly IMessageRepository _mess;
         private readonly IMapper _mapper;
-    
-
-
-
-
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";

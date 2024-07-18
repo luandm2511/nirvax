@@ -162,6 +162,8 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     { 
+                       
+                        
                         Message = "Can't get quantity and price of warehouse!",
                     });
                 }

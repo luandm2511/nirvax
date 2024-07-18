@@ -32,12 +32,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader()
                           .AllowAnyMethod());
 });
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromDays(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
+builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
@@ -59,6 +54,8 @@ builder.Services.AddScoped<ProductSizeDAO>();
 builder.Services.AddScoped<VoucherDAO>();
 builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<AccessLogDAO>();
+builder.Services.AddScoped<TransactionDAO>();
+
 
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
@@ -81,14 +78,14 @@ builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<OwnerDAO>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddScoped<ISizeRepository, SizeRepository>();
 builder.Services.AddScoped<SizeDAO>();
 
 builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
 builder.Services.AddScoped<ProductSizeDAO>();
-
-
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 builder.Services.AddScoped<IImportProductDetailRepository, ImportProductDetailRepository>();
 builder.Services.AddScoped<ImportProductDetailDAO>();

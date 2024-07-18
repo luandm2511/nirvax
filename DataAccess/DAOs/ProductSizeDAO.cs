@@ -17,8 +17,8 @@ namespace DataAccess.DAOs
 {
     public class ProductSizeDAO
     {
+        private readonly NirvaxContext _context;
 
-        private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
 
 

@@ -17,14 +17,16 @@ namespace WebAPI.Controllers
         private readonly IProductRepository _productRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public CommentController(IProductRepository productRepository ,ICommentRepository commentRepository,INotificationRepository notificationRepository, IMapper mapper)
+        public CommentController(IProductRepository productRepository ,ICommentRepository commentRepository,INotificationRepository notificationRepository,ITransactionRepository transactionRepository, IMapper mapper)
         {
             _commentRepository = commentRepository;
             _mapper = mapper;
             _productRepository = productRepository;
             _notificationRepository = notificationRepository;
+            _transactionRepository = transactionRepository;
         }
 
         // Lấy tất cả comments của một sản phẩm
@@ -47,10 +49,11 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("add-comment")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> AddComment([FromForm] CommentDTO commentDto)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 if (!ModelState.IsValid)
@@ -72,15 +75,17 @@ namespace WebAPI.Controllers
                     Content = $"Your product has just been commented.",
                     IsRead = false,
                     Url = null,
-                    CreateDate = DateTime.UtcNow
+                    CreateDate = DateTime.Now
                 };
 
-                await _notificationRepository.AddNotificationAsync(notification);               
+                await _notificationRepository.AddNotificationAsync(notification);
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Comment is created successfully." });
                 
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -88,7 +93,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update-comment")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateComment(int commentId, string updateComment)
         {
@@ -100,8 +105,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Product is not found." });
                 }
-                
-                
+
                 comment.Content = updateComment;
                 await _commentRepository.UpdateCommentAsync(comment);
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the comment." });
@@ -115,10 +119,11 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("{commentId}/reply")]
+        [HttpPut("reply/{commentId}")]
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> ReplyComment(int commentId, [FromBody] ReplyCommentDTO replyDto)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 if (!ModelState.IsValid)
@@ -138,7 +143,7 @@ namespace WebAPI.Controllers
                 
 
                 _mapper.Map(replyDto, comment);
-                comment.ReplyTimestamp = DateTime.UtcNow;
+                comment.ReplyTimestamp = DateTime.Now;
 
                 await _commentRepository.UpdateCommentAsync(comment);
                 var notification = new Notification
@@ -148,14 +153,16 @@ namespace WebAPI.Controllers
                     Content = $"Your comment has just been replied.",
                     IsRead = false,
                     Url = null,
-                    CreateDate = DateTime.UtcNow
+                    CreateDate = DateTime.Now
                 };
 
                 await _notificationRepository.AddNotificationAsync(notification);
+                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Reply successfully." });
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message

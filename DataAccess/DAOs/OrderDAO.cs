@@ -20,27 +20,11 @@ namespace DataAccess.DAOs
         {
             _context = context;
         }
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            _transaction = await _context.Database.BeginTransactionAsync();
-            return _transaction;
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            await _transaction.CommitAsync();
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            await _transaction.RollbackAsync();
-        }
         public async Task AddOrderAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
-
         public async Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId)
         {
             return await _context.Orders

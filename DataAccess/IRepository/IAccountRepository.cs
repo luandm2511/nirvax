@@ -16,5 +16,6 @@ namespace DataAccess.IRepository
         Task UnbanAccountAsync(Account account);
         Task UpdateAccountAsync(Account account);
         Task<IEnumerable<Account>> SearchAccountAsync(string keyword);
+        Task<AccountStatisticDTO> AccountStatistics();
     }
 }
