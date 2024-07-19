@@ -29,9 +29,9 @@ namespace DataAccess.DAOs
         {
             return await _context.Orders
                     .Include(o => o.Owner)
-                    .Include(o => o.Account)
                     .Include(o => o.Status)
                     .Include(o => o.Voucher)
+                    .AsNoTracking()
                     .Where(o => o.AccountId == accountId)
                     .ToListAsync();
         }

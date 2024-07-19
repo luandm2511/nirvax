@@ -21,7 +21,7 @@ public partial class Order
 
     public string Address { get; set; } = null!;
 
-    public string Note { get; set; } = null!;
+    public string? Note { get; set; }
 
     public double TotalAmount { get; set; }
 

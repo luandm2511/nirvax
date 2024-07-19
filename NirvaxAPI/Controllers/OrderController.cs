@@ -92,9 +92,9 @@ namespace WebAPI.Controllers
             var voucher = await _voucherRepository.GetVoucherById(request.VoucherId);
 
             if (voucher != null&& (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now 
-                || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed))
+                || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed || voucher.VoucherId != request.VoucherId))
             {
-                return BadRequest($"{request.OwnerId} is invalid.");
+                return BadRequest($"{request.VoucherId} is invalid.");
             }
 
             return Ok(voucher);
@@ -129,11 +129,11 @@ namespace WebAPI.Controllers
 
                 foreach (var group in groupedItems)
                 {
-                    var ownerVoucher = createOrderDTO.Vouchers.FirstOrDefault(v => v.OwnerId == group.Key)?.VoucherId;
+                    var ownerVoucher = createOrderDTO.Vouchers.FirstOrDefault(v => v.OwnerId == group.Key);
                     double voucherPrice = 0;
                     if(ownerVoucher != null)
                     {
-                        Voucher voucher = await _voucherRepository.PriceAndQuantityByOrderAsync(ownerVoucher);
+                        Voucher voucher = await _voucherRepository.PriceAndQuantityByOrderAsync(ownerVoucher.VoucherId);
                         voucherPrice = voucher.Price;
                     }
 
@@ -150,12 +150,12 @@ namespace WebAPI.Controllers
                         Phone = createOrderDTO.Phone,
                         OrderDate = DateTime.Now,
                         Address = createOrderDTO.Address,
-                        Note = createOrderDTO.Note,
+                        Note = ownerVoucher.Note,
                         TotalAmount = group.Sum(item => item.Quantity * item.UnitPrice) - voucherPrice,
                         AccountId = createOrderDTO.AccountId,
                         OwnerId = group.Key,
                         StatusId = 1,
-                        VoucherId = ownerVoucher
+                        VoucherId = ownerVoucher.VoucherId
                     };
 
                     await _orderRepository.AddOrderAsync(order);
@@ -164,9 +164,6 @@ namespace WebAPI.Controllers
                         var productSize = await _productSizeRepository.GetByIdAsync(cartItem.ProductSizeId);
                         if (productSize != null && productSize.Quantity >= cartItem.Quantity)
                         {
-                            productSize.Quantity -= cartItem.Quantity;
-                            await _productSizeRepository.UpdateAsync(productSize);
-
                             // Add order details
                             var orderDetail = new OrderDetail
                             {

@@ -10,5 +10,6 @@ namespace BusinessObject.DTOs
     {
         public int OwnerId { get; set; }
         public string VoucherId { get; set; }
+        public string? Note { get; set; }
     }
 }
