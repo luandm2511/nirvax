@@ -6,21 +6,31 @@ namespace WebAPI.Service
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(int roomId, string user, string message)
+        public async Task SendMessageToRoom(string roomId, string senderId, string content)
         {
-            // Gửi tin nhắn tới tất cả các client trong phòng chat
-            await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", user, message);
+            await Clients.Group(roomId).SendAsync("ReceiveMessage", senderId, content);
         }
 
-        public async Task JoinRoom(int roomId)
+        public override async Task OnConnectedAsync()
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
+            var roomId = Context.GetHttpContext().Request.Query["roomId"];
+            if (!string.IsNullOrEmpty(roomId))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+            }
+            await base.OnConnectedAsync();
         }
 
-        public async Task LeaveRoom(int roomId)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId.ToString());
+            var roomId = Context.GetHttpContext().Request.Query["roomId"];
+            if (!string.IsNullOrEmpty(roomId))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
+            }
+            await base.OnDisconnectedAsync(exception);
         }
     }
+
 
 }
