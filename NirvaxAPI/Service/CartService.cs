@@ -36,7 +36,7 @@ namespace WebAPI.Service
 
         public void RemoveCartItemFromCookie(int userId, string productSizeId)
         {
-            var cart = GetCartFromCookie(userId) ?? new List<CartOwner>();
+            var cart = GetCartFromCookie(userId);
 
             foreach (var ownerCart in cart)
             {
@@ -48,11 +48,10 @@ namespace WebAPI.Service
                     {
                         cart.Remove(ownerCart);
                     }
+                    SaveCartToCookie(userId, cart);
                     break;
                 }
             }
-
-            SaveCartToCookie(userId, cart);
         }
     }
 }
