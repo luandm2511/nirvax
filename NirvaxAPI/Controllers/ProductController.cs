@@ -346,7 +346,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _transactionRepository.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();    
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
