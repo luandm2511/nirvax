@@ -92,9 +92,9 @@ namespace WebAPI.Controllers
             var voucher = await _voucherRepository.GetVoucherById(request.VoucherId);
 
             if (voucher != null&& (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now 
-                || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed))
+                || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed || voucher.VoucherId != request.VoucherId))
             {
-                return BadRequest($"{request.OwnerId} is invalid.");
+                return BadRequest($"{request.VoucherId} is invalid.");
             }
 
             return Ok(voucher);
@@ -112,15 +112,18 @@ namespace WebAPI.Controllers
                 // Group các sản phẩm theo OwnerId
                 var groupedItems = createOrderDTO.Items.GroupBy(item => item.OwnerId);
 
-                // Validate vouchers
-                if (createOrderDTO.Vouchers != null)
+                // Validate vouchers nếu vouchers không null hoặc rỗng
+                if (createOrderDTO.Vouchers != null && createOrderDTO.Vouchers.Any())
                 {
                     foreach (var voucherDto in createOrderDTO.Vouchers)
                     {
-                        var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
-                        if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.UtcNow)
+                        if (!string.IsNullOrEmpty(voucherDto.VoucherId))
                         {
-                            return BadRequest($"Voucher for OwnerId {voucherDto.OwnerId} is invalid.");
+                            var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
+                            if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.Now)
+                            {
+                                return BadRequest($"Voucher [{voucherDto.VoucherId}] is invalid.");
+                            }
                         }
                     }
                 }
@@ -129,12 +132,20 @@ namespace WebAPI.Controllers
 
                 foreach (var group in groupedItems)
                 {
-                    var ownerVoucher = createOrderDTO.Vouchers.FirstOrDefault(v => v.OwnerId == group.Key)?.VoucherId;
+                    var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.Key);
                     double voucherPrice = 0;
-                    if(ownerVoucher != null)
+                    string ownerVoucherId = null;
+                    string ownerVoucherNote = null;
+
+                    if (ownerVoucherDto != null)
                     {
-                        Voucher voucher = await _voucherRepository.PriceAndQuantityByOrderAsync(ownerVoucher);
-                        voucherPrice = voucher.Price;
+                        if (!string.IsNullOrEmpty(ownerVoucherDto.VoucherId))
+                        {
+                            var voucher = await _voucherRepository.PriceAndQuantityByOrderAsync(ownerVoucherDto.VoucherId);
+                            voucherPrice = voucher?.Price ?? 0;
+                            ownerVoucherId = ownerVoucherDto.VoucherId;
+                        }
+                        ownerVoucherNote = ownerVoucherDto.Note;
                     }
 
                     string codeOrder;
@@ -150,23 +161,21 @@ namespace WebAPI.Controllers
                         Phone = createOrderDTO.Phone,
                         OrderDate = DateTime.Now,
                         Address = createOrderDTO.Address,
-                        Note = createOrderDTO.Note,
+                        Note = ownerVoucherNote,
                         TotalAmount = group.Sum(item => item.Quantity * item.UnitPrice) - voucherPrice,
                         AccountId = createOrderDTO.AccountId,
                         OwnerId = group.Key,
                         StatusId = 1,
-                        VoucherId = ownerVoucher
+                        VoucherId = ownerVoucherId
                     };
 
                     await _orderRepository.AddOrderAsync(order);
+
                     foreach (var cartItem in group)
                     {
                         var productSize = await _productSizeRepository.GetByIdAsync(cartItem.ProductSizeId);
                         if (productSize != null && productSize.Quantity >= cartItem.Quantity)
                         {
-                            productSize.Quantity -= cartItem.Quantity;
-                            await _productSizeRepository.UpdateAsync(productSize);
-
                             // Add order details
                             var orderDetail = new OrderDetail
                             {
@@ -195,17 +204,18 @@ namespace WebAPI.Controllers
                     {
                         AccountId = null,
                         OwnerId = group.Key, // Assuming Product model has OwnerId field
-                        Content = $"You has just had a order with code order {codeOrder}.",
+                        Content = $"You have just had an order with code order {codeOrder}.",
                         IsRead = false,
                         Url = null,
                         CreateDate = DateTime.Now
                     };
-                     await _notificationRepository.AddNotificationAsync(notification);
+
+                    await _notificationRepository.AddNotificationAsync(notification);
                 }
 
                 await _transactionRepository.CommitTransactionAsync();
 
-                return Ok(new { message = "Order successfull!" });
+                return Ok(new { message = "Order successful!" });
             }
             catch (Exception ex)
             {

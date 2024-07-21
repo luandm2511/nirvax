@@ -9,11 +9,7 @@ public partial class WarehouseDetail
 
     public string ProductSizeId { get; set; } = null!;
 
-    public int QuantityInStock { get; set; }
-
     public string Location { get; set; } = null!;
-
-    public double UnitPrice { get; set; }
 
     public virtual ProductSize ProductSize { get; set; } = null!;
 

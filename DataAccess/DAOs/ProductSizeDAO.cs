@@ -36,6 +36,7 @@ namespace DataAccess.DAOs
             return await _context.ProductSizes.Include(p => p.Product)
                    .ThenInclude(p => p.Images)
                    .Include(p => p.Size)
+                   .Include(p => p.Product.Owner)
                    .FirstOrDefaultAsync(p => p.ProductSizeId == id);
         }
 

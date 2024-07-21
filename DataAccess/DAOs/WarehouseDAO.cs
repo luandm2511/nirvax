@@ -164,13 +164,6 @@ namespace DataAccess.DAOs
                     .Where(i => i.WarehouseId == warehouse.WarehouseId)
                    
                     .ToListAsync();
-
-            var totalQuantity = listWarehouseDetail.Sum(p => p.QuantityInStock);
-            var totalPrice = listWarehouseDetail.Sum(p =>  p.UnitPrice);
-
-            warehouse.TotalQuantity = totalQuantity;
-            warehouse.TotalPrice = totalPrice;
-
             return warehouse;
         }
 
@@ -195,14 +188,12 @@ namespace DataAccess.DAOs
             var result = await _context.WarehouseDetails
                 .Where(wd => wd.WarehouseId == warehouse.WarehouseId)
 
-            .GroupBy(w => new { w.ProductSizeId, w.UnitPrice})
+            .GroupBy(w => new { w.ProductSizeId})
 
         .Select(g => new WarehouseDetail
         {
             ProductSizeId = g.Key.ProductSizeId,
             Location = g.Select(i => i.Location).FirstOrDefault(),
-            QuantityInStock = g.Sum(wd => wd.QuantityInStock),
-            UnitPrice = g.Key.UnitPrice
         })
         .ToListAsync();
             if (result == null) 

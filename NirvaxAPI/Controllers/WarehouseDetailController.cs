@@ -54,11 +54,6 @@ namespace WebAPI.Controllers
             }
         }
 
-
-
-
-
-
         [HttpPost]
         //  [Authorize]
         public async Task<ActionResult> CreateWarehouseDetailAsync(ProductSizeCreateDTO productSizeCreateDTO)
@@ -71,9 +66,7 @@ namespace WebAPI.Controllers
                     {
                         WarehouseId = productSizeCreateDTO.WarehouseId,
                         ProductSizeId = productsize.ProductSizeId,
-                        QuantityInStock = 0,
-                        Location = "",
-                        UnitPrice = 0
+                        Location = ""
                     };
 
                     var warehouse = await _repo.CreateWarehouseDetailAsync(warehouseDetail);

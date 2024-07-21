@@ -61,8 +61,6 @@ namespace DataAccess.DAOs
             ProductSizeId = g.Key.ProductSizeId,
             
            Location = g.Select(i => i.Location).FirstOrDefault(),
-            TotalQuantity = g.Sum(wd => wd.QuantityInStock),
-            TotalUnitPrice = g.Sum(wd => wd.UnitPrice)
         })
         .ToListAsync();
 
