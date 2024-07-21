@@ -111,13 +111,14 @@ namespace DataAccess.DAOs
                 .Include(p => p.Owner)
                 .Where(p => !p.Isdelete && !p.Isban);
 
-            var ownersQuery = _context.Owners
-                .Where(o => !o.IsBan);
+            List<Owner> owners = new List<Owner>();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm));
-                ownersQuery = ownersQuery.Where(o => o.Fullname.Contains(searchTerm) || o.Email.Contains(searchTerm) || o.Phone.Contains(searchTerm));
+                owners = await _context.Owners
+                    .Where(o => !o.IsBan && o.Fullname.Contains(searchTerm))
+                    .ToListAsync();
             }
 
             if (minPrice.HasValue)
@@ -146,7 +147,6 @@ namespace DataAccess.DAOs
             }
 
             var products = await productsQuery.ToListAsync();
-            var owners = await ownersQuery.ToListAsync();
 
             return (products, owners);
         }
