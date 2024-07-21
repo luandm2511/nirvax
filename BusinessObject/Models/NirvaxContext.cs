@@ -806,8 +806,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.Location)
                 .HasMaxLength(50)
                 .HasColumnName("location");
-            entity.Property(e => e.QuantityInStock).HasColumnName("quantity_in_stock");
-            entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
 
             entity.HasOne(d => d.ProductSize).WithMany(p => p.WarehouseDetails)
                 .HasForeignKey(d => d.ProductSizeId)

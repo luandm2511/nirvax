@@ -33,6 +33,7 @@ namespace DataAccess.DAOs
                     .Include(o => o.Voucher)
                     .AsNoTracking()
                     .Where(o => o.AccountId == accountId)
+                    .OrderByDescending(o => o.OrderId)
                     .ToListAsync();
         }
 
@@ -44,6 +45,7 @@ namespace DataAccess.DAOs
                     .Include(o => o.Status)
                     .Include(o => o.Voucher)
                     .Where(o => o.OwnerId == ownerId)
+                    .OrderByDescending(o => o.OrderId)
                     .ToListAsync();
         }
 

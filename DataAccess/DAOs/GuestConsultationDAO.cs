@@ -27,8 +27,7 @@ namespace DataAccess.DAOs
 
         public GuestConsultationDAO(NirvaxContext context, IMapper mapper)
         {
-
-             _context = context;
+            _context = context;
             _mapper = mapper;
         }
 
