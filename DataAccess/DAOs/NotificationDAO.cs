@@ -28,6 +28,7 @@ namespace DataAccess.DAOs
                 .Include(n => n.Owner)
                 .Include(n => n.Account)
                 .Where(n => n.AccountId == id)
+                .OrderByDescending(n => n.NotificationId)
                 .ToListAsync();
         }
 
@@ -37,6 +38,7 @@ namespace DataAccess.DAOs
                 .Include(n => n.Owner)
                 .Include(n => n.Account)
                 .Where(n => n.OwnerId == id)
+                .OrderByDescending(n => n.NotificationId)
                 .ToListAsync();
         }
 

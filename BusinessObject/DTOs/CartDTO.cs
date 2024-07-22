@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.DTOs
 {
-    public class VoucherOrderDTO
+    public class CartDTO
     {
-        public int? OwnerId { get; set; }
-        public string? VoucherId { get; set; }
-        public string? Note { get; set; }
+        public int TotalCount { get; set; }
+        public List<CartOwner> CartOwners { get; set; } = new List<CartOwner>();
     }
 }

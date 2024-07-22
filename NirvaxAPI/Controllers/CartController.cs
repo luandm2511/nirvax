@@ -34,7 +34,16 @@ namespace WebAPI.Controllers
             try
             {
                 var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
-                return Ok(cart);
+
+                // Calculate the total count of items in the cart
+                int totalCount = cart.Sum(owner => owner.CartItems.Sum(item => item.Quantity));
+
+                var cartDto = new CartDTO
+                {
+                    CartOwners = cart,
+                    TotalCount = totalCount
+                };
+                return Ok(cartDto);
             }
             catch (Exception ex)
             {
@@ -60,7 +69,7 @@ namespace WebAPI.Controllers
                 {
                     ownerCart = new CartOwner {
                         OwnerId = ownerId,
-                        OwnerName = productsize.Product.Owner.Fullname
+                        OwnerName = productsize.Product.Owner.Fullname, 
                     };
                     
                     cart.Add(ownerCart);
@@ -79,7 +88,7 @@ namespace WebAPI.Controllers
                         TotalPrice = quantity * productsize.Product.Price,
                         Image = productsize.Product.Images.FirstOrDefault()?.LinkImage,
                         OwnerId = ownerId
-                    });
+                    });   
                 }
                 else
                 {
@@ -91,7 +100,7 @@ namespace WebAPI.Controllers
 
                 _cartService.SaveCartToCookie(userId, cart);
 
-                return Ok(new { Count = cart.Count(), message = "Product is add to cart successfully." });
+                return Ok(new { message = "Product is add to cart successfully." });
             }
             catch (Exception ex)
             {
