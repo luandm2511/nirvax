@@ -453,11 +453,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("home/searchs")]
-        public async Task<IActionResult> Searchs(string? searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<int> sizeIds)
+        public async Task<IActionResult> Searchs(string? searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<string> sizes)
         {
             try
             {
-                var result = await _productRepository.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizeIds);
+                var result = await _productRepository.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizes);
                 return Ok(result);
             }
             catch (Exception ex)
