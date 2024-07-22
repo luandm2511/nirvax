@@ -112,8 +112,7 @@ namespace WebAPI.Controllers
                 {
                     var wh = await _repo.UpdateWarehouseDetailAsync(warehouseDetailDTO);
                     if (wh)
-                    {
-                        await _repoProdSize.UpdateProductSizeAsync(warehouseDetailDTO.ProductSizeId, warehouseDetailDTO.QuantityInStock);
+                    {           
                         return StatusCode(200, new
                         {
                             Message = "Update Warehouse detail" + ok,

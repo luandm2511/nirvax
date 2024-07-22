@@ -121,7 +121,50 @@ namespace WebAPI.Controllers
             }
         }
 
-[HttpPatch("{productSizeId}")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var checkProductSize = await _repo.CheckProductSizeByIdAsync(productSizeDTO.ProductSizeId);
+                    if (checkProductSize == true)
+                    {
+                        var size1 = await _repo.UpdateProductSizeAsync(productSizeDTO);
+                        return StatusCode(200, new
+                        {
+                            Message = "Update product size" + ok,
+                            Data = size1
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(400, new
+                        {
+                            Message = "The productsize not exists !",
+                        });
+                    }
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = "Please enter valid Size",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
+        }
+
+        [HttpPatch("{productSizeId}")]
         public async Task<ActionResult> DeleteProductSizeAsync(string productSizeId)
         {
             try { 
