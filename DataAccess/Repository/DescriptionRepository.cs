@@ -61,12 +61,12 @@ namespace DataAccess.Repository
             return (_descriptionDAO.GetDescriptionByIdAsync(descriptionId));
         }
   
-        public Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
+        public Task<Description> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
             return _descriptionDAO.CreateDesctiptionAsync(descriptionCreateDTO);
         }
 
-        public Task<bool> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
+        public Task<Description> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
         {
             return _descriptionDAO.UpdateDesctiptionAsync(descriptionDTO);
         }

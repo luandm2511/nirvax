@@ -12,7 +12,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class DescriptionController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IDescriptionRepository _repo;
         private readonly IImageRepository _imageRepository;
         private readonly string ok = "successfully";
@@ -20,9 +19,9 @@ namespace WebAPI.Controllers
         private readonly string badRequest = "Failed!";
         private readonly IMapper _mapper;
 
-        public DescriptionController(IConfiguration config, IDescriptionRepository repo, IImageRepository imageRepository,  IMapper mapper)
+        public DescriptionController( IDescriptionRepository repo, IImageRepository imageRepository,  IMapper mapper)
         {
-            _config = config;
+           
             _repo = repo;
             _imageRepository = imageRepository;
             _mapper = mapper;
@@ -103,7 +102,7 @@ namespace WebAPI.Controllers
             try {
                 if (ModelState.IsValid)
                 {
-                    var des = _mapper.Map<Description>(descriptionCreateDTO);
+          
                     var checkDescription = await _repo.CheckDescriptionAsync(0, descriptionCreateDTO.Title, descriptionCreateDTO.Content);
                     if (checkDescription == true)
                     {
@@ -113,7 +112,7 @@ namespace WebAPI.Controllers
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                DescriptionId = des.DescriptionId
+                                DescriptionId = description1.DescriptionId
                             };
                             await _imageRepository.AddImagesAsync(image);
 
@@ -163,7 +162,7 @@ namespace WebAPI.Controllers
             try
             {
                 if (ModelState.IsValid) { 
-            var des = _mapper.Map<Description>(descriptionDTO);
+      
             var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
                     if (checkDescription == true)
                     {
@@ -181,7 +180,7 @@ namespace WebAPI.Controllers
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                DescriptionId = des.DescriptionId
+                                DescriptionId = description1.DescriptionId
                             };
                             await _imageRepository.AddImagesAsync(image);
                         }
@@ -220,7 +219,7 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPatch("{sizeId}")]
+        [HttpPatch()]
         public async Task<ActionResult> DeleteDesctiptionAsync(int descriptionId)
         {
             using var transaction = await _repo.BeginTransactionAsync();

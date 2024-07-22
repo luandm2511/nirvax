@@ -139,7 +139,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
+        public async Task<Description> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
         {
 
             Description description = _mapper.Map<Description>(descriptionCreateDTO);
@@ -148,13 +148,13 @@ namespace DataAccess.DAOs
             int i = await _context.SaveChangesAsync();
             if (i > 0)
             {
-                return true;
+                return description;
             }
-            else { return false; }
+            else { return null; }
 
         }
 
-        public async Task<bool> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
+        public async Task<Description> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
         {
             Description? description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionDTO.DescriptionId);
             //ánh xạ đối tượng DescriptionDTO đc truyền vào cho staff
@@ -162,7 +162,7 @@ namespace DataAccess.DAOs
                 _mapper.Map(descriptionDTO, description);
                  _context.Descriptions.Update(description);
                 await _context.SaveChangesAsync();
-                return true;
+                return description;
         }
 
         public async Task<bool> DeleteDesctiptionAsync(int descriptionId)

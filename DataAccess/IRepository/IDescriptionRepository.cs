@@ -20,9 +20,9 @@ namespace DataAccess.IRepository
         Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content);
 
         Task<bool> CheckDescriptionExistAsync(int sizeId);
-        Task<bool> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO);
+        Task<Description> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO);
 
-        Task<bool> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO);
+        Task<Description> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO);
         Task<bool> DeleteDesctiptionAsync(int sizeId);
 
     }
