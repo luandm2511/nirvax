@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using StackExchange.Redis;
+using WebAPI.Service;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -22,10 +25,12 @@ namespace WebAPI.Controllers
         private readonly IImageRepository _imageRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly IMapper _mapper;
 
-        public ProductController(IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository)
+        public ProductController(IHubContext<NotificationHub> hubContext, IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository)
         {
+            _hubContext = hubContext;
             _productRepository = productRepository;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
@@ -305,6 +310,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Product is banned successfully." });
             }
             catch (Exception ex)
@@ -342,6 +349,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Product has been unbanned successfully." });
             }
             catch (Exception ex)

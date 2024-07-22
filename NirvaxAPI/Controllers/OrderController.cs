@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Helpers;
 using WebAPI.Service;
@@ -27,11 +28,13 @@ namespace WebAPI.Controllers
         private readonly INotificationRepository _notificationRepository;
         private readonly IVoucherRepository _voucherRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IHubContext<NotificationHub> _hubContext;
         ICartService _cartService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public OrderController(
+            IHubContext<NotificationHub> hubContext,
             IOrderRepository orderRepository,
             IOrderDetailRepository orderDetailRepository,
             IProductSizeRepository productSizeRepository,
@@ -43,6 +46,7 @@ namespace WebAPI.Controllers
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor)
         {
+            _hubContext = hubContext;
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
             _productSizeRepository = productSizeRepository;
@@ -211,6 +215,8 @@ namespace WebAPI.Controllers
                     };
 
                     await _notificationRepository.AddNotificationAsync(notification);
+                    // Gửi thông báo cho chủ sở hữu sản phẩm
+                    await _hubContext.Clients.Group($"Owner-{group.Key}").SendAsync("ReceiveNotification", notification.Content);
                 }
 
                 await _transactionRepository.CommitTransactionAsync();
@@ -318,6 +324,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho người dùng và chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"User-{order.AccountId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok();
             }
             catch (Exception ex)
@@ -365,6 +373,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok();
             }
             catch (Exception ex)
