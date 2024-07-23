@@ -98,7 +98,7 @@ namespace WebAPI.Controllers
                 cart.Remove(ownerCart);
                 cart.Insert(0, ownerCart);
 
-                _cartService.SaveCartToCookie(userId, cart);
+                await _cartService.SaveCartToCookie(userId, cart);
 
                 return Ok(new { message = "Product is add to cart successfully." });
             }
