@@ -12,7 +12,7 @@ namespace WebAPI.Service
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public List<CartOwner> GetCartFromCookie(int userId)
+        public async Task<List<CartOwner>> GetCartFromCookie(int userId)
         {
             var cookie = _httpContextAccessor.HttpContext.Request.Cookies[$"Cart_{userId}"];
             if (cookie == null)
@@ -22,7 +22,7 @@ namespace WebAPI.Service
             return JsonConvert.DeserializeObject<List<CartOwner>>(cookie);
         }
 
-        public void SaveCartToCookie(int userId, List<CartOwner> cart)
+        public async Task SaveCartToCookie(int userId, List<CartOwner> cart)
         {
             var cookieOptions = new CookieOptions
             {
@@ -34,10 +34,8 @@ namespace WebAPI.Service
             _httpContextAccessor.HttpContext.Response.Cookies.Append($"Cart_{userId}", cartJson, cookieOptions);
         }
 
-        public void RemoveCartItemFromCookie(int userId, string productSizeId)
+        public async Task<List<CartOwner>> RemoveCartItemFromCookie(List<CartOwner> cart, string productSizeId)
         {
-            var cart = GetCartFromCookie(userId);
-
             foreach (var ownerCart in cart)
             {
                 var existingItem = ownerCart.CartItems.FirstOrDefault(i => i.ProductSizeId == productSizeId);
@@ -51,7 +49,7 @@ namespace WebAPI.Service
                     break;
                 }
             }
-            SaveCartToCookie(userId, cart);
+            return cart;
         }
     }
 }

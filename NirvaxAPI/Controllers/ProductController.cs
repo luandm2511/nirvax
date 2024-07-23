@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _accessLogService.LogAccessAsync(HttpContext);
+                await _accessLogService.LogAccessAsync(HttpContext);
                 var products = await _productRepository.GetProductsInHomeAsync();
                 return Ok(products);
             }

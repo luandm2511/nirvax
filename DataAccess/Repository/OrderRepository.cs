@@ -39,7 +39,7 @@ namespace DataAccess.Repository
             return await _orderDAO.GetOrderByIdAsync(orderId);
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId)
+        public async Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId)
         {
             return await _orderDAO.GetOrdersByAccountIdAsync(accountId);
         }

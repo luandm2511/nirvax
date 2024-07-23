@@ -27,8 +27,10 @@ namespace DataAccess.DAOs
         {
             return await _context.OrderDetails
                 .Include(o => o.Order)
-                .Include(o => o.ProductSize.Product)
-                .Include(o => o.ProductSize.Size)
+                .Include(o => o.ProductSize)
+                    .ThenInclude(ps => ps.Product)
+                .Include(o => o.ProductSize)
+                    .ThenInclude(ps => ps.Size)
                 .Where(od => od.OrderId == orderId)
                 .ToListAsync();
         }

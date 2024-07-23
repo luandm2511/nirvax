@@ -111,7 +111,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{createOrderDTO.AccountId}") ?? new List<CartOwner>();
+                var cart = await _cartService.GetCartFromCookie(createOrderDTO.AccountId);
 
                 // Group các sản phẩm theo OwnerId
                 var groupedItems = createOrderDTO.Items.GroupBy(item => item.OwnerId);
@@ -194,7 +194,7 @@ namespace WebAPI.Controllers
                             // Remove item from session cart
                             if (!createOrderDTO.IsOrderNow)
                             {
-                                _cartService.RemoveCartItemFromCookie(createOrderDTO.AccountId, cartItem.ProductSizeId);
+                                cart = await _cartService.RemoveCartItemFromCookie(cart, cartItem.ProductSizeId);
                             }
                         }
                         else
@@ -215,6 +215,7 @@ namespace WebAPI.Controllers
                     };
 
                     await _notificationRepository.AddNotificationAsync(notification);
+                    await _cartService.SaveCartToCookie(order.AccountId, cart);
                     // Gửi thông báo cho chủ sở hữu sản phẩm
                     await _hubContext.Clients.Group($"Owner-{group.Key}").SendAsync("ReceiveNotification", notification.Content);
                 }
@@ -320,7 +321,7 @@ namespace WebAPI.Controllers
                 {
                     AccountId = order.AccountId,
                     OwnerId = null, // Assuming Product model has OwnerId field
-                    Content = content,
+                    Content = content ,
                     IsRead = false,
                     Url = "abcd",
                     CreateDate = DateTime.Now

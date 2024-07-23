@@ -25,16 +25,34 @@ namespace DataAccess.DAOs
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
-        public async Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId)
+        public async Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId)
         {
-            return await _context.Orders
-                    .Include(o => o.Owner)
-                    .Include(o => o.Status)
-                    .Include(o => o.Voucher)
-                    .AsNoTracking()
-                    .Where(o => o.AccountId == accountId)
-                    .OrderByDescending(o => o.OrderId)
-                    .ToListAsync();
+            var orders = await _context.Orders
+                .Include(o => o.Status)
+                .Include(o => o.Owner)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.ProductSize)
+                        .ThenInclude(ps => ps.Product)
+                            .ThenInclude(p => p.Images)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.ProductSize)
+                        .ThenInclude(ps => ps.Size)
+                .Where(o => o.AccountId == accountId)
+                .ToListAsync();
+
+            var historyList = orders.Select(o => new HistoryOrderDTO
+            {
+                OrderId = o.OrderId,
+                ShopName = o.Owner.Fullname, // Assuming Owner has a property ShopName
+                StatusName = o.Status.Name,
+                ProductName = o.OrderDetails.FirstOrDefault()?.ProductSize.Product.Name,
+                ProductImage = o.OrderDetails.FirstOrDefault()?.ProductSize.Product.Images.FirstOrDefault()?.LinkImage,
+                Size = o.OrderDetails.FirstOrDefault()?.ProductSize.Size.Name,
+                UnitPrice = o.OrderDetails.FirstOrDefault()?.UnitPrice ?? 0,
+                TotalPrice = o.TotalAmount
+            }).ToList();
+
+            return historyList;
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId)
