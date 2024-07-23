@@ -25,8 +25,6 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id)
         {
             return await _context.Notifications
-                .Include(n => n.Owner)
-                .Include(n => n.Account)
                 .Where(n => n.AccountId == id)
                 .OrderByDescending(n => n.NotificationId)
                 .ToListAsync();
@@ -35,8 +33,6 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Notification>> GetNotificationsByOwnerAsync(int id)
         {
             return await _context.Notifications
-                .Include(n => n.Owner)
-                .Include(n => n.Account)
                 .Where(n => n.OwnerId == id)
                 .OrderByDescending(n => n.NotificationId)
                 .ToListAsync();

@@ -26,9 +26,10 @@ namespace WebAPI.Controllers
         private readonly INotificationRepository _notificationRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IAccessLogService _accessLogService;
         private readonly IMapper _mapper;
 
-        public ProductController(IHubContext<NotificationHub> hubContext, IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository)
+        public ProductController(IHubContext<NotificationHub> hubContext, IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository, IAccessLogService accessLogService)
         {
             _hubContext = hubContext;
             _productRepository = productRepository;
@@ -36,6 +37,7 @@ namespace WebAPI.Controllers
             _mapper = mapper;
             _imageRepository = imageRepository;
             _notificationRepository = notificationRepository;
+            _accessLogService = accessLogService;
         }
 
         [HttpGet("dashboard-admin")]
@@ -57,6 +59,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                _accessLogService.LogAccessAsync(HttpContext);
                 var products = await _productRepository.GetProductsInHomeAsync();
                 return Ok(products);
             }

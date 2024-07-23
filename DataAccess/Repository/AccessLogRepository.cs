@@ -27,9 +27,9 @@ namespace DataAccess.Repository
             return await _accessLogDAO.GetAccessLogsAsync();
         }
 
-        public async Task<bool> LogAccessAsync(AccessLog accessLog)
+        public async Task LogAccessAsync(AccessLog accessLog)
         {
-            return await _accessLogDAO.LogAccessAsync(accessLog);
+             await _accessLogDAO.LogAccessAsync(accessLog);
         }
     }
 }

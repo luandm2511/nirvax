@@ -48,10 +48,10 @@ namespace WebAPI.Service
                     {
                         cart.Remove(ownerCart);
                     }
-                    SaveCartToCookie(userId, cart);
                     break;
                 }
             }
+            SaveCartToCookie(userId, cart);
         }
     }
 }

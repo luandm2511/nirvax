@@ -169,9 +169,9 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("update-avatar/{id}/{avatar}")]
+        [HttpPut("update-avatar/{id}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> UpdateAvatar(int id, string avatar)
+        public async Task<IActionResult> UpdateAvatar(int id, AvatarDTO avatarDTO)
         {
             try
             {
@@ -180,7 +180,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(new { message = "Account not found." });
                 }
-                account.Image = avatar;
+                account.Image = avatarDTO.Image;
                 await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Avatar updated successfully." });
             }

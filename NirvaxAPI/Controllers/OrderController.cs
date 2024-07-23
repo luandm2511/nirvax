@@ -267,6 +267,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
+                var content = "";
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
                 if (order == null)
                 {
@@ -276,6 +277,7 @@ namespace WebAPI.Controllers
                 if(statusId == 2)
                 {
                     order.RequiredDate = DateTime.Now;
+                    content = $"You have an order with code {order.CodeOrder} that has been delivered to the shipping company by the seller.";
                 }
 
                 if (statusId == 3)
@@ -291,6 +293,7 @@ namespace WebAPI.Controllers
                         }
                     }
                     order.ShippedDate = DateTime.Now;
+                    content = $"You have an order with code {order.CodeOrder} that has been successfully delivered.";
                 }
 
                 if (statusId > 3) // Assuming > 3 means order is canceled or returned
@@ -306,6 +309,7 @@ namespace WebAPI.Controllers
                         }
                     }
                     order.ShippedDate = DateTime.Now;
+                    content = $"You have an order with code {order.CodeOrder} that has failed to be delivered.";
                 }
 
                 order.StatusId = statusId; 
@@ -316,7 +320,7 @@ namespace WebAPI.Controllers
                 {
                     AccountId = order.AccountId,
                     OwnerId = null, // Assuming Product model has OwnerId field
-                    Content = $"You have an order with order code {order.CodeOrder} being in {order.Status.Name} status  .",
+                    Content = content,
                     IsRead = false,
                     Url = "abcd",
                     CreateDate = DateTime.Now

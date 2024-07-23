@@ -147,23 +147,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
-
-                foreach (var ownerCart in cart)
-                {
-                    var existingItem = ownerCart.CartItems.FirstOrDefault(i => i.ProductSizeId == productsizeId);
-                    if (existingItem != null)
-                    {
-                        ownerCart.CartItems.Remove(existingItem);
-                        if (ownerCart.CartItems.Count == 0)
-                        {
-                            cart.Remove(ownerCart);
-                        }
-                        break;
-                    }
-                }
-
-                _cartService.SaveCartToCookie(userId, cart);
+                _cartService.RemoveCartItemFromCookie(userId, productsizeId);
                 return Ok(new { message = "You have just deleted product form cart successfully." });
             }
             catch (Exception ex)
