@@ -237,7 +237,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Staff",
+                        Message = "Please enter valid Staff!",
                     });
                 }
             }
@@ -323,7 +323,7 @@ namespace WebAPI.Controllers
             }
 
         }
-        [HttpPatch("{staffId}")]
+        [HttpDelete("{staffId}")]
         public async Task<ActionResult> DeleteStaffAsync(int staffId)
         {
             try { 

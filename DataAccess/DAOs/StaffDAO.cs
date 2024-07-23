@@ -293,7 +293,7 @@ namespace DataAccess.DAOs
             if (staff != null)
             {
            
-                 _context.Staff.Update(staff);
+                 _context.Staff.Remove(staff);
                 await _context.SaveChangesAsync();
                 return true;
             }
