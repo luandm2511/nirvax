@@ -39,8 +39,6 @@ namespace DataAccess.Repository
             return _importProductDetailDAO.GetAllImportProductDetailAsync();
         }
 
-
-
         public Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {
 

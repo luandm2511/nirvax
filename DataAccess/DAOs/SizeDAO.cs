@@ -115,17 +115,10 @@ namespace DataAccess.DAOs
 
         public async Task<SizeDTO> GetSizeByIdAsync(int sizeId)
         {
-            SizeDTO sizeDTO = new SizeDTO();
-            try
-            {
-                Size? sid = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId);
-               
-                    sizeDTO = _mapper.Map<SizeDTO>(sid);
-                return sizeDTO;
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-          
+                SizeDTO sizeDTO = new SizeDTO();
+                Size? sid = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId);              
+                sizeDTO = _mapper.Map<SizeDTO>(sid);
+                return sizeDTO;         
         }
 
       

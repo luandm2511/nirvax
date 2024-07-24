@@ -12,14 +12,16 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IImportProductDetailRepository _repo;
+        private readonly IProductSizeRepository _repoProdSize;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public ImportProductDetailController(IConfiguration config, IImportProductDetailRepository repo)
+        public ImportProductDetailController(IConfiguration config, IImportProductDetailRepository repo, IProductSizeRepository repoProdSize)
         {
             _config = config;
             _repo = repo;
+            _repoProdSize = repoProdSize;
         }
 
 
@@ -95,6 +97,7 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     var importProductDetail = await _repo.CreateImportProductDetailAsync(importId, importProductDetailDTO);
+                    await _repoProdSize.UpdateProductSizeByImportAsync(importProductDetailDTO);
                     return StatusCode(200, new
                     {
                         Message = "Create Import Product Detail " + ok,

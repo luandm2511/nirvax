@@ -134,14 +134,8 @@ namespace DataAccess.DAOs
         public async Task<ServiceDTO> GetServiceByIdAsync(int sizeId)
         {
             ServiceDTO serviceDTO = new ServiceDTO();
-            try
-            {
                 Service? sid = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ServiceId == sizeId);
-
-                serviceDTO = _mapper.Map<ServiceDTO>(sid);
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
+                serviceDTO = _mapper.Map<ServiceDTO>(sid);       
             return serviceDTO;
         }
 
@@ -167,9 +161,6 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceDTO.ServiceId);
-            //ánh xạ đối tượng ServiceDTO đc truyền vào cho staff
-
-
             serviceDTO.Isdelete = false;
             _mapper.Map(serviceDTO, service);
              _context.Services.Update(service);
@@ -182,28 +173,18 @@ namespace DataAccess.DAOs
         public async Task<bool> DeleteServiceAsync(int serviceId)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceId);
-            //ánh xạ đối tượng ServiceDTO đc truyền vào cho staff
-
-
-
             if (service != null)
             {
                 service.Isdelete = true;
                  _context.Services.Update(service);
-                //    _mapper.Map(ServiceDTO, staff);
-
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
-
-
         }
         public async Task<bool> RestoreServiceAsync(int serviceId)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceId);
-          
             if (service != null)
             {
                 service.Isdelete = false;
@@ -213,10 +194,7 @@ namespace DataAccess.DAOs
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
-
-
         }
     }
 }

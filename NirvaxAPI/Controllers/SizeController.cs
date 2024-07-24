@@ -27,13 +27,12 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Size>>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            try { 
             var list = await _repo.GetAllSizesAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     {
-                        Message = "Get list size " + ok,
+                        Message = "Get list of sizes " + ok,
                         Data = list
                     });
                 }
@@ -45,14 +44,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "any size"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
 
@@ -118,7 +109,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Size",
+                        Message = "Please enter valid Size!",
                     });
                 }
             }
@@ -177,7 +168,6 @@ namespace WebAPI.Controllers
         [HttpPatch("{sizeId}")]
         public async Task<ActionResult> DeleteSizeAsync(int sizeId)
         {
-            try { 
             var size1 = await _repo.DeleteSizeAsync(sizeId);
                 if (size1)
                 {
@@ -192,15 +182,7 @@ namespace WebAPI.Controllers
                     {
                         Message = badRequest,
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }  
         }
 
         [HttpPatch("{sizeId}")]

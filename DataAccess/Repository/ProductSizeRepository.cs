@@ -66,6 +66,11 @@ namespace DataAccess.Repository
             return _productSizeDAO.CreateProductSizeAsync(productSizeCreateDTO);
         }
 
+        public Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailDTO> importProductDetailDTO)
+        {
+            return _productSizeDAO.UpdateProductSizeByImportAsync(importProductDetailDTO);
+        }
+
         public Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
         {
             return _productSizeDAO.UpdateProductSizeAsync(productSizeDTO);

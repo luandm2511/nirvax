@@ -29,13 +29,12 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
-            try { 
             var list = await _repo.GetAllOwnersAsync( searchQuery, page,  pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     {
-                        Message = "Get list owner " + ok,
+                        Message = "Get list of owners " + ok,
                         Data = list
                     });
                 }
@@ -45,15 +44,7 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any owner"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }     
         }
 
 
@@ -61,13 +52,13 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersForUserAsync(string? searchQuery)
         {
-            try { 
+           
             var list = await _repo.GetAllOwnersForUserAsync(searchQuery);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     {
-                        Message = "Get list owner " + ok,
+                        Message = "Get list of owners " + ok,
                         Data = list
                     });
                 }
@@ -78,14 +69,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "any owner"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
 
@@ -93,7 +76,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetOwnerByIdAsync(int ownerId)
         {
-            try { 
             var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
                 if (checkOwner == true)
                 {
@@ -109,24 +91,15 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(404, new
                     {
-                        Message = notFound + "any owner"
+                        Message = notFound + "owner"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet("{ownerEmail}")]
         //  [Authorize]
         public async Task<ActionResult> GetOwnerByEmailAsync(string ownerEmail)
         {
-            try { 
             var checkOwner = await _repo.CheckProfileExistAsync(ownerEmail);
                 if (checkOwner == true)
                 {
@@ -141,17 +114,9 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(404, new
                     {
-                        Message = notFound + "any owner"
+                        Message = notFound + "owner"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }          
         }
 
         //check exist
@@ -309,7 +274,6 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateAvatarOwnerAsync([FromForm] OwnerAvatarDTO ownerAvatarDTO)
         {
-            try { 
             var checkOwner = await _repo.CheckOwnerExistAsync(ownerAvatarDTO.OwnerId);
                 if (checkOwner == true)
                 {
@@ -327,27 +291,23 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
         }
         
 
         [HttpPatch("{ownerId}")]
         public async Task<ActionResult> BanOwnerAsync(int ownerId)
         {
-            try
-            {
                 var owner1 = await _repo.BanOwnerAsync(ownerId);
                 if (owner1)
                 {
                     var email = await _repo.GetEmailAsync(ownerId);
+                    if(email == null)
+                    {
+                       return StatusCode(404, new
+                       {
+                        Message = "Not found email!",
+                       });
+                    }
                     await _emailService.SendEmailAsync(email, "Ban", "Your account violates the policy, so we temporarily and permanently block your account!");
                     return StatusCode(200, new
                     {
@@ -361,21 +321,11 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {                   
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
         }
 
         [HttpPatch("{ownerId}")]
         public async Task<ActionResult> UnBanOwnerAsync(int ownerId)
         {
-            try { 
             var owner1 = await _repo.UnBanOwnerAsync(ownerId);
                 if (owner1)
                 {
@@ -391,15 +341,6 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
         }
 
         [HttpGet]

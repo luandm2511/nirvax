@@ -19,8 +19,6 @@ namespace DataAccess.IRepository
 
         Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync();
 
-       
-
         Task<bool> CreateImportProductDetailAsync(int importId,List<ImportProductDetailDTO> importProductDetailDTO);
 
        

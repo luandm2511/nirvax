@@ -224,6 +224,23 @@ namespace DataAccess.DAOs
                 return true;
           
         }
+        public async Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailDTO> importProductDetailDTO)
+        {
+            Product? productSize;
+            foreach (var item in importProductDetailDTO)
+            {
+               var result = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == item.ProductSizeId);
+                if(result == null)
+                {                   
+                        throw new Exception("One of the imported product sizes is not in stock");                   
+                }
+               result.Quantity += item.QuantityReceived;
+                _context.ProductSizes.Update(result);
+                await _context.SaveChangesAsync();
+            }
+            return true;
+
+        }
 
         public async Task<bool> DeleteProductSizeAsync(string productSizeId)
         {
