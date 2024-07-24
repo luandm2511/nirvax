@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using StackExchange.Redis;
+using WebAPI.Service;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -22,15 +25,19 @@ namespace WebAPI.Controllers
         private readonly IImageRepository _imageRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IAccessLogService _accessLogService;
         private readonly IMapper _mapper;
 
-        public ProductController(IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository)
+        public ProductController(IHubContext<NotificationHub> hubContext, IProductRepository productRepository, ITransactionRepository transactionRepository, IMapper mapper, IImageRepository imageRepository, INotificationRepository notificationRepository, IAccessLogService accessLogService)
         {
+            _hubContext = hubContext;
             _productRepository = productRepository;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
             _imageRepository = imageRepository;
             _notificationRepository = notificationRepository;
+            _accessLogService = accessLogService;
         }
 
         [HttpGet("dashboard-admin")]
@@ -52,6 +59,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                await _accessLogService.LogAccessAsync(HttpContext);
                 var products = await _productRepository.GetProductsInHomeAsync();
                 return Ok(products);
             }
@@ -305,6 +313,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Product is banned successfully." });
             }
             catch (Exception ex)
@@ -342,6 +352,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Product has been unbanned successfully." });
             }
             catch (Exception ex)
@@ -453,11 +465,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("home/searchs")]
-        public async Task<IActionResult> Searchs(string? searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<int> sizeIds)
+        public async Task<IActionResult> Searchs(string? searchTerm, double? minPrice, double? maxPrice, [FromQuery] List<int> categoryIds, [FromQuery] List<int> brandIds, [FromQuery] List<string> sizes)
         {
             try
             {
-                var result = await _productRepository.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizeIds);
+                var result = await _productRepository.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizes);
                 return Ok(result);
             }
             catch (Exception ex)

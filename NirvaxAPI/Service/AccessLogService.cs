@@ -12,7 +12,7 @@ namespace WebAPI.Service
             _accessLogRepository = accessLogRepository;
         }
 
-        public async Task<bool> LogAccessAsync(HttpContext context)
+        public async Task LogAccessAsync(HttpContext context)
         {
             var accessLog = new AccessLog
             {
@@ -22,7 +22,6 @@ namespace WebAPI.Service
             };
 
             await _accessLogRepository.LogAccessAsync(accessLog);
-            return true;
         }
 
         public async Task<IEnumerable<AccessLog>> GetAccessLogsAsync()

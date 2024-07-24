@@ -12,7 +12,7 @@ namespace DataAccess.IRepository
     public interface IOrderRepository
     {
         Task AddOrderAsync(Order order);
-        Task<IEnumerable<Order>> GetOrdersByAccountIdAsync(int accountId);
+        Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId);
         Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId);
         Task<Order> GetOrderByIdAsync(int orderId);
         Task UpdateOrderAsync(Order order);

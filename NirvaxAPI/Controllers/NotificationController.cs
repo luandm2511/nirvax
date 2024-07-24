@@ -19,12 +19,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("user/{id}")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> GetByUser(int id)
         {
             try
             {
-                var noti = _notificationRepository.GetNotificationsByUserAsync(id);
+                var noti = await _notificationRepository.GetNotificationsByUserAsync(id);
                 return Ok(noti);
             }
             catch (Exception ex)
@@ -37,12 +37,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("owner/{id}")]
-        [Authorize(Roles = "Owner,Staff")]
+        //[Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> GetByOwner(int id)
         {
             try
             {
-                var noti = _notificationRepository.GetNotificationsByOwnerAsync(id);
+                var noti = await _notificationRepository.GetNotificationsByOwnerAsync(id);
                 return Ok(noti);
             }
             catch (Exception ex)
@@ -55,12 +55,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "User,Owner,Staff")]
+        //[Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> GetByid(int id)
         {
             try
             {
-                var noti = _notificationRepository.GetNotificationByidAsync(id);
+                var noti = await _notificationRepository.GetNotificationByidAsync(id);
                 if(noti == null)
                 {
                     return NotFound(new { message = "Notification is not found." });

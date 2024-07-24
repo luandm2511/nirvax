@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Helpers;
 using WebAPI.Service;
@@ -27,11 +28,13 @@ namespace WebAPI.Controllers
         private readonly INotificationRepository _notificationRepository;
         private readonly IVoucherRepository _voucherRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IHubContext<NotificationHub> _hubContext;
         ICartService _cartService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public OrderController(
+            IHubContext<NotificationHub> hubContext,
             IOrderRepository orderRepository,
             IOrderDetailRepository orderDetailRepository,
             IProductSizeRepository productSizeRepository,
@@ -43,6 +46,7 @@ namespace WebAPI.Controllers
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor)
         {
+            _hubContext = hubContext;
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
             _productSizeRepository = productSizeRepository;
@@ -107,7 +111,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartOwner>>($"Cart_{createOrderDTO.AccountId}") ?? new List<CartOwner>();
+                var cart = await _cartService.GetCartFromCookie(createOrderDTO.AccountId);
 
                 // Group các sản phẩm theo OwnerId
                 var groupedItems = createOrderDTO.Items.GroupBy(item => item.OwnerId);
@@ -190,7 +194,7 @@ namespace WebAPI.Controllers
                             // Remove item from session cart
                             if (!createOrderDTO.IsOrderNow)
                             {
-                                _cartService.RemoveCartItemFromCookie(createOrderDTO.AccountId, cartItem.ProductSizeId);
+                                cart = await _cartService.RemoveCartItemFromCookie(cart, cartItem.ProductSizeId);
                             }
                         }
                         else
@@ -211,6 +215,9 @@ namespace WebAPI.Controllers
                     };
 
                     await _notificationRepository.AddNotificationAsync(notification);
+                    await _cartService.SaveCartToCookie(order.AccountId, cart);
+                    // Gửi thông báo cho chủ sở hữu sản phẩm
+                    await _hubContext.Clients.Group($"Owner-{group.Key}").SendAsync("ReceiveNotification", notification.Content);
                 }
 
                 await _transactionRepository.CommitTransactionAsync();
@@ -261,6 +268,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
+                var content = "";
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
                 if (order == null)
                 {
@@ -270,6 +278,7 @@ namespace WebAPI.Controllers
                 if(statusId == 2)
                 {
                     order.RequiredDate = DateTime.Now;
+                    content = $"You have an order with code {order.CodeOrder} that has been delivered to the shipping company by the seller.";
                 }
 
                 if (statusId == 3)
@@ -285,6 +294,7 @@ namespace WebAPI.Controllers
                         }
                     }
                     order.ShippedDate = DateTime.Now;
+                    content = $"You have an order with code {order.CodeOrder} that has been successfully delivered.";
                 }
 
                 if (statusId > 3) // Assuming > 3 means order is canceled or returned
@@ -300,6 +310,7 @@ namespace WebAPI.Controllers
                         }
                     }
                     order.ShippedDate = DateTime.Now;
+                    content = $"You have an order with code {order.CodeOrder} that has failed to be delivered.";
                 }
 
                 order.StatusId = statusId; 
@@ -310,7 +321,7 @@ namespace WebAPI.Controllers
                 {
                     AccountId = order.AccountId,
                     OwnerId = null, // Assuming Product model has OwnerId field
-                    Content = $"You have an order with order code {order.CodeOrder} being in {order.Status.Name} status  .",
+                    Content = content ,
                     IsRead = false,
                     Url = "abcd",
                     CreateDate = DateTime.Now
@@ -318,6 +329,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho người dùng và chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"User-{order.AccountId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok();
             }
             catch (Exception ex)
@@ -365,6 +378,8 @@ namespace WebAPI.Controllers
 
                 await _notificationRepository.AddNotificationAsync(notification);
                 await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok();
             }
             catch (Exception ex)

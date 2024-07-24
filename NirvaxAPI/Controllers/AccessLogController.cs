@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("count")]
-        public async Task<IActionResult> GetAccessCount(DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> GetAccessCount( DateTime startDate, DateTime endDate)
         {
             var count = await _accessLogService.GetAccessCountAsync(startDate, endDate);
             return Ok(count);

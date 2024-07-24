@@ -40,12 +40,12 @@ namespace WebAPI.Controllers
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUser request)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(400, new { message = "Please pass the valid data." });
-                }
                 var existingAccount = await _repository.CheckEmailAsync(request.Email);
                 if (!existingAccount) return BadRequest("Email already in use.");
 
@@ -76,12 +76,12 @@ namespace WebAPI.Controllers
         [HttpPost("register-owner")]
         public async Task<IActionResult> RegisterOwner([FromBody] RegisterOwner request)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(400, new { message = "Please pass the valid data." });
-                }
                 var existingAccount = await _repository.CheckEmailAsync(request.Email);
                 if (!existingAccount) return BadRequest("Email already in use.");
 
@@ -263,30 +263,40 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Passwords do not match.");
             }
-            var account = await _repository.GetAccountByEmailAsync(request.Email);
-            if (account != null)
+            try
             {
-                account.Password = PasswordHasher.HashPassword(request.NewPassword);
-                await _repository.SaveChangesAsync();
-                return Ok(new { message = "Reset password successful", userType = "User" });
-            }
+                var account = await _repository.GetAccountByEmailAsync(request.Email);
+                if (account != null)
+                {
+                    account.Password = PasswordHasher.HashPassword(request.NewPassword);
+                    await _repository.SaveChangesAsync();
+                    return Ok(new { message = "Reset password successful", userType = "User" });
+                }
 
-            var owner = await _repository.GetOwnerByEmailAsync(request.Email);
-            if (owner != null)
-            {
-                owner.Password = PasswordHasher.HashPassword(request.NewPassword);
-                await _repository.SaveChangesAsync();
-                return Ok(new { message = "Reset password successful", userType = "Owner" });
-            }
+                var owner = await _repository.GetOwnerByEmailAsync(request.Email);
+                if (owner != null)
+                {
+                    owner.Password = PasswordHasher.HashPassword(request.NewPassword);
+                    await _repository.SaveChangesAsync();
+                    return Ok(new { message = "Reset password successful", userType = "Owner" });
+                }
 
-            var staff = await _repository.GetStaffByEmailAsync(request.Email);
-            if (staff != null)
-            {
-                staff.Password = PasswordHasher.HashPassword(request.NewPassword);
-                await _repository.SaveChangesAsync();
-                return Ok(new { message = "Reset password successful", userType = "Staff" });
+                var staff = await _repository.GetStaffByEmailAsync(request.Email);
+                if (staff != null)
+                {
+                    staff.Password = PasswordHasher.HashPassword(request.NewPassword);
+                    await _repository.SaveChangesAsync();
+                    return Ok(new { message = "Reset password successful", userType = "Staff" });
+                }
+                return BadRequest("Email not found");
             }
-            return BadRequest("Email not found");
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }           
         }
 
         [HttpPost("login-admin")]
@@ -318,12 +328,12 @@ namespace WebAPI.Controllers
         [HttpPost("login-user")]
         public async Task<IActionResult> LoginUser([FromForm] Login request)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(406, new { message = "Please pass the valid data." });
+            }
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(406, new { message = "Please pass the valid data." });
-                }
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
                 if (account.IsBan)
                 {
@@ -349,12 +359,12 @@ namespace WebAPI.Controllers
         [HttpPost("login-shop")]
         public async Task<IActionResult> LoginShop([FromForm] Login request)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(406, new { message = "Please pass the valid data." });
+            }
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(406, new { message = "Please pass the valid data." });
-                }
                 if(request.Role == "Owner")
                 {
                     var owner = await _repository.GetOwnerByEmailAsync(request.Email);

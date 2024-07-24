@@ -17,11 +17,10 @@ namespace DataAccess.DAOs
             _context = context;
         }
 
-        public async Task<bool> LogAccessAsync(AccessLog accessLog)
+        public async Task LogAccessAsync(AccessLog accessLog)
         {
             await _context.AccessLogs.AddAsync(accessLog);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<IEnumerable<AccessLog>> GetAccessLogsAsync()

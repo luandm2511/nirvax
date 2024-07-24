@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
+                var cart = await _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
 
                 // Calculate the total count of items in the cart
                 int totalCount = cart.Sum(owner => owner.CartItems.Sum(item => item.Quantity));
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
                     return NotFound(new { message = "Product is not found." });
                 }
 
-                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
+                var cart = await _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
 
                 var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
                 if (ownerCart == null)
@@ -98,7 +98,7 @@ namespace WebAPI.Controllers
                 cart.Remove(ownerCart);
                 cart.Insert(0, ownerCart);
 
-                _cartService.SaveCartToCookie(userId, cart);
+                await _cartService.SaveCartToCookie(userId, cart);
 
                 return Ok(new { message = "Product is add to cart successfully." });
             }
@@ -109,11 +109,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{userId}")]
-        public IActionResult UpdateCart(int userId, string productsizeId, int quantity, int ownerId)
+        public async Task<IActionResult> UpdateCart(int userId, string productsizeId, int quantity, int ownerId)
         {
             try
             {
-                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
+                var cart = await _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
 
                 var ownerCart = cart.FirstOrDefault(o => o.OwnerId == ownerId);
                 if (ownerCart != null)
@@ -133,7 +133,7 @@ namespace WebAPI.Controllers
                     }
                 }
 
-                _cartService.SaveCartToCookie(userId, cart);
+                await _cartService.SaveCartToCookie(userId, cart);
                 return Ok(new { message = "You have just updated product form cart successfully." });
             }
             catch (Exception ex)
@@ -143,27 +143,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{userId}/{productsizeId}")]
-        public IActionResult DeleteFromCart(int userId, string productsizeId)
+        public async Task<IActionResult> DeleteFromCart(int userId, string productsizeId)
         {
             try
             {
-                var cart = _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
-
-                foreach (var ownerCart in cart)
-                {
-                    var existingItem = ownerCart.CartItems.FirstOrDefault(i => i.ProductSizeId == productsizeId);
-                    if (existingItem != null)
-                    {
-                        ownerCart.CartItems.Remove(existingItem);
-                        if (ownerCart.CartItems.Count == 0)
-                        {
-                            cart.Remove(ownerCart);
-                        }
-                        break;
-                    }
-                }
-
-                _cartService.SaveCartToCookie(userId, cart);
+                var cart = await _cartService.GetCartFromCookie(userId);
+                cart = await _cartService.RemoveCartItemFromCookie(cart, productsizeId);
+                await _cartService.SaveCartToCookie(userId,cart);
                 return Ok(new { message = "You have just deleted product form cart successfully." });
             }
             catch (Exception ex)

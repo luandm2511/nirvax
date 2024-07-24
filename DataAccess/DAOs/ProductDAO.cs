@@ -105,7 +105,7 @@ namespace DataAccess.DAOs
             return products;
         }
 
-        public async Task<(IEnumerable<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string? searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<int> sizeIds)
+        public async Task<(IEnumerable<Product> Products, List<Owner> Owners)> SearchProductsAndOwnersAsync(string? searchTerm, double? minPrice, double? maxPrice, List<int> categoryIds, List<int> brandIds, List<string> size)
         {
             var productsQuery = _context.Products
                 .Include(p => p.Owner)
@@ -141,9 +141,9 @@ namespace DataAccess.DAOs
                 productsQuery = productsQuery.Where(p => brandIds.Contains(p.BrandId.Value));
             }
 
-            if (sizeIds != null && sizeIds.Count > 0)
+            if (size != null && size.Count > 0)
             {
-                productsQuery = productsQuery.Where(p => p.ProductSizes.Any(ps => sizeIds.Contains(ps.SizeId)));
+                productsQuery = productsQuery.Where(p => p.ProductSizes.Any(ps => size.Contains(ps.Size.Name)));
             }
 
             var products = await productsQuery.ToListAsync();

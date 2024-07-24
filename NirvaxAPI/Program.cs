@@ -178,12 +178,12 @@ app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAccessLogMiddleware();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     endpoints.MapHub<ChatHub>("/chatHub"); // Đăng ký Hub của bạn tại endpoint "/chatHub"
+    endpoints.MapHub<NotificationHub>("/notificationHub");
 });
 
 app.Run();
