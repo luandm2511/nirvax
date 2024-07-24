@@ -130,7 +130,7 @@ namespace DataAccess.DAOs
                                                        .Include(i => i.Service)
                                                        .Include(i => i.StatusPost);
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()));
             }
@@ -143,12 +143,10 @@ namespace DataAccess.DAOs
                 4 
             );
 
-            // Áp dụng phân trang
             List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
                                                      .Take(pageSize)
                                                      .ToListAsync();
 
-            // Ánh xạ từ Advertisement sang AdvertisementDTO
             listAdvertisementDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
 
             return listAdvertisementDTO;
@@ -160,7 +158,7 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
@@ -187,7 +185,7 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
@@ -214,7 +212,7 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
@@ -241,7 +239,7 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
@@ -265,7 +263,7 @@ namespace DataAccess.DAOs
             List<AdvertisementDTO> listAdDTO = new List<AdvertisementDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
@@ -296,7 +294,7 @@ namespace DataAccess.DAOs
                                                        .Include(i => i.StatusPost)
                                                        .Where(i => i.OwnerId == ownerId);
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()));
             }
@@ -376,17 +374,18 @@ namespace DataAccess.DAOs
 
         }
 
-        
+        //staff, owner
         public  async Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
-            
-         
             Advertisement? adOrgin = await _context.Advertisements
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
                 .SingleOrDefaultAsync(i => i.AdId == advertisementDTO.AdId);
-            
+            if(adOrgin != null && (adOrgin.StatusPost.Name == "ACCEPT" || adOrgin.StatusPost.Name == "DENY"))
+            {
+                throw new Exception("Can not update after the admin approved");
+            }
             _mapper.Map(advertisementDTO, adOrgin);
                  _context.Advertisements.Update(adOrgin);
                 await _context.SaveChangesAsync();

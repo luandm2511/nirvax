@@ -142,7 +142,6 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateSizeAsync(SizeDTO sizeDTO)
         {
             Size? size = await _context.Sizes.Include(i => i.Owner).SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
-            //ánh xạ đối tượng SizeDTO đc truyền vào cho staff
             sizeDTO.Isdelete = false;
                 _mapper.Map(sizeDTO, size);
                  _context.Sizes.Update(size);
@@ -153,44 +152,26 @@ namespace DataAccess.DAOs
         public async Task<bool> DeleteSizeAsync(int sizeId)
         {
             Size? size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeId);
-            //ánh xạ đối tượng SizeDTO đc truyền vào cho staff
-
-               
-
             if (size != null)
             {
                 size.Isdelete = true;
                  _context.Sizes.Update(size);
-                //    _mapper.Map(SizeDTO, staff);
-
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
-
-
         }
         public async Task<bool> RestoreSizeAsync(int sizeId)
         {
             Size? size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == sizeId);
-            //ánh xạ đối tượng SizeDTO đc truyền vào cho staff
-
-
-
             if (size != null)
             {
                 size.Isdelete = false;
-                _context.Sizes.Update(size);
-       
-
+                _context.Sizes.Update(size);     
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
-
-
         }
     }
 }
