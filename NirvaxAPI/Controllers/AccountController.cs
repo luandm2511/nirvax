@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
 
         [HttpPut("ban/{id}")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> BanAccount(int id)
+        public async Task<IActionResult> BanAccount(int id) 
         {
             try
             {
