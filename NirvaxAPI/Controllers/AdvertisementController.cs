@@ -454,7 +454,7 @@ namespace WebAPI.Controllers
                         Content = $"Your new Advertisement has been moderated and its status changed to {advertisement.StatusPost.Name}",
                         IsRead = false,
                         Url = null,
-                        CreateDate = DateTime.UtcNow
+                        CreateDate = DateTime.Now
                     };
                     await _notificationRepository.AddNotificationAsync(notification);
 
