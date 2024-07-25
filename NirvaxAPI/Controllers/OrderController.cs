@@ -389,6 +389,55 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPut("confirm-success/{orderId}")]
+        public async Task<IActionResult> SuccessOrder(int orderId)
+        {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
+            try
+            {
+                var order = await _orderRepository.GetOrderByIdAsync(orderId);
+                if (order == null)
+                {
+                    return NotFound();
+                }
+                var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
+                foreach (var detail in orderDetail)
+                {
+                    var product = await _productRepository.GetByIdAsync(detail.ProductSize.ProductId);
+                    if (product != null)
+                    {
+                        product.QuantitySold += detail.Quantity;
+                        await _productRepository.UpdateAsync(product);
+                    }
+                }
+
+                order.ShippedDate = DateTime.Now;
+                order.StatusId = 3;
+                await _orderRepository.UpdateOrderAsync(order);
+
+                var notification = new Notification
+                {
+                    AccountId = null,
+                    OwnerId = order.OwnerId,
+                    Content = $"The order with order code {order.CodeOrder} has been successfully confirmed by user.",
+                    IsRead = false,
+                    Url = "abcd",
+                    CreateDate = DateTime.Now
+                };
+
+                await _notificationRepository.AddNotificationAsync(notification);
+                await _transactionRepository.CommitTransactionAsync();
+                // Gửi thông báo cho chủ sở hữu sản phẩm
+                await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                await _transactionRepository.RollbackTransactionAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet("search")]
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> SearchOrders([FromQuery] string codeOrder)
