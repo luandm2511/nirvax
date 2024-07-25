@@ -38,13 +38,12 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
             {
-            try { 
                 var list =await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     { 
-                        Message = "Get list advertisement " + ok,
+                        Message = "Get list of advertisements " + ok,
                         Data = list
                     });
                 }
@@ -52,14 +51,6 @@ namespace WebAPI.Controllers
                 {
                     Message = notFound + "any advertisement"
                 });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
             [HttpGet]
@@ -150,7 +141,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
-            try { 
             var list =await _repo.GetAllAdvertisementsForUserAsync(searchQuery);
             if (list.Any())
             {
@@ -164,22 +154,12 @@ namespace WebAPI.Controllers
             {
                 Message = notFound + "any advertisement"
             });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
-            try
-            {
                 var list = await _repo.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
                 if (list.Any())
                 {
@@ -193,21 +173,12 @@ namespace WebAPI.Controllers
                 {
                     Message = notFound + "any advertisement"
                 });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
-        {
-            try { 
+        { 
             var list = await _repo.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
@@ -221,14 +192,6 @@ namespace WebAPI.Controllers
             {
                 Message = notFound + "any advertisement"
             });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet]
@@ -265,7 +228,6 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
             {
-            try { 
                 var checkSizeExist =await _repo.CheckAdvertisementExistAsync(adId);
                 if (checkSizeExist == true)
                 {
@@ -279,22 +241,13 @@ namespace WebAPI.Controllers
                 return StatusCode(404, new
                 { 
                     Message = notFound + "any advertisement"
-                });
+                });          
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-        }
 
         [HttpGet("{adId}")]
         //  [Authorize]
         public async Task<ActionResult> GetAdvertisementByIdForUserAsync(int adId)
         {
-            try { 
                 var advertisement =await _repo.GetAdvertisementByIdForUserAsync(adId);
             if (advertisement != null)
             {
@@ -310,14 +263,6 @@ namespace WebAPI.Controllers
             {
                 Message = notFound + "any advertisement"
             });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpPost]
@@ -326,8 +271,8 @@ namespace WebAPI.Controllers
             try {
                 if (ModelState.IsValid)
                 {
-                    var checkAd = await _repo.CheckAdvertisementCreateAsync(advertisementCreateDTO);
-                    if (checkAd == true)
+                    var checkAdvertisement = await _repo.CheckAdvertisementCreateAsync(advertisementCreateDTO);
+                    if (checkAdvertisement == true)
                     {
 
                         var advertisement1 = await _repo.CreateAdvertisementAsync(advertisementCreateDTO);
@@ -349,7 +294,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Dont't accept empty information!",
+                        Message = "Don't accept empty information!",
                     });
                 }
             }
@@ -370,8 +315,8 @@ namespace WebAPI.Controllers
             try { 
             if (ModelState.IsValid)
             {
-                var checkAd =await _repo.CheckAdvertisementAsync(advertisementDTO);
-                if (checkAd == true)
+                var checkAdvertisement =await _repo.CheckAdvertisementAsync(advertisementDTO);
+                if (checkAdvertisement == true)
                 {
                     
                     var advertisement1 =await _repo.UpdateAdvertisementAsync(advertisementDTO);          
@@ -409,9 +354,8 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateStatusAdvertisementByIdAsync(int adId, int StatusPostId)
         {
-            try { 
-            var checkAd =await _repo.CheckAdvertisementExistAsync(adId);
-                if (checkAd == true)
+            var checkAdvertisement =await _repo.CheckAdvertisementExistAsync(adId);
+                if (checkAdvertisement == true)
                 {
                     var advertisement1 = await _repo.UpdateStatusAdvertisementByIdAsync(adId, StatusPostId);
                         return StatusCode(200, new
@@ -427,15 +371,6 @@ namespace WebAPI.Controllers
                         Message = "The name advertisement is already exist",
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
         }
 
         [HttpPut]
@@ -443,8 +378,8 @@ namespace WebAPI.Controllers
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try { 
-            var checkAd = await _repo.CheckAdvertisementExistAsync(adId);
-            if (checkAd == true)
+            var checkAdvertisement = await _repo.CheckAdvertisementExistAsync(adId);
+            if (checkAdvertisement == true)
             {                
                     var advertisement = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);
                     
@@ -455,7 +390,7 @@ namespace WebAPI.Controllers
                         Content = $"Your new Advertisement has been moderated and its status changed to {advertisement.StatusPost.Name}",
                         IsRead = false,
                         Url = null,
-                        CreateDate = DateTime.UtcNow
+                        CreateDate = DateTime.Now
                     };
                     await _notificationRepository.AddNotificationAsync(notification);
 
@@ -469,7 +404,7 @@ namespace WebAPI.Controllers
             return StatusCode(400, new
             {
                 
-                Message = "The name advertisement is already exist",
+                Message = "There already exists a advertisement with that information!",
             });
             }
             catch (Exception ex)
@@ -494,8 +429,6 @@ namespace WebAPI.Controllers
                     totalBlog = total,
                     totalOwnerBlog = total2,
                 });
-            
-
         }
 
         [HttpGet]

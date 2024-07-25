@@ -26,13 +26,12 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
             {
-            try { 
                 var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new
                 {
-                    Message = "Get list voucher " + ok,
+                    Message = "Get list of vouchers " + ok,
                     Data = list
                 });
             }
@@ -43,21 +42,12 @@ namespace WebAPI.Controllers
                     Message = notFound + "any voucher"
                 });
             }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherForUserAsync()
         {
-            try { 
             var list = await _repo.GetAllVoucherForUserAsync();
                 if (list.Any())
                 {
@@ -73,23 +63,13 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any voucher"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }          
         }
 
         [HttpGet]
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherByOwnerAsync(int ownerId)
         {
-            try
-            {
                 var list = await _repo.GetAllVoucherByOwnerAsync(ownerId);
                 if (list.Any())
                 {
@@ -106,14 +86,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "any voucher"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
 
@@ -122,7 +94,6 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetProductSizeByIdAsync(string voucherId)
             {
-            try { 
                 var checkVoucher = await _repo.CheckVoucherByIdAsync(voucherId);
                 if (checkVoucher == true)
                 {
@@ -139,15 +110,7 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any voucher"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }         
         }
 
             //check exist
@@ -180,7 +143,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Voucher",
+                        Message = "Please enter valid Voucher!",
                     });
                 }
             }
@@ -222,7 +185,7 @@ namespace WebAPI.Controllers
         }
             return StatusCode(400, new
             {
-                Message = "Please enter valid Voucher",
+                Message = "Please enter valid Voucher!",
             });
             }
             catch (Exception ex)
@@ -241,7 +204,6 @@ namespace WebAPI.Controllers
             [HttpPatch("{voucherId}")]
             public async Task<ActionResult> DeleteVoucherAsync(string voucherId)
             {
-            try { 
                 var voucher1 = await _repo.DeleteVoucherAsync(voucherId);
                 if (voucher1)
                 {
@@ -257,15 +219,6 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
         }
 
         [HttpGet]

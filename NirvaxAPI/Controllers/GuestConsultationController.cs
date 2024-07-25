@@ -33,29 +33,20 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<GuestConsultation>>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
             {
-            try { 
                 var list = await _repo.GetAllGuestConsultationsAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     {
                         
-                        Message = "Get list guest consultation " + ok,
+                        Message = "Get list of guest consultations" + ok,
                         Data = list
                     });
                 }
                 return StatusCode(404, new
                 {               
                     Message = notFound + "any guest consultation"
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                });       
             }
 
 
@@ -207,7 +198,7 @@ namespace WebAPI.Controllers
                             Content = $"You have just received a registration for a new consultation about products in the store",
                             IsRead = false,
                             Url = null,
-                            CreateDate = DateTime.UtcNow
+                            CreateDate = DateTime.Now
                         };
 
                         await _notificationRepository.AddNotificationAsync(notification);
@@ -223,7 +214,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            Message = "There already exists a staff with that information",
+                            Message = "There already exists guest consultation with that information!",
                         });
                     }
 
@@ -232,7 +223,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Consultation!",
+                        Message = "Please enter valid Guest Consultation!",
                     });
                 }
             }
@@ -270,7 +261,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "The name guest consultation is already exist",
+                        Message = "The name guest consultation is already exist!",
                     });
                 }
                 }

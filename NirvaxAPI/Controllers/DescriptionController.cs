@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
         private readonly string badRequest = "Failed!";
         private readonly IMapper _mapper;
 
-        public DescriptionController( IDescriptionRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository, IMapper mapper)
+        public DescriptionController(IDescriptionRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
             _repo = repo;
@@ -33,47 +33,58 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
         {
-            try { 
             var list = await _repo.GetAllDescriptionsAsync(searchQuery, page, pageSize);
             if (list.Any())
             {
                 return StatusCode(200, new
                 {
-                    
-                    Message = "Get list description " + ok,
+
+                    Message = "Get list of descriptions " + ok,
                     Data = list
                 });
             }
             return StatusCode(404, new
             {
-                
+
                 Message = notFound + "any description"
             });
-            }
-            catch (Exception ex)
+        }
+
+        [HttpGet]
+        //  [Authorize]
+        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsForUserAsync(string? searchQuery)
+        {
+            var list = await _repo.GetAllDescriptionsForUserAsync(searchQuery);
+            if (list.Any())
             {
-                return StatusCode(500, new
+                return StatusCode(200, new
                 {
-                    Message = "An error occurred: " + ex.Message
+
+                    Message = "Get list of descriptions" + ok,
+                    Data = list
                 });
             }
+            return StatusCode(404, new
+            {
+
+                Message = notFound + "any description"
+            });
         }
 
 
-        [HttpGet("{sizeId}")]
+        [HttpGet("{descriptionId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetDescriptionByIdAsync(int sizeId)
+        public async Task<ActionResult> GetDescriptionByIdAsync(int descriptionId)
         {
-            try { 
-            var checkSizeExist = await _repo.CheckDescriptionExistAsync(sizeId);
-            if (checkSizeExist == true)
+            var checkDescriptionExist = await _repo.CheckDescriptionExistAsync(descriptionId);
+            if (checkDescriptionExist == true)
             {
-                var description = await _repo.GetDescriptionByIdAsync(sizeId);
+                var description = await _repo.GetDescriptionByIdAsync(descriptionId);
 
 
                 return StatusCode(200, new
                 {
-                    
+
                     Message = "Get description by id" + ok,
                     Data = description
                 });
@@ -83,27 +94,19 @@ namespace WebAPI.Controllers
 
             return StatusCode(404, new
             {
-                
+
                 Message = notFound + "any description"
             });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateDesctiptionAsync([FromForm]DescriptionCreateDTO descriptionCreateDTO)
+        public async Task<ActionResult> CreateDesctiptionAsync([FromForm] DescriptionCreateDTO descriptionCreateDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try {
                 if (ModelState.IsValid)
                 {
-          
+
                     var checkDescription = await _repo.CheckDescriptionAsync(0, descriptionCreateDTO.Title, descriptionCreateDTO.Content);
                     if (checkDescription == true)
                     {
@@ -162,9 +165,9 @@ namespace WebAPI.Controllers
 
             try
             {
-                if (ModelState.IsValid) { 
-      
-            var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
+                if (ModelState.IsValid) {
+
+                    var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
                     if (checkDescription == true)
                     {
                         var description1 = await _repo.UpdateDesctiptionAsync(descriptionDTO);
@@ -197,7 +200,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            Message = "The name description is already exist",
+                            Message = "There already exists a description with that information!",
                         });
                     }
                 }
@@ -220,7 +223,7 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPatch()]
+        [HttpPatch("{descriptionId}")]
         public async Task<ActionResult> DeleteDesctiptionAsync(int descriptionId)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
@@ -233,8 +236,8 @@ namespace WebAPI.Controllers
                 // Xóa ảnh cũ trước khi xóa ảnh mới
                 await _imageRepository.DeleteImagesAsync(img);
             }
-            var description1 = await _repo.DeleteDesctiptionAsync(descriptionId);
-                if (description1)
+            var description = await _repo.DeleteDesctiptionAsync(descriptionId);
+                if (description)
                 {
                     await _transactionRepository.CommitTransactionAsync();
 

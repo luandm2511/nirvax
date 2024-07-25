@@ -56,9 +56,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
-                .SingleOrDefaultAsync(i => i.AdId == advertisementDTO.AdId);
-          
-            
+                .SingleOrDefaultAsync(i => i.AdId == advertisementDTO.AdId);                 
 
             if (Advertisement != null)
             {
@@ -81,15 +79,12 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO)
         { 
-
-
             Advertisement? StaffCreate = new Advertisement();
             StaffCreate = await _context.Advertisements
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
                 .SingleOrDefaultAsync(i => i.Title == advertisementCreateDTO.Title || i.Content.Trim() == advertisementCreateDTO.Content.Trim());
-
            
              if (StaffCreate == null)
             {
@@ -113,12 +108,6 @@ namespace DataAccess.DAOs
             }
             return true;
         }
-     
-
-
-
-    
-
 
         //get all for owner,staff 
         public async Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
@@ -349,13 +338,9 @@ namespace DataAccess.DAOs
         public async Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId) 
         {
             AdvertisementDTO advertisementDTO = new AdvertisementDTO();
-            try
-            {
                 Advertisement? sid = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).Where(i => i.StatusPost.Name.Contains("POSTING")).SingleOrDefaultAsync(i => i.AdId == adId);
                 advertisementDTO = _mapper.Map<AdvertisementDTO>(sid);
-                return advertisementDTO;
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
+                return advertisementDTO;           
 
         }
 

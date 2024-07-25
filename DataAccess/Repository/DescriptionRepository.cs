@@ -56,6 +56,12 @@ namespace DataAccess.Repository
             return _descriptionDAO.GetAllDescriptionsAsync(searchQuery, page,  pageSize);
         }
 
+        public Task<List<DescriptionDTO>> GetAllDescriptionsForUserAsync(string? searchQuery)
+        {
+            return _descriptionDAO.GetAllDescriptionsForUserAsync(searchQuery);
+
+        }
+
         public Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
         {
             return (_descriptionDAO.GetDescriptionByIdAsync(descriptionId));

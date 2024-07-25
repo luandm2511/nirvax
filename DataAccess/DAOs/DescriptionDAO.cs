@@ -104,7 +104,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Description> getList = await _context.Descriptions
-                 //   .Where(i => i.Isdelete == false)
+                  //  .Where(i => i.Isdelete == false)
                     .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -123,19 +123,35 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
+        public async Task<List<DescriptionDTO>> GetAllDescriptionsForUserAsync(string? searchQuery)
+        {
+            List<DescriptionDTO> listSizeDTO = new List<DescriptionDTO>();
+
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                List<Description> getList = await _context.Descriptions
+                    .Where(i => i.Isdelete == false)
+                    .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
+                    .ToListAsync();
+                listSizeDTO = _mapper.Map<List<DescriptionDTO>>(getList);
+            }
+            else
+            {
+                List<Description> getList = await _context.Descriptions
+                    .Where(i => i.Isdelete == false)                  
+                    .ToListAsync();
+                listSizeDTO = _mapper.Map<List<DescriptionDTO>>(getList);
+            }
+            return listSizeDTO;
+        }
+
         public async Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
         {
-            DescriptionDTO descriptionDTO = new DescriptionDTO();
-            try
-            {
-                Description? sid = await _context.Descriptions.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);
-               
-                    descriptionDTO = _mapper.Map<DescriptionDTO>(sid);
-                return descriptionDTO;
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-          
+                DescriptionDTO descriptionDTO = new DescriptionDTO();
+                Description? sid = await _context.Descriptions.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
+                descriptionDTO = _mapper.Map<DescriptionDTO>(sid);
+                return descriptionDTO;       
         }
 
 

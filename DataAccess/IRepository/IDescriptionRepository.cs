@@ -16,6 +16,7 @@ namespace DataAccess.IRepository
         Task CommitTransactionAsync();
         Task RollbackTransactionAsync();
         Task<List<DescriptionDTO>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize);
+        Task<List<DescriptionDTO>> GetAllDescriptionsForUserAsync(string? searchQuery);
         Task<DescriptionDTO> GetDescriptionByIdAsync(int sizeId);
         Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content);
 
