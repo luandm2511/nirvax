@@ -115,7 +115,7 @@ namespace DataAccess.DAOs
                     .Include(i => i.Owner)
                  //   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
-                    .Where(i => i.VoucherId.Trim().Contains(searchQuery.Trim()))
+                    .Where(i => i.VoucherId.Trim().Contains(searchQuery.Trim()) && !i.Isdelete)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
