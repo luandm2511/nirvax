@@ -18,7 +18,7 @@ namespace DataAccess.IRepository
         Task RollbackTransactionAsync();
         Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId);
          Task<int> ViewGuestConsultationStatisticsAsync();
-        Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
+        Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
         Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO);
 
         Task<bool> CheckGuestConsultationExistAsync(int guestId);

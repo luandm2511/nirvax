@@ -49,7 +49,7 @@ namespace DataAccess.Repository
             return _guestConsultationDAO.GetGuestConsultationsByIdAsync(guestId);
         }
 
-        public Task<bool> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
+        public Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
         {
             return _guestConsultationDAO.CreateGuestConsultationAsync(guestConsultationCreateDTO);
         }

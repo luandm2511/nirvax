@@ -16,15 +16,18 @@ namespace WebAPI.Controllers
             private readonly IConfiguration _config;
             private readonly IGuestConsultationRepository  _repo;
             private readonly INotificationRepository _notificationRepository;
+            private readonly ITransactionRepository _transactionRepository;
             private readonly string ok = "successfully";
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public GuestConsultationController(IConfiguration config, IGuestConsultationRepository repo, INotificationRepository notificationRepository)
+        
+            public GuestConsultationController(IConfiguration config, IGuestConsultationRepository repo, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
             {
                 _config = config;
                 _repo = repo;
                 _notificationRepository = notificationRepository;
+                _transactionRepository = transactionRepository;
             }
 
           
@@ -179,9 +182,9 @@ namespace WebAPI.Controllers
            
 
             [HttpPost]
-            public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO, int ownerId)
+            public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
             {
-            using var transaction = await _repo.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
 
             try
             {
@@ -194,7 +197,7 @@ namespace WebAPI.Controllers
                         var notification = new Notification
                         {
                             AccountId = null,
-                            OwnerId = ownerId, // Assuming Product model has OwnerId field
+                            OwnerId = guestConsultation1.OwnerId, // Assuming Product model has OwnerId field
                             Content = $"You have just received a registration for a new consultation about products in the store",
                             IsRead = false,
                             Url = null,
@@ -202,7 +205,7 @@ namespace WebAPI.Controllers
                         };
 
                         await _notificationRepository.AddNotificationAsync(notification);
-                        await _repo.CommitTransactionAsync();
+                        await _transactionRepository.CommitTransactionAsync();
 
                         return StatusCode(200, new
                             {
@@ -231,7 +234,7 @@ namespace WebAPI.Controllers
 
 
             {
-                await _repo.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
