@@ -44,10 +44,12 @@ namespace DataAccess.DAOs
             {
                 OrderId = o.OrderId,
                 ShopName = o.Owner.Fullname, // Assuming Owner has a property ShopName
+                ShopImage = o.Owner.Image,
                 StatusName = o.Status.Name,
                 ProductName = o.OrderDetails.FirstOrDefault()?.ProductSize.Product.Name,
                 ProductImage = o.OrderDetails.FirstOrDefault()?.ProductSize.Product.Images.FirstOrDefault()?.LinkImage,
                 Size = o.OrderDetails.FirstOrDefault()?.ProductSize.Size.Name,
+                Quantity = o.OrderDetails.Sum(od => od.Quantity),
                 UnitPrice = o.OrderDetails.FirstOrDefault()?.UnitPrice ?? 0,
                 TotalPrice = o.TotalAmount
             }).ToList();
