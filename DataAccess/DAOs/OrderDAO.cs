@@ -43,6 +43,7 @@ namespace DataAccess.DAOs
             var historyList = orders.Select(o => new HistoryOrderDTO
             {
                 OrderId = o.OrderId,
+                CodeOrder = o.CodeOrder,
                 ShopName = o.Owner.Fullname, // Assuming Owner has a property ShopName
                 ShopImage = o.Owner.Image,
                 StatusName = o.Status.Name,

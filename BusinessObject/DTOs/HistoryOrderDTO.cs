@@ -9,6 +9,7 @@ namespace BusinessObject.DTOs
     public class HistoryOrderDTO
     {
         public int OrderId { get; set; }
+        public string CodeOrder { get; set; }
         public string ShopName { get; set; }
         public string ShopImage { get; set; }
         public string StatusName { get; set; }
