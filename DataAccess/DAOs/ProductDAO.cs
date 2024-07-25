@@ -188,7 +188,7 @@ namespace DataAccess.DAOs
         public async Task<bool> CheckProductAsync(Product product)
         {
             if (await _context.Products
-                    .AnyAsync(p => p.Name == product.Name && p.BrandId != product.BrandId
+                    .AnyAsync(p => p.Name == product.Name && p.ProductId != product.ProductId
                     && p.OwnerId == product.OwnerId && !p.Isdelete)) return false;
             return true;
         }
