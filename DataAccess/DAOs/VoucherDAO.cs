@@ -164,14 +164,8 @@ namespace DataAccess.DAOs
         public async Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId)
         {
             VoucherDTO voucherDTO = new VoucherDTO();
-            try
-            {
-                Voucher? sid = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-               
-                    voucherDTO = _mapper.Map<VoucherDTO>(sid);
-                
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
+            Voucher? sid = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);          
+            voucherDTO = _mapper.Map<VoucherDTO>(sid);
             return voucherDTO;
         }
 
@@ -197,45 +191,31 @@ namespace DataAccess.DAOs
         }
 
         public async Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO)
-        {
-           
-                Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
-                //ánh xạ đối tượng VoucherDTO đc truyền vào cho staff
+        {     
+                Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);             
                 voucherDTO.Isdelete = false;
                 _mapper.Map(voucherDTO, voucher);
                  _context.Vouchers.Update(voucher);
                 await _context.SaveChangesAsync();
-                return true;
-       
+                return true; 
         }
 
         public async Task<bool> DeleteVoucherAsync(string voucherId)
         {
             Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-            //ánh xạ đối tượng VoucherDTO đc truyền vào cho staff
-
-               
-
             if (voucher != null)
             {
                 voucher.Isdelete = true;
                  _context.Vouchers.Update(voucher);
-                //    _mapper.Map(VoucherDTO, staff);
-
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
-
-
         }
 
         public async Task<Voucher> PriceAndQuantityByOrderAsync(string voucherId)
         {
             Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-           // int ownerId = voucher.OwnerId;
-          
             voucher.Quantity = --voucher.Quantity;
             voucher.QuantityUsed = ++voucher.QuantityUsed;
             _context.Vouchers.Update(voucher);

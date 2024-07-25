@@ -105,7 +105,7 @@ namespace DataAccess.DAOs
                                                        .Where(i => i.OwnerId == ownerId);
  
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()));
             }
@@ -131,7 +131,7 @@ namespace DataAccess.DAOs
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)
@@ -162,7 +162,7 @@ namespace DataAccess.DAOs
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)
@@ -193,7 +193,7 @@ namespace DataAccess.DAOs
             List<GuestConsultationDTO> listGuestDTO = new List<GuestConsultationDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<GuestConsultation> getList = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)

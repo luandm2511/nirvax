@@ -157,7 +157,7 @@ namespace DataAccess.DAOs
             List<StaffDTO> listStaffDTO = new List<StaffDTO>();
 
 
-            if (!string.IsNullOrEmpty(searchQuery.Trim()))
+            if (!string.IsNullOrEmpty(searchQuery))
             {
                 List<Staff> getList = await _context.Staff.Include(i => i.Owner)
                     .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Email.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
@@ -182,29 +182,19 @@ namespace DataAccess.DAOs
         //details
         public async Task<StaffDTO> GetStaffByIdAsync(int staffId)
         {
-            StaffDTO staffDTO = new StaffDTO();
-            try
-            {
+                StaffDTO staffDTO = new StaffDTO();
                 Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
                 staffDTO = _mapper.Map<StaffDTO>(sid);
-                return staffDTO;
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-           
+                return staffDTO;        
         }
 
         //profile
         public async Task<StaffDTO> GetStaffByEmailAsync(string staffEmail)
         {
-            StaffDTO staffDTO = new StaffDTO();
-            try
-            {
+                StaffDTO staffDTO = new StaffDTO();
                 Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == staffEmail);
                 staffDTO = _mapper.Map<StaffDTO>(sid);
-                return staffDTO;
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-           
+                return staffDTO;       
         }
 
 
@@ -293,7 +283,7 @@ namespace DataAccess.DAOs
             if (staff != null)
             {
            
-                 _context.Staff.Update(staff);
+                 _context.Staff.Remove(staff);
                 await _context.SaveChangesAsync();
                 return true;
             }

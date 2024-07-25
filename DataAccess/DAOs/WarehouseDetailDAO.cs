@@ -99,11 +99,10 @@ namespace DataAccess.DAOs
         //update product size, create warehouse detail
         public async Task<bool> PatchWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            ProductSize productSize;
-            productSize = await _context.ProductSizes.FirstOrDefaultAsync(i => i.ProductSizeId == warehouseDetailDTO.ProductSizeId);
-            productSize.Quantity += warehouseDetailDTO.QuantityInStock;
-             _context.ProductSizes.Update(productSize);
-            await _context.SaveChangesAsync();
+           // ProductSize productSize;
+         //   productSize = await _context.ProductSizes.FirstOrDefaultAsync(i => i.ProductSizeId == warehouseDetailDTO.ProductSizeId);
+         //   productSize.Quantity += warehouseDetailDTO.QuantityInStock;
+            // _context.ProductSizes.Update(productSize);
             WarehouseDetail warehouseDetail = _mapper.Map<WarehouseDetail>(warehouseDetailDTO);
             await _context.WarehouseDetails.AddAsync(warehouseDetail);
             int i = await _context.SaveChangesAsync();
@@ -118,8 +117,7 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
             WarehouseDetail? warehouseDetail = await _context.WarehouseDetails.SingleOrDefaultAsync(i => i.WarehouseId == warehouseDetailDTO.WarehouseId);
-            //ánh xạ đối tượng WarehouseDetailDTO đc truyền vào cho staff
-          
+
             _mapper.Map(warehouseDetailDTO, warehouseDetail);
             _context.WarehouseDetails.Update(warehouseDetail);
             await _context.SaveChangesAsync();

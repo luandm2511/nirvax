@@ -11,17 +11,19 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IWarehouseDetailRepository _repo;
+        private readonly IWarehouseRepository _repoWh;
         private readonly IProductSizeRepository _repoProdSize;
 
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public WarehouseDetailController(IConfiguration config, IWarehouseDetailRepository repo, IProductSizeRepository repoProdSize)
+        public WarehouseDetailController(IConfiguration config, IWarehouseDetailRepository repo, IWarehouseRepository repoWh, IProductSizeRepository repoProdSize)
         {
             _config = config;
             _repo = repo;
             _repoProdSize = repoProdSize;
+            _repoWh = repoWh;
         }
 
 
@@ -72,7 +74,7 @@ namespace WebAPI.Controllers
                     var warehouse = await _repo.CreateWarehouseDetailAsync(warehouseDetail);
 
                     if (warehouse == true)
-                    {
+                    {  
                         return StatusCode(200, new
                         {
                             Message = "Create Warehouse detail" + ok,
@@ -112,8 +114,7 @@ namespace WebAPI.Controllers
                 {
                     var wh = await _repo.UpdateWarehouseDetailAsync(warehouseDetailDTO);
                     if (wh)
-                    {
-                        await _repoProdSize.UpdateProductSizeAsync(warehouseDetailDTO.ProductSizeId, warehouseDetailDTO.QuantityInStock);
+                    {           
                         return StatusCode(200, new
                         {
                             Message = "Update Warehouse detail" + ok,

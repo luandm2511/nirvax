@@ -196,29 +196,19 @@ namespace DataAccess.DAOs
         //admin
         public async Task<OwnerDTO> GetOwnerByIdAsync(int ownerId)
         {
-            OwnerDTO ownerDTO = new OwnerDTO();
-            try
-            {
+                OwnerDTO ownerDTO = new OwnerDTO();
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);
                 ownerDTO = _mapper.Map<OwnerDTO>(sid);
-                return ownerDTO;
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-            
+                return ownerDTO;  
         }
 
         //profile
         public async Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail)
         {
-            OwnerDTO ownerDTO = new OwnerDTO();
-            try
-            {
+                OwnerDTO ownerDTO = new OwnerDTO();
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.Email == ownerEmail);
                 ownerDTO = _mapper.Map<OwnerDTO>(sid);
-                return ownerDTO;
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-           
+                return ownerDTO;      
         }
 
 
@@ -288,10 +278,6 @@ namespace DataAccess.DAOs
         public async Task<bool> BanOwnerAsync(int ownerId)
         {
             Owner? owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerId);
-            //ánh xạ đối tượng staffdto đc truyền vào cho staff
-
-          
-             
             if (owner != null)
             {
                 owner.IsBan = true;
@@ -306,10 +292,6 @@ namespace DataAccess.DAOs
         {
           var owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerId);
             var ownerEmail = owner.Email;
-            if (ownerEmail == null)
-            {
-                throw new Exception("Email không tồn tại!");
-            }
             return ownerEmail;
         }
 
@@ -317,11 +299,6 @@ namespace DataAccess.DAOs
         public async Task<bool> UnBanOwnerAsync(int ownerId)
         {
             Owner? owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerId);
-            //ánh xạ đối tượng staffdto đc truyền vào cho staff
-
-           
-               
-
             if (owner != null)
             {
                 owner.IsBan = false;
@@ -331,8 +308,6 @@ namespace DataAccess.DAOs
             }
 
             return false;
-
-
         }
     }
 }

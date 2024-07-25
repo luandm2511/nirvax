@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
     {
        
             private readonly IConfiguration _config;
-
+            private readonly ITransactionRepository _transactionRepository;
             private readonly IAdvertisementRepository _repo;
             private readonly INotificationRepository _notificationRepository;
             private readonly IWebHostEnvironment _hostEnvironment;
@@ -24,12 +24,13 @@ namespace WebAPI.Controllers
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, INotificationRepository notificationRepository)
+            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
             {
                 _config = config;
                 _repo = repo;
                 this._hostEnvironment = hostEnvironment;
-            _notificationRepository = notificationRepository;
+               _notificationRepository = notificationRepository;
+               _transactionRepository = transactionRepository;
             }
 
 
@@ -440,7 +441,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
-            using var transaction = await _repo.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try { 
             var checkAd = await _repo.CheckAdvertisementExistAsync(adId);
             if (checkAd == true)
@@ -458,7 +459,7 @@ namespace WebAPI.Controllers
                     };
                     await _notificationRepository.AddNotificationAsync(notification);
 
-                    await _repo.CommitTransactionAsync();
+                    await _transactionRepository.CommitTransactionAsync();
                     return StatusCode(200, new
                     {
                         Message = "Update advertisement" + ok,
@@ -473,7 +474,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _repo.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message

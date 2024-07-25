@@ -20,7 +20,7 @@ namespace BusinessObject.DTOs
         [Range(1, Double.MaxValue, ErrorMessage = "The field total price must be greater than {1}.")]
         public string? OwnerName { get; set; }
 
-        public double TotalPrice { get; set; }
+        //public double TotalPrice { get; set; }
 
 
     }
@@ -33,9 +33,9 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field totalquantity must be greater than {1}.")]
         public int TotalQuantity { get; set; }
-        [Required(ErrorMessage = " Total price cannot be empty!!")]
-        [Range(1, Double.MaxValue, ErrorMessage = "The field total price must be greater than {1}.")]
-        public double TotalPrice { get; set; }
+       // [Required(ErrorMessage = " Total price cannot be empty!!")]
+        //[Range(1, Double.MaxValue, ErrorMessage = "The field total price must be greater than {1}.")]
+       // public double TotalPrice { get; set; }
 
 
     }

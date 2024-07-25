@@ -33,14 +33,13 @@ namespace WebAPI.Controllers
         [HttpGet]
         //  [Authorize]
         public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
-        {
-            try { 
+        {     
             var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     {
-                        Message = "Get list staff " + ok,
+                        Message = "Get list of staffs " + ok,
                         Data = list
                     });
                 }
@@ -50,15 +49,7 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any staff"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }         
         }
 
 
@@ -68,7 +59,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetStaffByIdAsync(int staffId)
         {
-            try { 
             var checkStaff = await _repo.CheckStaffExistAsync(staffId);
                 if (checkStaff == true)
                 {
@@ -83,24 +73,15 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(404, new
                     {
-                        Message = notFound + "any staff"
+                        Message = notFound + "staff"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet("{staffEmail}")]
         //  [Authorize]
         public async Task<ActionResult> GetStaffByEmailAsync(string staffEmail)
-        {
-            try { 
+        { 
             var checkStaff = await _repo.CheckProfileExistAsync(staffEmail);
                 if (checkStaff == true)
                 {
@@ -115,17 +96,9 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(404, new
                     {
-                        Message = notFound + "any staff"
+                        Message = notFound + "staff"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }      
         }
 
         //check exist
@@ -159,7 +132,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Dont't accept empty information!",
+                        Message = "Don't accept empty information!",
                     });
                 }
             }
@@ -237,7 +210,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Staff",
+                        Message = "Please enter valid Staff!",
                     });
                 }
             }
@@ -323,16 +296,16 @@ namespace WebAPI.Controllers
             }
 
         }
-        [HttpPatch("{staffId}")]
+        [HttpDelete("{staffId}")]
         public async Task<ActionResult> DeleteStaffAsync(int staffId)
         {
-            try { 
+           
             var staff1 = await _repo.DeleteStaffAsync(staffId);
                 if (staff1 == true)
                 {
                     return StatusCode(200, new
                     {
-                        Message = "Ban staff " + ok,
+                        Message = "Delete staff " + ok,
                     });
                 }
                 else
@@ -342,14 +315,7 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+           
         }
 
       

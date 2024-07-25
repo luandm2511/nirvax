@@ -47,7 +47,7 @@ namespace DataAccess.DAOs
             if(from == null && to == null)
             {
                 from= DateTime.Parse("2013-05-27");
-                to = DateTime.Parse("2025-12-12");
+                to = DateTime.Parse("2030-12-12");
             }
             #region Filtering
             if (from.HasValue)

@@ -25,14 +25,13 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
             {
-            try { 
                 var list = await _repo.GetAllServicesAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
                     {
 
-                        Message = "Get list service " + ok,
+                        Message = "Get list of services " + ok,
                         Data = list
                     });
                 }
@@ -42,15 +41,7 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any service"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }         
         }
 
 
@@ -58,7 +49,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
             public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync(string? searchQuery)
             {
-            try { 
                  var list = await _repo.GetAllServiceForUserAsync(searchQuery);
                 if (list.Any())
                 {
@@ -74,15 +64,7 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any service"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                }         
         }
 
 
@@ -90,7 +72,6 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetServiceByIdAsync(int serviceId)
             {
-            try { 
                 var checkServiceExist = await _repo.CheckServiceExistAsync(serviceId);
                 if (checkServiceExist == true)
                 {
@@ -108,14 +89,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "any service"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
             [HttpPost]
@@ -207,7 +180,6 @@ namespace WebAPI.Controllers
             [HttpPatch("{serviceId}")]
             public async Task<ActionResult> DeleteServiceAsync(int serviceId)
             {
-            try { 
                 var service1 = await _repo.DeleteServiceAsync(serviceId);
                 if (service1)
                 {
@@ -224,21 +196,11 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
         }
 
         [HttpPatch("{serviceId}")]
         public async Task<ActionResult> RestoreServiceAsync(int serviceId)
         {
-            try { 
             var service1 = await _repo.RestoreServiceAsync(serviceId);
                 if (service1)
                 {
@@ -253,16 +215,7 @@ namespace WebAPI.Controllers
                     {
                         Message = badRequest,
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
+                }  
         }
     }
-    }
+}

@@ -12,17 +12,17 @@ namespace WebAPI.Controllers
     [ApiController]
     public class DescriptionController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IDescriptionRepository _repo;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IImageRepository _imageRepository;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
         private readonly IMapper _mapper;
 
-        public DescriptionController(IConfiguration config, IDescriptionRepository repo, IImageRepository imageRepository,  IMapper mapper)
+        public DescriptionController( IDescriptionRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository, IMapper mapper)
         {
-            _config = config;
+            _transactionRepository = transactionRepository;
             _repo = repo;
             _imageRepository = imageRepository;
             _mapper = mapper;
@@ -99,11 +99,11 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateDesctiptionAsync([FromForm]DescriptionCreateDTO descriptionCreateDTO)
         {
-            using var transaction = await _repo.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try {
                 if (ModelState.IsValid)
                 {
-                    var des = _mapper.Map<Description>(descriptionCreateDTO);
+          
                     var checkDescription = await _repo.CheckDescriptionAsync(0, descriptionCreateDTO.Title, descriptionCreateDTO.Content);
                     if (checkDescription == true)
                     {
@@ -113,12 +113,12 @@ namespace WebAPI.Controllers
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                DescriptionId = des.DescriptionId
+                                DescriptionId = description1.DescriptionId
                             };
                             await _imageRepository.AddImagesAsync(image);
 
                         }
-                        await _repo.CommitTransactionAsync();
+                        await _transactionRepository.CommitTransactionAsync();
 
                         return StatusCode(200, new
                         {
@@ -146,7 +146,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _repo.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
@@ -158,12 +158,12 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateDesctiptionAsync([FromForm] DescriptionDTO descriptionDTO)
         {
-            using var transaction = await _repo.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
 
             try
             {
                 if (ModelState.IsValid) { 
-            var des = _mapper.Map<Description>(descriptionDTO);
+      
             var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
                     if (checkDescription == true)
                     {
@@ -181,7 +181,7 @@ namespace WebAPI.Controllers
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                DescriptionId = des.DescriptionId
+                                DescriptionId = description1.DescriptionId
                             };
                             await _imageRepository.AddImagesAsync(image);
                         }
@@ -211,7 +211,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _repo.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
@@ -220,10 +220,10 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPatch("{sizeId}")]
+        [HttpPatch()]
         public async Task<ActionResult> DeleteDesctiptionAsync(int descriptionId)
         {
-            using var transaction = await _repo.BeginTransactionAsync();
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
 
             try
             { 
@@ -236,7 +236,7 @@ namespace WebAPI.Controllers
             var description1 = await _repo.DeleteDesctiptionAsync(descriptionId);
                 if (description1)
                 {
-                    await _repo.CommitTransactionAsync();
+                    await _transactionRepository.CommitTransactionAsync();
 
                     return StatusCode(200, new
                     {
@@ -253,7 +253,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _repo.RollbackTransactionAsync();
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
