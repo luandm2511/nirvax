@@ -58,16 +58,35 @@ namespace DataAccess.DAOs
             return historyList;
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId)
+        public async Task<IEnumerable<OrderOwnerDTO>> GetOrdersByOwnerIdAsync(int ownerId)
         {
-            return await _context.Orders
-                    .Include(o => o.Owner)
-                    .Include(o => o.Account)
-                    .Include(o => o.Status)
-                    .Include(o => o.Voucher)
-                    .Where(o => o.OwnerId == ownerId)
-                    .OrderByDescending(o => o.OrderId)
-                    .ToListAsync();
+            var orders = await _context.Orders
+                .Include(o => o.Owner)
+                .Include(o => o.Account)
+                .Include(o => o.Status)
+                .Include(o => o.Voucher)
+                .Include(o => o.OrderDetails) // Include OrderDetails to calculate Quantity
+                .Where(o => o.OwnerId == ownerId)
+                .OrderByDescending(o => o.OrderId)
+                .ToListAsync();
+
+            var orderOwnerDTOs = orders.Select(o => new OrderOwnerDTO
+            {
+                OrderId = o.OrderId,
+                CodeOrder = o.CodeOrder,
+                FullName = o.Account.Fullname,
+                Address = o.Address,
+                StatusId = o.Status.StatusId,
+                StatusName = o.Status.Name,
+                OrderDate = o.OrderDate,
+                RequiredDate = o.RequiredDate,
+                ShippedDate = o.ShippedDate,
+                Quantity = o.OrderDetails.Sum(od => od.Quantity),
+                TotalPrice = o.TotalAmount,
+                Note = o.Note
+            }).ToList();
+
+            return orderOwnerDTOs;
         }
 
         public async Task<Order> GetOrderByIdAsync(int orderId)

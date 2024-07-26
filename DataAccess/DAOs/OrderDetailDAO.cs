@@ -49,6 +49,7 @@ namespace DataAccess.DAOs
                 StatusId = order.Status.StatusId,
                 StatusName = order.Status.Name,
                 Address = order.Address,
+                Phone = order.Phone,
                 OrderDate = order.OrderDate,
                 RequiredDate = order.RequiredDate,
                 ShippedDate = order.ShippedDate,
