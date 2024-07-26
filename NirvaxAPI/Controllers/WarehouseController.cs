@@ -31,7 +31,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetWarehouseIdByOwnerIdAsync(int ownerId)
         {
-            try { 
                 var warehouse = await _repo.GetWarehouseIdByOwnerIdAsync(ownerId);
             if (warehouse != null)
             {
@@ -47,14 +46,6 @@ namespace WebAPI.Controllers
                 return StatusCode(404, new
                 {                 
                     Message = notFound + "any warehouse"
-                });
-            }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
                 });
             }
 
@@ -153,7 +144,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(200, new
                     {
-                        Message = "Get list Warehouse " + ok,
+                        Message = "Get list of Warehouse " + ok,
                         Data = list,
                         numberOfWarehouse.TotalPrice,
                         numberOfWarehouse.TotalQuantity
@@ -207,7 +198,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {         
-                        Message = "Please enter valid Warehouse",
+                        Message = "Please enter valid Warehouse!",
                     });
                 }
              }

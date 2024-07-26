@@ -52,16 +52,16 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsForUserAsync(string? searchQuery)
+        public async Task<ActionResult<IEnumerable<Description>>> GetDescriptionForUserAsync(string? searchQuery)
         {
-            var list = await _repo.GetAllDescriptionsForUserAsync(searchQuery);
-            if (list.Any())
+            var description = await _repo.GetDescriptionForUserAsync(searchQuery);
+            if (description.Any())
             {
                 return StatusCode(200, new
                 {
 
-                    Message = "Get list of descriptions" + ok,
-                    Data = list
+                    Message = "Get descriptions" + ok,
+                    Data = description
                 });
             }
             return StatusCode(404, new

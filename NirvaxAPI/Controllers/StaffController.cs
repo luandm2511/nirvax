@@ -80,15 +80,15 @@ namespace WebAPI.Controllers
 
         [HttpGet("{staffEmail}")]
         //  [Authorize]
-        public async Task<ActionResult> GetStaffByEmailAsync(string staffEmail)
+        public async Task<ActionResult> ViewStaffProfileAsync(string staffEmail)
         { 
             var checkStaff = await _repo.CheckProfileExistAsync(staffEmail);
                 if (checkStaff == true)
                 {
-                    var staff = await _repo.GetStaffByEmailAsync(staffEmail);
+                    var staff = await _repo.ViewStaffProfileAsync(staffEmail);
                     return StatusCode(200, new
                     {
-                        Message = "Get staff by email " + ok,
+                        Message = "View staff profile" + ok,
                         Data = staff
                     });
                 }
@@ -167,7 +167,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Staff not exist",
+                        Message = "Staff not exist!",
                     });
                 }
             }
@@ -268,15 +268,14 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateAvatarStaffAsync([FromForm] StaffAvatarDTO staffAvatarDTO)
         {
-            try { 
-            var checkOwner = await _repo.CheckStaffExistAsync(staffAvatarDTO.StaffId);
-                if (checkOwner == true)
+            var checkStaff = await _repo.CheckStaffExistAsync(staffAvatarDTO.StaffId);
+                if (checkStaff == true)
                 {
-                    var owner1 = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);  
+                    var staff1 = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);  
                         return StatusCode(200, new
                         {
                             Message = "Update avatar staff " + ok,
-                            Data = owner1
+                            Data = staff1
                         });                 
                 }
                 else
@@ -286,14 +285,6 @@ namespace WebAPI.Controllers
                         Message = badRequest,
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
 
         }
         [HttpDelete("{staffId}")]

@@ -61,8 +61,7 @@ namespace DataAccess.DAOs
             #endregion
             List<ImportProduct> list = await getList.ToListAsync();
 
-            listImportDTO = _mapper.Map<List<ImportProductDTO>>(list);
-            
+            listImportDTO = _mapper.Map<List<ImportProductDTO>>(list);          
             return listImportDTO;
         }
 
@@ -73,8 +72,7 @@ namespace DataAccess.DAOs
             ImportProduct? sid = await _context.ImportProducts
             .Include(i => i.Warehouse)
             .SingleOrDefaultAsync(x => x.ImportId == importId);
-            importProductDTO = _mapper.Map<ImportProductDTO>(sid);
-            
+            importProductDTO = _mapper.Map<ImportProductDTO>(sid);          
             return importProductDTO;
         }
 
@@ -136,9 +134,6 @@ namespace DataAccess.DAOs
             return false;
 
         }
-
-      
-
        
     }
     }

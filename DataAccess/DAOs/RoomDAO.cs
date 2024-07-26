@@ -79,41 +79,24 @@ namespace DataAccess.DAOs
 
         public async Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-            try
-            {
                 RoomDTO roomDTO = new RoomDTO();
                 Room? sid = await _context.Rooms
                     .Include(i => i.Account)
                     .Include(i => i.Owner)
-                    .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);
-               
-
+                    .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);             
                 roomDTO = _mapper.Map<RoomDTO>(sid);
                 return roomDTO;
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-           
         }
 
         public async Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId) 
         {
-            try
-            {
                 var roomId = 0;
                 Room? sid = await _context.Rooms
                     .Include(i => i.Account)
                     .Include(i => i.Owner)
                     .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);
-            
-
-
                 roomId = _mapper.Map<RoomDTO>(sid).RoomId;
                 return roomId;
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-
         }
 
         public async Task<bool> CheckRoomExistAsync(int roomId)
@@ -133,18 +116,10 @@ namespace DataAccess.DAOs
         public async Task<RoomDTO> GetRoomByIdAsync(int roomId)
         {
             RoomDTO roomDTO = new RoomDTO();
-            try
-            {
                 Room? sid = await _context.Rooms.Include(i => i.Account)
                     .Include(i => i.Owner).SingleOrDefaultAsync(i => i.RoomId == roomId);
-              
-
                 roomDTO = _mapper.Map<RoomDTO>(sid);
                 return roomDTO;
-
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-            
         }
 
 

@@ -189,7 +189,7 @@ namespace DataAccess.DAOs
         }
 
         //profile
-        public async Task<StaffDTO> GetStaffByEmailAsync(string staffEmail)
+        public async Task<StaffDTO> ViewStaffProfileAsync(string staffEmail)
         {
                 StaffDTO staffDTO = new StaffDTO();
                 Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == staffEmail);

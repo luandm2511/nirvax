@@ -203,7 +203,7 @@ namespace DataAccess.DAOs
         }
 
         //profile
-        public async Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail)
+        public async Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail)
         {
                 OwnerDTO ownerDTO = new OwnerDTO();
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.Email == ownerEmail);

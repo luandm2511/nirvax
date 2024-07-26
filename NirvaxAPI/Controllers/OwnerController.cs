@@ -98,15 +98,15 @@ namespace WebAPI.Controllers
 
         [HttpGet("{ownerEmail}")]
         //  [Authorize]
-        public async Task<ActionResult> GetOwnerByEmailAsync(string ownerEmail)
+        public async Task<ActionResult> ViewOwnerProfileAsync(string ownerEmail)
         {
             var checkOwner = await _repo.CheckProfileExistAsync(ownerEmail);
                 if (checkOwner == true)
                 {
-                    var owner = await _repo.GetOwnerByEmailAsync(ownerEmail);
+                    var owner = await _repo.ViewOwnerProfileAsync(ownerEmail);
                     return StatusCode(200, new
                     {
-                        Message = "Get owner by email " + ok,
+                        Message = "Get view owner profile  " + ok,
                         Data = owner
                     });
                 }
@@ -248,7 +248,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            Message = "There already exists a owner with that information",
+                            Message = "Please enter valid Owner!",
                         });
                     }
 
@@ -354,9 +354,9 @@ namespace WebAPI.Controllers
                     Message = number,
                 });
             }
-            return StatusCode(400, new
+            return StatusCode(200, new
             {
-                Message = badRequest,
+                Message = 0,
             });
 
         }

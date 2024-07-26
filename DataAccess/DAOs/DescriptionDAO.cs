@@ -123,7 +123,7 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<List<DescriptionDTO>> GetAllDescriptionsForUserAsync(string? searchQuery)
+        public async Task<List<DescriptionDTO>> GetDescriptionForUserAsync(string? searchQuery)
         {
             List<DescriptionDTO> listSizeDTO = new List<DescriptionDTO>();
 

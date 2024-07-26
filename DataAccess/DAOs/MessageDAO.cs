@@ -33,13 +33,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CheckMessageAsync(MessageCreateDTO messageCreateDTO) 
         {
-
-            if (messageCreateDTO.Content.Trim() != null)
-            {
-                    return true;           
-            }
-          
-                return false;
+            return !string.IsNullOrWhiteSpace(messageCreateDTO.Content);
         }
 
        

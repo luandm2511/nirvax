@@ -34,9 +34,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Message>>> ViewUserHistoryChatAsync(int roomId)
+            public async Task<ActionResult<IEnumerable<Message>>> ViewAllMessageByRoomAsync(int roomId)
             {
-            try { 
+
                 var list = await _repo.ViewAllMessageByRoomAsync(roomId);
                 if (list.Any())
                 {
@@ -53,14 +53,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "all message of this room"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpPost]
@@ -76,7 +68,6 @@ namespace WebAPI.Controllers
                         var messageCreated = await _repo.CreateMessageAsync(messageCreateDTO);
                         if (messageCreated)
                         {
-                            // Gửi tin nhắn tới các client trong phòng chat
                             await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
 
                             // Cập nhật nội dung của Room

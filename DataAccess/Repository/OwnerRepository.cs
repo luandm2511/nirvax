@@ -46,9 +46,9 @@ namespace DataAccess.Repository
             return (_ownerDAO.GetOwnerByIdAsync(staffId));
         }
 
-        public Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail)
+        public Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail)
         {
-            return (_ownerDAO.GetOwnerByEmailAsync(ownerEmail));
+            return (_ownerDAO.ViewOwnerProfileAsync(ownerEmail));
         }
        
 

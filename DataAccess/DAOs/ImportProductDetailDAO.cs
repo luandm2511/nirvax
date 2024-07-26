@@ -57,14 +57,10 @@ namespace DataAccess.DAOs
         public async  Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync()
         {
             List<ImportProductDetailDTO> listImportProductDetailDTO;
-            try
-            {
              List<ImportProductDetail> getList = await _context.ImportProductDetails
             .Include(i => i.Import).Include(i => i.ProductSize)
             .ToListAsync();
                 listImportProductDetailDTO = _mapper.Map<List<ImportProductDetailDTO>>(getList);
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
             return listImportProductDetailDTO;
         }
 

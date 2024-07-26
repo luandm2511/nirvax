@@ -29,7 +29,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailAsync()
         {
-            try { 
             var list = await _repo.GetAllImportProductDetailAsync();
                 if (list.Any())
                 {
@@ -45,14 +44,6 @@ namespace WebAPI.Controllers
                     {
                         Message = notFound + "any Import Product Detail"
                     });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
             }
         }
 
@@ -60,7 +51,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
-            try { 
             var list = await _repo.GetAllImportProductDetailByImportIdAsync(importId);
                 if (list.Any())
                 {
@@ -78,14 +68,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "any Import Product Detail"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpPost]
@@ -127,8 +109,7 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     var importProductDetail = await _repo.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
-
-
+                    await _repoProdSize.UpdateProductSizeByImportAsync(importProductDetailDTO);
                     return StatusCode(200, new
                     {
                         Message = "Update Import Product Detail " + ok,

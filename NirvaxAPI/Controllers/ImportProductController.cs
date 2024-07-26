@@ -29,7 +29,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
         {
-            try { 
             var list = await _repo.GetAllImportProductAsync(warehouseId,from, to);
                 if (list.Any())
                 {
@@ -46,14 +45,6 @@ namespace WebAPI.Controllers
                         Message = notFound + "any import product"
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
 
@@ -61,7 +52,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetImportProductByIdAsync(int importId)
         {
-            try { 
             var checkSizeExist = await _repo.CheckImportProductExistAsync(importId);
             if (checkSizeExist == true)
             {
@@ -77,14 +67,6 @@ namespace WebAPI.Controllers
                 return StatusCode(404, new
                 {
                     Message = notFound + "any import product"
-                });
-            }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
                 });
             }
         }

@@ -41,11 +41,7 @@ namespace DataAccess.DAOs
         }
 
         
-      
-        //khi thêm vô
-        //gọi lại lệnh fetch
-        //thực thi theo productSizeId
-        //cùng productSizeId thì cộng quantity và price
+     
         public async Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
         {
            List<WarehouseDetail> listWarehouseDetail= new List<WarehouseDetail>();

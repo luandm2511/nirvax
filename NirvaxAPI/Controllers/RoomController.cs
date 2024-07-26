@@ -32,7 +32,6 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> ViewUserHistoryChatAsync(int accountId)
         {
-            try { 
             var list = await _repo.ViewUserHistoryChatAsync(accountId);
             if (list.Any())
             {
@@ -46,14 +45,6 @@ namespace WebAPI.Controllers
             {                
                 Message = notFound + "any room"
             });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
         }
 
         [HttpGet]
@@ -186,14 +177,14 @@ namespace WebAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var checkSize = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
-                    if (checkSize == true)
+                    var checkRoom = await _repo.CheckRoomAsync(roomCreateDTO.AccountId, roomCreateDTO.OwnerId);
+                    if (checkRoom == true)
                     {
-                        var size1 = await _repo.CreateRoomAsync(roomCreateDTO);
+                        var room1 = await _repo.CreateRoomAsync(roomCreateDTO);
                         return StatusCode(200, new
                         {
-                            Message = "Create new room " + ok,
-                            Data = size1
+                            Message = "Create room " + ok,
+                            Data = room1
                         });
                     }
                     else

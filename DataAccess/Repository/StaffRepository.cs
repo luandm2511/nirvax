@@ -40,9 +40,9 @@ namespace DataAccess.Repository
             return _staffDAO.GetStaffByIdAsync(staffId);
         }
 
-public Task<StaffDTO> GetStaffByEmailAsync(string ownerEmail)
+public Task<StaffDTO> ViewStaffProfileAsync(string ownerEmail)
 {
-    return (_staffDAO.GetStaffByEmailAsync(ownerEmail));
+    return (_staffDAO.ViewStaffProfileAsync(ownerEmail));
 }
 
 

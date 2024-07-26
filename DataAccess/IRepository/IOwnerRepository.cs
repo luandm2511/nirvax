@@ -18,7 +18,7 @@ namespace DataAccess.IRepository
 
         Task<List<OwnerDTO>> GetAllOwnersForUserAsync(string? searchQuery);
         Task<OwnerDTO> GetOwnerByIdAsync(int ownerId);
-        Task<OwnerDTO> GetOwnerByEmailAsync(string ownerEmail);
+        Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail);
 
         Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO);
        Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
