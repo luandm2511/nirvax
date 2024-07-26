@@ -25,32 +25,7 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckWarehouseAsync(WarehouseDTO warehouseDTO)
-        {
-
-            Warehouse? warehouse = new Warehouse();
-            warehouse = await _context.Warehouses.FindAsync(warehouseDTO.WarehouseId);
-            
-            if (warehouse != null)
-            {
-                List<Warehouse> getList = await _context.Warehouses.Include(i => i.Owner)
-                 
-                 //check khác Id`
-                 .Where(i => i.WarehouseId != warehouseDTO.WarehouseId)
-                 .ToListAsync();
-                if (getList.Count > 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-           
-            return false;
-        }
-
+       
 
 
         //list ra các import thôi

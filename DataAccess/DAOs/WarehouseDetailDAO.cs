@@ -27,18 +27,18 @@ namespace DataAccess.DAOs
 
         
 
-        public async Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
-        {
-            WarehouseDetail? sid = new WarehouseDetail();
+       // public async Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
+     //   {
+          //  WarehouseDetail? sid = new WarehouseDetail();
 
-            sid = await _context.WarehouseDetails.SingleOrDefaultAsync(i => i.WarehouseId == warehouseId); ;
+          //  sid = await _context.WarehouseDetails.SingleOrDefaultAsync(i => i.WarehouseId == warehouseId); ;
 
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
+          //  if (sid == null)
+         //   {
+         //       return false;
+           // }
+          //  return true;
+       // }
 
         
      

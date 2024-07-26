@@ -37,10 +37,6 @@ namespace DataAccess.Repository
             return _warehouseDetailDAO.GetAllWarehouseDetailByProductSizeAsync(ownerId, page, pageSize);
         }
 
-        public Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
-        {
-            return _warehouseDetailDAO.CheckWarehouseDetailExistAsync(warehouseId);
-        }
         public Task<bool> CreateWarehouseDetailAsync(WarehouseDetail warehouseDetail)
         {
             return _warehouseDetailDAO.CreateWarehouseDetailAsync(warehouseDetail);

@@ -12,8 +12,6 @@ namespace DataAccess.IRepository
     public interface IWarehouseDetailRepository
 
     {
-        Task<bool> CheckWarehouseDetailExistAsync(int warehouseId);
-
     
         Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize);
 

@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("{voucherId}")]
             //  [Authorize]
-            public async Task<ActionResult> GetProductSizeByIdAsync(string voucherId)
+            public async Task<ActionResult> GetVoucherByIdAsync(string voucherId)
             {
                 var checkVoucher = await _repo.CheckVoucherByIdAsync(voucherId);
                 if (checkVoucher == true)

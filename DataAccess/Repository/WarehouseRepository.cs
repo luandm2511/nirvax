@@ -34,10 +34,6 @@ namespace DataAccess.Repository
         }
 
 
-        public Task<bool> CheckWarehouseAsync(WarehouseDTO warehouseDTO)
-        {
-            return _warehouseDAO.CheckWarehouseAsync(warehouseDTO);
-        }
 
         public Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
         {
