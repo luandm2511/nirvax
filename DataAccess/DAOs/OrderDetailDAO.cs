@@ -61,6 +61,7 @@ namespace DataAccess.DAOs
                 OrderItems = order.OrderDetails.Select(od => new HistoryOrderItemDTO
                 {
                     ProductId = od.ProductSize.ProductId,
+                    ProductSizeId = od.ProductSizeId,
                     ProductName = od.ProductSize.Product.Name,
                     Size = od.ProductSize.Size.Name,
                     ProductImage = od.ProductSize.Product.Images.FirstOrDefault()?.LinkImage,

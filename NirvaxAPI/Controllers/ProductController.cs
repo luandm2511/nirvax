@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }
                 return Ok(product);
             }
@@ -166,7 +166,7 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return StatusCode(400, new { message = "Please pass the valid data." });
                 }
                 var product = _mapper.Map<Product>(productDto);
                 var check = await _productRepository.CheckProductAsync(product);
@@ -209,12 +209,12 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return StatusCode(400, new { message = "Please pass the valid data." });
                 }
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }
                 
                 _mapper.Map(productDto, product);
@@ -266,7 +266,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true)
                 {
-                    return NotFound(new { message = "Product not found." });
+                    return StatusCode(404,new { message = "Product not found." });
                 }
                 IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByProductAsync(id);
                 foreach (BusinessObject.Models.Image img in images)
@@ -298,7 +298,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true)
                 {
-                    return NotFound(new { message = "Product not found." });
+                    return StatusCode(404,new { message = "Product not found." });
                 }
                 await _productRepository.BanProductAsync(product);
                 var notification = new Notification
@@ -337,7 +337,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true)
                 {
-                    return NotFound(new { message = "Product not found." });
+                    return StatusCode(404,new { message = "Product not found." });
                 }
                 await _productRepository.UnbanProductAsync(product);
                 var notification = new Notification
@@ -375,7 +375,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(productId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }
                 var orderDetail = await _productRepository.GetOrderDetailAsync(orderId, productSizeId);
                 orderDetail.UserRate = rating;

@@ -47,14 +47,14 @@ namespace WebAPI.Controllers
             try
             {
                 var existingAccount = await _repository.CheckEmailAsync(request.Email);
-                if (!existingAccount) return BadRequest("Email already in use.");
+                if (!existingAccount) return StatusCode(400, new { message = "Email already in use." });
 
                 var existingPhoneAccount = await _repository.CheckPhoneAsync(request.Phone);
-                if (!existingPhoneAccount) return BadRequest("Phone number already in use.");
+                if (!existingPhoneAccount) return StatusCode(400, new { message = "Phone number already in use." });
 
                 if (request.Password != request.ConfirmPassword)
                 {
-                    return BadRequest("Passwords do not match.");
+                    return StatusCode(400, new { message = "Passwords do not match." });
                 }
 
                 var verificationCode = new Random().Next(100000, 999999).ToString();
@@ -83,14 +83,14 @@ namespace WebAPI.Controllers
             try
             {
                 var existingAccount = await _repository.CheckEmailAsync(request.Email);
-                if (!existingAccount) return BadRequest("Email already in use.");
+                if (!existingAccount) return StatusCode(400, new { message = "Email already in use." });
 
                 var existingPhoneAccount = await _repository.CheckPhoneAsync(request.Phone);
-                if (!existingPhoneAccount) return BadRequest("Phone number already in use.");
+                if (!existingPhoneAccount) return StatusCode(400, new { message = "Phone number already in use." });
 
                 if (request.Password != request.ConfirmPassword)
                 {
-                    return BadRequest("Passwords do not match.");
+                    return StatusCode(400, new { message = "Passwords do not match." });
                 }
 
                 var verificationCode = new Random().Next(100000, 999999).ToString();
@@ -137,12 +137,12 @@ namespace WebAPI.Controllers
                     }
                     else
                     {
-                        return BadRequest("Invalid verification code.");
+                        return StatusCode(400, new { message = "Invalid verification code." });
                     }
                 }
                 else
                 {
-                    return BadRequest("Verification code expired.");
+                    return StatusCode(400, new { message = "Verification code expired." });
                 }
             }
             catch (Exception ex)
@@ -185,12 +185,12 @@ namespace WebAPI.Controllers
                     }
                     else
                     {
-                        return BadRequest("Invalid verification code.");
+                        return StatusCode(400, new { message = "Invalid verification code." });
                     }
                 }
                 else
                 {
-                    return BadRequest("Verification code expired.");
+                    return StatusCode(400, new { message = "Verification code expired." });
                 }
             }
             catch (Exception ex)
@@ -212,7 +212,7 @@ namespace WebAPI.Controllers
 
                 if (account)
                 {
-                    return BadRequest("Email not found.");
+                    return StatusCode(404, new { message = "Email not found." });
                 }
 
                 var resetCode = new Random().Next(100000, 999999).ToString();
@@ -245,12 +245,12 @@ namespace WebAPI.Controllers
                     }
                     else
                     {
-                        return BadRequest("Invalid reset code.");
+                        return StatusCode(400, new { message = "Invalid reset code." });
                     }
                 }
                 else
                 {
-                    return BadRequest("Reset code expired.");
+                    return StatusCode(400, new { message = "Reset code expired." });
                 }
             }
             catch (Exception ex)
@@ -267,7 +267,7 @@ namespace WebAPI.Controllers
         {
             if (request.NewPassword != request.ConfirmPassword)
             {
-                return BadRequest("Passwords do not match.");
+                return StatusCode(400, new { message = "Passwords do not match." });
             }
             try
             {
@@ -294,7 +294,7 @@ namespace WebAPI.Controllers
                     await _repository.SaveChangesAsync();
                     return Ok(new { message = "Reset password successful", userType = "Staff" });
                 }
-                return BadRequest("Email not found");
+                return StatusCode(404, new { message = "Email not found" });
             }
             catch (Exception ex)
             {
@@ -320,7 +320,7 @@ namespace WebAPI.Controllers
                     var token = GenerateJSONWebToken(account.AccountId, account.Email, account.Role);
                     return Ok(new { token, userType = account.Role });
                 }
-                return BadRequest("Invalid email or password.");
+                return StatusCode(400, new { message = "Invalid email or password." });
             }
             catch (Exception ex)
             {
@@ -343,7 +343,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
                 if (account.IsBan)
                 {
-                    return BadRequest("Your account is banned.");
+                    return StatusCode(400, new { message = "Your account is banned." });
                 }
 
                 if (account.Role == "User" && PasswordHasher.VerifyPassword(request.Password, account.Password))
@@ -351,7 +351,7 @@ namespace WebAPI.Controllers
                     var token = GenerateJSONWebToken(account.AccountId,account.Email, account.Role);
                     return Ok(new { token, userType = account.Role });
                 }
-                return BadRequest("Invalid email or password.");
+                return StatusCode(400, new { message = "Invalid email or password." });
             }
             catch (Exception ex)
             {
@@ -376,7 +376,7 @@ namespace WebAPI.Controllers
                     var owner = await _repository.GetOwnerByEmailAsync(request.Email);
                     if (owner.IsBan)
                     {
-                        return BadRequest("Your account is banned.");
+                        return StatusCode(400, new { message = "Your account is banned." });
                     }
                     if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
                     {
@@ -393,7 +393,7 @@ namespace WebAPI.Controllers
                         return Ok(new { token, userType = "Staff" });
                     }
                 }               
-                return BadRequest("Invalid email or password.");
+                return StatusCode(400, new { message = "Invalid email or password." });
             }
             catch (Exception ex)
             {
