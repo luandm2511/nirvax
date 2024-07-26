@@ -9,7 +9,7 @@ namespace BusinessObject.DTOs
 {
     public class ImportProductDetailDTO
     {
-        public int ImportId { get; set; }
+       // public int ImportId { get; set; }
         [Required(ErrorMessage = " ProductSizeId received cannot be empty!!")]
 
         public string ProductSizeId { get; set; } = null!;
@@ -18,6 +18,6 @@ namespace BusinessObject.DTOs
         public int QuantityReceived { get; set; }
         [Required(ErrorMessage = " Unit price cannot be empty!!")]
         [Range(1, Double.MaxValue, ErrorMessage = "The field unit price must be greater than {1}.")]
-        public double UnitPrice { get; set; }
+       public double UnitPrice { get; set; }
     }
 }

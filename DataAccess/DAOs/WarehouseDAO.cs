@@ -83,10 +83,7 @@ namespace DataAccess.DAOs
               .Where(i => i.WarehouseId == warehouse.WarehouseId)
               .ToListAsync();
 
-            if (listImportProduct == null || !listImportProduct.Any()) 
-            {
-                throw new Exception("This owner has never imported products!");
-            }
+           
 
             var totalQuantity = listImportProduct.Sum(p => p.Quantity);
             var totalPrice = listImportProduct.Sum(p => p.TotalPrice);
@@ -185,28 +182,29 @@ namespace DataAccess.DAOs
                 throw new Exception("This owner does not have a warehouse yet");
             }
 
-            var result = await _context.WarehouseDetails
-                .Where(wd => wd.WarehouseId == warehouse.WarehouseId)
+           // var result = await _context.WarehouseDetails
+                //.Where(wd => wd.WarehouseId == warehouse.WarehouseId)
+               // .GroupBy(w => new { w.ProductSizeId})
 
-            .GroupBy(w => new { w.ProductSizeId})
+      //  .Select(g => new WarehouseDetail
+     //   {
+        //    ProductSizeId = g.Key.ProductSizeId,
+           // Location = g.Select(i => i.Location).FirstOrDefault(),
+     //   })
+       // .ToListAsync();
+          //  if (result == null) 
+         //   {
+        //        throw new Exception("This owner does not have a warehouse yet");
+          //  }
 
-        .Select(g => new WarehouseDetail
-        {
-            ProductSizeId = g.Key.ProductSizeId,
-            Location = g.Select(i => i.Location).FirstOrDefault(),
-        })
-        .ToListAsync();
-            if (result == null) 
-            {
-                throw new Exception("This owner does not have a warehouse yet");
-            }
+          //  var paginatedResult = result
+        var list = await _context.WarehouseDetails.Include(i => i.ProductSize)
+                .Where(i => i.WarehouseId == warehouse.WarehouseId)
+                 .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
-            var paginatedResult = result
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToList();
-
-            return paginatedResult;
+            return list;
         }
 
 
