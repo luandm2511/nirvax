@@ -25,9 +25,9 @@ namespace DataAccess.IRepository
         Task BanProductAsync(Product product);
         Task UnbanProductAsync(Product product);
         Task<bool> CheckProductAsync(Product product);
-        Task AddRatingAsync(Product product, int rating);
+        Task AddRatingAsync(Product product, double rating);
         Task<IEnumerable<Product>> GetTopSellingProductsAsync();
         Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId);
-
+        Task<OrderDetail> GetOrderDetailAsync(int orderId, string productSizeId);
     }
 }

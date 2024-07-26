@@ -17,7 +17,7 @@ namespace DataAccess.Repository
             _pro = pro;
         }
 
-        public async Task AddRatingAsync(Product product, int rating) 
+        public async Task AddRatingAsync(Product product, double rating) 
         {
             product.RateCount++;
             product.RatePoint = (product.RatePoint * (product.RateCount - 1) + rating) / product.RateCount;
@@ -94,6 +94,11 @@ namespace DataAccess.Repository
         public async Task<IEnumerable<Product>> SearchProductsInOwnerAsync(string? searchTerm, int ownerId)
         {
             return await _pro.SearchProductsInOwnerAsync(searchTerm, ownerId);
+        }
+
+        public async Task<OrderDetail> GetOrderDetailAsync(int orderId, string productSizeId)
+        {
+            return await _pro.GetOrderDetailAsync(orderId, productSizeId);
         }
     }
 }

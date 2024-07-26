@@ -65,7 +65,8 @@ namespace DataAccess.DAOs
                     Size = od.ProductSize.Size.Name,
                     ProductImage = od.ProductSize.Product.Images.FirstOrDefault()?.LinkImage,
                     Price = od.UnitPrice,
-                    Quantity = od.Quantity
+                    Quantity = od.Quantity,
+                    UserRate = od.UserRate
                 }).ToList()
             };
 

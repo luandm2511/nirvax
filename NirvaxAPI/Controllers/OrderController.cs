@@ -186,7 +186,8 @@ namespace WebAPI.Controllers
                                 ProductSizeId = cartItem.ProductSizeId,
                                 Quantity = cartItem.Quantity,
                                 UnitPrice = cartItem.UnitPrice,
-                                OrderId = order.OrderId
+                                OrderId = order.OrderId,
+                                UserRate = 0                            
                             };
                             await _orderDetailRepository.AddOrderDetailAsync(orderDetail);
                             productSize.Quantity -= cartItem.Quantity;

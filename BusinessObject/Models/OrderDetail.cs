@@ -13,6 +13,8 @@ public partial class OrderDetail
 
     public double UnitPrice { get; set; }
 
+    public double UserRate { get; set; }
+
     public virtual Order Order { get; set; } = null!;
 
     public virtual ProductSize ProductSize { get; set; } = null!;
