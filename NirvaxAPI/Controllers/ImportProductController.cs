@@ -134,6 +134,26 @@ namespace WebAPI.Controllers
                     Message = "An error occurred: " + ex.Message
                 });
             }
-        }       
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewImportProductStatisticsAsync(int warehouseId)
+        {
+            var number = await _repo.ViewImportProductStatisticsAsync(warehouseId);
+            if (number != null)
+            {
+                return StatusCode(200, new
+                {
+                    Message = number,
+                });
+            }
+            else
+            {
+                return StatusCode(200, new
+                {
+                    Message = 0,
+                });
+            }
+        }
     }
 }

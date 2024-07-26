@@ -407,8 +407,9 @@ namespace DataAccess.DAOs
         }
 
 
+
         //riêng
-        public async Task<int> ViewOwnerBlogStatisticsAsync(int ownerId)
+        public async Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId)
         {
             Advertisement ad = new Advertisement();
             var number = await _context.Advertisements.Where(i => i.OwnerId == ownerId).CountAsync();
@@ -416,7 +417,7 @@ namespace DataAccess.DAOs
         }
 
         //chung
-        public async Task<int> ViewBlogStatisticsAsync()
+        public async Task<int> ViewAdversisementStatisticsAsync()
         {
             Advertisement ad = new Advertisement();
             var number = await _context.Advertisements.Include(i=>i.Owner).CountAsync();

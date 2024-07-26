@@ -56,9 +56,9 @@ namespace DataAccess.Repository
             return _importProductDAO.UpdateImportProductAsync(importProductDTO);
         }
 
-    
-      
-     
-
+        public Task<int> ViewImportProductStatisticsAsync(int warehouseId)
+        {
+            return _importProductDAO.ViewImportProductStatisticsAsync(warehouseId);
+        }
     }
 }

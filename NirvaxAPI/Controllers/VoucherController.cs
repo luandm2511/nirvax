@@ -225,11 +225,13 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> VoucherStatisticsAsync(int ownerId)
         {
                 var total = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
-                var total2 = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);          
+                var total2 = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);     
+
                 return StatusCode(200, new
-                    {
-                        totalQuantityVoucherUsed = total,
-                    totalPriceVoucherUsed = total2
+                {
+                    totalQuantityVoucherUsed = total,
+                    totalPriceVoucherUsed = total2,
+                   
                 });                  
         }
 

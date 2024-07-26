@@ -228,8 +228,8 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
             {
-                var checkSizeExist =await _repo.CheckAdvertisementExistAsync(adId);
-                if (checkSizeExist == true)
+                var checkAdExist =await _repo.CheckAdvertisementExistAsync(adId);
+                if (checkAdExist == true)
                 {
                     var advertisement =await _repo.GetAdvertisementByIdAsync(adId);
                     return StatusCode(200, new
@@ -419,56 +419,17 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> BlogStatisticsAsync(int ownerId)
+        public async Task<ActionResult> AdversisementStatisticsAsync(int ownerId)
         {
-            var total2 = await _repo.ViewOwnerBlogStatisticsAsync(ownerId);
-            var total = await _repo.ViewBlogStatisticsAsync();
+            var total2 = await _repo.ViewOwnerAdversisementStatisticsAsync(ownerId);
+            var total = await _repo.ViewAdversisementStatisticsAsync();
 
             return StatusCode(200, new
                 {
-                    totalBlog = total,
-                    totalOwnerBlog = total2,
+                totalAdversisement = total,
+                totalOwnerAdversisement = total2,
                 });
         }
-
-        [HttpGet]
-        public async Task<ActionResult> ViewOwnerBlogStatisticsAsync(int ownerId)
-        {
-            var number = await _repo.ViewOwnerBlogStatisticsAsync(ownerId);
-            if (number != null)
-            {
-                return StatusCode(200, new
-                { 
-                    Message = number,
-                });
-            }
-            return StatusCode(200, new
-            {
-                Message = 0,
-            });
-
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> ViewBlogStatisticsAsync()
-        {
-            var number = await _repo.ViewBlogStatisticsAsync();
-            if (number != null)
-            {
-                return StatusCode(200, new
-                {
-                    Message = number,
-
-                });
-            }
-            return StatusCode(200, new
-            { 
-                Message = 0,
-            });
-
-        }
-
-
     }
 }
 

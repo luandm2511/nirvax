@@ -327,20 +327,29 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> UnBanOwnerAsync(int ownerId)
         {
             var owner1 = await _repo.UnBanOwnerAsync(ownerId);
-                if (owner1)
+            if (owner1)
+            {
+                var email = await _repo.GetEmailAsync(ownerId);
+                if (email == null)
                 {
-                    return StatusCode(200, new
+                    return StatusCode(404, new
                     {
-                        Message = "UnBan owner " + ok,
+                        Message = "Not found email!",
                     });
                 }
-                else
+                await _emailService.SendEmailAsync(email, "UnBan", "After review, we have made the decision to reopen your account.!");
+                return StatusCode(200, new
                 {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
+                    Message = "UnBan owner " + ok
+                });
+            }
+            else
+            {
+                return StatusCode(400, new
+                {
+                    Message = badRequest,
+                });
+            }
         }
 
         [HttpGet]

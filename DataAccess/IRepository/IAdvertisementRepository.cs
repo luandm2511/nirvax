@@ -16,8 +16,8 @@ namespace DataAccess.IRepository
         Task CommitTransactionAsync();
         Task RollbackTransactionAsync();
         Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId);
-        Task<int> ViewOwnerBlogStatisticsAsync(int ownerId);
-        Task<int> ViewBlogStatisticsAsync();
+        Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId);
+        Task<int> ViewAdversisementStatisticsAsync();
         Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId);
         Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO);
         

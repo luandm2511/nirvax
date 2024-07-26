@@ -115,14 +115,14 @@ namespace DataAccess.Repository
             return _advertisementDAO.GetAllAdvertisementsForUserAsync(searchQuery);
         }
 
-       public Task<int> ViewOwnerBlogStatisticsAsync(int ownerId)
+       public Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId)
         {
-            return _advertisementDAO.ViewOwnerBlogStatisticsAsync(ownerId);
+            return _advertisementDAO.ViewOwnerAdversisementStatisticsAsync(ownerId);
 
         }
-        public Task<int> ViewBlogStatisticsAsync()
+        public Task<int> ViewAdversisementStatisticsAsync()
         {
-            return _advertisementDAO.ViewBlogStatisticsAsync();
+            return _advertisementDAO.ViewAdversisementStatisticsAsync();
 
         }
 

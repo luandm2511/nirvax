@@ -150,9 +150,8 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetGuestConsultationsByIdAsync(int guestId)
             {
-            try { 
-                var checkSizeExist = await _repo.CheckGuestConsultationExistAsync(guestId);
-                if (checkSizeExist == true)
+                var checkguestConlExist = await _repo.CheckGuestConsultationExistAsync(guestId);
+                if (checkguestConlExist == true)
                 {
                     var guestConsultation = await _repo.GetGuestConsultationsByIdAsync(guestId);
 
@@ -168,15 +167,7 @@ namespace WebAPI.Controllers
                 return StatusCode(404, new
                 {      
                     Message = notFound + "any guest consultation"
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+                });          
         }
 
            

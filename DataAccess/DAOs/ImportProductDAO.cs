@@ -134,9 +134,16 @@ namespace DataAccess.DAOs
             return false;
 
         }
-       
+
+        public async Task<int> ViewImportProductStatisticsAsync(int warehouseId)
+        {
+
+            var sumImport = await _context.ImportProducts.Where(i => i.WarehouseId == warehouseId).GroupBy(w => w.ImportId).CountAsync();
+            return sumImport;
+        }
+
     }
-    }
+}
 
   
 
