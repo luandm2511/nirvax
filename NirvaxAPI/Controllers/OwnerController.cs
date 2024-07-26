@@ -119,39 +119,7 @@ namespace WebAPI.Controllers
                 }          
         }
 
-        //check exist
-        [HttpPost]
-        public async Task<ActionResult> CreateOwnerAsync(OwnerDTO ownerDTO)
-        {
-            try { 
-            var owner1 = await _repo.CreateOwnerAsync(ownerDTO);
-                if (owner1)
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = "Create owner " + ok,
-                        Data = owner1
-                    });
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
-        }
-
-         
+           
 
         [HttpPut]
         public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
