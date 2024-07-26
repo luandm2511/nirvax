@@ -31,21 +31,6 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            _transaction = await _context.Database.BeginTransactionAsync();
-            return _transaction;
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            await _transaction.CommitAsync();
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            await _transaction.RollbackAsync();
-        }
 
         //create
         public async Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)

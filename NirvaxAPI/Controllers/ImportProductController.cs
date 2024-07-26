@@ -136,24 +136,23 @@ namespace WebAPI.Controllers
             }
         }
 
+
         [HttpGet]
-        public async Task<ActionResult> ViewImportProductStatisticsAsync(int warehouseId)
+        public async Task<ActionResult> ViewImportProductStatisticsAsync(int warehouseId, int importId, int ownerId)
         {
-            var number = await _repo.ViewImportProductStatisticsAsync(warehouseId);
-            if (number != null)
+            var total = await _repo.ViewImportProductStatisticsAsync(warehouseId);
+            var total2 = await _repo.ViewNumberOfProductByImportStatisticsAsync(importId, ownerId);
+            var total3 = await _repo.ViewPriceByImportStatisticsAsync(importId, ownerId);
+            var total4 = await _repo.QuantityWarehouseStatisticsAsync(ownerId);
+
+            return StatusCode(200, new
             {
-                return StatusCode(200, new
-                {
-                    Message = number,
-                });
-            }
-            else
-            {
-                return StatusCode(200, new
-                {
-                    Message = 0,
-                });
-            }
+                totalImportProduct = total,
+                totalProductByImport = total2,
+                totalPriceByImport = total3,
+                totalQuantityByImport = total4
+            });
         }
+
     }
 }

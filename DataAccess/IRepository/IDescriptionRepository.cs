@@ -12,9 +12,7 @@ namespace DataAccess.IRepository
 {
     public interface IDescriptionRepository
     {
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
+
         Task<List<DescriptionDTO>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize);
         Task<List<DescriptionDTO>> GetDescriptionForUserAsync(string? searchQuery);
         Task<DescriptionDTO> GetDescriptionByIdAsync(int sizeId);

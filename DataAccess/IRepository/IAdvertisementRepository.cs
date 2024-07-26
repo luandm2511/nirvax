@@ -12,9 +12,7 @@ namespace DataAccess.IRepository
 {
      public interface IAdvertisementRepository
     {
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
+
         Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId);
         Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId);
         Task<int> ViewAdversisementStatisticsAsync();
