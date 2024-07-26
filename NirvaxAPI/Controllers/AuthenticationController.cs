@@ -173,8 +173,14 @@ namespace WebAPI.Controllers
                             Address = request.Address,
                             IsBan = false
                         };
-
                         await _repository.AddOwnerAsync(owner);
+                        var warehouse = new Warehouse
+                        {
+                            OwnerId = owner.OwnerId,
+                            TotalQuantity = 0,
+                            TotalPrice = 0.0
+                        };
+                        await _repository.AddWarehouseAsync(warehouse);
                         return Ok("Registration successful.");
                     }
                     else

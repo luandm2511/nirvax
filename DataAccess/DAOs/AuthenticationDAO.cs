@@ -37,8 +37,13 @@ namespace DataAccess.DAOs
 
         public async Task AddOwnerAsync(Owner owner)
         {
-            await _context.Owners.AddAsync(owner);
+            await _context.Owners.AddAsync(owner);         
             await _context.SaveChangesAsync();  
+        }
+        public async Task AddWarehouseAsync(Warehouse warehouse)
+        {
+            await _context.Warehouses.AddAsync(warehouse);
+            await _context.SaveChangesAsync();
         }
         public async Task<bool> CheckPhoneAsync(string phone)
         {

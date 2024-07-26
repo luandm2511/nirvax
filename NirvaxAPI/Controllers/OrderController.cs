@@ -331,7 +331,7 @@ namespace WebAPI.Controllers
                 await _transactionRepository.CommitTransactionAsync();
                 // Gửi thông báo cho người dùng và chủ sở hữu sản phẩm
                 await _hubContext.Clients.Group($"User-{order.AccountId}").SendAsync("ReceiveNotification", notification.Content);
-                return Ok();
+                return Ok(new { message = "Confirm order successful!" });
             }
             catch (Exception ex)
             {
@@ -380,7 +380,7 @@ namespace WebAPI.Controllers
                 await _transactionRepository.CommitTransactionAsync();
                 // Gửi thông báo cho chủ sở hữu sản phẩm
                 await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
-                return Ok();
+                return Ok(new { message = "You have just canceled successfully order!" });
             }
             catch (Exception ex)
             {
@@ -429,7 +429,7 @@ namespace WebAPI.Controllers
                 await _transactionRepository.CommitTransactionAsync();
                 // Gửi thông báo cho chủ sở hữu sản phẩm
                 await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
-                return Ok();
+                return Ok(new { message = "You have just confirmed that you have received your order successfully.!" });
             }
             catch (Exception ex)
             {
