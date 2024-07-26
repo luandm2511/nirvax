@@ -10,6 +10,7 @@ namespace BusinessObject.DTOs
     {
         public int OrderId { get; set; }
         public string CodeOrder { get; set; }
+        public string FullName { get; set; }
         public string ShopName { get; set; }
         public string ShopImage { get; set; }
         public int StatusId {  get; set; }

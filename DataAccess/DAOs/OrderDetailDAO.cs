@@ -44,6 +44,7 @@ namespace DataAccess.DAOs
             {
                 OrderId = order.OrderId,
                 CodeOrder = order.CodeOrder,
+                FullName = order.Fullname,
                 ShopName = order.Owner.Fullname,
                 ShopImage = order.Owner.Image,
                 StatusId = order.Status.StatusId,
