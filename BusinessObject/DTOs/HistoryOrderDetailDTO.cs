@@ -21,6 +21,7 @@ namespace BusinessObject.DTOs
         public string? VoucherId { get; set; }
         public double? VoucherPrice {  get; set; }
         public double TotalPrice { get; set; }
+        public string? Note { get; set; }
         public List<HistoryOrderItemDTO> OrderItems { get; set; }
     }
 }

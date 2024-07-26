@@ -55,6 +55,7 @@ namespace DataAccess.DAOs
                 VoucherId = order.VoucherId,  
                 VoucherPrice = order.Voucher?.Price ?? 0,
                 TotalPrice = order.TotalAmount,
+                Note = order.Note,
                 OrderItems = order.OrderDetails.Select(od => new HistoryOrderItemDTO
                 {
                     ProductName = od.ProductSize.Product.Name,
