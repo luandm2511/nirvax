@@ -112,7 +112,9 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)
         {
-            WarehouseDetail? warehouseDetail = await _context.WarehouseDetails.SingleOrDefaultAsync(i => i.WarehouseId == warehouseDetailDTO.WarehouseId);
+            WarehouseDetail? warehouseDetail = await _context.WarehouseDetails
+                .Where(i => i.ProductSizeId.Trim() == warehouseDetailDTO.ProductSizeId.Trim())
+                .SingleOrDefaultAsync(i => i.WarehouseId == warehouseDetailDTO.WarehouseId);
 
             _mapper.Map(warehouseDetailDTO, warehouseDetail);
             _context.WarehouseDetails.Update(warehouseDetail);
