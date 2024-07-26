@@ -247,7 +247,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("owner/{ownerId}")]
-        [Authorize(Roles = "Owner,Staff")]
+        //[Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> ViewOrdersByOwner(int ownerId)
         {
             try
@@ -445,19 +445,6 @@ namespace WebAPI.Controllers
             try
             {
                 var orders = await _orderRepository.SearchOrdersAsync(codeOrder);
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-        [HttpGet("all-orders")]
-        public async Task<IActionResult> ViewAllOrders()
-        {
-            try
-            {
-                var orders = await _orderRepository.GetAllOrdersAsync();
                 return Ok(orders);
             }
             catch (Exception ex)

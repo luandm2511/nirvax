@@ -13,7 +13,7 @@ namespace DataAccess.IRepository
     {
         Task AddOrderAsync(Order order);
         Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId);
-        Task<IEnumerable<Order>> GetOrdersByOwnerIdAsync(int ownerId);
+        Task<IEnumerable<OrderOwnerDTO>> GetOrdersByOwnerIdAsync(int ownerId);
         Task<Order> GetOrderByIdAsync(int orderId);
         Task UpdateOrderAsync(Order order);
         Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder);

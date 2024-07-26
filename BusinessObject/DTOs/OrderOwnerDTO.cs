@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.DTOs
 {
-    public class HistoryOrderDTO
+    public class OrderOwnerDTO
     {
         public int OrderId { get; set; }
         public string CodeOrder { get; set; }
-        public string ShopName { get; set; }
-        public string ShopImage { get; set; }
+        public string FullName { get; set; }
+        public string Address { get; set; }
+        public int StatusId { get; set; }
         public string StatusName { get; set; }
-        public string ProductName { get; set; }
-        public string ProductImage { get; set; }
-        public string Size { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime? RequiredDate { get; set; }
+        public DateTime? ShippedDate { get; set; }
         public int Quantity { get; set; }
-        public double UnitPrice { get; set; }
         public double TotalPrice { get; set; }
+        public string? Note { get; set; }
     }
 }
