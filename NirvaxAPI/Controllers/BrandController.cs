@@ -60,12 +60,12 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] BrandDTO brandDto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(0, new { message = "Please pass the valid data." });
-                }
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
+            try
+            {                
                 var brand = _mapper.Map<Brand>(brandDto);
                 var check = await _repository.CheckBrandAsync(brand);
                 if (!check)
@@ -85,13 +85,12 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromForm] BrandDTO brandDto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(0, new { message = "Please pass the valid data." });
-                }
-
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
+            try
+            {                
                 var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
