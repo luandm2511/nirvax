@@ -17,6 +17,10 @@ namespace DataAccess.IRepository
         Task<ImportProductDTO> GetImportProductByIdAsync(int importId);
 
         Task<int> ViewImportProductStatisticsAsync(int warehouseId);
+        Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId);
+        Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId);
+        Task<int> QuantityWarehouseStatisticsAsync(int ownerId);
+
         Task<bool> CheckImportProductExistAsync(int importId);
 
         Task<bool> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO);

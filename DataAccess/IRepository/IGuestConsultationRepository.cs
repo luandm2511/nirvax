@@ -13,9 +13,6 @@ namespace DataAccess.IRepository
 {
      public interface IGuestConsultationRepository
     {
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
         Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId);
          Task<int> ViewGuestConsultationStatisticsAsync();
         Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);

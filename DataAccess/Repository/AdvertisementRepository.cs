@@ -25,20 +25,7 @@ namespace DataAccess.Repository
             _advertisementDAO = advertisementDAO;
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            return await _advertisementDAO.BeginTransactionAsync();
-        }
 
-        public async Task CommitTransactionAsync()
-        {
-            await _advertisementDAO.CommitTransactionAsync();
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            await _advertisementDAO.RollbackTransactionAsync();
-        }
 
         public Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId)
         {

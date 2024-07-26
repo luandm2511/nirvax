@@ -63,22 +63,6 @@ namespace DataAccess.Repository
             return _warehouseDAO.UpdateQuantityAndPriceWarehouseAsync(ownerId);
         }
 
-        public Task<int> ViewCountImportStatisticsAsync(int warehouseId)
-        {
-            return _warehouseDAO.ViewCountImportStatisticsAsync(warehouseId);
-        }
-        public Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId)
-        {
-            return _warehouseDAO.ViewNumberOfProductByImportStatisticsAsync(importId,ownerId);
-        }
-        public Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId)
-        {
-            return _warehouseDAO.ViewPriceByImportStatisticsAsync(importId,ownerId);
-        }
-        public Task<int> QuantityWarehouseStatisticsAsync(int ownerId)
-        {
-            return _warehouseDAO.QuantityWarehouseStatisticsAsync(ownerId);
-        }
 
     }
 }

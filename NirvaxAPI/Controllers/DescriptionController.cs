@@ -188,7 +188,7 @@ namespace WebAPI.Controllers
                             };
                             await _imageRepository.AddImagesAsync(image);
                         }
-                        await _repo.CommitTransactionAsync();
+                        await _transactionRepository.CommitTransactionAsync();
 
                         return StatusCode(200, new
                         {

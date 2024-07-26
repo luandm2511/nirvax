@@ -24,21 +24,6 @@ namespace DataAccess.Repository
             _descriptionDAO = descriptionDAO;
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            return await _descriptionDAO.BeginTransactionAsync();
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            await _descriptionDAO.CommitTransactionAsync();
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            await _descriptionDAO.RollbackTransactionAsync();
-        }
-
         public Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content)
         {
             return _descriptionDAO.CheckDescriptionAsync( descriptionId,  title, content);
