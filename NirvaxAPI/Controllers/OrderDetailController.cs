@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-               var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
+               var orderDetail = await _orderDetailRepository.GetHistoryOrderDetailsByOrderIdAsync(orderId);
                return Ok(orderDetail);
             }
             catch (Exception ex)
