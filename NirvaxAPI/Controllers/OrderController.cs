@@ -381,6 +381,7 @@ namespace WebAPI.Controllers
                 }
 
                 order.StatusId = 5;
+                order.RequiredDate = DateTime.Now;
                 await _orderRepository.UpdateOrderAsync(order);
 
                 var notification = new Notification
