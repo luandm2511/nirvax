@@ -21,9 +21,6 @@ namespace DataAccess.DAOs
 
         private readonly IMapper _mapper;
 
-
-
-
         public ProductSizeDAO(NirvaxContext context, IMapper mapper)
         {
 
@@ -36,7 +33,8 @@ namespace DataAccess.DAOs
             return await _context.ProductSizes.Include(p => p.Product)
                    .ThenInclude(p => p.Images)
                    .Include(p => p.Size)
-                   .Include(p => p.Product.Owner)
+                   .Include(p => p.Product)
+                        .ThenInclude(p => p.Owner)
                    .FirstOrDefaultAsync(p => p.ProductSizeId == id);
         }
 

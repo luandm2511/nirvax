@@ -146,7 +146,7 @@ namespace DataAccess.DAOs
                 productsQuery = productsQuery.Where(p => p.ProductSizes.Any(ps => size.Contains(ps.Size.Name)));
             }
 
-            var products = await productsQuery.ToListAsync();
+            var products = await productsQuery.Include(p => p.Images).ToListAsync();
 
             return (products, owners);
         }

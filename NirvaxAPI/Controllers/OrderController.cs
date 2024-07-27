@@ -80,7 +80,8 @@ namespace WebAPI.Controllers
                             SizeName = productSize.Size.Name,
                             Quantity = item.Quantity,
                             UnitPrice = productSize.Product.Price,
-                            OwnerId = productSize.Product.OwnerId
+                            OwnerId = productSize.Product.OwnerId,
+                            OwnerName = productSize.Product.Owner.Fullname
                         });
                     }
                     else
@@ -227,7 +228,7 @@ namespace WebAPI.Controllers
                         OwnerId = group.Key, // Assuming Product model has OwnerId field
                         Content = $"You have just had an order with code order {codeOrder}.",
                         IsRead = false,
-                        Url = null,
+                        Url = $"http://localhost:4200/Link-dashboard/{order.OrderId}",
                         CreateDate = DateTime.Now
                     };
 
@@ -326,7 +327,14 @@ namespace WebAPI.Controllers
                             await _productSizeRepository.UpdateAsync(productSize);
                         }
                     }
-                    order.ShippedDate = DateTime.Now;
+                    if(statusId == 4)
+                    {
+                        order.ShippedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        order.RequiredDate = DateTime.Now;
+                    }
                     content = $"You have an order with code {order.CodeOrder} that has failed to be delivered.";
                 }
 
@@ -340,7 +348,7 @@ namespace WebAPI.Controllers
                     OwnerId = null, // Assuming Product model has OwnerId field
                     Content = content ,
                     IsRead = false,
-                    Url = "abcd",
+                    Url = $"http://localhost:4200/order-history-details/{orderId}",
                     CreateDate = DateTime.Now
                 };
 

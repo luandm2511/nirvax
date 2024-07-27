@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("user/{id}")]
         //[Authorize(Roles = "User")]
-        public async Task<IActionResult> GetByUser(int id)
+        public async Task<IActionResult> GetNotificationByUser(int id)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("owner/{id}")]
         //[Authorize(Roles = "Owner,Staff")]
-        public async Task<IActionResult> GetByOwner(int id)
+        public async Task<IActionResult> GetNotificationByOwner(int id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("{id}")]
         //[Authorize(Roles = "User,Owner,Staff")]
-        public async Task<IActionResult> GetByid(int id)
+        public async Task<IActionResult> GetNotificationByid(int id)
         {
             try
             {
@@ -65,7 +65,8 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(404,new { message = "Notification is not found." });
                 }
-                return Ok(noti);
+                var url = await _notificationRepository.UpdateStatusNotificationAsync(noti);
+                return Ok(url);
             }
             catch (Exception ex)
             {
@@ -75,5 +76,6 @@ namespace WebAPI.Controllers
                 });
             }
         }
+
     }
 }

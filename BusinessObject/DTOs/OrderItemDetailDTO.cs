@@ -14,5 +14,6 @@ namespace BusinessObject.DTOs
         public int Quantity { get; set; }
         public double UnitPrice { get; set; }
         public int OwnerId { get; set; }
+        public string OwnerName { get; set; }
     }
 }

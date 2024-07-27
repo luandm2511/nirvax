@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryParentByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Category parent not found." });
+                    return StatusCode(404,new { message = "Category parent is not found." });
                 }
                 return Ok(category);
             }
@@ -57,12 +57,12 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] CateParentDTO dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(400, new { message = "Please pass the valid data." });
-                }
                 var cateparent = _mapper.Map<CategoryParent>(dto);
                 var check = await _repository.CheckCategoryParentAsync(cateparent);
                 if (!check)
@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
                 var cateparent = await _repository.GetCategoryParentByIdAsync(id);
                 if (cateparent == null || cateparent.Isdelete == true)
                 {
-                    return StatusCode(400,new { message = "Category parent not found." });
+                    return StatusCode(400,new { message = "Category parent is not found." });
                 }
 
                 _mapper.Map(dto, cateparent);
@@ -120,7 +120,7 @@ namespace WebAPI.Controllers
                 var cateparent = await _repository.GetCategoryParentByIdAsync(id);
                 if (cateparent == null || cateparent.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Category parent not found." });
+                    return StatusCode(404,new { message = "Category parent is not found." });
                 }
                 await _repository.DeleteCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent deleted successfully." });
