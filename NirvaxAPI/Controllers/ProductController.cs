@@ -367,22 +367,18 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("rate/{productId}")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> RateProduct(int productId, [FromBody] int rating)
+        //[Authorize(Roles = "User")]
+        public async Task<IActionResult> RateProduct(int productId, double rating, int orderId, string productSizeId)
         {
             try
             {
-                if (rating < 1 || rating > 5)
-                {
-                    return BadRequest(new { message = "Rating must be between 1 and 5." });
-                }
-
                 var product = await _productRepository.GetByIdAsync(productId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
                     return NotFound(new { message = "Product is not found." });
                 }
-
+                var orderDetail = await _productRepository.GetOrderDetailAsync(orderId, productSizeId);
+                orderDetail.UserRate = rating;
                 await _productRepository.AddRatingAsync(product, rating);
 
                 return Ok(new { message = "Product is rated successfully." });

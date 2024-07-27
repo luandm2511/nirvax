@@ -60,11 +60,13 @@ namespace DataAccess.DAOs
                 Note = order.Note,
                 OrderItems = order.OrderDetails.Select(od => new HistoryOrderItemDTO
                 {
+                    ProductId = od.ProductSize.ProductId,
                     ProductName = od.ProductSize.Product.Name,
                     Size = od.ProductSize.Size.Name,
                     ProductImage = od.ProductSize.Product.Images.FirstOrDefault()?.LinkImage,
                     Price = od.UnitPrice,
-                    Quantity = od.Quantity
+                    Quantity = od.Quantity,
+                    UserRate = od.UserRate
                 }).ToList()
             };
 

@@ -192,6 +192,11 @@ namespace DataAccess.DAOs
                     && p.OwnerId == product.OwnerId && !p.Isdelete)) return false;
             return true;
         }
+
+        public async Task<OrderDetail> GetOrderDetailAsync(int  orderId, string productSizeId)
+        {
+            return await _context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == orderId && od.ProductSizeId == productSizeId);
+        }
     }
 
 }
