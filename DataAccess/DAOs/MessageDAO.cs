@@ -55,7 +55,6 @@ namespace DataAccess.DAOs
         public async Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
             messageCreateDTO.Timestamp = DateTime.Now;
-
             Message message = _mapper.Map<Message>(messageCreateDTO);
           //  message.Room.Content = message.Content;
             await _context.Messages.AddAsync(message);
