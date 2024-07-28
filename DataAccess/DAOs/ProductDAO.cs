@@ -26,8 +26,7 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetProductsInHomeAsync()
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
-                    .Include(p => p.Category).Include(p => p.Brand)
+            return await _context.Products.Include(p => p.Images)
                     .Include(p => p.Owner).AsNoTracking().Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
 
@@ -58,8 +57,7 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId)
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
-                    .Include(p => p.Category).Include(p => p.Brand)
+            return await _context.Products.Include(p => p.Images)
                     .Include(p => p.Owner)
                     .Where(p => p.CategoryId == categoryId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
@@ -146,7 +144,8 @@ namespace DataAccess.DAOs
                 productsQuery = productsQuery.Where(p => p.ProductSizes.Any(ps => size.Contains(ps.Size.Name)));
             }
 
-            var products = await productsQuery.Include(p => p.Images).ToListAsync();
+            var products = await productsQuery.Include(p => p.Images)
+                                            .Include(p => p.Owner).ToListAsync();
 
             return (products, owners);
         }
@@ -165,8 +164,7 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId)
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
-                .Include(p => p.Category).Include(p => p.Brand)
+            return await _context.Products.Include(p => p.Images)
                 .Include(p => p.Owner)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(5)
@@ -176,8 +174,7 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Product>> GetTopSellingProductsAsync()
         {
             return await _context.Products
-                .Include(p => p.Images).Include(p => p.Description)
-                .Include(p => p.Category).Include(p => p.Brand)
+                .Include(p => p.Images)
                 .Include(p => p.Owner)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(10)

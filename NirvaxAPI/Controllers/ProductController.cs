@@ -161,18 +161,18 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Create([FromForm] ProductDTO productDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(400, new { message = "Please pass the valid data." });
-                }
+            { 
                 var product = _mapper.Map<Product>(productDto);
                 var check = await _productRepository.CheckProductAsync(product);
                 if (!check)
                 {
-                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The product name has been duplicated." });
+                    return StatusCode(406, new { message = "The product name has been duplicated." });
                 }
 
                 await _productRepository.CreateAsync(product);
@@ -221,7 +221,7 @@ namespace WebAPI.Controllers
                 var check = await _productRepository.CheckProductAsync(product);
                 if (!check)
                 {
-                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The product name has been duplicated." });
+                    return StatusCode(406, new { message = "The product name has been duplicated." });
                 }
 
                 await _productRepository.UpdateAsync(product);
