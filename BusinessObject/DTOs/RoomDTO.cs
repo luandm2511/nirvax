@@ -22,7 +22,8 @@ namespace BusinessObject.DTOs
         public string Content { get; set; } = null!;
         public string? OwnerName { get; set; }
         public string? AccountName { get; set; }
-
+        public string? OwnerImage { get; set; }
+        public string? AccountImage { get; set; }
         public DateTime Timestamp { get; set; }
     }
 

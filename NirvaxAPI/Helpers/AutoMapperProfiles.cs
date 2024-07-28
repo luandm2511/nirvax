@@ -96,6 +96,9 @@ namespace WebAPI.Helpers
             CreateMap<Room, RoomDTO>()
             .ForMember(dest => dest.AccountName, opt => opt.MapFrom(src => src.Account.Fullname))             
             .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+            .ForMember(dest => dest.OwnerImage, opt => opt.MapFrom(src => src.Owner.Image))
+            .ForMember(dest => dest.AccountImage, opt => opt.MapFrom(src => src.Account.Image))
+
                 .ReverseMap();
             CreateMap<Room, RoomCreateDTO>().ReverseMap();
             CreateMap<Room, RoomContentDTO>().ReverseMap();
