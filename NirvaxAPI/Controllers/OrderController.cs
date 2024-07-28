@@ -63,45 +63,62 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetOrderItems([FromBody] List<OrderItemDTO> orderItems)
         {
-            var orderItemDetails = new List<OrderItemDetailDTO>();
-
-            foreach (var item in orderItems)
+            try
             {
-                var productSize = await _productSizeRepository.GetByIdAsync(item.ProductSizeId);
+                var orderItemDetails = new List<OrderItemDetailDTO>();
 
-                if (productSize != null && !productSize.Isdelete && !productSize.Product.Isdelete && !productSize.Product.Isban && productSize.Quantity >= item.Quantity)
+                foreach (var item in orderItems)
                 {
-                    orderItemDetails.Add(new OrderItemDetailDTO
+                    var productSize = await _productSizeRepository.GetByIdAsync(item.ProductSizeId);
+
+                    if (productSize != null && !productSize.Isdelete && !productSize.Product.Isdelete && !productSize.Product.Isban && productSize.Quantity >= item.Quantity)
                     {
-                        ProductSizeId = productSize.ProductSizeId,
-                        ProductName = productSize.Product.Name,
-                        SizeName = productSize.Size.Name,
-                        Quantity = item.Quantity,
-                        UnitPrice = productSize.Product.Price,
-                        OwnerId = productSize.Product.OwnerId
-                    });
+                        orderItemDetails.Add(new OrderItemDetailDTO
+                        {
+                            ProductSizeId = productSize.ProductSizeId,
+                            ProductName = productSize.Product.Name,
+                            SizeName = productSize.Size.Name,
+                            Quantity = item.Quantity,
+                            UnitPrice = productSize.Product.Price,
+                            OwnerId = productSize.Product.OwnerId,
+                            OwnerName = productSize.Product.Owner.Fullname
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(404, $"The {productSize.Product.Name} you purchased is not found or the quantity in stock is not enough for the product you want to order.");
+                    }
                 }
-                else
-                {
-                    return BadRequest($"The {productSize.Product.Name} you purchased is not found or the quantity in stock is not enough for the product you want to order.");
-                }
-            }
 
-            return Ok(orderItemDetails);
+                return Ok(orderItemDetails);
+            }
+            catch (Exception ex)
+            {
+                await _transactionRepository.RollbackTransactionAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPost("check-voucher")]
         public async Task<IActionResult> CheckVoucher([FromBody] VoucherOrderDTO request)
         {
-            var voucher = await _voucherRepository.GetVoucherById(request.VoucherId);
-
-            if (voucher != null&& (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now 
-                || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed || voucher.VoucherId != request.VoucherId))
+            try
             {
-                return BadRequest($"{request.VoucherId} is invalid.");
-            }
+                var voucher = await _voucherRepository.GetVoucherById(request.VoucherId);
 
-            return Ok(voucher);
+                if (voucher != null && (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now
+                    || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed || voucher.VoucherId != request.VoucherId))
+                {
+                    return StatusCode(400, $"{request.VoucherId} is invalid.");
+                }
+
+                return Ok(voucher);
+            }
+            catch (Exception ex)
+            {
+                await _transactionRepository.RollbackTransactionAsync();
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            } 
         }
 
         [HttpPost]
@@ -126,7 +143,7 @@ namespace WebAPI.Controllers
                             var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
                             if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.Now)
                             {
-                                return BadRequest($"Voucher [{voucherDto.VoucherId}] is invalid.");
+                                return StatusCode(400,$"Voucher [{voucherDto.VoucherId}] is invalid.");
                             }
                         }
                     }
@@ -201,7 +218,7 @@ namespace WebAPI.Controllers
                         else
                         {
                             await _transactionRepository.RollbackTransactionAsync();
-                            return BadRequest($"Insufficient quantity for ProductSizeId {cartItem.ProductSizeId}");
+                            return StatusCode(400,$"Insufficient quantity for ProductSizeId {cartItem.ProductSizeId}");
                         }
                     }
 
@@ -211,7 +228,7 @@ namespace WebAPI.Controllers
                         OwnerId = group.Key, // Assuming Product model has OwnerId field
                         Content = $"You have just had an order with code order {codeOrder}.",
                         IsRead = false,
-                        Url = null,
+                        Url = $"http://localhost:4200/Link-dashboard/{order.OrderId}",
                         CreateDate = DateTime.Now
                     };
 
@@ -273,7 +290,7 @@ namespace WebAPI.Controllers
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
                 if (order == null)
                 {
-                    return NotFound();
+                    return StatusCode(404, new { message = "Order is not found!" });
                 }
 
                 if(statusId == 2)
@@ -310,7 +327,14 @@ namespace WebAPI.Controllers
                             await _productSizeRepository.UpdateAsync(productSize);
                         }
                     }
-                    order.ShippedDate = DateTime.Now;
+                    if(statusId == 4)
+                    {
+                        order.ShippedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        order.RequiredDate = DateTime.Now;
+                    }
                     content = $"You have an order with code {order.CodeOrder} that has failed to be delivered.";
                 }
 
@@ -324,7 +348,7 @@ namespace WebAPI.Controllers
                     OwnerId = null, // Assuming Product model has OwnerId field
                     Content = content ,
                     IsRead = false,
-                    Url = "abcd",
+                    Url = $"http://localhost:4200/order-history-details/{orderId}",
                     CreateDate = DateTime.Now
                 };
 
@@ -350,7 +374,7 @@ namespace WebAPI.Controllers
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
                 if (order == null)
                 {
-                    return NotFound();
+                    return StatusCode(404, new { message = "Order is not found!" });
                 }
 
                 var orderDetails = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
@@ -365,6 +389,7 @@ namespace WebAPI.Controllers
                 }
 
                 order.StatusId = 5;
+                order.RequiredDate = DateTime.Now;
                 await _orderRepository.UpdateOrderAsync(order);
 
                 var notification = new Notification
@@ -399,7 +424,7 @@ namespace WebAPI.Controllers
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
                 if (order == null)
                 {
-                    return NotFound();
+                    return StatusCode(404, new { message = "Order is not found!" });
                 }
                 var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
                 foreach (var detail in orderDetail)

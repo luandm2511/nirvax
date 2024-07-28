@@ -36,5 +36,10 @@ namespace DataAccess.Repository
         {
             return await _noti.GetNotificationsByUserAsync(id);
         }
+
+        public async Task<string> UpdateStatusNotificationAsync(Notification notification)
+        {
+            return await _noti.UpdateStatusNotificationAsync(notification);
+        }
     }
 }

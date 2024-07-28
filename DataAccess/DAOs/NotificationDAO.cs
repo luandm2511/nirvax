@@ -22,6 +22,14 @@ namespace DataAccess.DAOs
             await _context.SaveChangesAsync();
         }
 
+        public async Task<string> UpdateStatusNotificationAsync(Notification notification)
+        {
+            notification.IsRead = true;
+            _context.Notifications.Update(notification);
+            await _context.SaveChangesAsync();
+            return notification.Url;
+        }
+
         public async Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id)
         {
             return await _context.Notifications
@@ -43,7 +51,7 @@ namespace DataAccess.DAOs
             return await _context.Notifications
                 .Include(n => n.Owner)
                 .Include(n => n.Account)
-                .FirstOrDefaultAsync(n => n.AccountId == id);
+                .FirstOrDefaultAsync(n => n.NotificationId == id);
         }
     }
 }

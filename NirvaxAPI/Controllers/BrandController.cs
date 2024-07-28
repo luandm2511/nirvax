@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
                 var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
-                    return NotFound(new { message = "Brand not found." });
+                    return StatusCode(404, new { message = "Brand is not found." });
                 }
                 return Ok(brand);
             }
@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
                 var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
-                    return NotFound(new { message = "Brand not found." });
+                    return StatusCode(404,new { message = "Brand is not found." });
                 }
 
                 _mapper.Map(brandDto, brand);
@@ -122,7 +122,7 @@ namespace WebAPI.Controllers
                 var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
-                    return NotFound(new { message = "Brand not found." });
+                    return StatusCode(404,new { message = "Brand is not found." });
                 }
                 await _repository.DeleteBrandAsync(brand);
                 return Ok(new { message = "Brand deleted successfully." });
@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(keyword))
                 {
-                    return BadRequest(new { message = "Keyword must not be empty" });
+                    return StatusCode(400,new { message = "Keyword must not be empty" });
                 }
 
                 var brands = await _repository.SearchBrandsAsync(keyword);

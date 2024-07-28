@@ -13,5 +13,6 @@ namespace DataAccess.IRepository
         Task<IEnumerable<Notification>> GetNotificationsByUserAsync(int id);
         Task<IEnumerable<Notification>> GetNotificationsByOwnerAsync(int id);
         Task<Notification> GetNotificationByidAsync(int id);
+        Task<string> UpdateStatusNotificationAsync(Notification notification);
     }
 }

@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(productId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }
                 var products = await _commentRepository.GetCommentsByProductIdAsync(productId);
                 return Ok(products);
@@ -62,12 +62,12 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return StatusCode(400, new { message = "Please pass the valid data." });
                 }
                 var product = await _productRepository.GetByIdAsync(commentDto.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }
                 var comment = _mapper.Map<Comment>(commentDto);
                 
@@ -107,7 +107,7 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return StatusCode(404, ModelState);
                 }
 
                 var comment = await _commentRepository.GetCommentByIdAsync(commentId);
@@ -116,7 +116,7 @@ namespace WebAPI.Controllers
 
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }          
 
                 _mapper.Map(replyDto, comment);
@@ -159,7 +159,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(comment.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return NotFound(new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "Product is not found." });
                 }
 
                 comment.Content = updateComment;

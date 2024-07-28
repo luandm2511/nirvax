@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return NotFound(new { message = "Category not found." });
+                    return NotFound(new { message = "Category is not found." });
                 }
                 return Ok(category);
             }
@@ -60,13 +60,13 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return StatusCode(0, new { message = "Please pass the valid data." });
+                    return StatusCode(400, new { message = "Please pass the valid data." });
                 }
                 var category = _mapper.Map<Category>(categoryDto);
                 var check = await _repository.CheckCategoryAsync(category);
                 if (!check)
                 {
-                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The category name has been duplicated." });
+                    return StatusCode(406, new { message = "The category name has been duplicated." });
                 }
 
                 await _repository.CreateCategoryAsync(category);
@@ -86,19 +86,19 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return StatusCode(0, new { message = "Please pass the valid data." });
+                    return StatusCode(400, new { message = "Please pass the valid data." });
                 }
                 var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return NotFound(new { message = "Category not found." });
+                    return StatusCode(404,new { message = "Category is not found." });
                 }
 
                 _mapper.Map(categoryDto, category);
                 var check = await _repository.CheckCategoryAsync(category);
                 if (!check)
                 {
-                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The category name has been duplicated." });
+                    return StatusCode(406, new { message = "The category name has been duplicated." });
                 }
 
                 await _repository.UpdateAsync(category);
@@ -119,7 +119,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return NotFound(new { message = "Category not found." });
+                    return StatusCode(404,new { message = "Category is not found." });
                 }
                 await _repository.DeleteCategoryAsync(category);
                 return Ok(new { message = "Category deleted successfully." });
@@ -137,7 +137,7 @@ namespace WebAPI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(keyword))
                 {
-                    return BadRequest(new { message = "Keyword must not be empty" });
+                    return StatusCode(400,new { message = "Keyword must not be empty" });
                 }
 
                 var categories = await _repository.SearchCategoriesAsync(keyword);
