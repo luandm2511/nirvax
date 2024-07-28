@@ -9,11 +9,11 @@ public partial class Message
 
     public int SenderId { get; set; }
 
-    public int? ReceiverId { get; set; }
-
     public string Content { get; set; } = null!;
 
     public DateTime Timestamp { get; set; }
+
+    public string Sendertype { get; set; } = null!;
 
     public int RoomId { get; set; }
 

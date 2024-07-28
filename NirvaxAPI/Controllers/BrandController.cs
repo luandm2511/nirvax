@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
                 var check = await _repository.CheckBrandAsync(brand);
                 if (!check)
                 {
-                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
+                    return StatusCode(406, new { message = "The brand name has been duplicated." });
                 }   
                 await _repository.CreateBrandAsync(brand);
                 return Ok(new { message = "Brand added successfully." });
@@ -101,7 +101,7 @@ namespace WebAPI.Controllers
                 var check = await _repository.CheckBrandAsync(brand);
                 if (!check)
                 {
-                    return StatusCode(StatusCodes.Status406NotAcceptable, new { message = "The brand name has been duplicated." });
+                    return StatusCode(406, new { message = "The brand name has been duplicated." });
                 }
 
                 await _repository.UpdateBrandAsync(brand);
