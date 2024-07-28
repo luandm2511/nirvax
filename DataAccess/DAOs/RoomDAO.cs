@@ -95,6 +95,10 @@ namespace DataAccess.DAOs
                     .Include(i => i.Account)
                     .Include(i => i.Owner)
                     .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);
+                if(sid == null)
+                {
+                return 0;
+                }
                 roomId = _mapper.Map<RoomDTO>(sid).RoomId;
                 return roomId;
         }

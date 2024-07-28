@@ -52,9 +52,9 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<bool> CreateMessageAsync(int roomId, MessageCreateDTO messageCreateDTO)
+        public async Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
-            messageCreateDTO.RoomId = roomId;
+           
             messageCreateDTO.Timestamp = DateTime.Now;
             Message message = _mapper.Map<Message>(messageCreateDTO);
           //  message.Room.Content = message.Content;
@@ -72,6 +72,32 @@ namespace DataAccess.DAOs
 
                 // Notify clients in the room about new message
            //    await chatHub.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", message.SenderId, message.Content);
+
+                return true;
+            }
+            else { return false; }
+
+        }
+
+        public async Task<bool> CreateMessageFirstAsync(MessageCreateDTO messageCreateDTO)
+        {
+            messageCreateDTO.Timestamp = DateTime.Now;
+            Message message = _mapper.Map<Message>(messageCreateDTO);
+            //  message.Room.Content = message.Content;
+            await _context.Messages.AddAsync(message);
+            int i = await _context.SaveChangesAsync();
+            if (i > 0)
+            {
+                //Room room = await _context.Rooms.FindAsync(messageCreateDTO.RoomId);
+                //  if (room != null)
+                //  {
+                //    room.Content = message.Content; // Update room content to latest message
+                //    _context.Rooms.Update(room);
+                //  await _context.SaveChangesAsync();
+                //  }
+
+                // Notify clients in the room about new message
+                //    await chatHub.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", message.SenderId, message.Content);
 
                 return true;
             }

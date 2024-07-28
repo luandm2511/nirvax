@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using DataAccess.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Pipelines.Sockets.Unofficial.Buffers;
 using StackExchange.Redis;
 using WebAPI.Service;
 
@@ -56,29 +57,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateMessageAsync(int ownerId, int accountId, int roomId,MessageCreateDTO messageCreateDTO)
+        public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (messageCreateDTO.RoomId == 0)
-                    {
-                        RoomCreateDTO room = new RoomCreateDTO
-                        {
-                            OwnerId = ownerId,
-                            AccountId = accountId,
-                            Content = "",
-                            Timestamp = DateTime.Now
-                        };
-
-                        var roomResult = await _room.CreateRoomAsync(room);
-                        roomId = roomResult.RoomId;
-                    }
                     var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
                     if (checkMessage)
                     {
-                        var messageCreated = await _repo.CreateMessageAsync(roomId,messageCreateDTO);
+                        var messageCreated = await _repo.CreateMessageAsync(messageCreateDTO);
                         if (messageCreated)
                         {
                             await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
@@ -115,6 +103,61 @@ namespace WebAPI.Controllers
                         Message = "Please enter valid Message!"
                     });
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateMessageFirstAsync(int accountId, int ownerId)
+        {
+            try
+            {
+                RoomCreateDTO roomCreateDTO = new RoomCreateDTO
+                {
+                    AccountId = accountId,
+                    OwnerId = ownerId,
+                    Content = "",
+                    Timestamp = DateTime.Now
+                };
+                var roomResult = await _room.CreateRoomAsync(roomCreateDTO);
+
+                MessageCreateDTO messageCreateDTO = new MessageCreateDTO
+                {
+                    RoomId = roomResult.RoomId,
+                    SenderId = ownerId,
+                    Content = "Tôi giúp gì được cho bạn?",
+                    SenderType = "Owner",
+                    Timestamp = DateTime.Now,
+                };
+                var messageCreated = await _repo.CreateMessageFirstAsync(messageCreateDTO);
+                        if (messageCreated)
+                        {
+                            await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
+
+                            // Cập nhật nội dung của Room
+                            await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
+
+                            return StatusCode(200, new
+                            {
+                                Message = "Create message " + ok,
+                                Data = messageCreated
+                            });
+                        }
+                        else
+                        {
+                            return StatusCode(400, new
+                            {
+                                Message = "Failed to send message!"
+                            });
+                        }
+                  
             }
             catch (Exception ex)
             {
