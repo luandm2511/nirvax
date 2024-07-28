@@ -75,7 +75,7 @@ public partial class NirvaxContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;User ID=sa;Password=123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -379,7 +379,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityReceived).HasColumnName("quantity_received");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -405,9 +404,11 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.Content)
                 .HasMaxLength(500)
                 .HasColumnName("content");
-            entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
             entity.Property(e => e.RoomId).HasColumnName("room_id");
             entity.Property(e => e.SenderId).HasColumnName("sender_id");
+            entity.Property(e => e.Sendertype)
+                .HasMaxLength(10)
+                .HasColumnName("sendertype");
             entity.Property(e => e.Timestamp)
                 .HasColumnType("datetime")
                 .HasColumnName("timestamp");
@@ -518,7 +519,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -643,7 +643,6 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
@@ -726,7 +725,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.StaffId).HasColumnName("staff_id");
             entity.Property(e => e.Email)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("email");
             entity.Property(e => e.Fullname)
@@ -782,7 +781,7 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF81DFF54B");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF946EF7BB");
 
             entity.ToTable("Warehouse");
 
@@ -806,7 +805,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Location)
                 .HasMaxLength(50)

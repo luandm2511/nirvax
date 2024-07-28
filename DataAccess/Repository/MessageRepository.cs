@@ -34,9 +34,9 @@ namespace DataAccess.Repository
         {
             return _messageDAO.CheckMessageAsync(messageCreateDTO);
         }
-        public Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
+        public Task<bool> CreateMessageAsync(int roomId, MessageCreateDTO messageCreateDTO)
         {
-            return _messageDAO.CreateMessageAsync(messageCreateDTO);
+            return _messageDAO.CreateMessageAsync(roomId,messageCreateDTO);
         }
 
         public Task<bool> CreateMessageFromOwnerAsync(Message message)

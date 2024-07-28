@@ -9,13 +9,13 @@ public partial class Message
 
     public int SenderId { get; set; }
 
-    public int? ReceiverId { get; set; }
-
     public string Content { get; set; } = null!;
 
     public DateTime Timestamp { get; set; }
 
     public int RoomId { get; set; }
+
+    public string Sendertype { get; set; } = null!;
 
     public virtual Room Room { get; set; } = null!;
 }

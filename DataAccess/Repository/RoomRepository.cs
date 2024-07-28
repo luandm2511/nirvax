@@ -37,7 +37,7 @@ namespace DataAccess.Repository
             return _roomDAO.ViewOwnerHistoryChatAsync(ownerId);
         }
 
-        public Task<bool> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
+        public Task<Room> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
             return _roomDAO.CreateRoomAsync(roomCreateDTO);
         }

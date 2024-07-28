@@ -124,22 +124,22 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
+        public async Task<Room> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
             Room room = await _context.Rooms.Where(i => i.OwnerId == roomCreateDTO.OwnerId && i.AccountId == roomCreateDTO.AccountId).FirstOrDefaultAsync();
             if(room == null)
             {
                 roomCreateDTO.Timestamp = DateTime.Now;
                 Room roomCreate = _mapper.Map<Room>(roomCreateDTO);
-                await _context.Rooms.AddAsync(roomCreate);
+                 await _context.Rooms.AddAsync(roomCreate);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)
                 {
-                    return true;
+                    return roomCreate;
                 }
                 else
                 {
-                    return false;
+                    throw new Exception("Failed to create a new room."); ;
                 }
             }
             else

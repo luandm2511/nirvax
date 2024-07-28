@@ -56,16 +56,29 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
+        public async Task<ActionResult> CreateMessageAsync(int ownerId, int accountId, int roomId,MessageCreateDTO messageCreateDTO)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    if (messageCreateDTO.RoomId == 0)
+                    {
+                        RoomCreateDTO room = new RoomCreateDTO
+                        {
+                            OwnerId = ownerId,
+                            AccountId = accountId,
+                            Content = "",
+                            Timestamp = DateTime.Now
+                        };
+
+                        var roomResult = await _room.CreateRoomAsync(room);
+                        roomId = roomResult.RoomId;
+                    }
                     var checkMessage = await _repo.CheckMessageAsync(messageCreateDTO);
                     if (checkMessage)
                     {
-                        var messageCreated = await _repo.CreateMessageAsync(messageCreateDTO);
+                        var messageCreated = await _repo.CreateMessageAsync(roomId,messageCreateDTO);
                         if (messageCreated)
                         {
                             await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);

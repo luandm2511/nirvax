@@ -52,8 +52,9 @@ namespace DataAccess.DAOs
             return listSizeDTO;
         }
 
-        public async Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
+        public async Task<bool> CreateMessageAsync(int roomId, MessageCreateDTO messageCreateDTO)
         {
+            messageCreateDTO.RoomId = roomId;
             messageCreateDTO.Timestamp = DateTime.Now;
             Message message = _mapper.Map<Message>(messageCreateDTO);
           //  message.Room.Content = message.Content;

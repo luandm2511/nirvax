@@ -13,7 +13,7 @@ namespace DataAccess.IRepository
     {
         Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId);
         Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId);
-        Task<bool> CreateRoomAsync(RoomCreateDTO roomCreateDTO);
+        Task<Room> CreateRoomAsync(RoomCreateDTO roomCreateDTO);
         Task<bool> CheckRoomAsync(int accountId, int ownerId);
         Task<bool> UpdateContentRoomAsync(int roomId);
         Task<RoomDTO> GetRoomByIdAsync(int roomId);
