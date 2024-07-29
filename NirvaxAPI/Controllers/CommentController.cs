@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(productId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has not been found.." });
                 }
                 var products = await _commentRepository.GetCommentsByProductIdAsync(productId);
                 return Ok(products);
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(commentDto.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has not been found.." });
                 }
                 var comment = _mapper.Map<Comment>(commentDto);
                 
@@ -116,7 +116,7 @@ namespace WebAPI.Controllers
 
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has not been found.." });
                 }          
 
                 _mapper.Map(replyDto, comment);
@@ -159,7 +159,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(comment.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has not been found.." });
                 }
 
                 comment.Content = updateComment;
