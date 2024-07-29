@@ -268,9 +268,9 @@ namespace DataAccess.DAOs
         {
            
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffAvatarDTO.StaffId);
-           
+            staff.Image = staffAvatarDTO.Image;
 
-            _mapper.Map(staffAvatarDTO, staff);
+           // _mapper.Map(staffAvatarDTO, staff);
              _context.Staff.Update(staff);
             await _context.SaveChangesAsync();
             return true;
