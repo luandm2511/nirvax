@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
                 var productsize = await _productSizeRepository.GetByIdAsync(productsizeId);
                 if (productsize == null || productsize.Isdelete == true)
                 {
-                    return StatusCode(404,  new { message = "Product is not found." });
+                    return StatusCode(404,  new { message = "The product has not been found.." });
                 }
 
                 var cart = await _cartService.GetCartFromCookie(userId) ?? new List<CartOwner>();
