@@ -204,13 +204,13 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Update(int id, [FromForm] ProductDTO productDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(400, new { message = "Please pass the valid data." });
-                }
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true)
                 {
@@ -260,7 +260,6 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Delete(int id)
         {
-            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             { 
                 var product = await _productRepository.GetByIdAsync(id);
@@ -268,19 +267,11 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(404,new { message = "Product not found." });
                 }
-                IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByProductAsync(id);
-                foreach (BusinessObject.Models.Image img in images)
-                {
-                    // Xóa ảnh cũ trước khi xóa ảnh mới
-                    await _imageRepository.DeleteImagesAsync(img);
-                }
                 await _productRepository.DeleteAsync(product);
-                await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is deleted successfully"});
             }
             catch (Exception ex)
             {
-                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message
@@ -373,7 +364,7 @@ namespace WebAPI.Controllers
             try
             {
                 var product = await _productRepository.GetByIdAsync(productId);
-                if (product == null || product.Isdelete == true || product.Isban == true)
+                if (product == null || product.Isdelete == true)
                 {
                     return StatusCode(404,new { message = "Product is not found." });
                 }
