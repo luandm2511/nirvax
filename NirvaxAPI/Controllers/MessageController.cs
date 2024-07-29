@@ -132,7 +132,7 @@ namespace WebAPI.Controllers
                 {
                     RoomId = roomResult.RoomId,
                     SenderId = ownerId,
-                    Content = "Tôi giúp gì được cho bạn?",
+                    Content = "Chào bạn, Tôi giúp gì được cho bạn?",
                     SenderType = "Owner",
                     Timestamp = DateTime.Now,
                 };

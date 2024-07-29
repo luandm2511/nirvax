@@ -81,60 +81,68 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<DescriptionDTO>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
         {
-            List<DescriptionDTO> listSizeDTO = new List<DescriptionDTO>();
+            List < Description> getList = new List<Description> ();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Description> getList = await _context.Descriptions
+                 getList = await _context.Descriptions
                   //  .Where(i => i.Isdelete == false)
+                  .Include(i => i.Images)
+                  .Include(i => i.Products)
                     .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<DescriptionDTO>>(getList);
+              
             }
             else
             {
-                List<Description> getList = await _context.Descriptions
-                  //  .Where(i => i.Isdelete == false)
+               getList = await _context.Descriptions
+                   //  .Where(i => i.Isdelete == false)
+                   .Include(i => i.Images)
+                  .Include(i => i.Products)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<DescriptionDTO>>(getList);
+               
             }
-            return listSizeDTO;
+            return getList;
         }
 
-        public async Task<List<DescriptionDTO>> GetDescriptionForUserAsync(string? searchQuery)
+        public async Task<List<Description>> GetDescriptionForUserAsync(string? searchQuery)
         {
-            List<DescriptionDTO> listSizeDTO = new List<DescriptionDTO>();
+            List<Description> getList = new List<Description>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Description> getList = await _context.Descriptions
+                 getList = await _context.Descriptions
+                     .Include(i => i.Images)
+                  .Include(i => i.Products)
                     .Where(i => i.Isdelete == false)
                     .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<DescriptionDTO>>(getList);
+              
             }
             else
             {
-                List<Description> getList = await _context.Descriptions
+                getList = await _context.Descriptions
+                     .Include(i => i.Images)
+                  .Include(i => i.Products)
                     .Where(i => i.Isdelete == false)                  
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<DescriptionDTO>>(getList);
+                
             }
-            return listSizeDTO;
+            return getList;
         }
 
         public async Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
         {
                 DescriptionDTO descriptionDTO = new DescriptionDTO();
-                Description? sid = await _context.Descriptions.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
+                Description? sid = await _context.Descriptions.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
                 descriptionDTO = _mapper.Map<DescriptionDTO>(sid);
                 return descriptionDTO;       
         }
@@ -157,7 +165,8 @@ namespace DataAccess.DAOs
 
         public async Task<Description> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
         {
-            Description? description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionDTO.DescriptionId);
+            Description? description = await _context.Descriptions.Include(i => i.Images)
+                  .Include(i => i.Products).SingleOrDefaultAsync(i => i.DescriptionId == descriptionDTO.DescriptionId);
             //ánh xạ đối tượng DescriptionDTO đc truyền vào cho staff
             descriptionDTO.Isdelete = false;
                 _mapper.Map(descriptionDTO, description);

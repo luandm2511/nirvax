@@ -246,9 +246,7 @@ namespace DataAccess.DAOs
             
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerAvatarDTO.OwnerId);
             owner.Image = ownerAvatarDTO.Image;
-           
-          
-            _mapper.Map(ownerAvatarDTO, owner);
+         
              _context.Owners.Update(owner);
             await _context.SaveChangesAsync();
             return true;
