@@ -9,15 +9,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class VoucherController : ControllerBase
     {
-            private readonly IConfiguration _config;
             private readonly IVoucherRepository  _repo;
             private readonly string ok = "successfully ";
             private readonly string notFound = "Not found ";
             private readonly string badRequest = "Failed! ";
 
-            public VoucherController(IConfiguration config, IVoucherRepository repo)
+            public VoucherController( IVoucherRepository repo)
             {
-                _config = config;
                  _repo = repo;
             }
 

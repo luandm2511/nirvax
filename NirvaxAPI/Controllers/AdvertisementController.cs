@@ -11,9 +11,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]/[Action]")]
     [ApiController]
     public  class AdvertisementController : ControllerBase
-    {
-       
-            private readonly IConfiguration _config;
+    {   
             private readonly ITransactionRepository _transactionRepository;
             private readonly IAdvertisementRepository _repo;
             private readonly INotificationRepository _notificationRepository;
@@ -24,9 +22,8 @@ namespace WebAPI.Controllers
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public  AdvertisementController(IConfiguration config, IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
+            public  AdvertisementController(IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
             {
-                _config = config;
                 _repo = repo;
                 this._hostEnvironment = hostEnvironment;
                _notificationRepository = notificationRepository;

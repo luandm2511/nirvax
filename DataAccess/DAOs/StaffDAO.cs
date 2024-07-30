@@ -152,32 +152,32 @@ namespace DataAccess.DAOs
 
 
         //owner
-        public async Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            List<StaffDTO> listStaffDTO = new List<StaffDTO>();
+            List<Staff> listStaff = new List<Staff>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Staff> getList = await _context.Staff.Include(i => i.Owner)
+                listStaff = await _context.Staff.Include(i => i.Owner)
                   //  .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Email.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<StaffDTO>>(getList);
+                
             }
             else
             {
-                List<Staff> getList = await _context.Staff.Include(i => i.Owner)
+                listStaff = await _context.Staff.Include(i => i.Owner)
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listStaffDTO = _mapper.Map<List<StaffDTO>>(getList);
+              
             }
-            return listStaffDTO;
+            return listStaff;
         }
 
         //details

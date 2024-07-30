@@ -12,7 +12,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class WarehouseController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IWarehouseRepository _repo;
        
 
@@ -20,9 +19,8 @@ namespace WebAPI.Controllers
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public WarehouseController(IConfiguration config, IWarehouseRepository repo)
+        public WarehouseController(IWarehouseRepository repo)
         {
-            _config = config;
             _repo = repo;
         }
 

@@ -10,16 +10,14 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ImportProductDetailController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IImportProductDetailRepository _repo;
         private readonly IProductSizeRepository _repoProdSize;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public ImportProductDetailController(IConfiguration config, IImportProductDetailRepository repo, IProductSizeRepository repoProdSize)
+        public ImportProductDetailController(IImportProductDetailRepository repo, IProductSizeRepository repoProdSize)
         {
-            _config = config;
             _repo = repo;
             _repoProdSize = repoProdSize;
         }

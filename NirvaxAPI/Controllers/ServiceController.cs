@@ -9,15 +9,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ServiceController : ControllerBase
     {
-            private readonly IConfiguration _config;
             private readonly IServiceRepository  _repo;
             private readonly string ok = "successfully";
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public ServiceController(IConfiguration config, IServiceRepository repo)
+            public ServiceController(IServiceRepository repo)
             {
-                _config = config;
                  _repo = repo;
             }
 

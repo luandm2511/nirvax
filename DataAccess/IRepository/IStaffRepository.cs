@@ -11,7 +11,7 @@ namespace DataAccess.IRepository
 {
     public interface  IStaffRepository
     {
-        Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<StaffDTO> GetStaffByIdAsync(int staffId);
         Task<StaffDTO> ViewStaffProfileAsync(string ownerEmail);
 

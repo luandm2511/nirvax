@@ -11,7 +11,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class RoomController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IRoomRepository  _repo;
         private readonly IMessageRepository _mess;
         private readonly IMapper _mapper;
@@ -19,9 +18,8 @@ namespace WebAPI.Controllers
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public RoomController(IConfiguration config, IRoomRepository repo, IMessageRepository mess, IMapper mapper)
-        {
-            _config = config;
+        public RoomController(IRoomRepository repo, IMessageRepository mess, IMapper mapper)
+        { 
              _repo = repo;
             _mess = mess;
             _mapper = mapper;

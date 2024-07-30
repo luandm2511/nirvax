@@ -10,10 +10,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]/[Action]")]
     [ApiController]
     public class GuestConsultationController : ControllerBase
-    {
-        
-
-            private readonly IConfiguration _config;
+    {     
             private readonly IGuestConsultationRepository  _repo;
             private readonly INotificationRepository _notificationRepository;
             private readonly ITransactionRepository _transactionRepository;
@@ -22,9 +19,8 @@ namespace WebAPI.Controllers
             private readonly string badRequest = "Failed!";
 
         
-            public GuestConsultationController(IConfiguration config, IGuestConsultationRepository repo, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
+            public GuestConsultationController(IGuestConsultationRepository repo, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
             {
-                _config = config;
                 _repo = repo;
                 _notificationRepository = notificationRepository;
                 _transactionRepository = transactionRepository;

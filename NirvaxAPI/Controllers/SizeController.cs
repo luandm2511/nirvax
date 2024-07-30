@@ -10,15 +10,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class SizeController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly ISizeRepository  _repo;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public SizeController(IConfiguration config, ISizeRepository repo)
+        public SizeController(ISizeRepository repo)
         {
-            _config = config;
              _repo = repo;
         }
 

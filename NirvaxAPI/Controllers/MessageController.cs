@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
     {
         
        
-        private readonly IConfiguration _config;
+     
         private readonly IMessageRepository  _repo;
         private readonly IRoomRepository _room;
         private readonly IHubContext<ChatHub> _hubContext;
@@ -24,9 +24,8 @@ namespace WebAPI.Controllers
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public MessageController(IConfiguration config, IMessageRepository repo, IRoomRepository room, IHubContext<ChatHub> hubContext)
+        public MessageController(IMessageRepository repo, IRoomRepository room, IHubContext<ChatHub> hubContext)
         {
-            _config = config;
             _repo = repo;
             _room = room;
             _hubContext = hubContext;

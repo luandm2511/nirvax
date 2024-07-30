@@ -26,7 +26,7 @@ namespace DataAccess.Repository
        
 
 
-        public Task<List<StaffDTO>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
 
             return _staffDAO.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);

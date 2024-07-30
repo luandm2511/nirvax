@@ -9,7 +9,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class WarehouseDetailController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IWarehouseDetailRepository _repo;
         private readonly IWarehouseRepository _repoWh;
         private readonly IProductSizeRepository _repoProdSize;
@@ -18,9 +17,8 @@ namespace WebAPI.Controllers
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public WarehouseDetailController(IConfiguration config, IWarehouseDetailRepository repo, IWarehouseRepository repoWh, IProductSizeRepository repoProdSize)
+        public WarehouseDetailController(IWarehouseDetailRepository repo, IWarehouseRepository repoWh, IProductSizeRepository repoProdSize)
         {
-            _config = config;
             _repo = repo;
             _repoProdSize = repoProdSize;
             _repoWh = repoWh;

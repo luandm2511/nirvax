@@ -16,16 +16,14 @@ namespace WebAPI.Controllers
    
     public class StaffController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IStaffRepository  _repo;
         
         private readonly string ok = "successfully ";
         private readonly string notFound = "Not found ";
         private readonly string badRequest = "Failed! ";
 
-        public StaffController(IConfiguration config, IStaffRepository repo)
+        public StaffController(IStaffRepository repo)
         {
-            _config = config;
              _repo = repo;           
         }
 
@@ -153,21 +151,30 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var checkStaff = await _repo.CheckStaffExistAsync(staffId);
-                if (checkStaff == true)
+                if (ModelState.IsValid)
                 {
-                    var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
-                    return StatusCode(200, new
+                    var checkStaff = await _repo.CheckStaffExistAsync(staffId);
+                    if (checkStaff == true)
                     {
-                        Message = "Change password of staff" + ok,
-                        Data = staff1
-                    });
-                }
-                else
+                        var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
+                        return StatusCode(200, new
+                        {
+                            Message = "Change password of staff" + ok,
+                            Data = staff1
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(400, new
+                        {
+                            Message = "Staff not exist!",
+                        });
+                    }
+                } else
                 {
-                    return StatusCode(400, new
+                    return StatusCode(404, new
                     {
-                        Message = "Staff not exist!",
+                        Message = "Don't accept empty!",
                     });
                 }
             }
