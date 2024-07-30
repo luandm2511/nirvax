@@ -93,7 +93,7 @@ namespace DataAccess.DAOs
                 //    .Where(i => i.Isdelete == false)
                     .Include(i => i.Owner)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
-                    .Where(i => i.OwnerId == ownerId)
+                    .Where(i => i.OwnerId == ownerId && !i.Isdelete)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

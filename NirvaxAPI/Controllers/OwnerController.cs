@@ -203,7 +203,7 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
                     var checkOwner = await _repo.CheckProfileOwnerAsync(ownerProfileDTO);
-                    if (checkOwner == true)
+                    if (checkOwner == false)
                     {
                         var owner1 = await _repo.UpdateProfileOwnerAsync(ownerProfileDTO);
                         return StatusCode(200, new

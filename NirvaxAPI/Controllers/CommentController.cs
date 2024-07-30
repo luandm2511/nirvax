@@ -39,13 +39,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var product = await _productRepository.GetByIdAsync(productId);
-                if (product == null || product.Isdelete == true || product.Isban == true)
-                {
-                    return StatusCode(404,new { message = "The product has not been found.." });
-                }
-                var products = await _commentRepository.GetCommentsByProductIdAsync(productId);
-                return Ok(products);
+                var comments = await _commentRepository.GetCommentsByProductIdAsync(productId);
+                return Ok(comments);
             }
             catch (Exception ex)
             {
@@ -107,7 +102,7 @@ namespace WebAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return StatusCode(404, ModelState);
+                    return StatusCode(404, new { message = "Please pass the valid data." });
                 }
 
                 var comment = await _commentRepository.GetCommentByIdAsync(commentId);
@@ -149,6 +144,8 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        //Bỏ
         [HttpPut("update-comment")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateComment(int commentId, string updateComment)

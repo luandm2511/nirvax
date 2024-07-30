@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpPut("{id}")]
         //[Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> GetNotificationByid(int id)
         {

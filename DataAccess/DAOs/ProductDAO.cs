@@ -79,7 +79,7 @@ namespace DataAccess.DAOs
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm));
+                productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm.Trim()) || p.Owner.Fullname.Contains(searchTerm.Trim()));
             }
 
             var products = await productsQuery.ToListAsync();

@@ -152,7 +152,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-    options.CallbackPath = "/api/GoogleLogin/GoogleResponse";
+    options.CallbackPath = "/api/Authentication/signin-google";
     options.SaveTokens = true;
 });
 builder.Services.AddAuthorization();

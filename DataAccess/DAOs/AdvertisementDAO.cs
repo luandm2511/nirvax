@@ -107,7 +107,7 @@ namespace DataAccess.DAOs
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()));
+                query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()) || i.Owner.Fullname.Contains(searchQuery.Trim()));
             }
 
            
