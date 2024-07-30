@@ -118,16 +118,16 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword)
+        public async Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
         {
             //check password             
             Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
             bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
             if (verified == true)
             {
-                if(newPasswod == confirmPassword)
+                if(newPassword == confirmPassword)
                 {
-                    string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(newPasswod);
+                    string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
                     sid.Password = newpasswordHash;
                     _context.Staff.Update(sid);
                     await _context.SaveChangesAsync();

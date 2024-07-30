@@ -70,9 +70,9 @@ namespace DataAccess.Repository
             return _ownerDAO.CheckProfileExistAsync(ownerEmail);
         }
        
-        public Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
+        public Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword,string confirmPassword)
         {
-            return _ownerDAO.ChangePasswordOwnerAsync(ownerId, oldPassword, newPasswod); 
+            return _ownerDAO.ChangePasswordOwnerAsync(ownerId, oldPassword, newPassword, confirmPassword); 
         }
 
         public Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO)

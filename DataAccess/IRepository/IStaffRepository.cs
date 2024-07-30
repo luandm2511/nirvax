@@ -20,7 +20,7 @@ namespace DataAccess.IRepository
 
 
         Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO);
-        Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword);
+        Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword);
 
         Task<bool> CheckStaffExistAsync(int staffId);
 

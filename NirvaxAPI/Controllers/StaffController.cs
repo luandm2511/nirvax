@@ -149,14 +149,14 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword)
+        public async Task<ActionResult> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
         {
             try
             {
                 var checkStaff = await _repo.CheckStaffExistAsync(staffId);
                 if (checkStaff == true)
                 {
-                    var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPasswod, confirmPassword);
+                    var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
                     return StatusCode(200, new
                     {
                         Message = "Change password of staff" + ok,

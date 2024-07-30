@@ -22,7 +22,7 @@ namespace DataAccess.IRepository
 
         Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO);
        Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
-        Task<bool> ChangePasswordOwnerAsync(int  ownerId, string oldPassword, string newPasswod);
+        Task<bool> ChangePasswordOwnerAsync(int  ownerId, string oldPassword, string newPassword, string confirmPassword);
 
         Task<bool> CheckOwnerExistAsync(int ownerId);
 

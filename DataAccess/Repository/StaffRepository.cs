@@ -64,9 +64,9 @@ public Task<bool> CheckProfileExistAsync(string ownerEmail)
     return _staffDAO.CheckProfileExistAsync(ownerEmail);
 }
 
-public Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPasswod, string confirmPassword)
+public Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
 {
-    return _staffDAO.ChangePasswordStaffAsync(staffId, oldPassword, newPasswod, confirmPassword);
+    return _staffDAO.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
 }
 
 public Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO)

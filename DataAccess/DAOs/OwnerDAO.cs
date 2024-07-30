@@ -120,23 +120,35 @@ namespace DataAccess.DAOs
 
        
 
-        public async Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod)
+        public async Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword,string confirmPassword)
         { 
                 //check password             
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);  
                bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
                 if (verified == true)
                 {
-                    string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(newPasswod);
+                if (newPassword == confirmPassword)
+                {
+                    string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
                     sid.Password = newpasswordHash;
-                    // Ánh xạ dữ liệu từ OwnerDTO sang Owner
-                    //_mapper.Map(, sid);
-                     _context.Owners.Update(sid);
+                    _context.Owners.Update(sid);
                     await _context.SaveChangesAsync();
-
                     return true;
+
                 }
-                return false;
+                else
+                {
+
+                    throw new Exception("Your new password and confirm password not match!");
+
+                }
+            }
+            else
+            {
+
+                throw new Exception("Enter wrong your old password!");
+
+            }
         }
 
 
