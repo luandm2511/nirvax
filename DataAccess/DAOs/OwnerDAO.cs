@@ -153,56 +153,56 @@ namespace DataAccess.DAOs
 
 
         //admin
-        public async Task<List<OwnerDTO>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
-            List<OwnerDTO> listOwnerDTO = new List<OwnerDTO>();
+            List<Owner> getList = new List<Owner>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Owner> getList = await _context.Owners
+                 getList = await _context.Owners
                     .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()))
                    
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                       
                     .ToListAsync();
-                listOwnerDTO = _mapper.Map<List<OwnerDTO>>(getList);
+               
             }
             else
             {
-                List<Owner> getList = await _context.Owners
+                getList = await _context.Owners
                  
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listOwnerDTO = _mapper.Map<List<OwnerDTO>>(getList);
+               
             }
-            return listOwnerDTO;
+            return getList;
         }
 
         //user
-        public async Task<List<OwnerDTO>> GetAllOwnersForUserAsync(string? searchQuery)
+        public async Task<List<Owner>> GetAllOwnersForUserAsync(string? searchQuery)
         {
-            List<OwnerDTO> listOwnerDTO = new List<OwnerDTO>();
+            List<Owner> getList = new List<Owner>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Owner> getList = await _context.Owners
+                 getList = await _context.Owners
                    .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.IsBan == false)
                     .ToListAsync();
-                listOwnerDTO = _mapper.Map<List<OwnerDTO>>(getList);
+               
             }
             else
             {
-                List<Owner> getList = await _context.Owners
+                getList = await _context.Owners
                      .Where(i => i.IsBan == false)
                     .ToListAsync();
-                listOwnerDTO = _mapper.Map<List<OwnerDTO>>(getList);
+                
             }
-            return listOwnerDTO;
+            return getList;
         }
 
         //admin

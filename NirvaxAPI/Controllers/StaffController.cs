@@ -151,8 +151,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+               // if (ModelState.IsValid)
+               // {
                     var checkStaff = await _repo.CheckStaffExistAsync(staffId);
                     if (checkStaff == true)
                     {
@@ -170,13 +170,13 @@ namespace WebAPI.Controllers
                             Message = "Staff not exist!",
                         });
                     }
-                } else
-                {
-                    return StatusCode(404, new
-                    {
-                        Message = "Don't accept empty!",
-                    });
-                }
+             //   } else
+               // {
+                 //   return StatusCode(404, new
+                 //   {
+                //        Message = "Don't accept empty!",
+                  //  });
+              //  }
             }
             catch (Exception ex)
             {
