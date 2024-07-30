@@ -67,7 +67,6 @@ namespace DataAccess.DAOs
                 .Include(o => o.Voucher)
                 .Include(o => o.OrderDetails) // Include OrderDetails to calculate Quantity
                 .Where(o => o.OwnerId == ownerId)
-                .OrderByDescending(o => o.OrderId)
                 .ToListAsync();
 
             var orderOwnerDTOs = orders.Select(o => new OrderOwnerDTO
@@ -86,8 +85,13 @@ namespace DataAccess.DAOs
                 Note = o.Note
             }).ToList();
 
-            return orderOwnerDTOs;
+            var sortedOrderOwnerDTOs = orderOwnerDTOs
+                .OrderByDescending(o => new[] { o.OrderDate, o.RequiredDate ?? DateTime.MinValue, o.ShippedDate ?? DateTime.MinValue }.Max())
+                .ToList();
+
+            return sortedOrderOwnerDTOs;
         }
+
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
