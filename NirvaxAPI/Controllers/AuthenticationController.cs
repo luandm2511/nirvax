@@ -407,7 +407,7 @@ namespace WebAPI.Controllers
         [HttpGet("signin-google")]
         public IActionResult SignInGoogle()
         {
-            var redirectUrl = Url.Action("GoogleResponse", "GoogleLogin");
+            var redirectUrl = Url.Action(nameof(GoogleResponse));
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
