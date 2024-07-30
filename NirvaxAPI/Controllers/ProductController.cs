@@ -75,9 +75,34 @@ namespace WebAPI.Controllers
             try
             {
                 var product = await _productRepository.GetByIdAsync(id);
-                if (product == null || product.Isdelete == true || product.Isban == true)
+                if (product == null || product.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has been not found." });
+                }
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("home/{id}")]
+        public async Task<IActionResult> GetProductDetailInHome(int id)
+        {
+            try
+            {
+                var product = await _productRepository.GetByIdAsync(id);
+                if (product == null || product.Isdelete == true)
+                {
+                    return StatusCode(404, new { message = "The product has been not found." });
+                }
+                if (product.Isban)
+                {
+                    return StatusCode(404, new { message = "The product has been banned." });
                 }
                 return Ok(product);
             }
@@ -214,7 +239,7 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null || product.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has been not found." });
                 }
                 
                 _mapper.Map(productDto, product);
@@ -364,9 +389,9 @@ namespace WebAPI.Controllers
             try
             {
                 var product = await _productRepository.GetByIdAsync(productId);
-                if (product == null || product.Isdelete == true)
+                if (product == null || product.Isdelete == true || product.Isban)
                 {
-                    return StatusCode(404,new { message = "Product is not found." });
+                    return StatusCode(404,new { message = "The product has been deleted or banned. You can't rate and comment product" });
                 }
                 var orderDetail = await _productRepository.GetOrderDetailAsync(orderId, productSizeId);
                 orderDetail.UserRate = rating;

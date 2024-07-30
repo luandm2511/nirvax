@@ -266,7 +266,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("owner/{ownerId}")]
         //[Authorize(Roles = "Owner,Staff")]
-        public async Task<IActionResult> ViewOrdersByOwner(int ownerId)
+        public async Task<IActionResult> ViewOrdersByOwner(int ownerId) 
         {
             try
             {

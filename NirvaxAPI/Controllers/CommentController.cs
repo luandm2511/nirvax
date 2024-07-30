@@ -52,17 +52,17 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> AddComment([FromForm] CommentDTO commentDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new { message = "Please pass the valid data." });
+            }
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(400, new { message = "Please pass the valid data." });
-                }
                 var product = await _productRepository.GetByIdAsync(commentDto.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "The product has not been found.." });
+                    return StatusCode(404,new { message = "The product has been deleted or banned. You can't rate and comment product" });
                 }
                 var comment = _mapper.Map<Comment>(commentDto);
                 
@@ -137,34 +137,6 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-
-
-        //Bỏ
-        [HttpPut("update-comment")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> UpdateComment(int commentId, string updateComment)
-        {
-            try
-            {
-                var comment = await _commentRepository.GetCommentByIdAsync(commentId);
-                var product = await _productRepository.GetByIdAsync(comment.ProductId);
-                if (product == null || product.Isdelete == true || product.Isban == true)
-                {
-                    return StatusCode(404,new { message = "The product has not been found.." });
-                }
-
-                comment.Content = updateComment;
-                await _commentRepository.UpdateCommentAsync(comment);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Failed to create the comment." });
-            }
-            catch (Exception ex)
-            {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message

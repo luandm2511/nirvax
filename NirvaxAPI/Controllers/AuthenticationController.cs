@@ -404,54 +404,39 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("signin-google")]
-        public IActionResult SignInGoogle()
-        {
-            var redirectUrl = Url.Action(nameof(GoogleResponse));
-            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-        }
-
-        [HttpGet("google-response")]
+        [HttpPost("google-response")]
         [AllowAnonymous]
-        public async Task<IActionResult> GoogleResponse()
+        public async Task<IActionResult> GoogleResponse([FromBody] AccountGoogle request)
         {
-            var result = await HttpContext.AuthenticateAsync();
-            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            if (string.IsNullOrEmpty(request.Email))
             {
-                claim.Issuer,
-                claim.OriginalIssuer,
-                claim.Type,
-                claim.Value
-            });
+                return StatusCode(400, new { message = "Invalid Google user data." });
+            }
 
-            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var picture = claims.FirstOrDefault(c => c.Type == "urn:google:picture")?.Value;
-            var phoneNumber = claims.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value;
-            var address = claims.FirstOrDefault(c => c.Type == ClaimTypes.StreetAddress)?.Value;
-
-            Account user = await _repository.GetAccountByEmailAsync(email);
+            var user = await _repository.GetAccountByEmailAsync(request.Email);
 
             if (user == null)
             {
-                var userGG = new AccountGoogle
+                var userGG = new Account
                 {
-                    Email = email,
-                    Fullname = name,
-                    Phone = phoneNumber,
-                    Image = picture,
-                    Address = address,
+                    Email = request.Email,
+                    Password = "Nirvax@123",
+                    Fullname = request.Name,
+                    Phone = request.PhoneNumber ?? "N/A",
+                    Image = request.Picture,
+                    Address = "N/A",  
+                    Dob = request.Birthday ?? DateTime.MinValue, 
+                    Gender = "N/A",
                     Role = "User",
-                    IsBan = false
+                    IsBan = false, 
                 };
-                var account = _mapper.Map<Account>(userGG);
-                await _repository.AddAccountAsync(account);
-                var tokenn = GenerateJSONWebToken(account.AccountId, email, "User");
-                return Ok(new { token = tokenn });
+
+                await _repository.AddAccountAsync(userGG);
+                var token = GenerateJSONWebToken(userGG.AccountId, request.Email, "User");
+                return Ok(new { token });
             }
 
-            var tokenString = GenerateJSONWebToken(user.AccountId, email, "User");
+            var tokenString = GenerateJSONWebToken(user.AccountId, request.Email, "User");
 
             return Ok(new { token = tokenString });
         }
