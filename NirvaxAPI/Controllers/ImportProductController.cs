@@ -1,5 +1,6 @@
 ﻿using BusinessObject.DTOs;
 using BusinessObject.Models;
+using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,22 @@ namespace WebAPI.Controllers
     public class ImportProductController : ControllerBase
     {
         private readonly IImportProductRepository _repo;
-        
+        private readonly IProductSizeRepository _repoProdSize;
+        private readonly IImportProductDetailRepository _repoImport;
+        private readonly IWarehouseDetailRepository _repoWh;
+        private readonly ITransactionRepository _transactionRepository;
+
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public ImportProductController(IImportProductRepository repo)
+        public ImportProductController(ITransactionRepository transactionRepository, IWarehouseDetailRepository repoWh, IImportProductRepository repo, IProductSizeRepository repoProdSize, IImportProductDetailRepository repoImport)
         {
             _repo = repo;
-           
+            _repoProdSize = repoProdSize;
+            _repoImport = repoImport;
+            _repoWh = repoWh;
+            _transactionRepository = transactionRepository;
         }
         
 
@@ -70,12 +78,27 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
+        public async Task<ActionResult> CreateImportProductAsync(int warehouseId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
+            using var transaction = await _transactionRepository.BeginTransactionAsync();
             try {
                 if (ModelState.IsValid)
                 {
-                    var importProduct1 = await _repo.CreateImportProductAsync(importProductCreateDTO);
+                    ImportProductCreateDTO importProduct = new ImportProductCreateDTO()
+                    {
+                        WarehouseId = warehouseId,
+                        ImportDate = DateTime.Now,
+                        Origin = origin,
+                        Quantity = 0,
+                        TotalPrice = 0
+                    };
+                    await _repoProdSize.CreateProductSizeAsync(importProductDetailDTO);
+                    await _repoProdSize.UpdateProductSizeByImportAsync(importProductDetailDTO);
+                    await _repoWh.CreateWarehouseDetailAsync(warehouseId, importProductDetailDTO);
+                    var importProduct1 = await _repo.CreateImportProductAsync(importProduct);              
+                    await _repoImport.CreateImportProductDetailAsync(importProduct1.ImportId, importProductDetailDTO);
+                    await _repo.UpdateQuantityAndPriceImportProductAsync(importProduct1.ImportId);               
+                    await _transactionRepository.CommitTransactionAsync();
                     return StatusCode(200, new
                     {
                         Message = "Create import product " + ok,
@@ -86,14 +109,13 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-
-
                         Message = "Dont't accept empty information!",
                     });
                 }
             }
             catch (Exception ex)
             {
+                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
                     Status = "Error",

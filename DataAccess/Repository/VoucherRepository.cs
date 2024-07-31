@@ -56,23 +56,23 @@ namespace DataAccess.Repository
         }
 
        
-        public Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<List<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _voucherDAO.GetAllVouchersAsync(searchQuery, page, pageSize, ownerId);
         }
 
-       public Task<List<VoucherDTO>> GetAllVoucherForUserAsync()
+       public Task<List<Voucher>> GetAllVoucherForUserAsync()
         {
             return _voucherDAO.GetAllVoucherForUserAsync();
         }
 
-        public Task<List<VoucherDTO>> GetAllVoucherByOwnerAsync(int ownerId)
+        public Task<List<Voucher>> GetAllVoucherByOwnerAsync(int ownerId)
         {
             return _voucherDAO.GetAllVoucherByOwnerAsync(ownerId);
         }
 
 
-        public Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId)
+        public Task<Voucher> GetVoucherDTOByIdAsync(string voucherId)
         {
             return _voucherDAO.GetVoucherDTOByIdAsync(voucherId);
         }

@@ -35,7 +35,7 @@ namespace DataAccess.Repository
 
 
 
-    public Task<StaffDTO> GetStaffByIdAsync(int staffId)
+    public Task<Staff> GetStaffByIdAsync(int staffId)
         {
             return _staffDAO.GetStaffByIdAsync(staffId);
         }

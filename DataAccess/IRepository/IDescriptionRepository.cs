@@ -15,7 +15,7 @@ namespace DataAccess.IRepository
 
         Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize);
         Task<List<Description>> GetDescriptionForUserAsync(string? searchQuery);
-        Task<DescriptionDTO> GetDescriptionByIdAsync(int sizeId);
+        Task<Description> GetDescriptionByIdAsync(int sizeId);
         Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content);
 
         Task<bool> CheckDescriptionExistAsync(int sizeId);

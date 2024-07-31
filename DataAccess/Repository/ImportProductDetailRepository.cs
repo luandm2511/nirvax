@@ -27,19 +27,19 @@ namespace DataAccess.Repository
             return _importProductDetailDAO.CheckImportProductDetailExistAsync(importProductDetailId);
         }
 
-        public Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
+        public Task<List<ImportProductDetail>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
 
             return _importProductDetailDAO.GetAllImportProductDetailByImportIdAsync(importId);
         }
 
-        public Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync()
+        public Task<List<ImportProductDetail>> GetAllImportProductDetailAsync()
         {
 
             return _importProductDetailDAO.GetAllImportProductDetailAsync();
         }
 
-        public Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
 
             return _importProductDetailDAO.CreateImportProductDetailAsync(importId, importProductDetailDTO);

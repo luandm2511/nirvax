@@ -68,68 +68,8 @@ namespace WebAPI.Controllers
                 }
         }
 
-        [HttpPost]
-        //  [Authorize]
-        public async Task<ActionResult> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var importProductDetail = await _repo.CreateImportProductDetailAsync(importId, importProductDetailDTO);
-                    await _repoProdSize.UpdateProductSizeByImportAsync(importProductDetailDTO);
-                    return StatusCode(200, new
-                    {
-                        Message = "Create Import Product Detail " + ok,
-                        Data = importProductDetail
-                    });              
-            }
-            return StatusCode(400, new
-            {
-                Message = "Please enter valid ImportProduct Detail!",
-            });
-        }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-        }
 
-        [HttpPut]
-        //  [Authorize]
-        public async Task<ActionResult> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var importProductDetail = await _repo.UpdateImportProductDetailAsync(importId, importProductDetailDTO);
-                    await _repoProdSize.UpdateProductSizeByImportAsync(importProductDetailDTO);
-                    return StatusCode(200, new
-                    {
-                        Message = "Update Import Product Detail " + ok,
-                        Data = importProductDetail
-                    });
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = "Please enter valid ImportProduct Detail!",
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {                    
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-        }
+     
 
 
     }

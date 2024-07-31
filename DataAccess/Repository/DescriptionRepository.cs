@@ -47,7 +47,7 @@ namespace DataAccess.Repository
 
         }
 
-        public Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
+        public Task<Description> GetDescriptionByIdAsync(int descriptionId)
         {
             return (_descriptionDAO.GetDescriptionByIdAsync(descriptionId));
         }

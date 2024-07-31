@@ -82,14 +82,14 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<List<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            List<SizeDTO> listSizeDTO = new List<SizeDTO>();
+            List<Size> listSize = new List<Size>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Size> getList = await _context.Sizes
+                listSize = await _context.Sizes
                 //    .Where(i => i.Isdelete == false)
                     .Include(i => i.Owner)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
@@ -97,28 +97,28 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<SizeDTO>>(getList);
+              
             }
             else
             {
-                List<Size> getList = await _context.Sizes
+                listSize = await _context.Sizes
                 //    .Where(i => i.Isdelete == false)
                     .Include(i => i.Owner)
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<SizeDTO>>(getList);
+              
             }
-            return listSizeDTO;
+            return listSize;
         }
 
-        public async Task<SizeDTO> GetSizeByIdAsync(int sizeId)
+        public async Task<Size> GetSizeByIdAsync(int sizeId)
         {
-                SizeDTO sizeDTO = new SizeDTO();
+               
                 Size? sid = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId);              
-                sizeDTO = _mapper.Map<SizeDTO>(sid);
-                return sizeDTO;         
+           
+                return sid;         
         }
 
       

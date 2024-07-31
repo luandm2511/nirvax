@@ -13,7 +13,7 @@ namespace DataAccess.IRepository
 {
      public interface IGuestConsultationRepository
     {
-        Task<GuestConsultationDTO> GetGuestConsultationsByIdAsync(int guestId);
+        Task<GuestConsultation> GetGuestConsultationsByIdAsync(int guestId);
          Task<int> ViewGuestConsultationStatisticsAsync();
         Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
         Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO);
@@ -21,10 +21,10 @@ namespace DataAccess.IRepository
         Task<bool> CheckGuestConsultationExistAsync(int guestId);
         Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
         Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId);
-        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize,int ownerId);
-        Task<List<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<List<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<List<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<List<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize,int ownerId);
+        Task<List<GuestConsultation>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId);
        Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest);
 
     }

@@ -34,13 +34,13 @@ namespace DataAccess.Repository
             return _sizeDAO.CheckSizeExistAsync(sizeId);
         }
 
-        public Task<List<SizeDTO>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<List<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             
             return _sizeDAO.GetAllSizesAsync(searchQuery, page,  pageSize, ownerId);
         }
 
-        public Task<SizeDTO> GetSizeByIdAsync(int sizeId)
+        public Task<Size> GetSizeByIdAsync(int sizeId)
         {
             return (_sizeDAO.GetSizeByIdAsync(sizeId));
         }

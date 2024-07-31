@@ -12,7 +12,7 @@ namespace DataAccess.IRepository
     public interface  IStaffRepository
     {
         Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<StaffDTO> GetStaffByIdAsync(int staffId);
+        Task<Staff> GetStaffByIdAsync(int staffId);
         Task<StaffDTO> ViewStaffProfileAsync(string ownerEmail);
 
      //   Task<bool> CheckStaffAsync(StaffDTO staffDTO);

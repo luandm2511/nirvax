@@ -13,10 +13,10 @@ namespace DataAccess.IRepository
      public interface IAdvertisementRepository
     {
 
-        Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId);
+        Task<Advertisement> GetAdvertisementByIdAsync(int adId);
         Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId);
         Task<int> ViewAdversisementStatisticsAsync();
-        Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId);
+        Task<Advertisement> GetAdvertisementByIdForUserAsync(int adId);
         Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO);
         
         Task<bool> CreateAdvertisementAsync(AdvertisementCreateDTO advertisementCreateDTO);
@@ -26,13 +26,13 @@ namespace DataAccess.IRepository
         Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO);
          Task<bool> UpdateStatusAdvertisementByIdAsync(int adId, int statusPostId);
         Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);
-        Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsByServiceAsync(int serviceId);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize);
-        Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery);
-        Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);
+        Task<List<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId);
+        Task<List<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId);
+        Task<List<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize);
+        Task<List<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize);
+        Task<List<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize);
+        Task<List<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery);
+        Task<List<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId);
     }
 }

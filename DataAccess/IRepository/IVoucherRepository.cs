@@ -18,11 +18,11 @@ namespace DataAccess.IRepository
         Task<bool> CheckVoucherByIdAsync(string voucherId);
         Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId);
         Task<double> PriceVoucherUsedStatisticsAsync(int ownerId);
-        Task<List<VoucherDTO>> GetAllVoucherForUserAsync();
+        Task<List<Voucher>> GetAllVoucherForUserAsync();
         Task<Voucher> PriceAndQuantityByOrderAsync( string voucherId);
-        Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<List<VoucherDTO>> GetAllVoucherByOwnerAsync(int ownerId);
-        Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId);
+        Task<List<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<List<Voucher>> GetAllVoucherByOwnerAsync(int ownerId);
+        Task<Voucher> GetVoucherDTOByIdAsync(string voucherId);
         Task<Voucher> GetVoucherById(string voucherId);
 
         Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO);

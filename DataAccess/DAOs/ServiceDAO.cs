@@ -77,53 +77,52 @@ namespace DataAccess.DAOs
         }
 
         //owner,staff
-        public async Task<List<ServiceDTO>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
-            List<ServiceDTO> listSizeDTO = new List<ServiceDTO>();
+            List<Service> getList = new List<Service>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Service> getList = await _context.Services
+                getList = await _context.Services
                //     .Where(i => i.Isdelete == false)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
+                
             }
             else
             {
-                List<Service> getList = await _context.Services
+                 getList = await _context.Services
                  //   .Where(i => i.Isdelete == false)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
+             
             }
-            return listSizeDTO;
+            return getList;
         }
 
         //user
-        public async Task<List<ServiceDTO>> GetAllServiceForUserAsync(string? searchQuery)
+        public async Task<List<Service>> GetAllServiceForUserAsync(string? searchQuery)
         {
-            List<ServiceDTO> listSizeDTO = new List<ServiceDTO>();
+            List<Service> getList = new List<Service>();
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Service> getList = await _context.Services
+                getList = await _context.Services
                     .Where(i => i.Isdelete == false)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
+               
             }
             else
             {
-                List<Service> getList = await _context.Services
+                 getList = await _context.Services
                                .Where(i => i.Isdelete == false)
-                               .ToListAsync();
-                listSizeDTO = _mapper.Map<List<ServiceDTO>>(getList);
+                               .ToListAsync();            
             }
-            return listSizeDTO;
+            return getList;
 
             
             
@@ -131,12 +130,12 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<ServiceDTO> GetServiceByIdAsync(int sizeId)
+        public async Task<Service> GetServiceByIdAsync(int sizeId)
         {
-            ServiceDTO serviceDTO = new ServiceDTO();
+           
                 Service? sid = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ServiceId == sizeId);
-                serviceDTO = _mapper.Map<ServiceDTO>(sid);       
-            return serviceDTO;
+                     
+            return sid;
         }
 
 

@@ -27,11 +27,11 @@ namespace DataAccess.Repository
 
 
 
-        public Task<AdvertisementDTO> GetAdvertisementByIdAsync(int adId)
+        public Task<Advertisement> GetAdvertisementByIdAsync(int adId)
         {
             return _advertisementDAO.GetAdvertisementByIdAsync(adId);
         }
-        public Task<AdvertisementDTO> GetAdvertisementByIdForUserAsync(int adId)
+        public Task<Advertisement> GetAdvertisementByIdForUserAsync(int adId)
         {
             return _advertisementDAO.GetAdvertisementByIdForUserAsync(adId);
         }
@@ -65,39 +65,39 @@ namespace DataAccess.Repository
         {
             return _advertisementDAO.CheckAdvertisementAsync(advertisementDTO);
         }
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
         }
 
-        public Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
+        public Task<List<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
             return _advertisementDAO.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
         }
 
-        public Task<List<AdvertisementDTO>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<List<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _advertisementDAO.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
         }
 
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        public Task<List<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
             return _advertisementDAO.GetAllAdvertisementsByServiceAsync(serviceId);
         }
 
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
         }
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
         }
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
         }
-        public Task<List<AdvertisementDTO>> GetAllAdvertisementsForUserAsync(string? searchQuery)
+        public Task<List<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
             return _advertisementDAO.GetAllAdvertisementsForUserAsync(searchQuery);
         }

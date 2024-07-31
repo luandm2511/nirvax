@@ -63,7 +63,9 @@ namespace WebAPI.Helpers
             CreateMap<ImportProduct, ImportProductCreateDTO>().ReverseMap();
 
             CreateMap<ImportProductDetail, ImportProductDetailDTO>().ReverseMap();
+            CreateMap<ImportProductDetail, ImportProductDetailCreateDTO>().ReverseMap();
 
+            
 
             CreateMap<Warehouse, WarehouseDTO>()
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))

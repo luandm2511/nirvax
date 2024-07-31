@@ -25,13 +25,13 @@ namespace DataAccess.Repository
 
     
       
-        public Task<List<ImportProductDTO>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
+        public Task<List<ImportProduct>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
         {
             
             return _importProductDAO.GetAllImportProductAsync(warehouseId, from, to);
         }
 
-        public Task<List<ImportProductDTO>> GetImportProductByWarehouseAsync(int warehouseId)
+        public Task<List<ImportProduct>> GetImportProductByWarehouseAsync(int warehouseId)
         {
 
             return _importProductDAO.GetImportProductByWarehouseAsync(warehouseId);
@@ -41,12 +41,12 @@ namespace DataAccess.Repository
         {
             return _importProductDAO.CheckImportProductExistAsync(importId);
         }
-        public Task<ImportProductDTO> GetImportProductByIdAsync(int importId)
+        public Task<ImportProduct> GetImportProductByIdAsync(int importId)
         {
             return (_importProductDAO.GetImportProductByIdAsync(importId));
         }
   
-        public Task<bool> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
+        public Task<ImportProduct> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
         {
             return _importProductDAO.CreateImportProductAsync(importProductCreateDTO);
         }
@@ -55,7 +55,10 @@ namespace DataAccess.Repository
         {
             return _importProductDAO.UpdateImportProductAsync(importProductDTO);
         }
-
+        public Task<bool> UpdateQuantityAndPriceImportProductAsync(int importId)
+        {
+            return _importProductDAO.UpdateQuantityAndPriceImportProductAsync(importId);
+        }
         public Task<int> ViewImportProductStatisticsAsync(int warehouseId)
         {
             return _importProductDAO.ViewImportProductStatisticsAsync(warehouseId);

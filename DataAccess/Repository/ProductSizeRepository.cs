@@ -47,26 +47,26 @@ namespace DataAccess.Repository
         }
 
        
-        public Task<List<ProductSizeDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
         {
             return _productSizeDAO.GetAllProductSizesAsync(searchQuery, page, pageSize);
         }
-        public Task<List<ProductSizeDTO>> GetProductSizeByProductIdAsync(int productId)
+        public Task<List<ProductSize>> GetProductSizeByProductIdAsync(int productId)
         {
             return _productSizeDAO.GetProductSizeByProductIdAsync(productId);
         }
 
-        public Task<ProductSizeDTO> GetProductSizeByIdAsync(string productSizeId)
+        public Task<ProductSize> GetProductSizeByIdAsync(string productSizeId)
         {
             return _productSizeDAO.GetProductSizeByIdAsync(productSizeId);
         }
 
-        public Task<ProductSize> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO)
+        public Task<bool> CreateProductSizeAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
-            return _productSizeDAO.CreateProductSizeAsync(productSizeCreateDTO);
+            return _productSizeDAO.CreateProductSizeAsync(importProductDetailDTO);
         }
 
-        public Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailDTO> importProductDetailDTO)
+        public Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             return _productSizeDAO.UpdateProductSizeByImportAsync(importProductDetailDTO);
         }

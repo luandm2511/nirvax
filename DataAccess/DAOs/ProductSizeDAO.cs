@@ -12,6 +12,7 @@ using Azure;
 using Azure.Core;
 using System.Drawing;
 using Size = BusinessObject.Models.Size;
+using System.Security.Cryptography;
 
 namespace DataAccess.DAOs
 {
@@ -90,80 +91,72 @@ namespace DataAccess.DAOs
         }
 
         //staff,owner
-        public async Task<List<ProductSizeDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
         {
-            List<ProductSizeDTO> listProductSizeDTO = new List<ProductSizeDTO>();
+            List<ProductSize> getList = new List<ProductSize>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
+                getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
                   //  .Where(i => i.Isdelete == false)
                     .Where(i => i.ProductSizeId.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listProductSizeDTO = _mapper.Map<List<ProductSizeDTO>>(getList);
+               
             }
             else
             {
-                List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
+                getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
                   //  .Where(i => i.Isdelete == false)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listProductSizeDTO = _mapper.Map<List<ProductSizeDTO>>(getList);
+          
             }
-            return listProductSizeDTO;
+            return getList;
         }
 
         //user,guest
        
-        public async Task<List<ProductSizeDTO>> GetProductSizeByProductIdAsync(int productId)
+        public async Task<List<ProductSize>> GetProductSizeByProductIdAsync(int productId)
         {
-            List<ProductSizeDTO> listProductSizeDTO = new List<ProductSizeDTO>();
+            List<ProductSize> getList = new List<ProductSize>();
 
-            List<ProductSize> getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
+            getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
                 .Where(i => i.Isdelete == false)
                 .Where(i => i.ProductId == productId)
                 .ToListAsync();
 
-
-            listProductSizeDTO = _mapper.Map<List<ProductSizeDTO>>(getList);
-            foreach (var productSizeDTO in listProductSizeDTO)
-            {
-               
-                var productSize = getList.Where(i => i.SizeId == productSizeDTO.SizeId).FirstOrDefault(ps => ps.ProductSizeId == productSizeDTO.ProductSizeId);              
-            }
-
-            return listProductSizeDTO;
+            return getList;
         }
 
         //detail
-        public async Task<ProductSizeDTO> GetProductSizeByIdAsync(string productSizeId)
+        public async Task<ProductSize> GetProductSizeByIdAsync(string productSizeId)
         {
-            ProductSizeDTO productSizeDTO = new ProductSizeDTO();
+        
             try
             {
                 ProductSize? sid = await _context.ProductSizes.Include(i=>i.Size).Include(i => i.Product).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
-                
-                    productSizeDTO = _mapper.Map<ProductSizeDTO>(sid);
-                
+
+                return sid;
             }
             catch (Exception ex) { throw new Exception(ex.Message); }
-            return productSizeDTO;
+  
         }
 
 
 
-        public async Task<ProductSize> CreateProductSizeAsync(ProductSizeCreateDTO productSizeCreateDTO)
+        public async Task<bool> CreateProductSizeAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
-           
-                // Fetch the product and size
-                Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == productSizeCreateDTO.ProductId);
-                Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == productSizeCreateDTO.SizeId);
 
-                // Check if product or size is null
+            foreach (var item in importProductDetailDTO)
+            {
+                Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == item.ProductId);
+                Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == item.SizeId);
+                var nameProductSize = $"{item.ProductId}_{item.SizeId}"; 
+
                 if (product == null)
                 {
                     throw new Exception($"Product with ID does not exist.");
@@ -176,41 +169,27 @@ namespace DataAccess.DAOs
 
                 if (size.OwnerId != product.OwnerId)
                 {
-                   throw new Exception($"Size and Product do not share the same Owner.");
+                    throw new Exception($"Size and Product do not share the same Owner.");
                 }
-            ProductSize productSize = _mapper.Map<ProductSize>(productSizeCreateDTO);
+        
+                var checkProdSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).Where(i => i.ProductSizeId.Trim() == nameProductSize.Trim()).FirstOrDefaultAsync();
 
-                
-                productSize.ProductId = product.ProductId;
-                productSize.SizeId = size.SizeId;
-
-
-            productSize.ProductSizeId = product.ProductId + "_" + size.SizeId;
-
-              //  var checkId = productSize.ProductSizeId;
-
-            List<ProductSize> checkProdSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).Where(i => i.ProductSizeId.Trim() == productSize.ProductSizeId.Trim()).ToListAsync();
-
-            if (checkProdSize.Count > 0)
+                if (checkProdSize == null)
                 {
-                throw new Exception($"ProductSize with ID already exist!.");
+                    ProductSize productSize = new ProductSize
+                    {
+                        ProductId = item.ProductId,
+                        SizeId = item.SizeId,
+                        ProductSizeId = nameProductSize,
+                        Quantity = item.QuantityReceived,
+                        Isdelete = false
+                    };
+                    await _context.ProductSizes.AddAsync(productSize);
                 }
 
-               
-                productSize.Isdelete = false;
-
-                await _context.ProductSizes.AddAsync(productSize);
-               
-
-            int i = await _context.SaveChangesAsync();
-            if (i > 0)
-            {
-                return productSize;
             }
-            else { return productSize; }
-
-
-
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
@@ -222,20 +201,23 @@ namespace DataAccess.DAOs
                 return true;
           
         }
-        public async Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
-            Product? productSize;
             foreach (var item in importProductDetailDTO)
             {
-               var result = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == item.ProductSizeId);
-                if(result == null)
-                {                   
-                        throw new Exception("One of the imported product sizes is not in stock");                   
+                var productSizeId = $"{item.ProductId}_{item.SizeId}";
+                var productSize = await _context.ProductSizes
+              .Include(i => i.Size)
+              .Include(i => i.Product)
+              .SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
+
+                if (productSize != null)
+                {
+                    productSize.Quantity += item.QuantityReceived;
+                    _context.ProductSizes.Update(productSize);
                 }
-               result.Quantity += item.QuantityReceived;
-                _context.ProductSizes.Update(result);
-                await _context.SaveChangesAsync();
             }
+            await _context.SaveChangesAsync();
             return true;
 
         }

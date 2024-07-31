@@ -11,9 +11,9 @@ namespace DataAccess.IRepository
 {
     public interface IServiceRepository
     {
-        Task<List<ServiceDTO>> GetAllServicesAsync(string? searchQuery, int page, int pageSize);
-        Task<List<ServiceDTO>> GetAllServiceForUserAsync(string? searchQuery);
-        Task<ServiceDTO> GetServiceByIdAsync(int serviceId);
+        Task<List<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize);
+        Task<List<Service>> GetAllServiceForUserAsync(string? searchQuery);
+        Task<Service> GetServiceByIdAsync(int serviceId);
         Task<bool> CheckServiceAsync(int serviceId, string name);
         Task<bool> CheckServiceExistAsync(int serviceId);
         Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO);

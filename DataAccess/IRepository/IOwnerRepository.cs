@@ -14,10 +14,10 @@ namespace DataAccess.IRepository
     public interface IOwnerRepository
     {
         Task<int> NumberOfOwnerStatisticsAsync();
-        Task<List<OwnerDTO>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize);
+        Task<List<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize);
 
-        Task<List<OwnerDTO>> GetAllOwnersForUserAsync(string? searchQuery);
-        Task<OwnerDTO> GetOwnerByIdAsync(int ownerId);
+        Task<List<Owner>> GetAllOwnersForUserAsync(string? searchQuery);
+        Task<Owner> GetOwnerByIdAsync(int ownerId);
         Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail);
 
         Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO);

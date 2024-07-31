@@ -78,18 +78,26 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> CreateWarehouseDetailAsync(WarehouseDetail warehouseDetail)
+        public async Task<bool> CreateWarehouseDetailAsync(int warehouseId,List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
-          
-         
-            await _context.WarehouseDetails.AddAsync(warehouseDetail);
-            int i = await _context.SaveChangesAsync();
-            if (i > 0)
+            foreach (var item in importProductDetailDTO)
             {
-                return true;
+                var productSizeId = $"{item.ProductId}_{item.SizeId}";
+                var checkWarehouseDetail = await _context.WarehouseDetails
+               .SingleOrDefaultAsync(i => i.WarehouseId == warehouseId && i.ProductSizeId == productSizeId);
+                if (checkWarehouseDetail == null)
+                {
+                    WarehouseDetail warehouseDetail = new WarehouseDetail
+                    {
+                        WarehouseId = warehouseId,
+                        ProductSizeId = productSizeId,
+                        Location = ""
+                    };
+                    await _context.WarehouseDetails.AddAsync(warehouseDetail);
+                }
             }
-            else { return false; }
-
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         //update product size, create warehouse detail

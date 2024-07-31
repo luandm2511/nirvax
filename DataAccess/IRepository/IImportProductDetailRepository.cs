@@ -14,14 +14,15 @@ namespace DataAccess.IRepository
     {
         Task<bool> CheckImportProductDetailExistAsync(int importProductDetailId);
 
-        Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportIdAsync(int importId);
+        Task<List<ImportProductDetail>> GetAllImportProductDetailByImportIdAsync(int importId);
         
 
-        Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync();
+        Task<List<ImportProductDetail>> GetAllImportProductDetailAsync();
 
-        Task<bool> CreateImportProductDetailAsync(int importId,List<ImportProductDetailDTO> importProductDetailDTO);
+        Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailCreateDTO> importProductDetailDTO);
 
-       
+
+
         Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO);
 
 

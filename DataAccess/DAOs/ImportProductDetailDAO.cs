@@ -42,67 +42,62 @@ namespace DataAccess.DAOs
 
 
         //show list theo import Id => detail import đó
-        public async Task<List<ImportProductDetailDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
+        public async Task<List<ImportProductDetail>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
-            List<ImportProductDetailDTO> listImportProductDetailDTO = new List<ImportProductDetailDTO>();
+          
             List<ImportProductDetail> getList = await _context.ImportProductDetails
             .Include(i => i.Import).Include(i => i.ProductSize)
             .Where(x => x.ImportId == importId).ToListAsync();
-            listImportProductDetailDTO = _mapper.Map<List<ImportProductDetailDTO>>(getList);
+         
             
-            return listImportProductDetailDTO;
+            return getList;
         }
 
         // detail list all các detail của import nhưng 
-        public async  Task<List<ImportProductDetailDTO>> GetAllImportProductDetailAsync()
+        public async  Task<List<ImportProductDetail>> GetAllImportProductDetailAsync()
         {
-            List<ImportProductDetailDTO> listImportProductDetailDTO;
+           
              List<ImportProductDetail> getList = await _context.ImportProductDetails
             .Include(i => i.Import).Include(i => i.ProductSize)
             .ToListAsync();
-                listImportProductDetailDTO = _mapper.Map<List<ImportProductDetailDTO>>(getList);
-            return listImportProductDetailDTO;
+               
+            return getList;
         }
 
 
-        public async Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(i => i.ImportId == importId);
             if (importProduct == null)
             {
                 throw new Exception("ImportProduct not found.");
             }
-            var importProductDetails = _mapper.Map<List<ImportProductDetail>>(importProductDetailDTO);
-            
-            int totalQuantity = importProductDetails.Sum(d => d.QuantityReceived);
-            double totalPrice = importProductDetails.Sum(d => d.UnitPrice );
-            if(importProduct.TotalPrice > totalPrice || importProduct.TotalPrice < totalPrice)
-            {
-                throw new Exception("Sum shoud similar Total Price of Import Product");
-            }
 
-            if (importProduct.Quantity < totalQuantity || importProduct.Quantity > totalQuantity)
+            foreach (var item in importProductDetailDTO)
             {
-                throw new Exception("Sum shoud similar Quantity of Import Product");
-            }
+                var nameProductSize = $"{item.ProductId}_{item.SizeId}";
 
-            foreach (var item in importProductDetails)
-            {
-                item.ImportId = importId;
-                var checkProductSizeId = await _context.ProductSizes.Where(i => i.ProductSizeId == item.ProductSizeId).SingleOrDefaultAsync();
-                if(checkProductSizeId == null)
+                var productSize = await _context.ProductSizes.SingleOrDefaultAsync(i => i.ProductSizeId == nameProductSize);
+                if (productSize == null)
                 {
-                    throw new Exception("Don't exist that Product Size");
+                    throw new Exception($"ProductSize with ID {nameProductSize} does not exist.");
                 }
-            }
 
-            await _context.ImportProductDetails.AddRangeAsync(importProductDetails);
-            //importProduct.TotalPrice = totalPrice;
-            
+                ImportProductDetail importProductDetail = new ImportProductDetail
+                {
+                    ImportId = importId,
+                    ProductSizeId = nameProductSize,
+                    QuantityReceived = item.QuantityReceived,
+                    UnitPrice = item.UnitPrice
+                };
+
+                await _context.ImportProductDetails.AddAsync(importProductDetail);
+            }
             await _context.SaveChangesAsync();
-          
+
             return true;
         }
+
 
         public async Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
         {

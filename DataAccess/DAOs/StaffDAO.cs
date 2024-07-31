@@ -181,12 +181,12 @@ namespace DataAccess.DAOs
         }
 
         //details
-        public async Task<StaffDTO> GetStaffByIdAsync(int staffId)
+        public async Task<Staff> GetStaffByIdAsync(int staffId)
         {
-                StaffDTO staffDTO = new StaffDTO();
+               
                 Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
-                staffDTO = _mapper.Map<StaffDTO>(sid);
-                return staffDTO;        
+               
+                return sid;        
         }
 
         //profile
@@ -280,19 +280,14 @@ namespace DataAccess.DAOs
         public async Task<bool> DeleteStaffAsync(int staffId)
         {
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
-            //ánh xạ đối tượng staffdto đc truyền vào cho Staff
             if (staff != null)
-            {
-           
+            {           
                  _context.Staff.Remove(staff);
                 await _context.SaveChangesAsync();
                 return true;
             }
 
             return false;
-
-            
-            
 
         }
         

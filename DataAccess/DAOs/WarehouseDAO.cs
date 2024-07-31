@@ -173,7 +173,7 @@ namespace DataAccess.DAOs
           //  }
 
           //  var paginatedResult = result
-        var list = await _context.WarehouseDetails.Include(i => i.ProductSize)
+             var list = await _context.WarehouseDetails.Include(i => i.ProductSize)
                 .Where(i => i.WarehouseId == warehouse.WarehouseId)
                  .Skip((page - 1) * pageSize)
                     .Take(pageSize)

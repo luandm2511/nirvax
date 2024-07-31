@@ -104,14 +104,14 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<VoucherDTO>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<List<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
+            List<Voucher> listSize = new List<Voucher>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<Voucher> getList = await _context.Vouchers
+                listSize = await _context.Vouchers
                     .Include(i => i.Owner)
                  //   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
@@ -119,54 +119,47 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<VoucherDTO>>(getList);
+               
             }
             else
             {
-                List<Voucher> getList = await _context.Vouchers
+                listSize = await _context.Vouchers
                     .Include(i => i.Owner)
                   //  .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-                listSizeDTO = _mapper.Map<List<VoucherDTO>>(getList);
+                    .ToListAsync();            
             }
-            return listSizeDTO;
+            return listSize;
         }
 
         //user
-        public async Task<List<VoucherDTO>> GetAllVoucherForUserAsync()
+        public async Task<List<Voucher>> GetAllVoucherForUserAsync()
         {
-            List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
               List<Voucher> getList = await _context.Vouchers
                 .Include(i => i.Owner)
                     .Where(i => i.Isdelete == false)
-                    .ToListAsync();
-                listSizeDTO = _mapper.Map<List<VoucherDTO>>(getList);
-            
-            return listSizeDTO;
+                    .ToListAsync();                
+            return getList;
         }
 
-        public async Task<List<VoucherDTO>> GetAllVoucherByOwnerAsync(int ownerId)
+        public async Task<List<Voucher>> GetAllVoucherByOwnerAsync(int ownerId)
         {
-            List<VoucherDTO> listSizeDTO = new List<VoucherDTO>();
             List<Voucher> getList = await _context.Vouchers
               .Include(i => i.Owner)
                   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
-                  .ToListAsync();
-            listSizeDTO = _mapper.Map<List<VoucherDTO>>(getList);
-
-            return listSizeDTO;
+                  .ToListAsync();        
+            return getList;
         }
 
-        public async Task<VoucherDTO> GetVoucherDTOByIdAsync(string voucherId)
+        public async Task<Voucher> GetVoucherDTOByIdAsync(string voucherId)
         {
-            VoucherDTO voucherDTO = new VoucherDTO();
+          
             Voucher? sid = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);          
-            voucherDTO = _mapper.Map<VoucherDTO>(sid);
-            return voucherDTO;
+       
+            return sid;
         }
 
       

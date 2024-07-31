@@ -206,12 +206,12 @@ namespace DataAccess.DAOs
         }
 
         //admin
-        public async Task<OwnerDTO> GetOwnerByIdAsync(int ownerId)
+        public async Task<Owner> GetOwnerByIdAsync(int ownerId)
         {
-                OwnerDTO ownerDTO = new OwnerDTO();
+              
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);
-                ownerDTO = _mapper.Map<OwnerDTO>(sid);
-                return ownerDTO;  
+               
+                return sid;  
         }
 
         //profile

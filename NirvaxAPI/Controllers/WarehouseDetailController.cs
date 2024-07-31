@@ -54,55 +54,8 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost]
-        //  [Authorize]
-        public async Task<ActionResult> CreateWarehouseDetailAsync(ProductSizeCreateDTO productSizeCreateDTO)
-        {
-            try {
-                if (ModelState.IsValid)
-                {
-                    var productsize = await _repoProdSize.CreateProductSizeAsync(productSizeCreateDTO);
-                    WarehouseDetail warehouseDetail = new WarehouseDetail
-                    {
-                        WarehouseId = productSizeCreateDTO.WarehouseId,
-                        ProductSizeId = productsize.ProductSizeId,
-                        Location = ""
-                    };
 
-                    var warehouse = await _repo.CreateWarehouseDetailAsync(warehouseDetail);
-
-                    if (warehouse == true)
-                    {  
-                        return StatusCode(200, new
-                        {
-                            Message = "Create Warehouse detail" + ok,
-                            Data = warehouse
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(400, new
-                        {
-                            Message = badRequest
-                        }) ;
-                    }
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = "Please enter valid Warehouse Detail!",
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-        }
+      
 
         [HttpPut]
         public async Task<ActionResult> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)

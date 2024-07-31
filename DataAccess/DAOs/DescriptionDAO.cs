@@ -139,12 +139,12 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<DescriptionDTO> GetDescriptionByIdAsync(int descriptionId)
+        public async Task<Description> GetDescriptionByIdAsync(int descriptionId)
         {
-                DescriptionDTO descriptionDTO = new DescriptionDTO();
+               
                 Description? sid = await _context.Descriptions.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
-                descriptionDTO = _mapper.Map<DescriptionDTO>(sid);
-                return descriptionDTO;       
+      
+                return sid;       
         }
 
 

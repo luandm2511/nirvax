@@ -20,4 +20,26 @@ namespace BusinessObject.DTOs
         [Range(1, Double.MaxValue, ErrorMessage = "The field unit price must be greater than {1}.")]
        public double UnitPrice { get; set; }
     }
+
+    public class ImportProductDetailForImportDTO
+    {
+        public int ImportId { get; set; }
+        [Required(ErrorMessage = " ProductSizeId received cannot be empty!!")]
+        public string ProductSizeId { get; set; } = null!;
+        public int TotalQuantity { get; set; }
+        public double TotalPrice { get; set; }
+    }
+
+    public class ImportProductDetailCreateDTO
+    {
+        public int ProductId { get; set; }
+        public int SizeId { get; set; }
+
+        [Required(ErrorMessage = " Quantity received cannot be empty!!")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity received must be greater than {1}.")]
+        public int QuantityReceived { get; set; }
+        [Required(ErrorMessage = " Unit price cannot be empty!!")]
+        [Range(1, Double.MaxValue, ErrorMessage = "The field unit price must be greater than {1}.")]
+        public double UnitPrice { get; set; }
+    }
 }
