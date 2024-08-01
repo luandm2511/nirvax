@@ -69,7 +69,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
-                    return StatusCode(404, new { message = "Account is not found!" });
+                    return StatusCode(404, new { message = "The account has been not found!" });
                 }
 
                 await _repository.BanAccountAsync(account);
@@ -91,7 +91,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
-                    return StatusCode(404, new { message = "Account is not found!" });
+                    return StatusCode(404, new { message = "The account has been not found!" });
                 }
 
                 await _repository.UnbanAccountAsync(account);
@@ -128,7 +128,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
-                    StatusCode(404, new { message = "Account is not found!" });
+                    StatusCode(404, new { message = "The account has been not found!" });
                 }
                 if(!PasswordHasher.VerifyPassword(changePassword.OldPassword, account.Password))
                 {
@@ -157,7 +157,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
-                    StatusCode(404, new { message = "Account is not found!" });
+                    StatusCode(404, new { message = "The account has been not found!" });
                 }
                 _mapper.Map(model, account);
                 await _repository.UpdateAccountAsync(account);
@@ -178,7 +178,7 @@ namespace WebAPI.Controllers
                 var account = await _repository.GetAccountByIdAsync(id);
                 if (account == null)
                 {
-                    return StatusCode(404, new { message = "Account is not found!" });
+                    return StatusCode(404, new { message = "The account has been not found!" });
                 }
                 account.Image = avatarDTO.Image;
                 await _repository.UpdateAccountAsync(account);

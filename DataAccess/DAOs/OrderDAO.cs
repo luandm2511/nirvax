@@ -116,7 +116,7 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)
         {
-            return await _context.Orders.Where(o => o.CodeOrder.Contains(codeOrder)).ToListAsync();
+            return await _context.Orders.Where(o => o.CodeOrder.Contains(codeOrder) || o.Fullname.Contains(codeOrder)).ToListAsync();
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -130,16 +130,22 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync()
         {
-            var topShops = await _context.Orders
-                .GroupBy(o => o.OwnerId)
+            var orderDetails = await _context.OrderDetails
+                                .Include(od => od.Order)
+                                .Where(od => od.Order.StatusId == 3)
+                                .ToListAsync();
+
+            var topShops = orderDetails
+                .GroupBy(od => od.Order.OwnerId)
                 .Select(group => new TopShopDTO
                 {
                     OwnerId = group.Key,
-                    TotalProductsSold = group.Sum(o => o.OrderDetails.Sum(od => od.Quantity))
+                    TotalProductsSold = group.Sum(od => od.Quantity),
+                    TotalSalesAmount = group.Sum(od => od.Quantity * od.UnitPrice)
                 })
-                .OrderByDescending(t => t.TotalProductsSold)
+                .OrderByDescending(t => t.TotalSalesAmount)
                 .Take(10)
-                .ToListAsync();
+                .ToList();
 
             return topShops;
         } 

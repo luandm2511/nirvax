@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryParentByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Category parent is not found." });
+                    return StatusCode(404,new { message = "The category parent has been not found." });
                 }
                 return Ok(category);
             }
@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
                 var cateparent = await _repository.GetCategoryParentByIdAsync(id);
                 if (cateparent == null || cateparent.Isdelete == true)
                 {
-                    return StatusCode(400,new { message = "Category parent is not found." });
+                    return StatusCode(400,new { message = "The category parent has been not found." });
                 }
 
                 _mapper.Map(dto, cateparent);
@@ -120,7 +120,7 @@ namespace WebAPI.Controllers
                 var cateparent = await _repository.GetCategoryParentByIdAsync(id);
                 if (cateparent == null || cateparent.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Category parent is not found." });
+                    return StatusCode(404,new { message = "The category parent has been not found." });
                 }
                 await _repository.DeleteCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent deleted successfully." });
