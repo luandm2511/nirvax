@@ -94,7 +94,6 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -116,7 +115,6 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             } 
         }
@@ -290,7 +288,7 @@ namespace WebAPI.Controllers
                 var order = await _orderRepository.GetOrderByIdAsync(orderId);
                 if (order == null)
                 {
-                    return StatusCode(404, new { message = "Order is not found!" });
+                    return StatusCode(404, new { message = "The order has been not found!" });
                 }
 
                 if(statusId == 2)
@@ -371,13 +369,12 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var order = await _orderRepository.GetOrderByIdAsync(orderId);
-                if (order == null)
-                {
-                    return StatusCode(404, new { message = "Order is not found!" });
-                }
-
                 var orderDetails = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
+                var order = await _orderRepository.GetOrderByIdAsync(orderId);
+                if (order == null || (orderDetails.Count() == 0))
+                {
+                    return StatusCode(404, new { message = "The order or the order detail have been not found!" });
+                }
                 foreach (var detail in orderDetails)
                 {
                     var productSize = await _productSizeRepository.GetByIdAsync(detail.ProductSizeId);
@@ -421,12 +418,12 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var order = await _orderRepository.GetOrderByIdAsync(orderId);
-                if (order == null)
-                {
-                    return StatusCode(404, new { message = "Order is not found!" });
-                }
                 var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
+                var order = await _orderRepository.GetOrderByIdAsync(orderId);
+                if (order == null || (orderDetail.Count() == 0))
+                {
+                    return StatusCode(404, new { message = "The order or the order detail have been not found!" });
+                }
                 foreach (var detail in orderDetail)
                 {
                     var product = await _productRepository.GetByIdAsync(detail.ProductSize.ProductId);

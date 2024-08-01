@@ -63,7 +63,7 @@ namespace WebAPI.Controllers
                 var noti = await _notificationRepository.GetNotificationByidAsync(id);
                 if(noti == null)
                 {
-                    return StatusCode(404,new { message = "Notification is not found." });
+                    return StatusCode(404,new { message = "The notification has been not found." });
                 }
                 var url = await _notificationRepository.UpdateStatusNotificationAsync(noti);
                 return Ok(url);

@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return NotFound(new { message = "Category is not found." });
+                    return NotFound(new { message = "The category has been not found." });
                 }
                 return Ok(category);
             }
@@ -91,7 +91,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Category is not found." });
+                    return StatusCode(404,new { message = "The category has been not found." });
                 }
 
                 _mapper.Map(categoryDto, category);
@@ -119,7 +119,7 @@ namespace WebAPI.Controllers
                 var category = await _repository.GetCategoryByIdAsync(id);
                 if (category == null || category.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "Category is not found." });
+                    return StatusCode(404,new { message = "The category has been not found." });
                 }
                 await _repository.DeleteCategoryAsync(category);
                 return Ok(new { message = "Category deleted successfully." });

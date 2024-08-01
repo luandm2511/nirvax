@@ -412,33 +412,39 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new { message = "Invalid Google user data." });
             }
-
-            var user = await _repository.GetAccountByEmailAsync(request.Email);
-
-            if (user == null)
+            try
             {
-                var userGG = new Account
+                var user = await _repository.GetAccountByEmailAsync(request.Email);
+
+                if (user == null)
                 {
-                    Email = request.Email,
-                    Password = "Nirvax@123",
-                    Fullname = request.Name,
-                    Phone = request.PhoneNumber ?? "N/A",
-                    Image = request.Picture,
-                    Address = "N/A",  
-                    Dob = request.Birthday ?? DateTime.MinValue, 
-                    Gender = "N/A",
-                    Role = "User",
-                    IsBan = false, 
-                };
+                    var userGG = new Account
+                    {
+                        Email = request.Email,
+                        Password = "Nirvax@123",
+                        Fullname = request.Name,
+                        Phone = request.PhoneNumber ?? "N/A",
+                        Image = request.Picture,
+                        Address = "N/A",
+                        Dob = request.Birthday ?? DateTime.MinValue,
+                        Gender = "N/A",
+                        Role = "User",
+                        IsBan = false,
+                    };
 
-                await _repository.AddAccountAsync(userGG);
-                var token = GenerateJSONWebToken(userGG.AccountId, request.Email, "User");
-                return Ok(new { token });
+                    await _repository.AddAccountAsync(userGG);
+                    var token = GenerateJSONWebToken(userGG.AccountId, request.Email, "User");
+                    return Ok(new { token, userType = "User" });
+                }
+
+                var tokenString = GenerateJSONWebToken(user.AccountId, request.Email, "User");
+
+                return Ok(new {  tokenString, userType = "User" });
             }
-
-            var tokenString = GenerateJSONWebToken(user.AccountId, request.Email, "User");
-
-            return Ok(new { token = tokenString });
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         private string GenerateJSONWebToken(int id, string Email, string Role)

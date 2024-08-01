@@ -97,14 +97,13 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> ReplyComment(int commentId, [FromBody] ReplyCommentDTO replyDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(404, new { message = "Please pass the valid data." });
+            }
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(404, new { message = "Please pass the valid data." });
-                }
-
                 var comment = await _commentRepository.GetCommentByIdAsync(commentId);
 
                 var product = await _productRepository.GetByIdAsync(comment.ProductId);
