@@ -10,5 +10,6 @@ namespace BusinessObject.DTOs
     {
         public int OwnerId { get; set; }
         public int TotalProductsSold { get; set; }
+        public double TotalSalesAmount { get; set; }
     }
 }

@@ -59,13 +59,14 @@ namespace DataAccess.DAOs
         {
             return await _context.Products.Include(p => p.Images)
                     .Include(p => p.Owner)
+                    .AsNoTracking()
                     .Where(p => p.CategoryId == categoryId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetByBrandAsync(int brandId)
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
-                    .Include(p => p.Category).Include(p => p.Brand)
+            return await _context.Products.Include(p => p.Images)
+                    .AsNoTracking() 
                     .Include(p => p.Owner).Where(p => p.BrandId == brandId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
 
