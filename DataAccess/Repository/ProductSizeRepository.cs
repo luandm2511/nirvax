@@ -47,9 +47,9 @@ namespace DataAccess.Repository
         }
 
        
-        public Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            return _productSizeDAO.GetAllProductSizesAsync(searchQuery, page, pageSize);
+            return _productSizeDAO.GetAllProductSizesAsync(searchQuery, page, pageSize, ownerId);
         }
         public Task<List<ProductSize>> GetProductSizeByProductIdAsync(int productId)
         {

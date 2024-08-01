@@ -91,7 +91,7 @@ namespace DataAccess.DAOs
         }
 
         //staff,owner
-        public async Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List<ProductSize> getList = new List<ProductSize>();
 
@@ -100,6 +100,7 @@ namespace DataAccess.DAOs
             {
                 getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
                   //  .Where(i => i.Isdelete == false)
+                    .Where(i => i.Size.OwnerId == ownerId)
                     .Where(i => i.ProductSizeId.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -109,7 +110,8 @@ namespace DataAccess.DAOs
             else
             {
                 getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
-                  //  .Where(i => i.Isdelete == false)
+                    //  .Where(i => i.Isdelete == false)
+                    .Where(i => i.Size.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

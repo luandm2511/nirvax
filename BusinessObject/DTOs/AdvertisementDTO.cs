@@ -31,6 +31,7 @@ namespace BusinessObject.DTOs
         public string? ServiceName { get; set; }
         public string? OwnerName { get; set; }
 
+
         public int ServiceId { get; set; }
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
