@@ -361,20 +361,6 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> UpdateStatusAdvertisementByIdAsync(int adId, int statusPostId)
-        {
-
-            Advertisement? adOrgin = await _context.Advertisements
-                .Include(i => i.Owner)
-                .Include(i => i.Service)
-                .Include(i => i.StatusPost)
-                .SingleOrDefaultAsync(i => i.AdId == adId);
-            adOrgin.StatusPostId = statusPostId;
-             _context.Advertisements.Update(adOrgin);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusPost.Trim());

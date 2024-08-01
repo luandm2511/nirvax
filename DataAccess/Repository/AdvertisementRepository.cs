@@ -48,10 +48,7 @@ namespace DataAccess.Repository
         {
             return _advertisementDAO.UpdateAdvertisementAsync(advertisementDTO);
         }
-        public Task<bool> UpdateStatusAdvertisementByIdAsync(int adId, int statusPostId)
-        {
-            return _advertisementDAO.UpdateStatusAdvertisementByIdAsync(adId, statusPostId);
-        }
+
         public Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             return _advertisementDAO.UpdateStatusAdvertisementAsync(adId, statusPost);

@@ -51,16 +51,22 @@ namespace DataAccess.DAOs
         //owner,staff
         public async Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
         {
-            List<RoomDTO> listSizeDTO = new List<RoomDTO>();
-            
-                List<Room> getList = await _context.Rooms
-                    .Include(i => i.Account).Include(i => i.Owner)
-                    .Where(i => i.Account.AccountId == accountId)
-                    .ToListAsync();
-            
-                listSizeDTO = _mapper.Map<List<RoomDTO>>(getList);
-            
-            return listSizeDTO;
+            var listSizeDTO = await _context.Rooms
+            .Include(i => i.Account)
+            .Include(i => i.Owner)
+            .Select(room => new
+        {
+            Room = room,
+            LatestMessageTimestamp = room.Messages.OrderByDescending(m => m.Timestamp).Select(m => m.Timestamp).FirstOrDefault()
+        })
+        .Where(x => x.Room.Account.AccountId == accountId)
+        .OrderByDescending(x => x.LatestMessageTimestamp)
+        .Select(x => x.Room)
+        .ToListAsync();
+
+            var roomDTOs = _mapper.Map<List<RoomDTO>>(listSizeDTO);
+
+            return roomDTOs;
         }
 
         public async Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)

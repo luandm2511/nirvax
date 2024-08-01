@@ -15,17 +15,15 @@ namespace WebAPI.Controllers
             private readonly ITransactionRepository _transactionRepository;
             private readonly IAdvertisementRepository _repo;
             private readonly INotificationRepository _notificationRepository;
-            private readonly IWebHostEnvironment _hostEnvironment;
-   
 
+   
             private readonly string ok = "successfully";
             private readonly string notFound = "Not found";
             private readonly string badRequest = "Failed!";
 
-            public  AdvertisementController(IAdvertisementRepository repo, IWebHostEnvironment hostEnvironment, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
+            public  AdvertisementController(IAdvertisementRepository repo, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
             {
                 _repo = repo;
-                this._hostEnvironment = hostEnvironment;
                _notificationRepository = notificationRepository;
                _transactionRepository = transactionRepository;
             }
@@ -348,27 +346,6 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateStatusAdvertisementByIdAsync(int adId, int StatusPostId)
-        {
-            var checkAdvertisement =await _repo.CheckAdvertisementExistAsync(adId);
-                if (checkAdvertisement == true)
-                {
-                    var advertisement1 = await _repo.UpdateStatusAdvertisementByIdAsync(adId, StatusPostId);
-                        return StatusCode(200, new
-                        {
-                            Message = "Update advertisement" + ok,
-                            Data = advertisement1
-                        });                 
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = "The name advertisement is already exist",
-                    });
-                }
-        }
 
         [HttpPut]
         public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
