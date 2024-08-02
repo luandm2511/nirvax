@@ -18,40 +18,7 @@ namespace WebAPI.Controllers
         public WarehouseDetailController(IWarehouseDetailRepository repo) 
         { 
             _repo = repo;
-        }
-
-
-
-        [HttpGet]
-        //  [Authorize]
-        public async Task<ActionResult<IEnumerable<WarehouseDetailFinalDTO>>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
-        {
-            try { 
-            var list = await _repo.GetAllWarehouseDetailByProductSizeAsync(warehouseId, page, pageSize);
-            if (list.Any())
-            {
-                return StatusCode(200, new
-                {                 
-                    Message = "Get list Warehouse detail " + ok,
-                    Data = list
-                });
-            }
-            return StatusCode(404, new
-            {            
-                Message = notFound + "any Warehouse detail"
-            });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-        }
-
-
-      
+        }   
 
         [HttpPut]
         public async Task<ActionResult> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO)

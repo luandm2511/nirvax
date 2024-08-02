@@ -25,50 +25,6 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        
-
-       // public async Task<bool> CheckWarehouseDetailExistAsync(int warehouseId)
-     //   {
-          //  WarehouseDetail? sid = new WarehouseDetail();
-
-          //  sid = await _context.WarehouseDetails.SingleOrDefaultAsync(i => i.WarehouseId == warehouseId); ;
-
-          //  if (sid == null)
-         //   {
-         //       return false;
-           // }
-          //  return true;
-       // }
-
-        
-     
-        public async Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize)
-        {
-           List<WarehouseDetail> listWarehouseDetail= new List<WarehouseDetail>();
-          var result= await _context.WarehouseDetails
-              //  .Where(i => i.ProductSize.Isdelete == false)    
-                .Where(wd=> wd.WarehouseId == warehouseId)
-          
-            .GroupBy(w => new { w.ProductSizeId })
-
-        .Select(g => new WarehouseDetailFinalDTO
-        {
-            WarehouseId = warehouseId,
-            ProductSizeId = g.Key.ProductSizeId,
-            
-           Location = g.Select(i => i.Location).FirstOrDefault(),
-        })
-        .ToListAsync();
-
-            var paginatedResult = result
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToList();
-
-            return paginatedResult;
-       
-        }
-
         //tổng số loại sản phẩm => số sản phẩm theo productSizeId
         public async Task<int> SumOfKindProdSizeStatisticsAsync(int warehouseId)
         {

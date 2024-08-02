@@ -12,16 +12,11 @@ namespace DataAccess.IRepository
     public interface IWarehouseDetailRepository
 
     {
-    
-        Task<List<WarehouseDetailFinalDTO>> GetAllWarehouseDetailByProductSizeAsync(int warehouseId, int page, int pageSize);
-
         Task<int> SumOfKindProdSizeStatisticsAsync(int warehouseId);
 
         Task<bool> CreateWarehouseDetailAsync(int warehouseId, List<ImportProductDetailCreateDTO> importProductDetailDTO);
 
         Task<bool> PatchWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO);
         Task<bool> UpdateWarehouseDetailAsync(WarehouseDetailDTO warehouseDetailDTO);
-
-
     }
 }

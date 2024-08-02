@@ -11,15 +11,13 @@ namespace WebAPI.Controllers
     public class ImportProductDetailController : ControllerBase
     {
         private readonly IImportProductDetailRepository _repo;
-        private readonly IProductSizeRepository _repoProdSize;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public ImportProductDetailController(IImportProductDetailRepository repo, IProductSizeRepository repoProdSize)
+        public ImportProductDetailController(IImportProductDetailRepository repo)
         {
             _repo = repo;
-            _repoProdSize = repoProdSize;
         }
 
 

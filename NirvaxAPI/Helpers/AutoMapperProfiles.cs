@@ -72,12 +72,9 @@ namespace WebAPI.Helpers
                 .ReverseMap();
             CreateMap<Warehouse, WarehouseCreateDTO>().ReverseMap();
 
-            CreateMap<WarehouseDetail, WarehouseDetailFinalDTO>().ReverseMap();
             CreateMap<WarehouseDetail, WarehouseDetailDTO>().ReverseMap();
-       
-
-            
-
+      
+        
             CreateMap<ProductSize, ProductSizeDTO>()
                 .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.Size.Name))
                 .ReverseMap();
