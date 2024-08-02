@@ -81,7 +81,7 @@ namespace WebAPI.Controllers
                     return StatusCode(200, new
                     {
                         Message = "Get room" + ok,
-                        Data = room
+                        roomId = room
                     });
                 }
                 else
