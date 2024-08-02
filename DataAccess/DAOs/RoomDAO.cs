@@ -12,6 +12,7 @@ using Azure;
 using Azure.Core;
 using System.Security.Cryptography;
 using System.Drawing;
+using Microsoft.Identity.Client;
 
 namespace DataAccess.DAOs
 {
@@ -71,16 +72,22 @@ namespace DataAccess.DAOs
 
         public async Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
         {
-            List<RoomDTO> listSizeDTO = new List<RoomDTO>();
-            List<Room> getList = await _context.Rooms
-                .Include(i => i.Account).Include(i => i.Owner)
-                .Where(i => i.Owner.OwnerId == ownerId)
-                .ToListAsync();
-            
+            var listSizeDTO = await _context.Rooms
+           .Include(i => i.Account)
+           .Include(i => i.Owner)
+           .Select(room => new
+           {
+               Room = room,
+               LatestMessageTimestamp = room.Messages.OrderByDescending(m => m.Timestamp).Select(m => m.Timestamp).FirstOrDefault()
+           })
+       .Where(i => i.Room.Owner.OwnerId == ownerId)
+       .OrderByDescending(x => x.LatestMessageTimestamp)
+       .Select(x => x.Room)
+       .ToListAsync();
 
-            listSizeDTO = _mapper.Map<List<RoomDTO>>(getList);
+            var roomDTOs = _mapper.Map<List<RoomDTO>>(listSizeDTO);
 
-            return listSizeDTO;
+            return roomDTOs;
         }
 
         public async Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
