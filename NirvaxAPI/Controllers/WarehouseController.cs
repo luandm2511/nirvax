@@ -98,13 +98,13 @@ namespace WebAPI.Controllers
                 var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(warehouseId);
                 if (numberOfWarehouse != null)
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list of Warehouse " + ok,
-                        Data = list,
-                        numberOfWarehouse.TotalPrice,
-                        numberOfWarehouse.TotalQuantity
-                    });
+                        return StatusCode(200, new
+                        {
+                            Message = "Get list of Warehouse " + ok,
+                             Data = list,                          
+                           TotalPrice = numberOfWarehouse.TotalPrice,
+                            TotalQuantity = numberOfWarehouse.TotalQuantity
+                        }) ;
                 } else
                 {
                     return StatusCode(400, new

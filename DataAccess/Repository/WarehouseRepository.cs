@@ -42,9 +42,9 @@ namespace DataAccess.Repository
             return _warehouseDAO.GetWarehouseIdByOwnerIdAsync(ownerId);
         }
 
-        public Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
+        public Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int warehouseId)
         {
-            return _warehouseDAO.UpdateQuantityAndPriceWarehouseAsync(ownerId);
+            return _warehouseDAO.UpdateQuantityAndPriceWarehouseAsync(warehouseId);
         }
 
 

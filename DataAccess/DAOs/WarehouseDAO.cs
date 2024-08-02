@@ -28,9 +28,9 @@ namespace DataAccess.DAOs
        
      
         
-        public async Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
+        public async Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int warehouseId)
         {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Include(i=>i.ImportProducts).Where(i => i.WarehouseId == warehouseId).FirstOrDefaultAsync();
             if (warehouse == null)
             {
                 throw new Exception("This owner does not have a warehouse yet");
@@ -41,11 +41,8 @@ namespace DataAccess.DAOs
               .ToListAsync();
 
            
-
-            var totalQuantity = listImportProduct.Sum(p => p.Quantity);
-            var totalPrice = listImportProduct.Sum(p => p.TotalPrice);
-             warehouse.TotalQuantity = totalQuantity;
-            warehouse.TotalPrice = totalPrice;
+             warehouse.TotalQuantity = listImportProduct.Sum(p => p.Quantity);
+            warehouse.TotalPrice = listImportProduct.Sum(p => p.TotalPrice);
 
             _context.Warehouses.Update(warehouse);
             await _context.SaveChangesAsync();

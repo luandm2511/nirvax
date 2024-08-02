@@ -14,7 +14,7 @@ namespace DataAccess.IRepository
         Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize);
         Task<Warehouse> GetWarehouseByOwnerIdAsync(int ownerId);
         Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId);
-        Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId);
+        Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int warehouseId);
         Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO);
     }
 }
