@@ -39,6 +39,7 @@ namespace DataAccess.DAOs
                     .Include(p => p.Comments)
                     .Include(p => p.Owner)
                     .Include(p => p.ProductSizes)
+                        .ThenInclude(ps => ps.Size)
                     .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
