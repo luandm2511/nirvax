@@ -439,7 +439,7 @@ namespace WebAPI.Controllers
 
                 var tokenString = GenerateJSONWebToken(user.AccountId, request.Email, "User");
 
-                return Ok(new {  tokenString, userType = "User" });
+                return Ok(new {  token = tokenString, userType = "User" });
             }
             catch (Exception ex)
             {
