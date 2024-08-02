@@ -26,25 +26,7 @@ namespace DataAccess.DAOs
         }
 
        
-
-
-        //list ra các import thôi
-        public async Task<List<ImportProduct>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
-        {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i=> i.OwnerId == ownerId).FirstOrDefaultAsync();
-
-            List<ImportProduct> listImportProduct = await _context.ImportProducts    
-                    .Where(i => i.WarehouseId == warehouse.WarehouseId)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
      
-            
-            return listImportProduct;
-        }
-
-       
         
         public async Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
         {
@@ -149,9 +131,9 @@ namespace DataAccess.DAOs
 
         //list ra detail nhưng mà group by theo product size giống bên warehousedetail
 
-        public async Task<List<WarehouseDetail>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
+        public async Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.WarehouseId == warehouseId).FirstOrDefaultAsync();
             if (warehouse == null) 
             {
                 throw new Exception("This owner does not have a warehouse yet");
@@ -204,19 +186,6 @@ namespace DataAccess.DAOs
             else {
                 throw new Exception("Warehouse is already registed");
             }
-        }
-
-        public async Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
-        {
-            Warehouse? warehouse = await _context.Warehouses.Include(i => i.Owner).SingleOrDefaultAsync(i => i.WarehouseId == warehouseDTO.WarehouseId);
-            if (warehouse == null)
-            {
-                throw new Exception("Warehouse is not exist!");
-            }
-                _mapper.Map(warehouseDTO, warehouse);
-            _context.Warehouses.Update(warehouse);
-            await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

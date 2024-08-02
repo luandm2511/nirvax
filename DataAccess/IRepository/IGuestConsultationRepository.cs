@@ -20,7 +20,6 @@ namespace DataAccess.IRepository
 
         Task<bool> CheckGuestConsultationExistAsync(int guestId);
         Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
-        Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId);
         Task<List<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<List<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<List<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize,int ownerId);

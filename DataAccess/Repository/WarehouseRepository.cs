@@ -23,17 +23,10 @@ namespace DataAccess.Repository
             _warehouseDAO = warehouseDAO;
         }
 
-
-        public Task<List<ImportProduct>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
+        public Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
-            return _warehouseDAO.GetWarehouseByImportProductAsync(ownerId, page, pageSize);
+            return _warehouseDAO.GetAllWarehouseDetailByWarehouseAsync(warehouseId, page, pageSize);
         }
-        public Task<List<WarehouseDetail>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
-        {
-            return _warehouseDAO.GetAllWarehouseDetailAsync(ownerId, page, pageSize);
-        }
-
-
 
         public Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
         {
@@ -48,11 +41,6 @@ namespace DataAccess.Repository
         {
             return _warehouseDAO.GetWarehouseIdByOwnerIdAsync(ownerId);
         }
-        public Task<bool> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
-        {
-            return _warehouseDAO.UpdateWarehouseAsync(warehouseDTO);
-        }
-        
 
         public Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int ownerId)
         {

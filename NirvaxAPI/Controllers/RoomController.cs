@@ -12,17 +12,13 @@ namespace WebAPI.Controllers
     public class RoomController : ControllerBase
     {
         private readonly IRoomRepository  _repo;
-        private readonly IMessageRepository _mess;
-        private readonly IMapper _mapper;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public RoomController(IRoomRepository repo, IMessageRepository mess, IMapper mapper)
+        public RoomController(IRoomRepository repo)
         { 
-             _repo = repo;
-            _mess = mess;
-            _mapper = mapper;
+             _repo = repo;           
         }
 
      

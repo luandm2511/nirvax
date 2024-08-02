@@ -13,11 +13,8 @@ namespace DataAccess.IRepository
     {
         Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId);
         Task<bool> CheckMessageAsync(MessageCreateDTO messageCreateDTO);
-            Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO);
+        Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO);
         Task<bool> CreateMessageFirstAsync(MessageCreateDTO messageCreateDTO);
-
         Task<bool> CreateMessageFromOwnerAsync(Message message);
-
-
     }
 }

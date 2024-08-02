@@ -10,18 +10,14 @@ namespace WebAPI.Controllers
     public class WarehouseDetailController : ControllerBase
     {
         private readonly IWarehouseDetailRepository _repo;
-        private readonly IWarehouseRepository _repoWh;
-        private readonly IProductSizeRepository _repoProdSize;
 
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public WarehouseDetailController(IWarehouseDetailRepository repo, IWarehouseRepository repoWh, IProductSizeRepository repoProdSize)
-        {
+        public WarehouseDetailController(IWarehouseDetailRepository repo) 
+        { 
             _repo = repo;
-            _repoProdSize = repoProdSize;
-            _repoWh = repoWh;
         }
 
 

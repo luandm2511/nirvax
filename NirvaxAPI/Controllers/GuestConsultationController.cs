@@ -272,35 +272,7 @@ namespace WebAPI.Controllers
             }
 
         }
-
-            [HttpPut]
-            public async Task<ActionResult> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId)
-            {
-            try { 
-                var checkGuestConsultation = await _repo.CheckGuestConsultationExistAsync(guestId);
-                if (checkGuestConsultation == true)
-                {
-                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtByIdAsync(guestId, statusGuestId);
-                        return StatusCode(200, new
-                        {
-                            Message = "Update guest consultation" + ok,
-                            Data = guestConsultation1
-                        });
-                }
-                return StatusCode(400, new
-                {
-                    Message = "The name guest consultation is already exist",
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
-        }
+      
 
         [HttpPut]
         public async Task<ActionResult> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)

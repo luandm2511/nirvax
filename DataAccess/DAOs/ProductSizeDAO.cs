@@ -194,15 +194,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<bool> UpdateProductSizeAsync(ProductSizeDTO productSizeDTO)
-        {
-            ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeDTO.ProductSizeId);
-                productSize.Isdelete= false;
-                _context.ProductSizes.Update(productSize);
-                await _context.SaveChangesAsync();
-                return true;
-          
-        }
+   
         public async Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             foreach (var item in importProductDetailDTO)

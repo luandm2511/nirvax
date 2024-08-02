@@ -258,20 +258,6 @@ namespace DataAccess.DAOs
                 return true;
         }
 
-        public async Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId , int statusGuestId)
-        {
-
-            GuestConsultation? staffOrgin = await _context.GuestConsultations
-          .Include(i => i.Owner)
-                .Include(i => i.Ad)
-                .Include(i => i.StatusGuest)
-                .SingleOrDefaultAsync(i => i.GuestId  == guestId );
-            staffOrgin.StatusGuestId = statusGuestId;
-             _context.GuestConsultations.Update(staffOrgin);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
         {
             GuestStatus guestStatus = await _context.GuestStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusGuest.Trim());

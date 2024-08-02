@@ -51,10 +51,6 @@ namespace DataAccess.Repository
         {
             return _guestConsultationDAO.CheckGuestConsultationAsync(guestConsultationCreateDTO);
         }
-        public Task<bool> UpdateStatusGuestConsultationtByIdAsync(int guestId, int statusGuestId)
-        {
-            return _guestConsultationDAO.UpdateStatusGuestConsultationtByIdAsync(guestId, statusGuestId);
-        }
         public Task<List<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _guestConsultationDAO.GetAllGuestConsultationsAsync(searchQuery, page, pageSize, ownerId);

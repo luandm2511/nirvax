@@ -18,14 +18,12 @@ namespace WebAPI.Controllers
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
-        private readonly IMapper _mapper;
 
-        public DescriptionController(IDescriptionRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository, IMapper mapper)
+        public DescriptionController(IDescriptionRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
             _repo = repo;
-            _imageRepository = imageRepository;
-            _mapper = mapper;
+            _imageRepository = imageRepository;          
         }
 
 

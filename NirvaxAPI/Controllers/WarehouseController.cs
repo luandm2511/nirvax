@@ -86,58 +86,16 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpGet]
-        //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetWarehouseByImportProductAsync(int ownerId, int page, int pageSize)
-        {
-            try {
-                
-                var list = await _repo.GetWarehouseByImportProductAsync(ownerId,  page,  pageSize);
-            if (list.Any())
-            {
-                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
-                if(numberOfWarehouse != null)
-                {
-                 
-                        return StatusCode(200, new
-                    {  
-                        Message = "Get list Warehouse " + ok,
-                        Data = list,
-                        numberOfWarehouse.TotalPrice,
-                        numberOfWarehouse.TotalQuantity
-                    });
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {  
-                        Message = "Can't get quantity and price of warehouse!",
-                    });
-                }
-            }
-            return StatusCode(404, new
-            {
-                Message = notFound + "any Warehouse"
-            });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-        }
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<WarehouseDetail>>> GetAllWarehouseDetailAsync(int ownerId, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<WarehouseDetail>>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
             try { 
-            var list = await _repo.GetAllWarehouseDetailAsync(ownerId, page, pageSize);
+            var list = await _repo.GetAllWarehouseDetailByWarehouseAsync(warehouseId, page, pageSize);
             if (list.Any() && list!= null)
             {
-                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(ownerId);
+                var numberOfWarehouse = await _repo.UpdateQuantityAndPriceWarehouseAsync(warehouseId);
                 if (numberOfWarehouse != null)
                 {
                     return StatusCode(200, new
@@ -211,39 +169,7 @@ namespace WebAPI.Controllers
             
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateWarehouseAsync(WarehouseDTO warehouseDTO)
-        {
-            try
-            {
-                var size1 = await _repo.UpdateWarehouseAsync(warehouseDTO);
-                if (size1)
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = "Update warehouse " + ok,
-                    });
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {                    
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-           
-
-        }
-
-   
+      
   
     }
 }
