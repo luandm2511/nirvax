@@ -84,7 +84,7 @@ namespace BusinessObject.DTOs
      
    
         public int StaffId { get; set; }
-        public string? Image { get; set; }
+        public string Image { get; set; }
         //[NotMapped]
        // public IFormFile? ImageFile { get; set; }
     }

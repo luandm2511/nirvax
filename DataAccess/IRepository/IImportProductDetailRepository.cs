@@ -23,7 +23,7 @@ namespace DataAccess.IRepository
 
 
 
-        Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO);
+        Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailUpdateDTO> importProductDetailDTO);
 
 
     }

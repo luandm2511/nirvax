@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.Net.WebSockets;
+using System.Drawing;
 
 namespace DataAccess.DAOs
 {
@@ -99,60 +100,30 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailDTO> importProductDetailDTO)
+        public async Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailUpdateDTO> importProductDetailDTO)
         {
-            var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(i => i.ImportId == importId);
-            List<ImportProductDetail> importProductDetails = await _context.ImportProductDetails.Where(i => i.ImportId == importId).ToListAsync();
-            //ánh xạ đối tượng staffdto đc truyền vào cho staff
+            var importProductDetail = await _context.ImportProductDetails.Where(i => i.ImportId == importId).ToListAsync();
 
-            if (importProduct == null)
+            foreach (var item in importProductDetail)
             {
-                throw new Exception("ImportProduct not found.");
-            }
-            int totalQuantity = importProductDetailDTO.Sum(d => d.QuantityReceived);
-            double totalPrice = importProductDetailDTO.Sum(d => d.UnitPrice);
-            if (importProduct.TotalPrice > totalPrice || importProduct.TotalPrice < totalPrice)
-            {
-                throw new Exception("Sum shoud similar Total Price of Import Product");
-            }
-
-            if (importProduct.Quantity < totalQuantity || importProduct.Quantity > totalQuantity)
-            {
-                throw new Exception("Sum shoud similar Quantity of Import Product");
-            }
-            foreach (var item in importProductDetailDTO)
-            {
-                item.ImportId = importId;
-                var checkProductSizeId = await _context.ProductSizes.Where(i => i.ProductSizeId == item.ProductSizeId).SingleOrDefaultAsync();
-                if (checkProductSizeId == null)
+                foreach (var item1 in importProductDetailDTO)
                 {
-                    throw new Exception("Don't exist that Product Size");
+                    if(item.ProductSizeId == item1.ProductSizeId)
+                    {
+                        _mapper.Map(item1, item);
+                         _context.ImportProductDetails.Update(item);
+                    }
                 }
             }
-
-            foreach (var detailDTO in importProductDetailDTO)
-            {
-                var existingDetail = importProductDetails.SingleOrDefault(d => d.ProductSizeId == detailDTO.ProductSizeId);
-                if (existingDetail != null)
-                {
-                    _mapper.Map(detailDTO, existingDetail);
-                    _context.ImportProductDetails.Update(existingDetail);
-                }
-                else
-                {
-                    var newDetail = _mapper.Map<ImportProductDetail>(detailDTO);
-                    await _context.ImportProductDetails.AddAsync(newDetail);
-                }
-            }
+               
             await _context.SaveChangesAsync();
-            return true;
-            
 
+            return true;
         }
 
-      
 
-       
+
+
     }
     }
 

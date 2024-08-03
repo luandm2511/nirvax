@@ -135,24 +135,23 @@ namespace DataAccess.DAOs
             {
                 throw new Exception("This owner does not have a warehouse yet");
             }
+            // var result = await _context.WarehouseDetails
+            //.Where(wd => wd.WarehouseId == warehouse.WarehouseId)
+            // .GroupBy(w => new { w.ProductSizeId})
 
-           // var result = await _context.WarehouseDetails
-                //.Where(wd => wd.WarehouseId == warehouse.WarehouseId)
-               // .GroupBy(w => new { w.ProductSizeId})
+            //  .Select(g => new WarehouseDetail
+            //   {
+            //    ProductSizeId = g.Key.ProductSizeId,
+            // Location = g.Select(i => i.Location).FirstOrDefault(),
+            //   })
+            // .ToListAsync();
+            //  if (result == null) 
+            //   {
+            //        throw new Exception("This owner does not have a warehouse yet");
+            //  }
 
-      //  .Select(g => new WarehouseDetail
-     //   {
-        //    ProductSizeId = g.Key.ProductSizeId,
-           // Location = g.Select(i => i.Location).FirstOrDefault(),
-     //   })
-       // .ToListAsync();
-          //  if (result == null) 
-         //   {
-        //        throw new Exception("This owner does not have a warehouse yet");
-          //  }
-
-          //  var paginatedResult = result
-             var list = await _context.WarehouseDetails.Include(i => i.ProductSize)
+            //  var paginatedResult = result
+            var list = await _context.WarehouseDetails.Include(i => i.ProductSize)
                 .Where(i => i.WarehouseId == warehouse.WarehouseId)
                  .Skip((page - 1) * pageSize)
                     .Take(pageSize)

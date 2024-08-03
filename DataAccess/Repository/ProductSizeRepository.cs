@@ -61,19 +61,23 @@ namespace DataAccess.Repository
             return _productSizeDAO.GetProductSizeByIdAsync(productSizeId);
         }
 
-        public Task<bool> CreateProductSizeAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public Task<bool> CreateProductSizeAsync(int ownerId,List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
-            return _productSizeDAO.CreateProductSizeAsync(importProductDetailDTO);
+            return _productSizeDAO.CreateProductSizeAsync(ownerId,importProductDetailDTO);
         }
 
-        public Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public Task<bool> UpdateProductSizeByImportAsync(int ownerId ,List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
-            return _productSizeDAO.UpdateProductSizeByImportAsync(importProductDetailDTO);
+            return _productSizeDAO.UpdateProductSizeByImportAsync(ownerId, importProductDetailDTO);
         }
         public Task<bool> DeleteProductSizeAsync(string productSizeId)
         {
             return _productSizeDAO.DeleteProductSizeAsync(productSizeId);
         }
+        public Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId,List<ImportProductDetailUpdateDTO> importProductDetail)
+        {
+            return _productSizeDAO.UpdateProductSizeByImportDetailAsync(ownerId,importProductDetail);
 
+        }
     }
 }

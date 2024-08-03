@@ -41,7 +41,7 @@ namespace BusinessObject.DTOs {
     public class OwnerAvatarDTO
     {
         public int OwnerId { get; set; }
-        public string? Image { get; set; }
+        public string Image { get; set; }
         //[NotMapped]
       //  public IFormFile? ImageFile { get; set; }
     }

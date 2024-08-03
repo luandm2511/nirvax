@@ -150,52 +150,67 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<bool> CreateProductSizeAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public async Task<bool> CreateProductSizeAsync(int ownerId,List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
 
             foreach (var item in importProductDetailDTO)
             {
+                // Build ProductSizeId from ProductId and SizeId
+                var nameProductSize = $"{item.ProductId}_{item.SizeId}";
+
+                // Check if the product and size exist
                 Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == item.ProductId);
                 Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == item.SizeId);
-                var nameProductSize = $"{item.ProductId}_{item.SizeId}"; 
 
                 if (product == null)
                 {
-                    throw new Exception($"Product with ID does not exist.");
+                    throw new Exception($"Product with ID {item.ProductId} does not exist.");
                 }
 
                 if (size == null)
                 {
-                    throw new Exception($"Size with ID does not exist.");
+                    throw new Exception($"Size with ID {item.SizeId} does not exist.");
                 }
 
                 if (size.OwnerId != product.OwnerId)
                 {
                     throw new Exception($"Size and Product do not share the same Owner.");
                 }
-        
-                var checkProdSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).Where(i => i.ProductSizeId.Trim() == nameProductSize.Trim()).FirstOrDefaultAsync();
 
-                if (checkProdSize == null)
+                // Check if ProductSize already exists
+                var existingProdSize = await _context.ProductSizes
+                    .Include(i => i.Size)
+                    .Include(i => i.Product)
+                    .Where(i => i.ProductSizeId.Trim() == nameProductSize.Trim())
+                    .Where(i => i.Product.OwnerId == ownerId)
+                    .FirstOrDefaultAsync();
+
+                if (existingProdSize == null)
                 {
+                    // If ProductSize doesn't exist, create it
                     ProductSize productSize = new ProductSize
                     {
                         ProductId = item.ProductId,
                         SizeId = item.SizeId,
                         ProductSizeId = nameProductSize,
-                        Quantity = item.QuantityReceived,
+                        Quantity = item.QuantityReceived, // Set initial quantity
                         Isdelete = false
                     };
                     await _context.ProductSizes.AddAsync(productSize);
                 }
-
+                else
+                {
+                    // If ProductSize already exists, update its quantity
+                    existingProdSize.Quantity += item.QuantityReceived;
+                    _context.ProductSizes.Update(existingProdSize);
+                }
             }
             await _context.SaveChangesAsync();
             return true;
         }
 
    
-        public async Task<bool> UpdateProductSizeByImportAsync(List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public async Task<bool> UpdateProductSizeByImportAsync(int ownerId, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             foreach (var item in importProductDetailDTO)
             {
@@ -203,6 +218,7 @@ namespace DataAccess.DAOs
                 var productSize = await _context.ProductSizes
               .Include(i => i.Size)
               .Include(i => i.Product)
+              .Where(i => i.Product.OwnerId == ownerId)
               .SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
 
                 if (productSize != null)
@@ -213,6 +229,53 @@ namespace DataAccess.DAOs
             }
             await _context.SaveChangesAsync();
             return true;
+
+        }
+
+        public async Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId, List<ImportProductDetailUpdateDTO> importProductDetail)
+        {
+            foreach (var item in importProductDetail)
+            {
+                var oldImportDetail = await _context.ImportProductDetails
+                    .Where(i => i.ProductSizeId.Trim() == item.ProductSizeId.Trim())    
+                    .Where(i => i.ImportId == item.ImportId)
+                    .SingleOrDefaultAsync();
+                if (oldImportDetail == null)
+                {
+                    continue;
+                }
+
+                var productSize = await _context.ProductSizes
+              .Include(i => i.Size)
+              .Include(i => i.Product)
+                    .Where(i => i.ProductSizeId.Trim() == item.ProductSizeId.Trim())
+               .Where(i => i.Product.OwnerId == ownerId)
+              .SingleOrDefaultAsync();
+
+                if (productSize != null)
+                {
+                    var newQuantity = productSize.Quantity - oldImportDetail.QuantityReceived + item.QuantityReceived;
+                    if (newQuantity < 0)
+                    {
+                        continue;
+                    }
+                    productSize.Quantity = newQuantity;
+                    _context.ProductSizes.Update(productSize);
+                }
+                else
+                {                
+                    continue;
+                }
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Can't update!!!");
+            }
 
         }
 

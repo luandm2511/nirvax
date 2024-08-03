@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateImportProductAsync(int warehouseId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public async Task<ActionResult> CreateImportProductAsync(int ownerId,int warehouseId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try {
@@ -92,8 +92,7 @@ namespace WebAPI.Controllers
                         Quantity = 0,
                         TotalPrice = 0
                     };
-                    await _repoProdSize.CreateProductSizeAsync(importProductDetailDTO);
-                    await _repoProdSize.UpdateProductSizeByImportAsync(importProductDetailDTO);
+                    await _repoProdSize.CreateProductSizeAsync(ownerId, importProductDetailDTO);             
                     await _repoWh.CreateWarehouseDetailAsync(warehouseId, importProductDetailDTO);
                     var importProduct1 = await _repo.CreateImportProductAsync(importProduct);              
                     await _repoImport.CreateImportProductDetailAsync(importProduct1.ImportId, importProductDetailDTO);

@@ -266,8 +266,9 @@ namespace DataAccess.DAOs
         }
         public async Task<bool> UpdateAvatarStaffAsync(StaffAvatarDTO staffAvatarDTO)
         {
-           
+          
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffAvatarDTO.StaffId);
+            
             staff.Image = staffAvatarDTO.Image;
 
            // _mapper.Map(staffAvatarDTO, staff);
