@@ -130,7 +130,7 @@ namespace DataAccess.DAOs
 
         public async Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.WarehouseId == warehouseId).FirstOrDefaultAsync();
+            Warehouse warehouse = await _context.Warehouses.Where(i => i.WarehouseId == warehouseId).FirstOrDefaultAsync();
             if (warehouse == null) 
             {
                 throw new Exception("This owner does not have a warehouse yet");
