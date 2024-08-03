@@ -209,29 +209,6 @@ namespace DataAccess.DAOs
             return true;
         }
 
-   
-        public async Task<bool> UpdateProductSizeByImportAsync(int ownerId, List<ImportProductDetailCreateDTO> importProductDetailDTO)
-        {
-            foreach (var item in importProductDetailDTO)
-            {
-                var productSizeId = $"{item.ProductId}_{item.SizeId}";
-                var productSize = await _context.ProductSizes
-              .Include(i => i.Size)
-              .Include(i => i.Product)
-              .Where(i => i.Product.OwnerId == ownerId)
-              .SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
-
-                if (productSize != null)
-                {
-                    productSize.Quantity += item.QuantityReceived;
-                    _context.ProductSizes.Update(productSize);
-                }
-            }
-            await _context.SaveChangesAsync();
-            return true;
-
-        }
-
         public async Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId, List<ImportProductDetailUpdateDTO> importProductDetail)
         {
             foreach (var item in importProductDetail)

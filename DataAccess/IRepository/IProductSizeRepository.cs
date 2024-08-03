@@ -15,8 +15,6 @@ namespace DataAccess.IRepository
         Task<bool> CheckProductSizeAsync(ProductSizeDTO productSizeDTO);
         Task<bool> CheckProductSizeExistAsync(string productSizeId);
         Task<bool> CheckProductSizeByIdAsync(string productSizeId);
-
-        Task<bool> UpdateProductSizeByImportAsync(int ownerId, List<ImportProductDetailCreateDTO> importProductDetailDTO);
         Task<ProductSize> GetByIdAsync(string id);
         Task<bool> UpdateAsync(ProductSize productSize);
         Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId);
