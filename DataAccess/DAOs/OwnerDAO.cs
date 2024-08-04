@@ -209,9 +209,9 @@ namespace DataAccess.DAOs
         public async Task<Owner> GetOwnerByIdAsync(int ownerId)
         {
               
-                Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);
+                Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);
                
-                return sid;  
+                return owner;  
         }
 
         //profile

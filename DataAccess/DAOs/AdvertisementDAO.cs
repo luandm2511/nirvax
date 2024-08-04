@@ -333,7 +333,7 @@ namespace DataAccess.DAOs
         {
                 PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == "WAITING");                
                 Advertisement advertisement = _mapper.Map<Advertisement>(advertisementCreateDTO);
-                advertisement.StatusPostId = postStatus.StatusPostId;
+                advertisement.StatusPostId =  .StatusPostId;
                 await _context.Advertisements.AddAsync(advertisement);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)
