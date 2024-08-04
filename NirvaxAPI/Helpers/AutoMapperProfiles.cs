@@ -43,18 +43,18 @@ namespace WebAPI.Helpers
             CreateMap<Size, SizeCreateDTO>().ReverseMap();
 
             CreateMap<Advertisement, AdvertisementDTO>()
-                .ForMember(dest => dest.StatusPostName, opt => opt.MapFrom(src => src.StatusPost.Name))
-                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name))
-                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
+              //  .ForMember(dest => dest.StatusPostName, opt => opt.MapFrom(src => src.StatusPost.Name))
+              //  .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name))
+              //  .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
                 .ReverseMap();
             CreateMap<Advertisement, AdvertisementCreateDTO>().ReverseMap();
-            CreateMap<Advertisement, AdvertisementUpdateDTO>().ReverseMap();
+            
 
             
 
             CreateMap<GuestConsultation, GuestConsultationDTO>()
-                .ForMember(dest => dest.StatusGuestName, opt => opt.MapFrom(src => src.StatusGuest.Name))
-                .ForMember(dest => dest.AdvertisementTitle, opt => opt.MapFrom(src => src.Ad.Title))
+               // .ForMember(dest => dest.StatusGuestName, opt => opt.MapFrom(src => src.StatusGuest.Name))
+               // .ForMember(dest => dest.AdvertisementTitle, opt => opt.MapFrom(src => src.Ad.Title))
                // .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Fullname))
                 .ReverseMap();
 
