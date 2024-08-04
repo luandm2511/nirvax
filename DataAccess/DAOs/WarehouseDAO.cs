@@ -161,27 +161,5 @@ namespace DataAccess.DAOs
         }
 
 
-
-        //chỉ là create warehouse cho owner (1 lần duy nhất)
-        public async Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
-        {
-            Warehouse warehouseCheck = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == warehouseCreateDTO.OwnerId).FirstOrDefaultAsync();
-            if(warehouseCheck == null) {
-                Warehouse warehouse = _mapper.Map<Warehouse>(warehouseCreateDTO);
-                await _context.Warehouses.AddAsync(warehouse);
-                int i = await _context.SaveChangesAsync();
-                if (i > 0)
-                {
-                    return true;
-                }
-                else 
-                { 
-                    return false; 
-                }
-            }
-            else {
-                throw new Exception("Warehouse is already registed");
-            }
-        }
     }
 }

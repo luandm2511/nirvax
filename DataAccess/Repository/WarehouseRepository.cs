@@ -28,10 +28,7 @@ namespace DataAccess.Repository
             return _warehouseDAO.GetAllWarehouseDetailByWarehouseAsync(warehouseId, page, pageSize);
         }
 
-        public Task<bool> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
-        {
-            return _warehouseDAO.CreateWarehouseAsync(warehouseCreateDTO);
-        }
+    
         public Task<Warehouse> GetWarehouseByOwnerIdAsync(int ownerId)
         {
             return _warehouseDAO.GetWarehouseByOwnerIdAsync(ownerId);

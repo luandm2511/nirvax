@@ -135,39 +135,7 @@ namespace WebAPI.Controllers
 
 
 
-        [HttpPost]
-        //  [Authorize]
-        public async Task<ActionResult> CreateWarehouseAsync(WarehouseCreateDTO warehouseCreateDTO)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var warehouse = await _repo.CreateWarehouseAsync(warehouseCreateDTO);
-                       return StatusCode(200, new
-                       { 
-                          Message = "Create Warehouse" + ok,
-                          Data = warehouse
-                        });           
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {         
-                        Message = "Please enter valid Warehouse!",
-                    });
-                }
-             }
-            catch(Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                  
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-            
-        }
+        
 
       
   

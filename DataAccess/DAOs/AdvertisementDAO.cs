@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
+
 namespace DataAccess.DAOs
 {
     public class AdvertisementDAO
@@ -36,7 +37,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
-
+          
             Advertisement? Advertisement = new Advertisement();
             Advertisement = await _context.Advertisements
                 .Include(i => i.Owner)
@@ -49,7 +50,7 @@ namespace DataAccess.DAOs
                 List<Advertisement> getList = await _context.Advertisements
                  //check khác Id`
                  .Where(i => i.AdId != advertisementDTO.AdId)
-                .Where(i => i.Title.Trim() == advertisementDTO.Title.Trim() || i.Content.Trim() == advertisementDTO.Content.Trim())
+                .Where(i => i.Title.Trim() == advertisementDTO.Title.Trim())
                  .ToListAsync();
                 if (getList.Count > 0)
                 {
@@ -70,7 +71,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
-                .SingleOrDefaultAsync(i => i.Title == advertisementCreateDTO.Title || i.Content.Trim() == advertisementCreateDTO.Content.Trim());
+                .SingleOrDefaultAsync(i => i.Title.Trim() == advertisementCreateDTO.Title.Trim());
            
              if (StaffCreate == null)
             {
