@@ -22,7 +22,7 @@ namespace BusinessObject.DTOs
 
         public DateTime EndDate { get; set; }
         public int QuantityUsed { get; set; }
-        public string? OwnerName { get; set; }
+    //    public string? OwnerName { get; set; }
         public bool? Isdelete { get; set; }
    
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]

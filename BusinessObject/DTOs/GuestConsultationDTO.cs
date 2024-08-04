@@ -19,7 +19,7 @@ namespace BusinessObject.DTOs
         public int StatusGuestId { get; set; }
 
         public int AdId { get; set; }
-        public string? OwnerName { get; set; }
+        //public string? OwnerName { get; set; }
         public string? AdvertisementTitle { get; set; }
         public string? StatusGuestName { get; set; }
 

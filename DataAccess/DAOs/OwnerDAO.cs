@@ -242,16 +242,7 @@ namespace DataAccess.DAOs
         }
 
         //admin
-        public async Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO)
-        {
-            Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerDTO.OwnerId);
-                _mapper.Map(ownerDTO, owner);
-                 _context.Owners.Update(owner);
-                await _context.SaveChangesAsync();
-                return true;
-     
-
-        }
+    
 
         public async Task<bool> UpdateAvatarOwnerAsync(OwnerAvatarDTO ownerAvatarDTO)
         {
@@ -260,6 +251,18 @@ namespace DataAccess.DAOs
             owner.Image = ownerAvatarDTO.Image;
          
              _context.Owners.Update(owner);
+            await _context.SaveChangesAsync();
+            return true;
+
+
+        }
+        public async Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO)
+        {
+            Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerDTO.OwnerId);
+            _mapper.Map(ownerDTO, owner);
+            string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(owner.Password);
+            owner.Password = newpasswordHash;
+            _context.Owners.Update(owner);
             await _context.SaveChangesAsync();
             return true;
 

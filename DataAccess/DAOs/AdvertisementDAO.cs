@@ -343,7 +343,7 @@ namespace DataAccess.DAOs
         }
 
         //staff, owner
-        public  async Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO)
+        public  async Task<bool> UpdateAdvertisementAsync(AdvertisementUpdateDTO advertisementDTO)
         {
             Advertisement? adOrgin = await _context.Advertisements
                 .Include(i => i.Owner)
