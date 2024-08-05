@@ -232,6 +232,7 @@ namespace DataAccess.DAOs
                 if (productSize != null)
                 {
                     var newQuantity = productSize.Quantity - oldImportDetail.QuantityReceived + item.QuantityReceived;
+                   
                     if (newQuantity < 0)
                     {
                         continue;

@@ -193,8 +193,7 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
-            try
-            {
+
                 var list = await _repo.GetAllAdvertisementsByServiceAsync(serviceId);
                 if (list.Any())
                 {
@@ -208,14 +207,7 @@ namespace WebAPI.Controllers
                 {
                     Message = notFound + "any advertisement"
                 });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
+           
         }
 
 
