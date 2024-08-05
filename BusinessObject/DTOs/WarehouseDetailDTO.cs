@@ -22,4 +22,19 @@ namespace BusinessObject.DTOs
         
 
     }
+
+    public class WarehouseDetailListDTO
+    {
+        public int WarehouseId { get; set; }
+        public string ProductSizeId { get; set; } 
+
+        public string Location { get; set; } 
+
+       public string ProductName { get; set; }
+
+        public string SizeName { get; set; }
+
+      
+
+    }
 }

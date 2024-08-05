@@ -128,7 +128,7 @@ namespace DataAccess.DAOs
 
         //list ra detail nhưng mà group by theo product size giống bên warehousedetail
 
-        public async Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
+        public async Task<List<WarehouseDetailListDTO>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
             Warehouse warehouse = await _context.Warehouses.Where(i => i.WarehouseId == warehouseId).FirstOrDefaultAsync();
             if (warehouse == null) 
@@ -152,15 +152,24 @@ namespace DataAccess.DAOs
 
             //  var paginatedResult = result
             var list = await _context.WarehouseDetails
-                .Where(i => i.WarehouseId == warehouse.WarehouseId)
-              // .Include(i=>i.ProductSize.Product)
-               //.Include(i=>i.ProductSize.Size)
-
-                 .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+         .Where(i => i.WarehouseId == warehouse.WarehouseId)
+         .Include(i => i.ProductSize.Product)
+         .Include(i => i.ProductSize.Size)
+         .Skip((page - 1) * pageSize)
+         .Take(pageSize)
+         .Select(wd => new WarehouseDetailListDTO
+         {
+             WarehouseId = wd.WarehouseId,
+             ProductSizeId = wd.ProductSizeId,
+             Location = wd.Location,
+             ProductName = wd.ProductSize.Product.Name,
+             SizeName = wd.ProductSize.Size.Name
+           })
+         .ToListAsync();
 
             return list;
+
+           
         }
 
 

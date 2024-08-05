@@ -11,7 +11,7 @@ namespace DataAccess.IRepository
 {
     public interface IWarehouseRepository
     {
-        Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize);
+        Task<List<WarehouseDetailListDTO>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize);
         Task<Warehouse> GetWarehouseByOwnerIdAsync(int ownerId);
         Task<int> GetWarehouseIdByOwnerIdAsync(int ownerId);
         Task<Warehouse> UpdateQuantityAndPriceWarehouseAsync(int warehouseId);

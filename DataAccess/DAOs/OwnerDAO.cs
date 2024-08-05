@@ -217,10 +217,10 @@ namespace DataAccess.DAOs
         //profile
         public async Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail)
         {
-                OwnerDTO ownerDTO = new OwnerDTO();
+                OwnerDTO owner = new OwnerDTO();
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.Email == ownerEmail);
-                ownerDTO = _mapper.Map<OwnerDTO>(sid);
-                return ownerDTO;      
+            owner = _mapper.Map<OwnerDTO>(sid);
+                return owner;      
         }
 
 

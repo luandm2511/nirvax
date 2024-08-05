@@ -196,10 +196,10 @@ namespace DataAccess.DAOs
         //profile
         public async Task<StaffDTO> ViewStaffProfileAsync(string staffEmail)
         {
-                StaffDTO staffDTO = new StaffDTO();
+                StaffDTO staff = new StaffDTO();
                 Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == staffEmail);
-                staffDTO = _mapper.Map<StaffDTO>(sid);
-                return staffDTO;       
+            staff = _mapper.Map<StaffDTO>(sid);
+                return staff;       
         }
 
 

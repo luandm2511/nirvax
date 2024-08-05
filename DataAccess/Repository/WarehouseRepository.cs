@@ -23,7 +23,7 @@ namespace DataAccess.Repository
             _warehouseDAO = warehouseDAO;
         }
 
-        public Task<List<WarehouseDetail>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
+        public Task<List<WarehouseDetailListDTO>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
             return _warehouseDAO.GetAllWarehouseDetailByWarehouseAsync(warehouseId, page, pageSize);
         }

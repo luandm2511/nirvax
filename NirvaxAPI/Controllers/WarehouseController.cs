@@ -89,7 +89,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<WarehouseDetail>>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<WarehouseDetailListDTO>>> GetAllWarehouseDetailByWarehouseAsync(int warehouseId, int page, int pageSize)
         {
             try { 
             var list = await _repo.GetAllWarehouseDetailByWarehouseAsync(warehouseId, page, pageSize);
