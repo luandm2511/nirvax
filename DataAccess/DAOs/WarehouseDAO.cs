@@ -153,8 +153,8 @@ namespace DataAccess.DAOs
             //  var paginatedResult = result
             var list = await _context.WarehouseDetails
          .Where(i => i.WarehouseId == warehouse.WarehouseId)
-         .Include(i => i.ProductSize.Product)
-         .Include(i => i.ProductSize.Size)
+      //   .Include(i => i.ProductSize.Product)
+     //    .Include(i => i.ProductSize.Size)
          .Skip((page - 1) * pageSize)
          .Take(pageSize)
          .Select(wd => new WarehouseDetailListDTO
