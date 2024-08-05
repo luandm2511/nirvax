@@ -163,7 +163,8 @@ namespace DataAccess.DAOs
              ProductSizeId = wd.ProductSizeId,
              Location = wd.Location,
              ProductName = wd.ProductSize.Product.Name,
-             SizeName = wd.ProductSize.Size.Name
+             SizeName = wd.ProductSize.Size.Name,
+             Quantity = wd.ProductSize.Quantity,
            })
          .ToListAsync();
 
