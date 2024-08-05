@@ -142,9 +142,9 @@ namespace DataAccess.DAOs
         public async Task<Description> GetDescriptionByIdAsync(int descriptionId)
         {
                
-                Description? sid = await _context.Descriptions.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
+                Description? des = await _context.Descriptions.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
       
-                return sid;       
+                return des;       
         }
 
 

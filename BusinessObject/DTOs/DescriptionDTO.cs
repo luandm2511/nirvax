@@ -9,6 +9,7 @@ namespace BusinessObject.DTOs
 {
     public class DescriptionDTO
     {
+        [Required(ErrorMessage = "DescriptionId cannot be empty!!")]
         public int DescriptionId { get; set; }
         [Required(ErrorMessage = " Title be empty!!")]
         [MinLength(2, ErrorMessage = " Title to be at least 2 characters!!")]
@@ -19,8 +20,7 @@ namespace BusinessObject.DTOs
         [MaxLength(4000, ErrorMessage = "Content is limited to 4000 characters!!")]
         public string Content { get; set; } = null!;
         public List<string> ImageLinks { get; set; }
-
-        public bool Isdelete { get; set; }
+        public bool? Isdelete { get; set; }
     }
 
     public class DescriptionCreateDTO

@@ -23,7 +23,7 @@ namespace BusinessObject.DTOs
         public string Email { get; set; } = null!;
         [Required(ErrorMessage = " Password cannot be empty!!")]
         [MinLength(6, ErrorMessage = " Password to be at least 6 characters!!")]
-        [MaxLength(24, ErrorMessage = "Password is limited to 24  characters!!")]
+        [MaxLength(10, ErrorMessage = "Password is limited to 10  characters!!")]
         public string Password { get; set; } = null!;
         [Required(ErrorMessage = " Fullname cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Fullname to be at least 2 characters!!")]
@@ -55,7 +55,7 @@ namespace BusinessObject.DTOs
         public string Email { get; set; } = null!;
         [Required(ErrorMessage = " Password cannot be empty!!")]
         [MinLength(6, ErrorMessage = " Password to be at least 6 characters!!")]
-        [MaxLength(24, ErrorMessage = "Password is limited to 24 characters!!")]
+        [MaxLength(10, ErrorMessage = "Password is limited to 10 characters!!")]
         public string Password { get; set; } = null!;
         [Required(ErrorMessage = " Fullname cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Fullname to be at least 2 characters!!")]

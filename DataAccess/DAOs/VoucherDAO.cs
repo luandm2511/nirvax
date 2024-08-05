@@ -106,12 +106,12 @@ namespace DataAccess.DAOs
         //owner,staff
         public async Task<List<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            List<Voucher> listSize = new List<Voucher>();
+            List<Voucher> getList = new List<Voucher>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                listSize = await _context.Vouchers
+                getList = await _context.Vouchers
                     .Include(i => i.Owner)
                  //   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
@@ -123,7 +123,7 @@ namespace DataAccess.DAOs
             }
             else
             {
-                listSize = await _context.Vouchers
+                getList = await _context.Vouchers
                     .Include(i => i.Owner)
                   //  .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
@@ -131,7 +131,7 @@ namespace DataAccess.DAOs
                     .Take(pageSize)
                     .ToListAsync();            
             }
-            return listSize;
+            return getList;
         }
 
         //user

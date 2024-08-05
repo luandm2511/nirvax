@@ -213,11 +213,11 @@ namespace DataAccess.DAOs
            
             try
             {
-                GuestConsultation? sid = await _context.GuestConsultations.Include(i => i.Owner)
+                GuestConsultation? gs = await _context.GuestConsultations.Include(i => i.Owner)
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest).SingleOrDefaultAsync(i => i.GuestId  == guestId );
                
-                return sid;
+                return gs;
             }
             catch (Exception ex) { throw new Exception(ex.Message); }
         

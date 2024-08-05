@@ -123,6 +123,10 @@ namespace DataAccess.DAOs
             //check password             
             Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
             bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
+            if(newPassword.Length<6)
+            {
+                throw new Exception("Your new password should have greater than 5 character!");
+            }
             if (verified == true)
             {
                 if(newPassword == confirmPassword)

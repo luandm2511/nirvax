@@ -313,9 +313,9 @@ namespace DataAccess.DAOs
            
             try
             {
-                Advertisement? sid = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).SingleOrDefaultAsync(i => i.AdId == adId);
+                Advertisement? ads = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).SingleOrDefaultAsync(i => i.AdId == adId);
                
-                return sid;
+                return ads;
             }
             catch (Exception ex) { throw new Exception(ex.Message); }
         
@@ -323,8 +323,8 @@ namespace DataAccess.DAOs
 
         public async Task<Advertisement> GetAdvertisementByIdForUserAsync(int adId) 
         {
-                Advertisement? sid = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).Where(i => i.StatusPost.Name.Contains("POSTING")).SingleOrDefaultAsync(i => i.AdId == adId);
-                return sid;           
+                Advertisement? ads = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).Where(i => i.StatusPost.Name.Contains("ACCEPT")).SingleOrDefaultAsync(i => i.AdId == adId);
+                return ads;           
 
         }
 
@@ -333,7 +333,7 @@ namespace DataAccess.DAOs
         {
                 PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == "WAITING");                
                 Advertisement advertisement = _mapper.Map<Advertisement>(advertisementCreateDTO);
-                advertisement.StatusPostId =  .StatusPostId;
+                advertisement.StatusPostId =  postStatus.StatusPostId;
                 await _context.Advertisements.AddAsync(advertisement);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)

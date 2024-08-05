@@ -41,15 +41,15 @@ namespace DataAccess.DAOs
         //owner,staff
         public async Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
         {
-            List<MessageDTO> listSizeDTO = new List<MessageDTO>();
+            List<MessageDTO> list = new List<MessageDTO>();
                 List<Message> getList = await _context.Messages
                  .Include(i => i.Room)
                     .Where(i => i.RoomId == roomId)
                     .OrderBy(i=> i.Timestamp)
                     .ToListAsync();
-                listSizeDTO = _mapper.Map<List<MessageDTO>>(getList);
+                list = _mapper.Map<List<MessageDTO>>(getList);
             
-            return listSizeDTO;
+            return list;
         }
 
         public async Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO)

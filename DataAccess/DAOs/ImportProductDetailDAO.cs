@@ -47,7 +47,7 @@ namespace DataAccess.DAOs
         {
           
             List<ImportProductDetail> getList = await _context.ImportProductDetails
-            .Include(i => i.Import).Include(i => i.ProductSize)
+            .Include(i => i.Import).Include(i => i.ProductSize.Product).Include(i=>i.ProductSize.Size)
             .Where(x => x.ImportId == importId).ToListAsync();
          
             
