@@ -23,9 +23,10 @@ namespace DataAccess.DAOs
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<AccessLog>> GetAccessLogsAsync()
+        public async Task<int> GetAccessLogsAsync()
         {
-            return await _context.AccessLogs.ToListAsync();
+            var access = await _context.AccessLogs.CountAsync();
+            return access;
         }
 
         public async Task<int> GetAccessCountAsync(DateTime startDate, DateTime endDate)

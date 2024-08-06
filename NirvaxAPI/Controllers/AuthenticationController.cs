@@ -308,17 +308,20 @@ namespace WebAPI.Controllers
         [HttpPost("login-admin")]
         public async Task<IActionResult> LoginAdmin([FromForm] Login request)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(406, new { message = "Please pass the valid data." });
-                }
+                return StatusCode(406, new { message = "Please pass the valid data." });
+            }
+            try
+            {  
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
-                if (account.Role == "Admin" && PasswordHasher.VerifyPassword(request.Password, account.Password))
+                if(account != null)
                 {
-                    var token = GenerateJSONWebToken(account.AccountId, account.Email, account.Role);
-                    return Ok(new { token, userType = account.Role });
+                    if (account.Role == "Admin" && PasswordHasher.VerifyPassword(request.Password, account.Password))
+                    {
+                        var token = GenerateJSONWebToken(account.AccountId, account.Email, account.Role);
+                        return Ok(new { token, userType = account.Role });
+                    }
                 }
                 return StatusCode(400, new { message = "Invalid email or password." });
             }
@@ -341,15 +344,18 @@ namespace WebAPI.Controllers
             try
             {
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
-                if (account.IsBan)
+                if(account != null)
                 {
-                    return StatusCode(400, new { message = "Your account is banned." });
-                }
+                    if (account.IsBan)
+                    {
+                        return StatusCode(400, new { message = "Your account is banned." });
+                    }
 
-                if (account.Role == "User" && PasswordHasher.VerifyPassword(request.Password, account.Password))
-                {
-                    var token = GenerateJSONWebToken(account.AccountId,account.Email, account.Role);
-                    return Ok(new { token, userType = account.Role });
+                    if (account.Role == "User" && PasswordHasher.VerifyPassword(request.Password, account.Password))
+                    {
+                        var token = GenerateJSONWebToken(account.AccountId, account.Email, account.Role);
+                        return Ok(new { token, userType = account.Role });
+                    }
                 }
                 return StatusCode(400, new { message = "Invalid email or password." });
             }
@@ -372,9 +378,9 @@ namespace WebAPI.Controllers
             try
             {
                 if(request.Role == "Owner")
-                {
+                {                   
                     var owner = await _repository.GetOwnerByEmailAsync(request.Email);
-                    if (owner.IsBan)
+                    if (owner != null && owner.IsBan)
                     {
                         return StatusCode(400, new { message = "Your account is banned." });
                     }
