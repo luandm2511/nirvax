@@ -17,13 +17,11 @@ namespace WebAPI.Controllers
     //[Authorize(Roles = "User")]
     public class CartController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
         private readonly IProductSizeRepository _productSizeRepository;
         private readonly ICartService _cartService;
 
-        public CartController(IProductRepository productRepository, IProductSizeRepository productSizeRepository, ICartService cartService)
-        {
-            _productRepository = productRepository;
+        public CartController( IProductSizeRepository productSizeRepository, ICartService cartService)
+        { 
             _productSizeRepository = productSizeRepository;
             _cartService = cartService;
         }

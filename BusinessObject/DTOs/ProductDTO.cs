@@ -20,7 +20,7 @@ namespace BusinessObject.DTOs
         [MaxLength(200, ErrorMessage = "ShortDescription is limited to 200 characters!!")]
         public string ShortDescription { get; set; } = null!;
         public List<string> ImageLinks {  get; set; }
-
+            
         [Required(ErrorMessage = " Price cannot be empty!!")]
         [Range(0.01, 99999999999, ErrorMessage = "Price must be greater than 0")]
         public double Price { get; set; }

@@ -10,7 +10,6 @@ namespace DataAccess.IRepository
     public interface IAccessLogRepository
     {
         Task LogAccessAsync(AccessLog accessLog);
-        Task<IEnumerable<AccessLog>> GetAccessLogsAsync();
-        Task<int> GetAccessCountAsync(DateTime startDate, DateTime endDate);
+        Task<int> GetAccessLogsAsync();
     }
 }

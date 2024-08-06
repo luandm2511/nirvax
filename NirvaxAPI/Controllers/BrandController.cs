@@ -14,14 +14,12 @@ namespace WebAPI.Controllers
     public class BrandController : ControllerBase
     {
         private readonly IBrandRepository _repository;
-        private readonly ICategoryRepository _cate;
         private readonly IMapper _mapper;
 
-        public BrandController(IBrandRepository repository, IMapper mapper, ICategoryRepository cate)
+        public BrandController(IBrandRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            _cate = cate;
         }
 
         [HttpGet]

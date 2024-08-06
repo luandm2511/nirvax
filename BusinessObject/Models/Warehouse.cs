@@ -11,7 +11,7 @@ public partial class Warehouse
 
     public int TotalQuantity { get; set; }
 
-    public double TotalPrice { get; set; }
+    public double TotalPrice { get; set; } 
 
     public virtual ICollection<ImportProduct> ImportProducts { get; set; } = new List<ImportProduct>();
 
