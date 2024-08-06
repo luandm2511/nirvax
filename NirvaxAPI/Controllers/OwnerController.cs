@@ -122,13 +122,13 @@ namespace WebAPI.Controllers
            
 
         [HttpPut]
-        public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPasswod, string confirmPassword)
+        public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword, string confirmPassword)
         {
             try { 
             var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
                 if (checkOwner == true)
                 {
-                    var owner1 = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPasswod, confirmPassword);
+                    var owner1 = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPassword, confirmPassword);
                     return StatusCode(200, new
                     {
                         Message = "Change password of owner" + ok,
