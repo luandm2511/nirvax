@@ -72,11 +72,11 @@ namespace DataAccess.DAOs
         {
             // OwnerDTO checkownerDTO = new OwnerDTO();
             Owner? owner = new Owner();
-            owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
+            owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
             if (owner != null)
             {
                 List<Owner> getList = await _context.Owners
-                 .Where(i => i.IsBan == false)
+                // .Where(i => i.IsBan == false)
          
                  .Where(i => i.OwnerId != ownerProfileDTO.OwnerId)
                  .Where(i => i.Email == ownerProfileDTO.Email || i.Phone == ownerProfileDTO.Phone)

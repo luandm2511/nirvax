@@ -196,7 +196,7 @@ namespace WebAPI.Controllers
 
                         return StatusCode(200, new
                             {
-                                Message = "Create guest consultation " + ok,
+                                Message = "Send guest consultation " + ok,
                                 Data = guestConsultation1
                             });
                     }
@@ -204,7 +204,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            Message = "There already exists guest consultation with that information!",
+                            Message = "There already exists guest consultation with that information by ads!",
                         });
                     }
 
@@ -285,7 +285,7 @@ namespace WebAPI.Controllers
                     var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtAsync(guestId, statusGuest);
                     return StatusCode(200, new
                     {
-                        Message = "Update guest consultation" + ok,
+                        Message = "Update status guest consultation" + ok,
                         Data = guestConsultation1
                     });
                 }
