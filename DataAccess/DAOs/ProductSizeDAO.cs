@@ -39,11 +39,10 @@ namespace DataAccess.DAOs
                    .FirstOrDefaultAsync(p => p.ProductSizeId == id);
         }
 
-        public async Task<bool> UpdateAsync(ProductSize productSize)
+        public async Task UpdateAsync(ProductSize productSize)
         {
             _context.ProductSizes.Update(productSize);
             await _context.SaveChangesAsync();
-            return true;
         }
         public async Task<bool> CheckProductSizeExistAsync(string productSizeId)
         {

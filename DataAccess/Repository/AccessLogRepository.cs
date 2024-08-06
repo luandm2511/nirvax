@@ -17,12 +17,7 @@ namespace DataAccess.Repository
             _accessLogDAO = accessLogDAO;
         }
 
-        public async Task<int> GetAccessCountAsync(DateTime startDate, DateTime endDate)
-        {
-            return await _accessLogDAO.GetAccessCountAsync(startDate, endDate);
-        }
-
-        public async Task<IEnumerable<AccessLog>> GetAccessLogsAsync()
+        public async Task<int> GetAccessLogsAsync()
         {
             return await _accessLogDAO.GetAccessLogsAsync();
         }

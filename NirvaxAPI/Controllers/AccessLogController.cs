@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Service;
@@ -7,28 +8,21 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AccessLogController : ControllerBase
     {
-        private readonly IAccessLogService _accessLogService;
+        private readonly IAccessLogRepository _accessLogRepository;
 
-        public AccessLogController(IAccessLogService accessLogService)
+        public AccessLogController(IAccessLogRepository accessLogRepository)
         {
-            _accessLogService = accessLogService;
+            _accessLogRepository = accessLogRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAccessLogs()
         {
-            var logs = await _accessLogService.GetAccessLogsAsync();
+            var logs = await _accessLogRepository.GetAccessLogsAsync();
             return Ok(logs);
-        }
-
-        [HttpGet("count")]
-        public async Task<IActionResult> GetAccessCount( DateTime startDate, DateTime endDate)
-        {
-            var count = await _accessLogService.GetAccessCountAsync(startDate, endDate);
-            return Ok(count);
         }
     }
 

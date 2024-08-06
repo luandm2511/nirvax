@@ -28,7 +28,7 @@ namespace DataAccess.Repository
             return _productSizeDAO.GetByIdAsync(id);
         }
 
-        public Task<bool> UpdateAsync(ProductSize productSize)
+        public Task UpdateAsync(ProductSize productSize)
         {
             return _productSizeDAO.UpdateAsync(productSize);
         }

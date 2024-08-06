@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         private readonly IVoucherRepository _voucherRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IHubContext<NotificationHub> _hubContext;
-        ICartService _cartService;
+        private readonly ICartService _cartService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -226,7 +226,7 @@ namespace WebAPI.Controllers
                         OwnerId = group.Key, // Assuming Product model has OwnerId field
                         Content = $"You have just had an order with code order {codeOrder}.",
                         IsRead = false,
-                        Url = $"http://localhost:4200/Link-dashboard/{order.OrderId}",
+                        Url = $"{order.OrderId}",
                         CreateDate = DateTime.Now
                     };
 

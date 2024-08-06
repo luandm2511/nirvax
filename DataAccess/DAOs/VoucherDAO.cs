@@ -209,7 +209,6 @@ namespace DataAccess.DAOs
         public async Task<Voucher> PriceAndQuantityByOrderAsync(string voucherId)
         {
             Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-            voucher.Quantity = --voucher.Quantity;
             voucher.QuantityUsed = ++voucher.QuantityUsed;
             _context.Vouchers.Update(voucher);
             await _context.SaveChangesAsync();

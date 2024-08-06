@@ -23,15 +23,5 @@ namespace WebAPI.Service
 
             await _accessLogRepository.LogAccessAsync(accessLog);
         }
-
-        public async Task<IEnumerable<AccessLog>> GetAccessLogsAsync()
-        {
-            return await _accessLogRepository.GetAccessLogsAsync();
-        }
-
-        public async Task<int> GetAccessCountAsync(DateTime startDate, DateTime endDate)
-        {
-            return await _accessLogRepository.GetAccessCountAsync(startDate, endDate);
-        }
     }
 }
