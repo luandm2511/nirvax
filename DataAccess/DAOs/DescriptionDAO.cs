@@ -89,7 +89,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                  getList = await _context.Descriptions
-                  //  .Where(i => i.Isdelete == false)
+                   .Where(i => i.Isdelete == false)
                   .Include(i => i.Images)
                   .Include(i => i.Products)
                     .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
@@ -101,7 +101,7 @@ namespace DataAccess.DAOs
             else
             {
                getList = await _context.Descriptions
-                   //  .Where(i => i.Isdelete == false)
+                    .Where(i => i.Isdelete == false)
                    .Include(i => i.Images)
                   .Include(i => i.Products)
                     .Skip((page - 1) * pageSize)
