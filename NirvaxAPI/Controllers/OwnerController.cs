@@ -242,8 +242,8 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateAvatarOwnerAsync([FromForm] OwnerAvatarDTO ownerAvatarDTO)
         {
-            var checkOwner = await _repo.CheckOwnerExistAsync(ownerAvatarDTO.OwnerId);
-                if (checkOwner == true)
+            var check = await _repo.CheckOwnerExistAsync(ownerAvatarDTO.OwnerId);
+                if (check == true)
                 {
                     var owner1 = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
                         return StatusCode(200, new

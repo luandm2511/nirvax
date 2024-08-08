@@ -90,7 +90,7 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 listSize = await _context.Sizes
-                //    .Where(i => i.Isdelete == false)
+               .Where(i => i.Isdelete == false)
                     .Include(i => i.Owner)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.OwnerId == ownerId && !i.Isdelete)
@@ -102,7 +102,7 @@ namespace DataAccess.DAOs
             else
             {
                 listSize = await _context.Sizes
-                //    .Where(i => i.Isdelete == false)
+                  .Where(i => i.Isdelete == false)
                     .Include(i => i.Owner)
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
