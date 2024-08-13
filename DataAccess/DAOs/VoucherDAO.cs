@@ -206,15 +206,6 @@ namespace DataAccess.DAOs
             return false;
         }
 
-        public async Task<Voucher> PriceAndQuantityByOrderAsync(string voucherId)
-        {
-            Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
-            voucher.QuantityUsed = ++voucher.QuantityUsed;
-            _context.Vouchers.Update(voucher);
-            await _context.SaveChangesAsync();
-            return voucher;
-        }
-
       
         public async Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId)
         {

@@ -14,19 +14,62 @@ namespace DataAccess.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly OrderDAO _orderDAO;
-        public OrderRepository(OrderDAO orderDAO)
+        private readonly ProductDAO _productDAO;
+        private readonly OrderDetailDAO _orderDetailDAO;
+        private readonly ProductSizeDAO _productSizeDAO;
+        public OrderRepository(OrderDAO orderDAO, ProductDAO productDAO, OrderDetailDAO orderDetailDAO, ProductSizeDAO productSizeDAO)
         {
             _orderDAO = orderDAO;
+            _productDAO = productDAO;
+            _orderDetailDAO = orderDetailDAO;
+            _productSizeDAO = productSizeDAO;
         }
 
-        public async Task AddOrderAsync(Order order)
+        public async Task<Order> AddOrderAsync(OrderDTO createOrderDTO, ItemGroup group)
         {
-            await _orderDAO.AddOrderAsync(order);
+            var priceVoucher = await _orderDAO.UpdateQuantityUsed(createOrderDTO, group);
+            var order = await _orderDAO.AddOrderAsync(createOrderDTO, group, priceVoucher);
+            return order;
         }
 
-        public async Task<bool> CodeOrderExistsAsync(string codeOrder)
+        public async Task<Order> ConfirmOrder(int orderId)
         {
-            return await _orderDAO.CodeOrderExistsAsync(codeOrder);
+            var orderDetails = await _orderDetailDAO.GetOrderDetailsByOrderIdAsync(orderId);
+            foreach (var detail in orderDetails)
+            {
+                var productSize = await _productSizeDAO.GetByIdAsync(detail.ProductSizeId);
+                productSize.Quantity -= detail.Quantity;
+                await _productSizeDAO.UpdateAsync(productSize);
+            }
+            var order = await _orderDAO.GetOrderByIdAsync(orderId);
+            order.StatusId = 2;
+            order.RequiredDate = DateTime.Now;
+            await _orderDAO.UpdateOrderAsync(order);
+            return order;
+        }
+
+        public async Task<Order> CancleOrder(int orderId)
+        { 
+            var order = await _orderDAO.GetOrderByIdAsync(orderId);
+            order.StatusId = 5;
+            order.RequiredDate = DateTime.Now;
+            await _orderDAO.UpdateOrderAsync(order);
+            return order;
+        }
+        public async Task<Order> RejectedOrder(int orderId)
+        {
+            var orderDetails = await _orderDetailDAO.GetOrderDetailsByOrderIdAsync(orderId);
+            foreach (var detail in orderDetails)
+            {
+                var productSize = await _productSizeDAO.GetByIdAsync(detail.ProductSizeId);
+                productSize.Quantity += detail.Quantity;
+                await _productSizeDAO.UpdateAsync(productSize);
+            }
+            var order = await _orderDAO.GetOrderByIdAsync(orderId);
+            order.StatusId = 4;
+            order.ShippedDate = DateTime.Now;
+            await _orderDAO.UpdateOrderAsync(order);
+            return order;
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -67,6 +110,22 @@ namespace DataAccess.Repository
         public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)
         {
             return await _orderDAO.SearchOrdersAsync(codeOrder);
+        }
+
+        public async Task<Order> SucessOrder(int orderId)
+        {
+            var orderDetail = await _orderDetailDAO.GetOrderDetailsByOrderIdAsync(orderId);
+            foreach (var detail in orderDetail)
+            {
+                var product = await _productDAO.GetByIdAsync(detail.ProductSize.ProductId);
+                    product.QuantitySold += detail.Quantity;
+                    await _productDAO.UpdateAsync(product);
+            }
+            var order = await _orderDAO.GetOrderByIdAsync(orderId);
+            order.ShippedDate = DateTime.Now;
+            order.StatusId = 3;
+            await _orderDAO.UpdateOrderAsync(order);
+            return order;
         }
 
         public async Task UpdateOrderAsync(Order order)
