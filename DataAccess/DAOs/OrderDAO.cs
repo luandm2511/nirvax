@@ -20,10 +20,49 @@ namespace DataAccess.DAOs
         {
             _context = context;
         }
-        public async Task AddOrderAsync(Order order)
+
+        public async Task<double> UpdateQuantityUsed(OrderDTO createOrderDTO, ItemGroup group)
         {
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
+            var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.OwnerId);
+            double voucherPrice = 0;
+            var voucher = new Voucher();
+            if (ownerVoucherDto != null && !string.IsNullOrEmpty(ownerVoucherDto.VoucherId))
+            {
+                 voucher = await _context.Vouchers
+                    .Where(v => v.VoucherId == ownerVoucherDto.VoucherId)
+                    .FirstOrDefaultAsync();
+                voucher.QuantityUsed = ++voucher.QuantityUsed;
+                _context.Update(voucher);
+            }
+            return voucher?.Price ?? 0;
+        } 
+        public async Task<Order> AddOrderAsync(OrderDTO createOrderDTO, ItemGroup group, double priceVoucher)
+        {
+            var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.OwnerId);
+
+            string codeOrder;
+            do
+            {
+                codeOrder = GenerateCodeOrder();
+            } while (await _context.Orders.AnyAsync(o => o.CodeOrder == codeOrder));
+
+            var order = new Order
+            {
+                CodeOrder = codeOrder,
+                Fullname = createOrderDTO.FullName,
+                Phone = createOrderDTO.Phone,
+                OrderDate = DateTime.Now,
+                Address = createOrderDTO.Address,
+                Note = ownerVoucherDto.Note,
+                TotalAmount = group.Items.Sum(item => item.Quantity * item.UnitPrice) - priceVoucher,
+                AccountId = createOrderDTO.AccountId,
+                OwnerId = group.OwnerId,
+                StatusId = 1,
+                VoucherId = ownerVoucherDto?.VoucherId,
+            };
+
+            _context.Orders.Add(order);
+            return order;
         }
         public async Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId)
         {
@@ -109,11 +148,6 @@ namespace DataAccess.DAOs
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> CodeOrderExistsAsync(string codeOrder)
-        {
-            return await _context.Orders.AnyAsync(o => o.CodeOrder == codeOrder);
-        }
-
         public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)
         {
             return await _context.Orders.Where(o => o.CodeOrder.Contains(codeOrder) || o.Fullname.Contains(codeOrder)).ToListAsync();
@@ -188,6 +222,11 @@ namespace DataAccess.DAOs
                 CanceledOrders = canceledOrders,
                 TotalRevenue = totalRevenue
             };
+        }
+        private string GenerateCodeOrder()
+        {
+            var random = new Random();
+            return new string(Enumerable.Repeat("0123456789", 10).Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
