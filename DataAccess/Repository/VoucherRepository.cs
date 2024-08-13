@@ -33,10 +33,6 @@ namespace DataAccess.Repository
         {
             return _voucherDAO.GetVoucherById(voucherId);
         }
-        public Task<Voucher> PriceAndQuantityByOrderAsync(string voucherId)
-        {
-            return _voucherDAO.PriceAndQuantityByOrderAsync(voucherId);
-        }
         public Task<double> PriceVoucherUsedStatisticsAsync(int ownerId)
         {
             return _voucherDAO.PriceVoucherUsedStatisticsAsync(ownerId);
