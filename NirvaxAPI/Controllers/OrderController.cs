@@ -131,70 +131,18 @@ namespace WebAPI.Controllers
                 // Group các sản phẩm theo OwnerId
                 var groupedItems = createOrderDTO.Items.GroupBy(item => item.OwnerId);
 
-                // Validate vouchers nếu vouchers không null hoặc rỗng
-                if (createOrderDTO.Vouchers != null && createOrderDTO.Vouchers.Any())
-                {
-                    foreach (var voucherDto in createOrderDTO.Vouchers)
-                    {
-                        if (!string.IsNullOrEmpty(voucherDto.VoucherId))
-                        {
-                            var voucher = await _voucherRepository.GetVoucherById(voucherDto.VoucherId);
-                            if (voucher == null || voucher.OwnerId != voucherDto.OwnerId || voucher.EndDate < DateTime.Now)
-                            {
-                                return StatusCode(400,$"Voucher [{voucherDto.VoucherId}] is invalid.");
-                            }
-                        }
-                    }
-                }
-
                 var orders = new List<Order>();
 
                 foreach (var group in groupedItems)
                 {
-                    var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.Key);
-                    double voucherPrice = 0;
-                    string ownerVoucherId = null;
-                    string ownerVoucherNote = null;
-
-                    if (ownerVoucherDto != null)
-                    {
-                        if (!string.IsNullOrEmpty(ownerVoucherDto.VoucherId))
-                        {
-                            var voucher = await _voucherRepository.PriceAndQuantityByOrderAsync(ownerVoucherDto.VoucherId);
-                            voucherPrice = voucher?.Price ?? 0;
-                            ownerVoucherId = ownerVoucherDto.VoucherId;
-                        }
-                        ownerVoucherNote = ownerVoucherDto.Note;
-                    }
-
-                    string codeOrder;
-                    do
-                    {
-                        codeOrder = GenerateCodeOrder();
-                    } while (await _orderRepository.CodeOrderExistsAsync(codeOrder));
-
-                    var order = new Order
-                    {
-                        CodeOrder = codeOrder,
-                        Fullname = createOrderDTO.FullName,
-                        Phone = createOrderDTO.Phone,
-                        OrderDate = DateTime.Now,
-                        Address = createOrderDTO.Address,
-                        Note = ownerVoucherNote,
-                        TotalAmount = group.Sum(item => item.Quantity * item.UnitPrice) - voucherPrice,
-                        AccountId = createOrderDTO.AccountId,
+                    var itemGroup = new ItemGroup{
                         OwnerId = group.Key,
-                        StatusId = 1,
-                        VoucherId = ownerVoucherId
+                        Items = group
                     };
-
-                    await _orderRepository.AddOrderAsync(order);
+                    var order = await _orderRepository.AddOrderAsync(createOrderDTO, itemGroup);
 
                     foreach (var cartItem in group)
                     {
-                        var productSize = await _productSizeRepository.GetByIdAsync(cartItem.ProductSizeId);
-                        if (productSize != null && productSize.Quantity >= cartItem.Quantity)
-                        {
                             // Add order details
                             var orderDetail = new OrderDetail
                             {
@@ -205,26 +153,18 @@ namespace WebAPI.Controllers
                                 UserRate = 0                            
                             };
                             await _orderDetailRepository.AddOrderDetailAsync(orderDetail);
-                            productSize.Quantity -= cartItem.Quantity;
-                            await _productSizeRepository.UpdateAsync(productSize);
                             // Remove item from session cart
                             if (!createOrderDTO.IsOrderNow)
                             {
                                 cart = await _cartService.RemoveCartItemFromCookie(cart, cartItem.ProductSizeId);
                             }
-                        }
-                        else
-                        {
-                            await _transactionRepository.RollbackTransactionAsync();
-                            return StatusCode(400,$"Insufficient quantity for ProductSizeId {cartItem.ProductSizeId}");
-                        }
                     }
 
                     var notification = new Notification
                     {
                         AccountId = null,
                         OwnerId = group.Key, // Assuming Product model has OwnerId field
-                        Content = $"You have just had an order with code order {codeOrder}.",
+                        Content = $"You have just had an order with code order {order.CodeOrder}.",
                         IsRead = false,
                         Url = $"{order.OrderId}",
                         CreateDate = DateTime.Now
@@ -285,55 +225,29 @@ namespace WebAPI.Controllers
             try
             {
                 var content = "";
-                var order = await _orderRepository.GetOrderByIdAsync(orderId);
-                if (order == null)
-                {
-                    return StatusCode(404, new { message = "The order has been not found!" });
-                }
+                var order = new Order();
 
                 if(statusId == 2)
                 {
-                    order.RequiredDate = DateTime.Now;
+                    order = await _orderRepository.ConfirmOrder(orderId);
                     content = $"You have an order with code {order.CodeOrder} that has been delivered to the shipping company by the seller.";
                 }
 
                 if (statusId == 3)
                 {
-                    var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
-                    foreach (var detail in orderDetail)
-                    {
-                        var product = await _productRepository.GetByIdAsync(detail.ProductSize.ProductId);
-                        if (product != null)
-                        {
-                            product.QuantitySold += detail.Quantity;
-                            await _productRepository.UpdateAsync(product);
-                        }
-                    }
-                    order.ShippedDate = DateTime.Now;
+                    order = await _orderRepository.SucessOrder(orderId);
                     content = $"You have an order with code {order.CodeOrder} that has been successfully delivered.";
                 }
 
-                if (statusId > 3) // Assuming > 3 means order is canceled or returned
+                if (statusId == 4)
                 {
-                    var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
-                    foreach (var detail in orderDetail)
-                    {
-                        var productSize = await _productSizeRepository.GetByIdAsync(detail.ProductSizeId);
-                        if (productSize != null)
-                        {
-                            productSize.Quantity += detail.Quantity;
-                            await _productSizeRepository.UpdateAsync(productSize);
-                        }
-                    }
-                    if(statusId == 4)
-                    {
-                        order.ShippedDate = DateTime.Now;
-                    }
-                    else
-                    {
-                        order.RequiredDate = DateTime.Now;
-                    }
+                    order = await _orderRepository.RejectedOrder(orderId);
                     content = $"You have an order with code {order.CodeOrder} that has failed to be delivered.";
+                }
+                if (statusId == 5) 
+                {
+                    order = await _orderRepository.CancleOrder(orderId);
+                    content = $"You have an order with code {order.CodeOrder} that has been cancelled.";
                 }
 
                 order.StatusId = statusId; 
@@ -369,25 +283,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var orderDetails = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
-                var order = await _orderRepository.GetOrderByIdAsync(orderId);
-                if (order == null || (orderDetails.Count() == 0))
-                {
-                    return StatusCode(404, new { message = "The order or the order detail have been not found!" });
-                }
-                foreach (var detail in orderDetails)
-                {
-                    var productSize = await _productSizeRepository.GetByIdAsync(detail.ProductSizeId);
-                    if (productSize != null)
-                    {
-                        productSize.Quantity += detail.Quantity;
-                        await _productSizeRepository.UpdateAsync(productSize);
-                    }
-                }
-
-                order.StatusId = 5;
-                order.RequiredDate = DateTime.Now;
-                await _orderRepository.UpdateOrderAsync(order);
+                var order = await _orderRepository.CancleOrder(orderId);
 
                 var notification = new Notification
                 {
@@ -418,26 +314,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var orderDetail = await _orderDetailRepository.GetOrderDetailsByOrderIdAsync(orderId);
-                var order = await _orderRepository.GetOrderByIdAsync(orderId);
-                if (order == null || (orderDetail.Count() == 0))
-                {
-                    return StatusCode(404, new { message = "The order or the order detail have been not found!" });
-                }
-                foreach (var detail in orderDetail)
-                {
-                    var product = await _productRepository.GetByIdAsync(detail.ProductSize.ProductId);
-                    if (product != null)
-                    {
-                        product.QuantitySold += detail.Quantity;
-                        await _productRepository.UpdateAsync(product);
-                    }
-                }
-
-                order.ShippedDate = DateTime.Now;
-                order.StatusId = 3;
-                await _orderRepository.UpdateOrderAsync(order);
-
+                var order = await _orderRepository.SucessOrder(orderId);
                 var notification = new Notification
                 {
                     AccountId = null,
@@ -531,10 +408,6 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        private string GenerateCodeOrder()
-        {
-            var random = new Random();
-            return new string(Enumerable.Repeat("0123456789", 10).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+        
     }
 }
