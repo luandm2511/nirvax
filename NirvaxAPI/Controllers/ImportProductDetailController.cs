@@ -104,7 +104,7 @@ namespace WebAPI.Controllers
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
-                    Status = "Error",
+                    
                     Message = "An error occurred: " + ex.Message
                 });
             }

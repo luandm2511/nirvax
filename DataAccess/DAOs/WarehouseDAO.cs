@@ -172,6 +172,54 @@ namespace DataAccess.DAOs
 
            
         }
+        public async Task<Dictionary<string, double>> ViewWeeklySalesRevenueAsync(int importId, int ownerId)
+        {
+            Warehouse warehouse = await _context.Warehouses
+                .Include(i => i.Owner)
+                .Where(i => i.OwnerId == ownerId)
+                .FirstOrDefaultAsync();
+
+            var listImportProduct = await _context.ImportProducts
+                .Where(i => i.WarehouseId == warehouse.WarehouseId)
+                .Where(i => i.ImportId == importId)
+                .OrderBy(i => i.ImportDate)
+                .ToListAsync();
+
+            if (listImportProduct.Count == 0)
+            {
+                return new Dictionary<string, double>();
+            }
+
+            DateTime firstImportDate = listImportProduct.First().ImportDate;
+
+    
+            DateTime startOfFirstWeek = firstImportDate.AddDays(-(int)firstImportDate.DayOfWeek + (int)DayOfWeek.Monday);
+
+
+            var weeklyRevenue = new Dictionary<string, double>();
+
+            foreach (var product in listImportProduct)
+            {
+               
+                DateTime currentWeekStart = product.ImportDate.AddDays(-(int)product.ImportDate.DayOfWeek + (int)DayOfWeek.Monday);
+                DateTime currentWeekEnd = currentWeekStart.AddDays(6);
+
+           
+                string weekKey = $"{currentWeekStart:dd/MM/yyyy} - {currentWeekEnd:dd/MM/yyyy}";
+
+             
+                if (weeklyRevenue.ContainsKey(weekKey))
+                {
+                    weeklyRevenue[weekKey] += product.TotalPrice;
+                }
+                else
+                {
+                    weeklyRevenue[weekKey] = product.TotalPrice;
+                }
+            }
+
+            return weeklyRevenue;
+        }
 
 
     }
