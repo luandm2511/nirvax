@@ -27,6 +27,8 @@ public partial class Owner
 
     public virtual ICollection<GuestConsultation> GuestConsultations { get; set; } = new List<GuestConsultation>();
 
+    public virtual ICollection<ImportProduct> ImportProducts { get; set; } = new List<ImportProduct>();
+
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
@@ -40,6 +42,4 @@ public partial class Owner
     public virtual ICollection<Staff> Staff { get; set; } = new List<Staff>();
 
     public virtual ICollection<Voucher> Vouchers { get; set; } = new List<Voucher>();
-
-    public virtual ICollection<Warehouse> Warehouses { get; set; } = new List<Warehouse>();
 }

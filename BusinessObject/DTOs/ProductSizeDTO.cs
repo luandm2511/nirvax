@@ -28,10 +28,7 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " SizeId cannot be empty!!")]
         public int SizeId { get; set; }
         [Required(ErrorMessage = " ProductId cannot be empty!!")]
-
         public int ProductId { get; set; }
 
-        [Required(ErrorMessage = " WarehouseId cannot be empty!!")]
-        public int WarehouseId { get; set; }
     }
 }

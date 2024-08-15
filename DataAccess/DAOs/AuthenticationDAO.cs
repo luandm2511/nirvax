@@ -40,11 +40,7 @@ namespace DataAccess.DAOs
             await _context.Owners.AddAsync(owner);         
             await _context.SaveChangesAsync();  
         }
-        public async Task AddWarehouseAsync(Warehouse warehouse)
-        {
-            await _context.Warehouses.AddAsync(warehouse);
-            await _context.SaveChangesAsync();
-        }
+       
         public async Task<bool> CheckPhoneAsync(string phone)
         {
             if (await _context.Accounts

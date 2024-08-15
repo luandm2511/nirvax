@@ -176,7 +176,6 @@ namespace DataAccess.DAOs
                     throw new Exception($"Size and Product do not share the same Owner.");
                 }
 
-                // Check if ProductSize already exists
                 var existingProdSize = await _context.ProductSizes
                     .Include(i => i.Size)
                     .Include(i => i.Product)
@@ -185,21 +184,19 @@ namespace DataAccess.DAOs
                     .FirstOrDefaultAsync();
 
                 if (existingProdSize == null)
-                {
-                    // If ProductSize doesn't exist, create it
+                {        
                     ProductSize productSize = new ProductSize
                     {
                         ProductId = item.ProductId,
                         SizeId = item.SizeId,
                         ProductSizeId = nameProductSize,
-                        Quantity = item.QuantityReceived, // Set initial quantity
+                        Quantity = item.QuantityReceived,
                         Isdelete = false
                     };
                     await _context.ProductSizes.AddAsync(productSize);
                 }
                 else
-                {
-                    // If ProductSize already exists, update its quantity
+                {          
                     existingProdSize.Quantity += item.QuantityReceived;
                     _context.ProductSizes.Update(existingProdSize);
                 }
@@ -256,23 +253,13 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> DeleteProductSizeAsync(string productSizeId)
+        public async Task<int> ViewQuantityStatisticsAsync(int ownerId)
         {
-            ProductSize? productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
-            
-            if (productSize != null)
-            {
-                productSize.Isdelete = true;
-                 _context.ProductSizes.Update(productSize);
-
-                await _context.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
-           
-           
-
+            List<ProductSize> listProductSize = await _context.ProductSizes
+             .Where(i => i.Product.OwnerId == ownerId)
+             .ToListAsync();
+            var sumOfProduct = listProductSize.Sum(p => p.Quantity);
+            return sumOfProduct;
         }
     }
 }

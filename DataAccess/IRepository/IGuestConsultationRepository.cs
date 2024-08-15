@@ -14,7 +14,7 @@ namespace DataAccess.IRepository
      public interface IGuestConsultationRepository
     {
         Task<GuestConsultation> GetGuestConsultationsByIdAsync(int guestId);
-         Task<int> ViewGuestConsultationStatisticsAsync();
+         Task<int> ViewGuestConsultationStatisticsAsync(int ownerId);
         Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
         Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO);
 

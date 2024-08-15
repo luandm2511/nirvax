@@ -305,9 +305,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewGuestConsultationStatisticsAsync()
+        public async Task<ActionResult> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
-            var number = await _repo.ViewGuestConsultationStatisticsAsync();
+            var number = await _repo.ViewGuestConsultationStatisticsAsync(ownerId);
             if (number != null)
             {
                 return StatusCode(200, new

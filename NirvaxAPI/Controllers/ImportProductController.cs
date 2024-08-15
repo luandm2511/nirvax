@@ -14,28 +14,26 @@ namespace WebAPI.Controllers
         private readonly IImportProductRepository _repo;
         private readonly IProductSizeRepository _repoProdSize;
         private readonly IImportProductDetailRepository _repoImport;
-        private readonly IWarehouseDetailRepository _repoWh;
         private readonly ITransactionRepository _transactionRepository;
 
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public ImportProductController(ITransactionRepository transactionRepository, IWarehouseDetailRepository repoWh, IImportProductRepository repo, IProductSizeRepository repoProdSize, IImportProductDetailRepository repoImport)
+        public ImportProductController(ITransactionRepository transactionRepository, IImportProductRepository repo, IProductSizeRepository repoProdSize, IImportProductDetailRepository repoImport)
         {
             _repo = repo;
             _repoProdSize = repoProdSize;
             _repoImport = repoImport;
-            _repoWh = repoWh;
             _transactionRepository = transactionRepository;
         }
         
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
+        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
-            var list = await _repo.GetAllImportProductAsync(warehouseId,from, to);
+            var list = await _repo.GetAllImportProductAsync(ownerId, from, to);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -78,7 +76,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateImportProductAsync(int ownerId,int warehouseId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public async Task<ActionResult> CreateImportProductAsync(int ownerId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try {
@@ -86,14 +84,13 @@ namespace WebAPI.Controllers
                 {
                     ImportProductCreateDTO importProduct = new ImportProductCreateDTO()
                     {
-                        WarehouseId = warehouseId,
+                        OwnerId = ownerId,
                         ImportDate = DateTime.Now,
                         Origin = origin,
                         Quantity = 0,
                         TotalPrice = 0
                     };
                     await _repoProdSize.CreateProductSizeAsync(ownerId, importProductDetailDTO);             
-                    await _repoWh.CreateWarehouseDetailAsync(warehouseId, importProductDetailDTO);
                     var importProduct1 = await _repo.CreateImportProductAsync(importProduct);              
                     await _repoImport.CreateImportProductDetailAsync(importProduct1.ImportId, importProductDetailDTO);
                     await _repo.UpdateQuantityAndPriceImportProductAsync(importProduct1.ImportId);               
@@ -157,21 +154,32 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> ViewImportProductStatisticsAsync(int warehouseId, int importId, int ownerId)
+        public async Task<ActionResult> ViewImportProductStatisticsAsync(int ownerId)
         {
-            var total = await _repo.ViewImportProductStatisticsAsync(warehouseId);
-            var total2 = await _repo.ViewNumberOfProductByImportStatisticsAsync(importId, ownerId);
-            var total3 = await _repo.ViewPriceByImportStatisticsAsync(importId, ownerId);
-            var total4 = await _repo.QuantityWarehouseStatisticsAsync(ownerId);
+            var total = await _repo.ViewImportProductStatisticsAsync(ownerId);
+            var total2 = await _repo.ViewNumberOfProductByImportStatisticsAsync(ownerId);
+            var total3 = await _repo.ViewPriceByImportStatisticsAsync(ownerId);
 
             return StatusCode(200, new
             {
                 totalImportProduct = total,
                 totalProductByImport = total2,
-                totalPriceByImport = total3,
-                totalQuantityByImport = total4
+                totalPriceByImport = total3
             });
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ViewWeeklyImportProductAsync(int ownerId)
+        {
+            var total = await _repo.ViewWeeklyImportProductAsync(ownerId);
+          
+
+            return StatusCode(200, new
+            {
+                data= total
+            });
+        }
+
+        
     }
 }

@@ -9,9 +9,8 @@ namespace BusinessObject.DTOs
 {
     public class ImportProductDTO
     {
-        public int ImportId { get; set; }
-        [Required(ErrorMessage = " WarehouseId cannot be empty!!")]
-        public int WarehouseId { get; set; }
+        [Required(ErrorMessage = "ImportId cannot be empty!!")]
+        public int ImportId { get; set; }     
 
         public DateTime ImportDate { get; set; }
         [Required(ErrorMessage = " Origin cannot be empty!!")]
@@ -28,10 +27,8 @@ namespace BusinessObject.DTOs
 
     public class ImportProductCreateDTO
     {
-        
-        [Required(ErrorMessage = " WarehouseId cannot be empty!!")]
-        public int WarehouseId { get; set; }
-
+        [Required(ErrorMessage = " OwnerId cannot be empty!!")]
+        public int OwnerId { get; set; }
         public DateTime ImportDate { get; set; }
         [Required(ErrorMessage = " Origin cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Origin to be at least 2 characters!!")]

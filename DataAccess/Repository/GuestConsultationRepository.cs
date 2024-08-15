@@ -24,9 +24,9 @@ namespace DataAccess.Repository
             _guestConsultationDAO = guestConsultationDAO;
         }
 
-        public  Task<int> ViewGuestConsultationStatisticsAsync()
+        public  Task<int> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
-            return _guestConsultationDAO.ViewGuestConsultationStatisticsAsync();
+            return _guestConsultationDAO.ViewGuestConsultationStatisticsAsync(ownerId);
 
         }
         public Task<GuestConsultation> GetGuestConsultationsByIdAsync(int guestId)

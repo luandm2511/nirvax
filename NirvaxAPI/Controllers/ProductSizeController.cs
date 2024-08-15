@@ -119,37 +119,18 @@ namespace WebAPI.Controllers
             }
         }
 
-
-        [HttpPatch("{productSizeId}")]
-        public async Task<ActionResult> DeleteProductSizeAsync(string productSizeId)
+        [HttpGet]
+        public async Task<ActionResult> ViewQuantityStatisticsAsync(int ownerId)
         {
-            try { 
-            var productSize1 = await _repo.DeleteProductSizeAsync(productSizeId);
-                if (productSize1)
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = "Delete productSize " + ok,
+            var total = await _repo.ViewQuantityStatisticsAsync(ownerId);  
 
-                    });
-                }
-                else
-                {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
-            }
-            catch (Exception ex)
+            return StatusCode(200, new
             {
-                return StatusCode(500, new
-                {
-                    Message = "An error occurred: " + ex.Message
-                });
-            }
-
+                totalQuantityProductSize = total,          
+            });
         }
+
+   
 
     }
 }

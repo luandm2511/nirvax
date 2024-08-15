@@ -25,17 +25,13 @@ namespace DataAccess.Repository
 
     
       
-        public Task<List<ImportProduct>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
+        public Task<List<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
             
-            return _importProductDAO.GetAllImportProductAsync(warehouseId, from, to);
+            return _importProductDAO.GetAllImportProductAsync(ownerId, from, to);
         }
 
-        public Task<List<ImportProduct>> GetImportProductByWarehouseAsync(int warehouseId)
-        {
-
-            return _importProductDAO.GetImportProductByWarehouseAsync(warehouseId);
-        }
+  
 
         public Task<bool> CheckImportProductExistAsync(int importId)
         {
@@ -59,23 +55,27 @@ namespace DataAccess.Repository
         {
             return _importProductDAO.UpdateQuantityAndPriceImportProductAsync(importId);
         }
-        public Task<int> ViewImportProductStatisticsAsync(int warehouseId)
+        public Task<int> ViewImportProductStatisticsAsync(int ownerId)
         {
-            return _importProductDAO.ViewImportProductStatisticsAsync(warehouseId);
+            return _importProductDAO.ViewImportProductStatisticsAsync(ownerId);
         }
 
 
-        public Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId)
+        public Task<int> ViewNumberOfProductByImportStatisticsAsync(int ownerId)
         {
-            return _importProductDAO.ViewNumberOfProductByImportStatisticsAsync(importId, ownerId);
+            return _importProductDAO.ViewNumberOfProductByImportStatisticsAsync(ownerId);
         }
-        public Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId)
+        public Task<double> ViewPriceByImportStatisticsAsync(int ownerId)
         {
-            return _importProductDAO.ViewPriceByImportStatisticsAsync(importId, ownerId);
+            return _importProductDAO.ViewPriceByImportStatisticsAsync(ownerId);
         }
-        public Task<int> QuantityWarehouseStatisticsAsync(int ownerId)
+
+        public Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)
         {
-            return _importProductDAO.QuantityWarehouseStatisticsAsync(ownerId);
+            return _importProductDAO.ViewWeeklyImportProductAsync(ownerId);
         }
+
+
+        
     }
 }

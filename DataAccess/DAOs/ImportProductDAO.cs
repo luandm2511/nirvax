@@ -30,7 +30,7 @@ namespace DataAccess.DAOs
         {
             ImportProduct? sid = new ImportProduct();
 
-            sid = await _context.ImportProducts.Include(i => i.Warehouse).SingleOrDefaultAsync(i => i.ImportId == importId) ;
+            sid = await _context.ImportProducts.SingleOrDefaultAsync(i => i.ImportId == importId) ;
 
             if (sid == null)
             {
@@ -38,12 +38,12 @@ namespace DataAccess.DAOs
             }
             return true;
         }
-        public async Task<List<ImportProduct>> GetAllImportProductAsync(int warehouseId,DateTime? from, DateTime? to)
+        public async Task<List<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
             List<ImportProduct> listImport = new List<ImportProduct>();
          
             var getList = _context.ImportProducts
-                .Include(i => i.Warehouse).Where(i => i.WarehouseId == warehouseId).AsQueryable(); 
+                .Where(i => i.OwnerId == ownerId).AsQueryable(); 
             if(from == null && to == null)
             {
                 from= DateTime.Parse("2013-05-27");
@@ -69,24 +69,11 @@ namespace DataAccess.DAOs
         {
            
             ImportProduct? sid = await _context.ImportProducts
-            .Include(i => i.Warehouse)
             .SingleOrDefaultAsync(x => x.ImportId == importId);
                 
             return sid;
         }
 
-
-        public async  Task<List<ImportProduct>> GetImportProductByWarehouseAsync(int warehouseId)
-        {
-          
-            try
-            {
-                List<ImportProduct> getList =await _context.ImportProducts.Include(i => i.Warehouse).Where(i => i.WarehouseId == warehouseId).ToListAsync();
-                return getList;
-            }
-            catch (Exception ex) { throw new Exception(ex.Message); }
-          
-        }
 
 
         public async Task<ImportProduct> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
@@ -157,58 +144,90 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<int> ViewImportProductStatisticsAsync(int warehouseId)
+    
+       public async Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)
+        {
+            var listImportProduct = await _context.ImportProducts
+                .Where(i => i.OwnerId == ownerId)
+                .OrderBy(i => i.ImportDate)
+                .ToListAsync();
+
+            if (listImportProduct.Count == 0)
+            {
+                return new List<object>();
+            }
+
+            var weeklyRevenue = new Dictionary<string, List<object>>();
+
+            foreach (var product in listImportProduct)
+            {
+                DateTime currentWeekStart = product.ImportDate.AddDays(-(int)product.ImportDate.DayOfWeek + (int)DayOfWeek.Monday);
+                DateTime currentWeekEnd = currentWeekStart.AddDays(6);
+
+                string weekKey = $"{currentWeekStart:dd/MM/yyyy} - {currentWeekEnd:dd/MM/yyyy}";
+                var productSize = new
+                {
+                    ImportDate = $"{product.ImportDate:dd/MM/yyyy}",
+                    Price = product.TotalPrice
+                };
+
+                if (weeklyRevenue.ContainsKey(weekKey))
+                {
+                    weeklyRevenue[weekKey].Add(productSize);
+                }
+                else
+                {
+                    weeklyRevenue[weekKey] = new List<object> { productSize };
+                }
+            }
+
+       
+            var result = new List<object>();
+
+            foreach (var weekEntry in weeklyRevenue)
+            {
+                var weekData = new
+                {
+                    Week = weekEntry.Key,
+                    Item = weekEntry.Value
+                };
+                result.Add(weekData);
+            }
+
+            return result;
+        }
+
+        //số lần nhập hàng
+        public async Task<int> ViewImportProductStatisticsAsync(int ownerId)
         {
 
-            var sumImport = await _context.ImportProducts.Where(i => i.WarehouseId == warehouseId).GroupBy(w => w.ImportId).CountAsync();
+            var sumImport = await _context.ImportProducts.Where(i => i.OwnerId == ownerId).GroupBy(w => w.ImportId).CountAsync();
             return sumImport;
         }
 
 
         //tổng số sản phẩm lần nhập đó
-        public async Task<int> ViewNumberOfProductByImportStatisticsAsync(int importId, int ownerId)
+        public async Task<int> ViewNumberOfProductByImportStatisticsAsync(int ownerId)
         {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-
             List<ImportProduct> listImportProduct = await _context.ImportProducts
-             .Where(i => i.WarehouseId == warehouse.WarehouseId)
-             .Where(i => i.ImportId == importId)
+             .Where(i => i.OwnerId == ownerId)
              .ToListAsync();
             var sumOfProduct = listImportProduct.Sum(p => p.Quantity);
             return sumOfProduct;
         }
 
         //tổng tiền lần nhập đó
-        public async Task<double> ViewPriceByImportStatisticsAsync(int importId, int ownerId)
+        public async Task<double> ViewPriceByImportStatisticsAsync( int ownerId)
         {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-
+         
             List<ImportProduct> listImportProduct = await _context.ImportProducts
-             .Where(i => i.WarehouseId == warehouse.WarehouseId)
-             .Where(i => i.ImportId == importId)
+             .Where(i => i.OwnerId == ownerId)
              .ToListAsync();
             var sumOfPrice = listImportProduct.Sum(p => p.TotalPrice);
             return sumOfPrice;
         }
 
 
-        // thống kê tổng số lượng các sản phẩm
-        public async Task<int> QuantityWarehouseStatisticsAsync(int ownerId)
-        {
-            Warehouse warehouse = await _context.Warehouses.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            List<ImportProduct> listImportProduct = await _context.ImportProducts
-              .Where(i => i.WarehouseId == warehouse.WarehouseId)
-              .ToListAsync();
-
-            var totalQuantity = listImportProduct.Sum(p => p.Quantity);
-            var totalPrice = listImportProduct.Sum(p => p.TotalPrice);
-            warehouse.TotalQuantity = totalQuantity;
-            warehouse.TotalPrice = totalPrice;
-
-            _context.Warehouses.Update(warehouse);
-            await _context.SaveChangesAsync();
-            return warehouse.TotalQuantity;
-        }
     }
 }
 

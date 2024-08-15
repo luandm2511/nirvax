@@ -22,6 +22,4 @@ public partial class ProductSize
     public virtual Product Product { get; set; } = null!;
 
     public virtual Size Size { get; set; } = null!;
-
-    public virtual ICollection<WarehouseDetail> WarehouseDetails { get; set; } = new List<WarehouseDetail>();
 }

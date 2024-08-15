@@ -69,13 +69,9 @@ public partial class NirvaxContext : DbContext
 
     public virtual DbSet<Voucher> Vouchers { get; set; }
 
-    public virtual DbSet<Warehouse> Warehouses { get; set; }
-
-    public virtual DbSet<WarehouseDetail> WarehouseDetails { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=WINDOWS-10\\SQLEXPRESS;database=nirvax;MultipleActiveResultSets=true;TrustServerCertificate=true;Trusted_Connection=True");
+        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -360,14 +356,14 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.Origin)
                 .HasMaxLength(50)
                 .HasColumnName("origin");
+            entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.TotalPrice).HasColumnName("total_price");
-            entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
 
-            entity.HasOne(d => d.Warehouse).WithMany(p => p.ImportProducts)
-                .HasForeignKey(d => d.WarehouseId)
+            entity.HasOne(d => d.Owner).WithMany(p => p.ImportProducts)
+                .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_importproduct_warehouse");
+                .HasConstraintName("fk_importproduct_owner");
         });
 
         modelBuilder.Entity<ImportProductDetail>(entity =>
@@ -379,6 +375,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityReceived).HasColumnName("quantity_received");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -519,6 +516,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -643,6 +641,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
@@ -725,7 +724,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.StaffId).HasColumnName("staff_id");
             entity.Property(e => e.Email)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("email");
             entity.Property(e => e.Fullname)
@@ -777,48 +776,6 @@ public partial class NirvaxContext : DbContext
                 .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_voucher_owner");
-        });
-
-        modelBuilder.Entity<Warehouse>(entity =>
-        {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__734FE6BF946EF7BB");
-
-            entity.ToTable("Warehouse");
-
-            entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
-            entity.Property(e => e.OwnerId).HasColumnName("owner_id");
-            entity.Property(e => e.TotalPrice).HasColumnName("total_price");
-            entity.Property(e => e.TotalQuantity).HasColumnName("total_quantity");
-
-            entity.HasOne(d => d.Owner).WithMany(p => p.Warehouses)
-                .HasForeignKey(d => d.OwnerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_warehouse_owner");
-        });
-
-        modelBuilder.Entity<WarehouseDetail>(entity =>
-        {
-            entity.HasKey(e => new { e.WarehouseId, e.ProductSizeId }).HasName("PK_MultiWarehouse");
-
-            entity.ToTable("WarehouseDetail");
-
-            entity.Property(e => e.WarehouseId).HasColumnName("warehouse_id");
-            entity.Property(e => e.ProductSizeId)
-                .HasMaxLength(30)
-                .HasColumnName("product_size_id");
-            entity.Property(e => e.Location)
-                .HasMaxLength(50)
-                .HasColumnName("location");
-
-            entity.HasOne(d => d.ProductSize).WithMany(p => p.WarehouseDetails)
-                .HasForeignKey(d => d.ProductSizeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_warehousedetail_productsize");
-
-            entity.HasOne(d => d.Warehouse).WithMany(p => p.WarehouseDetails)
-                .HasForeignKey(d => d.WarehouseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_warehousedetail_warehouse");
         });
 
         OnModelCreatingPartial(modelBuilder);

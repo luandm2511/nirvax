@@ -72,10 +72,10 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<int> ViewGuestConsultationStatisticsAsync()
+        public async Task<int> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
             GuestConsultation guest = new GuestConsultation();
-            var number = await _context.GuestConsultations.CountAsync();
+            var number = await _context.GuestConsultations.Where(i=> i.Owner.OwnerId == ownerId).CountAsync();
             return number;
         }
 
