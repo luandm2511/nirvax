@@ -87,19 +87,6 @@ builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
 builder.Services.AddScoped<ProductSizeDAO>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
-builder.Services.AddScoped<IImportProductDetailRepository, ImportProductDetailRepository>();
-builder.Services.AddScoped<ImportProductDetailDAO>();
-
-builder.Services.AddScoped<IImportProductRepository, ImportProductRepository>();
-builder.Services.AddScoped<ImportProductDAO>();
-
-builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
-builder.Services.AddScoped<WarehouseDAO>();
-
-
-builder.Services.AddScoped<IWarehouseDetailRepository, WarehouseDetailRepository>();
-builder.Services.AddScoped<WarehouseDetailDAO>();
-
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<ServiceDAO>();
 

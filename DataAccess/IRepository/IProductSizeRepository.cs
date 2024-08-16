@@ -21,10 +21,7 @@ namespace DataAccess.IRepository
         Task<List<ProductSize>> GetProductSizeByProductIdAsync(int productId);
 
         Task<ProductSize> GetProductSizeByIdAsync(string productSizeId);
-
-        Task<bool> CreateProductSizeAsync(int ownerId, List<ImportProductDetailCreateDTO> importProductDetailDTO);
         Task<bool> DeleteProductSizeAsync(string productSizeId);
-        Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId, List<ImportProductDetailUpdateDTO> importProductDetail);
 
     }
 }

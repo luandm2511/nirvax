@@ -56,11 +56,6 @@ namespace DataAccess.Repository
         {
             await _authen.SaveChangesAsync();
         }
-
-        public async Task AddWarehouseAsync(Warehouse warehouse)
-        {
-            await _authen.AddWarehouseAsync(warehouse);
-        }
     }
 }
  

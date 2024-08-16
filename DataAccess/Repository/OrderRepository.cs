@@ -92,12 +92,12 @@ namespace DataAccess.Repository
             return await _orderDAO.GetOrdersByOwnerIdAsync(ownerId);
         }
 
-        public async Task<OrderStatisticsDTO> GetOrderStatisticsAsync()
+        public async Task<IEnumerable<OrderStatisticsDTO>> GetOrderStatisticsAsync()
         {
             return await _orderDAO.GetOrderStatisticsAsync();
         }
 
-        public async Task<OwnerStatisticsDTO> GetOwnerStatisticsAsync(int ownerId)
+        public async Task<IEnumerable<OrderStatisticsDTO>> GetOwnerStatisticsAsync(int ownerId)
         {
             return await _orderDAO.GetOwnerStatisticsAsync(ownerId);
         }

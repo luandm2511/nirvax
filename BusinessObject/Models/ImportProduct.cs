@@ -7,7 +7,7 @@ public partial class ImportProduct
 {
     public int ImportId { get; set; }
 
-    public int WarehouseId { get; set; }
+    public int OwnerId { get; set; }
 
     public DateTime ImportDate { get; set; }
 
@@ -19,5 +19,5 @@ public partial class ImportProduct
 
     public virtual ICollection<ImportProductDetail> ImportProductDetails { get; set; } = new List<ImportProductDetail>();
 
-    public virtual Warehouse Warehouse { get; set; } = null!;
+    public virtual Owner Owner { get; set; } = null!;
 }

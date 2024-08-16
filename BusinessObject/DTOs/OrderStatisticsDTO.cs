@@ -8,10 +8,9 @@ namespace BusinessObject.DTOs
 {
     public class OrderStatisticsDTO
     {
-        public int TotalOrders { get; set; }
-        public int SuccessfulOrders { get; set; }
-        public int FailedOrders { get; set; }
-        public int CanceledOrders { get; set; }
-        public double TotalRevenue { get; set; }
+        public int Year { get; set; }
+        public DateTime StartDate { get; set; } // Ngày bắt đầu của tuần
+        public DateTime EndDate { get; set; }   // Ngày kết thúc của tuần
+        public List<DailyOrderStatistics> DailyStatistics { get; set; }
     }
 }
