@@ -56,8 +56,6 @@ namespace DataAccess.Repository
         {
             await _authen.SaveChangesAsync();
         }
-
-       
     }
 }
  

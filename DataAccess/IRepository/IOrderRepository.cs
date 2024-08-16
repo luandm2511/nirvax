@@ -23,7 +23,7 @@ namespace DataAccess.IRepository
         Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync();
-        Task<OrderStatisticsDTO> GetOrderStatisticsAsync();
-        Task<OwnerStatisticsDTO> GetOwnerStatisticsAsync(int ownerId);
+        Task<IEnumerable<OrderStatisticsDTO>> GetOrderStatisticsAsync();
+        Task<IEnumerable<OrderStatisticsDTO>> GetOwnerStatisticsAsync(int ownerId);
     }
 }

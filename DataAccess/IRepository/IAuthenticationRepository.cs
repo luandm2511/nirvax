@@ -16,7 +16,6 @@ namespace DataAccess.IRepository
         Task<bool> CheckPhoneAsync(string phone);
         Task AddAccountAsync(Account account);
         Task AddOwnerAsync(Owner owner);
-   
         Task<bool> CheckEmailAsync(string email);
         Task SaveChangesAsync();
     }
