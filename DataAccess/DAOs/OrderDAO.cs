@@ -24,7 +24,6 @@ namespace DataAccess.DAOs
         public async Task<double> UpdateQuantityUsed(OrderDTO createOrderDTO, ItemGroup group)
         {
             var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.OwnerId);
-            double voucherPrice = 0;
             var voucher = new Voucher();
             if (ownerVoucherDto != null && !string.IsNullOrEmpty(ownerVoucherDto.VoucherId))
             {
