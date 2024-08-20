@@ -28,17 +28,10 @@ namespace DataAccess.Repository
         {
             return _descriptionDAO.CheckDescriptionAsync( descriptionId,  title, content);
         }
-
-
-        public Task<bool> CheckDescriptionExistAsync(int descriptionId)
-        {
-            return _descriptionDAO.CheckDescriptionExistAsync(descriptionId);
-        }
-
-        public Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
+        public Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             
-            return _descriptionDAO.GetAllDescriptionsAsync(searchQuery, page,  pageSize);
+            return _descriptionDAO.GetAllDescriptionsAsync(searchQuery, page,  pageSize, ownerId);
         }
 
         public Task<List<Description>> GetDescriptionForUserAsync(string? searchQuery)

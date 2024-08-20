@@ -44,79 +44,47 @@ namespace DataAccess.DAOs
             _context.ProductSizes.Update(productSize);
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> CheckProductSizeExistAsync(string productSizeId)
-        {
-
-            ProductSize? productSize = new ProductSize();
-            productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
-
-
-            if (productSize == null)
-            {
-                return false;
-
-            }
-            return true;
-        }
-
-        public async Task<bool> CheckProductSizeByIdAsync(string productSizeId)
-        {
-
-            ProductSize? productSize = new ProductSize();
-            productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
-
-
-            if (productSize == null)
-            {
-                return false;
-
-            }
-            return true;
-        }
-
-        public async Task<bool> CheckProductSizeAsync(ProductSizeDTO productSizeDTO)
-        {
-
-            ProductSize? productSize = new ProductSize();
-            productSize = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeDTO.ProductSizeId);
-
-
-            if (productSize == null)
-            {
-                return true;
-
-            }
-            return false;
-        }
+ 
 
         //staff,owner
-        public async Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<List<ProductSizeListDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            List<ProductSize> getList = new List<ProductSize>();
+            List<ProductSizeListDTO> list = new List<ProductSizeListDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
+                List<ProductSize>  getList = await _context.ProductSizes
+                    .Include(i => i.Size) .Include(i => i.Product)
                   //  .Where(i => i.Isdelete == false)
                     .Where(i => i.Size.OwnerId == ownerId)
                     .Where(i => i.ProductSizeId.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-               
+                list = _mapper.Map<List<ProductSizeListDTO>>(getList);
+
             }
             else
             {
-                getList = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product)
+                List<ProductSize> getList = await _context.ProductSizes
+                    .Include(i => i.Size).Include(i => i.Product)
+
                     //  .Where(i => i.Isdelete == false)
                     .Where(i => i.Size.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-          
+                list = _mapper.Map<List<ProductSizeListDTO>>(getList);
+
             }
-            return getList;
+            
+            foreach (var item in list)
+            {
+                var link = await _context.Images.Where(i => i.ProductId == item.ProductId).FirstOrDefaultAsync();
+                item.ProductImage = link?.LinkImage ?? "default-image-link";
+            }
+            return list;
         }
 
         //user,guest
@@ -153,11 +121,9 @@ namespace DataAccess.DAOs
         {
 
             foreach (var item in importProductDetailDTO)
-            {
-                // Build ProductSizeId from ProductId and SizeId
+            {       
                 var nameProductSize = $"{item.ProductId}_{item.SizeId}";
 
-                // Check if the product and size exist
                 Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == item.ProductId);
                 Size size = await _context.Sizes.SingleOrDefaultAsync(i => i.SizeId == item.SizeId);
 
@@ -208,7 +174,7 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId, List<ImportProductDetailUpdateDTO> importProductDetail)
         {
             foreach (var item in importProductDetail)
-            {
+            {              
                 var oldImportDetail = await _context.ImportProductDetails
                     .Where(i => i.ProductSizeId.Trim() == item.ProductSizeId.Trim())    
                     .Where(i => i.ImportId == item.ImportId)
@@ -237,8 +203,21 @@ namespace DataAccess.DAOs
                     _context.ProductSizes.Update(productSize);
                 }
                 else
-                {                
-                    continue;
+                {
+                    var productSizeId = item.ProductSizeId;
+                    string[] parts = productSizeId.Split('_');
+                    int productId = int.Parse(parts[0]);
+                    int sizeId = int.Parse(parts[1]);
+
+                    ProductSize productSizeCreate = new ProductSize
+                    {
+                        ProductId = productId,
+                        SizeId = sizeId,
+                        ProductSizeId = item.ProductSizeId,
+                        Quantity = item.QuantityReceived,
+                        Isdelete = false
+                    };
+                    await _context.ProductSizes.AddAsync(productSize);
                 }
             }
             try

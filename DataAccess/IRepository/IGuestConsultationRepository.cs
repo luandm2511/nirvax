@@ -16,7 +16,6 @@ namespace DataAccess.IRepository
         Task<GuestConsultation> GetGuestConsultationsByIdAsync(int guestId);
          Task<int> ViewGuestConsultationStatisticsAsync(int ownerId);
         Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
-        Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO);
 
         Task<bool> CheckGuestConsultationExistAsync(int guestId);
         Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);

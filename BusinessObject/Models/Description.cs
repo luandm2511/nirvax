@@ -6,6 +6,7 @@ namespace BusinessObject.Models;
 public partial class Description
 {
     public int DescriptionId { get; set; }
+    public int OwnerId { get; set; }
 
     public string Title { get; set; } = null!;
 

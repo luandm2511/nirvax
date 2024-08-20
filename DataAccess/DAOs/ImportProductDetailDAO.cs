@@ -28,18 +28,7 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckImportProductDetailExistAsync(int importProductDetailId)
-        {
-            ImportProductDetail? sid = new ImportProductDetail();
-
-            sid = await _context.ImportProductDetails.Include(i => i.Import).Include(i => i.ProductSize).SingleOrDefaultAsync(i => i.ImportId == importProductDetailId) ;
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
+   
 
 
         //show list theo import Id => detail import đó

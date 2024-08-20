@@ -34,6 +34,8 @@ public partial class Owner
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public virtual ICollection<Description> Descriptions { get; set; } = new List<Description>();
+
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
 

@@ -50,24 +50,15 @@ namespace DataAccess.Repository
         {
             return (_ownerDAO.ViewOwnerProfileAsync(ownerEmail));
         }
-       
+
 
         public Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO)
         {
             return _ownerDAO.CheckOwnerAsync(ownerDTO);
         }
-        public Task<bool> CheckOwnerExistAsync(int ownerId)
-        {
-            return _ownerDAO.CheckOwnerExistAsync(ownerId);
-        }
         public Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
             return _ownerDAO.CheckProfileOwnerAsync(ownerProfileDTO);
-        }
-
-        public Task<bool> CheckProfileExistAsync(string ownerEmail)
-        {
-            return _ownerDAO.CheckProfileExistAsync(ownerEmail);
         }
        
         public Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword,string confirmPassword)

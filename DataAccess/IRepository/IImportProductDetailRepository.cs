@@ -12,7 +12,6 @@ namespace DataAccess.IRepository
     public interface IImportProductDetailRepository
 
     {
-        Task<bool> CheckImportProductDetailExistAsync(int importProductDetailId);
 
         Task<List<ImportProductDetail>> GetAllImportProductDetailByImportIdAsync(int importId);
         

@@ -138,13 +138,13 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> GetRoomByIdAsync(int roomId)
         {
             try { 
-                var size = await _repo.GetRoomByIdAsync(roomId);
-                if (size != null)
+                var room = await _repo.GetRoomByIdAsync(roomId);
+                if (room != null)
                 {
                     return StatusCode(200, new
                     {
                         Message = "Get room by id" + ok,
-                        Data = size
+                        Data = room
                     });
                 }
                 else

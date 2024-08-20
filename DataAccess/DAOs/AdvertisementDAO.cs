@@ -82,20 +82,6 @@ namespace DataAccess.DAOs
         }
 
 
-
-        public async Task<bool> CheckAdvertisementExistAsync(int adId) 
-        {
-            Advertisement? sid = new Advertisement();
-
-            sid = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).SingleOrDefaultAsync(i => i.AdId == adId);
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
         //get all for owner,staff 
         public async Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
@@ -364,12 +350,14 @@ namespace DataAccess.DAOs
 
         public async Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
+           
             PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusPost.Trim());
             Advertisement? adOrgin = await _context.Advertisements
                 .Include(i => i.Owner)
                 .Include(i => i.Service)
                 .Include(i => i.StatusPost)
                 .SingleOrDefaultAsync(i => i.AdId == adId);
+            if(adOrgin == null) { throw new Exception("Not found this ads!"); }
             adOrgin.StatusPostId = postStatus.StatusPostId;
             _context.Advertisements.Update(adOrgin);
             await _context.SaveChangesAsync();

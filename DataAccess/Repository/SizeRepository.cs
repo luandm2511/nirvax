@@ -28,12 +28,6 @@ namespace DataAccess.Repository
             return _sizeDAO.CheckSizeAsync(sizeId, ownerId, name); 
         }
 
-
-        public Task<bool> CheckSizeExistAsync(int sizeId)
-        {
-            return _sizeDAO.CheckSizeExistAsync(sizeId);
-        }
-
         public Task<List<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             

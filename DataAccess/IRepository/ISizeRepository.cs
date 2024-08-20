@@ -14,8 +14,6 @@ namespace DataAccess.IRepository
         Task<List<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<Size> GetSizeByIdAsync(int sizeId);
         Task<bool> CheckSizeAsync(int sizeId, int ownerId, string name);
-
-        Task<bool> CheckSizeExistAsync(int sizeId);
         Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO);
 
         Task<bool> UpdateSizeAsync(SizeDTO sizeDTO);

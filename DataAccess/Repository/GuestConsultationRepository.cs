@@ -38,10 +38,6 @@ namespace DataAccess.Repository
         {
             return _guestConsultationDAO.CreateGuestConsultationAsync(guestConsultationCreateDTO);
         }
-        public Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO)
-        {
-            return _guestConsultationDAO.UpdateGuestConsultationAsync(guestConsultationDTO);
-        }
 
         public Task<bool> CheckGuestConsultationExistAsync(int guestId)
         {

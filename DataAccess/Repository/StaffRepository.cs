@@ -50,19 +50,13 @@ public Task<bool> CheckStaffAsync(int staffId, string email, string phone, int o
 {
     return _staffDAO.CheckStaffAsync(staffId, email, phone, ownerId);
 }
-public Task<bool> CheckStaffExistAsync(int staffId)
-{
-    return _staffDAO.CheckStaffExistAsync(staffId);
-}
+
 public Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO)
 {
     return _staffDAO.CheckProfileStaffAsync(staffProfileDTO);
 }
 
-public Task<bool> CheckProfileExistAsync(string ownerEmail)
-{
-    return _staffDAO.CheckProfileExistAsync(ownerEmail);
-}
+
 
 public Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
 {

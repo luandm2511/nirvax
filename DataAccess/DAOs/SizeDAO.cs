@@ -34,11 +34,16 @@ namespace DataAccess.DAOs
         {
             if (sizeId == 0)
             {
+               
                 Size? size = new Size();
-                size = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.SizeId == sizeId);
+                size = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false)
+                    .Where(i => i.OwnerId == ownerId).Where(i => i.Name.Trim() == name.Trim()).SingleOrDefaultAsync();
                 if (size == null)
                 {
                     return true;
+                } else
+                {
+                    return false;
                 }
             }
             else
@@ -48,7 +53,7 @@ namespace DataAccess.DAOs
                    .Include(i => i.Owner)
                    .Where(i => i.OwnerId == ownerId)
                    .Where(i => i.SizeId != sizeId)
-                   .Where(i => i.Name == name)
+                   .Where(i => i.Name.Trim() == name.Trim())
                    .ToListAsync();
 
                 if (getList.Count > 0)
@@ -67,18 +72,6 @@ namespace DataAccess.DAOs
            
         }
 
-        public async Task<bool> CheckSizeExistAsync(int sizeId)
-        {
-            Size? sid = new Size();
-
-            sid = await _context.Sizes.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeId == sizeId); ;
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
 
 
         //owner,staff

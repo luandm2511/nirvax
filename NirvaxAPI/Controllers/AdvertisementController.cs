@@ -215,20 +215,23 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
             {
-                var checkAdExist =await _repo.CheckAdvertisementExistAsync(adId);
-                if (checkAdExist == true)
-                {
+               
                     var advertisement =await _repo.GetAdvertisementByIdAsync(adId);
-                    return StatusCode(200, new
-                    {
-                        Message = "Get advertisement by id" + ok,
-                        Data = advertisement
-                    });
-                }
+            if (advertisement != null)
+            {
+                return StatusCode(200, new
+                {
+                    Message = "Get advertisement by id" + ok,
+                    Data = advertisement
+                });
+            }
+            else
+            {
                 return StatusCode(404, new
-                { 
+                {
                     Message = notFound + "any advertisement"
-                });          
+                });
+            }
             }
 
         [HttpGet("{adId}")]
@@ -343,10 +346,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
-            try { 
-            var checkAdvertisement = await _repo.CheckAdvertisementExistAsync(adId);
-            if (checkAdvertisement == true)
-            {                
+            try {              
                     var advertisement = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);
                     
                     var notification = new Notification
@@ -366,12 +366,7 @@ namespace WebAPI.Controllers
                         Message = "Update advertisement" + ok,
                         Data = advertisement
                     });            
-            }
-            return StatusCode(400, new
-            {
-                
-                Message = "There already exists a advertisement with that information!",
-            });
+           
             }
             catch (Exception ex)
             {

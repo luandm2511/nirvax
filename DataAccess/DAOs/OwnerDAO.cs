@@ -54,7 +54,7 @@ namespace DataAccess.DAOs
                  .Where(i => i.IsBan == false)
          
                  .Where(i => i.OwnerId != ownerDTO.OwnerId)
-                 .Where(i => i.Email == ownerDTO.Email || i.Phone == ownerDTO.Phone)
+                 .Where(i => i.Email.Trim() == ownerDTO.Email.Trim() || i.Phone == ownerDTO.Phone)
                  .ToListAsync();
                 if (getList.Count > 0)
                 {
@@ -79,7 +79,7 @@ namespace DataAccess.DAOs
                 // .Where(i => i.IsBan == false)
          
                  .Where(i => i.OwnerId != ownerProfileDTO.OwnerId)
-                 .Where(i => i.Email == ownerProfileDTO.Email || i.Phone == ownerProfileDTO.Phone)
+                 .Where(i => i.Email.Trim() == ownerProfileDTO.Email.Trim() || i.Phone == ownerProfileDTO.Phone)
                  .ToListAsync();
                 if (getList.Count > 0)
                 {
@@ -92,38 +92,15 @@ namespace DataAccess.DAOs
             }
             return false;
         }
-        //check xem owner đó có tồn tại hay không
-        public async Task<bool> CheckOwnerExistAsync(int ownerId)
-        {
-            Owner? sid = new Owner();
 
-            sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);
+     
 
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
-        public async Task<bool> CheckProfileExistAsync(string ownerEmail)
-        {
-            Owner? sid = new Owner();
-
-            sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.Email == ownerEmail);
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-       
-
+     
         public async Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword,string confirmPassword)
         { 
                 //check password             
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);  
+               if (sid == null) { throw new Exception("Not found this owner!"); }
                bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
                 if (verified == true)
                 {
@@ -248,6 +225,10 @@ namespace DataAccess.DAOs
         {
             
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerAvatarDTO.OwnerId);
+            if (ownerAvatarDTO.Image == null)
+            {
+                throw new Exception("Don't accept null image!");
+            }
             owner.Image = ownerAvatarDTO.Image;
          
              _context.Owners.Update(owner);

@@ -38,10 +38,7 @@ namespace DataAccess.Repository
             return _voucherDAO.PriceVoucherUsedStatisticsAsync(ownerId);
 
         }
-        public Task<bool> CheckVoucherByIdAsync(string voucherId)
-        {
-            return _voucherDAO.CheckVoucherByIdAsync(voucherId);
-        }
+    
         public Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId)
         {
             return _voucherDAO.CheckVoucherAsync(startDate, endDate, voucherId);

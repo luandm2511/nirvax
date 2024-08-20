@@ -27,12 +27,6 @@ namespace DataAccess.Repository
         {
             return _serviceDAO.CheckServiceAsync(serviceId, name); 
         }
-
-        public Task<bool> CheckServiceExistAsync(int serviceId)
-        {
-            return _serviceDAO.CheckServiceExistAsync(serviceId);
-        }
-
         public Task<List<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
             

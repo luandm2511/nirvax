@@ -92,10 +92,9 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetVoucherByIdAsync(string voucherId)
             {
-                var checkVoucher = await _repo.CheckVoucherByIdAsync(voucherId);
-                if (checkVoucher == true)
-                {
-                    var voucher = await _repo.GetVoucherDTOByIdAsync(voucherId);
+            var voucher = await _repo.GetVoucherDTOByIdAsync(voucherId);
+            if (voucher != null)
+                {                
                     return StatusCode(200, new
                     {
                         Message = "Get voucher by id " + ok,

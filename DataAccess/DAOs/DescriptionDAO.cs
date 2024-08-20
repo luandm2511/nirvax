@@ -65,23 +65,8 @@ namespace DataAccess.DAOs
             return false;
           
         }
-
-        public async Task<bool> CheckDescriptionExistAsync(int descriptionId)
-        {
-            Description? sid = new Description();
-
-            sid = await _context.Descriptions.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId); ;
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-
         //owner,staff
-        public async Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
+        public async Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             List < Description> getList = new List<Description> ();
 
@@ -92,6 +77,7 @@ namespace DataAccess.DAOs
                    .Where(i => i.Isdelete == false)
                   .Include(i => i.Images)
                   .Include(i => i.Products)
+                  .Where(i => i.OwnerId == ownerId)
                     .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -104,6 +90,7 @@ namespace DataAccess.DAOs
                     .Where(i => i.Isdelete == false)
                    .Include(i => i.Images)
                   .Include(i => i.Products)
+                  .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

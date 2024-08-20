@@ -18,14 +18,8 @@ namespace DataAccess.IRepository
      //   Task<bool> CheckStaffAsync(StaffDTO staffDTO);
         Task<bool> CheckStaffAsync(int staffId, string email, string phone, int ownerId);
 
-
         Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO);
         Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword);
-
-        Task<bool> CheckStaffExistAsync(int staffId);
-
-        Task<bool> CheckProfileExistAsync(string ownerEmail);
-
 
         Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO);
 

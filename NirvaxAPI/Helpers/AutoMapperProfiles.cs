@@ -74,6 +74,17 @@ namespace WebAPI.Helpers
                 .ReverseMap();
 
             CreateMap<ProductSize, ProductSizeCreateDTO>().ReverseMap();
+            CreateMap<ProductSize, ProductSizeListDTO>()
+                .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.Size.Name))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+             
+                .AfterMap((src, dest) =>
+                {
+                    dest.Status = src.Quantity == 0 ? "sold out" : "instock";
+                })
+                .ReverseMap();
+
+
 
 
 

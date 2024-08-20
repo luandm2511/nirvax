@@ -75,48 +75,46 @@ namespace WebAPI.Controllers
         [HttpGet("{ownerId}")]
         //  [Authorize]
         public async Task<ActionResult> GetOwnerByIdAsync(int ownerId)
-        {
-            var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
-                if (checkOwner == true)
-                {
+        {        
                     var owner = await _repo.GetOwnerByIdAsync(ownerId);
+            if(owner != null) { 
                     return StatusCode(200, new
                     {
 
                         Message = "Get owner by id " + ok,
                         Data = owner
                     });
-                }
-                else
+            }
+             else
+            {
+                return StatusCode(404, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "owner"
-                    });
-                }
+                    Message = notFound + "any owner"
+                });
+            }
         }
 
         [HttpGet("{ownerEmail}")]
         //  [Authorize]
         public async Task<ActionResult> ViewOwnerProfileAsync(string ownerEmail)
-        {
-            var checkOwner = await _repo.CheckProfileExistAsync(ownerEmail);
-                if (checkOwner == true)
-                {
+        {       
                     var owner = await _repo.ViewOwnerProfileAsync(ownerEmail);
-                    return StatusCode(200, new
-                    {
-                        Message = "Get view owner profile  " + ok,
-                        Data = owner
-                    });
-                }
-                else
+            if (owner != null)
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "owner"
-                    });
-                }          
+                    Message = "Get view owner profile  " + ok,
+                    Data = owner
+                });
+        }
+             else
+            {
+                return StatusCode(404, new
+                {
+                    Message = notFound + "any owner"
+                });
+            }
+            
         }
 
            
@@ -125,25 +123,22 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword, string confirmPassword)
         {
             try { 
-            var checkOwner = await _repo.CheckOwnerExistAsync(ownerId);
+                    var checkOwner = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPassword, confirmPassword);
                 if (checkOwner == true)
                 {
-                    var owner1 = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPassword, confirmPassword);
                     return StatusCode(200, new
                     {
                         Message = "Change password of owner" + ok,
-                        Data = owner1
                     });
-
                 }
-                else
+            else
+            {
+                return StatusCode(400, new
                 {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
+                    Message = "Error!",
+                });
             }
+        }
             catch (Exception ex)
             {
                 return StatusCode(500, new
@@ -242,23 +237,31 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateAvatarOwnerAsync([FromForm] OwnerAvatarDTO ownerAvatarDTO)
         {
-            var check = await _repo.CheckOwnerExistAsync(ownerAvatarDTO.OwnerId);
-                if (check == true)
+            try
+            {
+                var checkOwner = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
+            if (checkOwner == true)
+            {
+                return StatusCode(200, new
                 {
-                    var owner1 = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
-                        return StatusCode(200, new
-                        {
-                            Message = "Update avatar owner" + ok,
-                            Data = owner1
-                        });                  
-                }
-                else
+                    Message = "Update avatar owner" + ok,
+                });
+            }
+            else
+            {
+                return StatusCode(400, new
                 {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
+                    Message = "Error!",
+                });
+            }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + ex.Message
+                });
+            }
         }
         
 

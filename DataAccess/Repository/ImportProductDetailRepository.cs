@@ -21,11 +21,6 @@ namespace DataAccess.Repository
        {
            _importProductDetailDAO = importProductDetailDAO;
        }
-        public Task<bool> CheckImportProductDetailExistAsync(int importProductDetailId)
-        {
-
-            return _importProductDetailDAO.CheckImportProductDetailExistAsync(importProductDetailId);
-        }
 
         public Task<List<ImportProductDetail>> GetAllImportProductDetailByImportIdAsync(int importId)
         {

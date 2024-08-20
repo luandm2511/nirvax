@@ -44,7 +44,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
                 .Where( i => i.OwnerId == guestConsultationCreateDTO.OwnerId )
-                .SingleOrDefaultAsync(i => i.Phone.Trim() == guestConsultationCreateDTO.Phone.Trim() && i.AdId == guestConsultationCreateDTO.AdId);
+                .SingleOrDefaultAsync(i => i.Phone == guestConsultationCreateDTO.Phone && i.AdId == guestConsultationCreateDTO.AdId);
 
             if (guestCreate == null)
             {
@@ -240,24 +240,7 @@ namespace DataAccess.DAOs
 
         }
 
-        //admin
-
-        //oldPass = xyz
-        //newPass =1234
-        public async Task<bool> UpdateGuestConsultationAsync(GuestConsultationDTO guestConsultationDTO)
-        {
-           
-            GuestConsultation? staffOrgin = await _context.GuestConsultations
-                   .Include(i => i.Owner)
-                .Include(i => i.Ad)
-                .Include(i => i.StatusGuest)
-                .SingleOrDefaultAsync(i => i.GuestId  == guestConsultationDTO.GuestId );
-                _mapper.Map(guestConsultationDTO, staffOrgin);
-                 _context.GuestConsultations.Update(staffOrgin);
-                await _context.SaveChangesAsync();
-                return true;
-        }
-
+     
         public async Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
         {
             GuestStatus guestStatus = await _context.GuestStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusGuest.Trim());
@@ -267,6 +250,7 @@ namespace DataAccess.DAOs
                 .Include(i => i.Ad)
                 .Include(i => i.StatusGuest)
                 .SingleOrDefaultAsync(i => i.GuestId == guestId);
+            if (staffOrgin == null) { throw new Exception("Not found this guest consultation!"); }
             staffOrgin.StatusGuestId = guestStatus.StatusGuestId;
             _context.GuestConsultations.Update(staffOrgin);
             await _context.SaveChangesAsync();

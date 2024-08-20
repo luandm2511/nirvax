@@ -37,7 +37,7 @@ namespace DataAccess.DAOs
             if (staffId == 0)
             {
                 Staff? Staff = new Staff();
-                Staff = await _context.Staff.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.Email == email || i.Phone == phone);
+                Staff = await _context.Staff.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).SingleOrDefaultAsync(i => i.Email.Trim() == email.Trim() || i.Phone == phone);
                 if(Staff == null)
                 {
                     return true;
@@ -47,7 +47,7 @@ namespace DataAccess.DAOs
                     List<Staff> getList = await _context.Staff
                      .Where(i => i.StaffId != staffId)
                      .Where(i => i.OwnerId == ownerId)
-                     .Where(i => i.Email == email || i.Phone == phone)
+                     .Where(i => i.Email.Trim() == email.Trim() || i.Phone == phone)
                      .ToListAsync();
 
                     if (getList.Count > 0)
@@ -77,7 +77,7 @@ namespace DataAccess.DAOs
                  //check khác Id
                  .Where(i => i.StaffId != staffProfileDTO.StaffId)
                  .Where(i => i.OwnerId == ownerId)
-                 .Where(i => i.Email == staffProfileDTO.Email || i.Phone == staffProfileDTO.Phone)
+                 .Where(i => i.Email.Trim() == staffProfileDTO.Email.Trim() || i.Phone == staffProfileDTO.Phone)
                  .ToListAsync();
                 if (getList.Count > 0)
                 {
@@ -90,31 +90,6 @@ namespace DataAccess.DAOs
             }
             return false;
         }
-        //check xem owner đó có tồn tại hay không
-        public async Task<bool> CheckStaffExistAsync(int staffId)
-        {
-            Staff? sid = new Staff();
-
-            sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
-        public async Task<bool> CheckProfileExistAsync(string staffEmail)
-        {
-            Staff? sid = new Staff();
-
-            sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email == staffEmail);
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
 
 
 
@@ -122,6 +97,7 @@ namespace DataAccess.DAOs
         {
             //check password             
             Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
+            if(sid == null) { throw new Exception("Not found this staff!"); }
             bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
             if(newPassword.Length<6)
             {
@@ -272,8 +248,12 @@ namespace DataAccess.DAOs
         {
           
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffAvatarDTO.StaffId);
-            
+            if(staffAvatarDTO.Image == null)
+            {
+                throw new Exception("Don't accept null image!");
+            }
             staff.Image = staffAvatarDTO.Image;
+          
 
            // _mapper.Map(staffAvatarDTO, staff);
              _context.Staff.Update(staff);

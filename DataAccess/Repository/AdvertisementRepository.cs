@@ -53,11 +53,6 @@ namespace DataAccess.Repository
         {
             return _advertisementDAO.UpdateStatusAdvertisementAsync(adId, statusPost);
         }
-
-        public Task<bool> CheckAdvertisementExistAsync(int adId)
-        {
-            return _advertisementDAO.CheckAdvertisementExistAsync(adId);
-        }
         public Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
             return _advertisementDAO.CheckAdvertisementAsync(advertisementDTO);

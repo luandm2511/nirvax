@@ -144,11 +144,18 @@ namespace DataAccess.DAOs
 
         }
 
-    
-       public async Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)
+
+
+        public async Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)
         {
             var listImportProduct = await _context.ImportProducts
                 .Where(i => i.OwnerId == ownerId)
+                .GroupBy(i => i.ImportDate.Date) 
+                .Select(g => new
+                {
+                    ImportDate = g.Key,
+                    TotalPrice = g.Sum(x => x.TotalPrice) 
+                })
                 .OrderBy(i => i.ImportDate)
                 .ToListAsync();
 
@@ -156,46 +163,56 @@ namespace DataAccess.DAOs
             {
                 return new List<object>();
             }
-
-            var weeklyRevenue = new Dictionary<string, List<object>>();
+            var weeklyStatistics = new Dictionary<(int year, DateTime weekStart), Dictionary<int, double>>();
 
             foreach (var product in listImportProduct)
             {
                 DateTime currentWeekStart = product.ImportDate.AddDays(-(int)product.ImportDate.DayOfWeek + (int)DayOfWeek.Monday);
-                DateTime currentWeekEnd = currentWeekStart.AddDays(6);
+                int year = product.ImportDate.Year;
+                int dayOfWeek = (int)product.ImportDate.DayOfWeek == 0 ? 8 : (int)product.ImportDate.DayOfWeek + 1;
 
-                string weekKey = $"{currentWeekStart:dd/MM/yyyy} - {currentWeekEnd:dd/MM/yyyy}";
-                var productSize = new
-                {
-                    ImportDate = $"{product.ImportDate:dd/MM/yyyy}",
-                    Price = product.TotalPrice
-                };
+                var key = (year, currentWeekStart);
 
-                if (weeklyRevenue.ContainsKey(weekKey))
+                if (!weeklyStatistics.ContainsKey(key))
                 {
-                    weeklyRevenue[weekKey].Add(productSize);
+                    weeklyStatistics[key] = new Dictionary<int, double>();
+                }
+                if (weeklyStatistics[key].ContainsKey(dayOfWeek))
+                {
+                    weeklyStatistics[key][dayOfWeek] += product.TotalPrice;
                 }
                 else
                 {
-                    weeklyRevenue[weekKey] = new List<object> { productSize };
+                    weeklyStatistics[key][dayOfWeek] = product.TotalPrice;
                 }
             }
 
-       
             var result = new List<object>();
 
-            foreach (var weekEntry in weeklyRevenue)
+            foreach (var entry in weeklyStatistics)
             {
+                var weekStart = entry.Key.weekStart;
+                var weekEnd = weekStart.AddDays(6);
+
                 var weekData = new
                 {
-                    Week = weekEntry.Key,
-                    Item = weekEntry.Value
+                    year = entry.Key.year,
+                    startDate = weekStart,
+                    endDate = weekEnd,
+                    dailyStatistics = entry.Value.Select(d => new
+                    {
+                        dayOfWeek = d.Key,
+                        totalPrice = d.Value
+                    }).ToList()
                 };
+
                 result.Add(weekData);
             }
 
             return result;
         }
+
+
 
         //số lần nhập hàng
         public async Task<int> ViewImportProductStatisticsAsync(int ownerId)

@@ -70,10 +70,9 @@ namespace WebAPI.Controllers
             //  [Authorize]
             public async Task<ActionResult> GetServiceByIdAsync(int serviceId)
             {
-                var checkServiceExist = await _repo.CheckServiceExistAsync(serviceId);
-                if (checkServiceExist == true)
-                {
+               
                     var service = await _repo.GetServiceByIdAsync(serviceId);
+            if(service != null) { 
                     return StatusCode(200, new
                     {
                         Message = "Get service by id" + ok,

@@ -31,7 +31,7 @@ namespace DataAccess.DAOs
             if (serviceId == 0)
             {
                 Service? service = new Service();
-                service = await _context.Services.SingleOrDefaultAsync(i => i.Name == name);
+                service = await _context.Services.SingleOrDefaultAsync(i => i.Name.Trim() == name.Trim());
                 if (service == null)
                 {
                     return true;
@@ -44,7 +44,7 @@ namespace DataAccess.DAOs
 
                  //check khác Id`
                  .Where(i => i.ServiceId != serviceId)
-                 .Where(i => i.Name == name)
+                 .Where(i => i.Name.Trim() == name.Trim())
                  .ToListAsync();
 
                 if (getList.Count > 0)
@@ -61,19 +61,6 @@ namespace DataAccess.DAOs
             return false;
            
         
-        }
-
-        public async Task<bool> CheckServiceExistAsync(int serviceId)
-        {
-            Service? sid = new Service();
-
-            sid = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ServiceId == serviceId); ;
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
         }
 
         //owner,staff

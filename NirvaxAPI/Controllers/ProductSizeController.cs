@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ProductSize>>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<ActionResult<IEnumerable<ProductSizeListDTO>>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try { 
             var list = await _repo.GetAllProductSizesAsync(searchQuery, page, pageSize, ownerId);
@@ -92,10 +92,9 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> GetProductSizeByIdAsync(string productSizeId)
         {
             try { 
-            var checkProductSize = await _repo.CheckProductSizeByIdAsync(productSizeId);
-                if (checkProductSize == true)
-                {
+          
                     var productSize = await _repo.GetProductSizeByIdAsync(productSizeId);
+                if (productSize != null) { 
                     return StatusCode(200, new
                     {
                         Message = "Get productSize by id " + ok,

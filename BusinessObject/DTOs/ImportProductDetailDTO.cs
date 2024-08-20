@@ -45,6 +45,7 @@ namespace BusinessObject.DTOs
 
     public class ImportProductDetailUpdateDTO
     {
+        public int SizeId { get; set; } 
         public int ImportId { get; set; }
         public string ProductSizeId { get; set; }
 

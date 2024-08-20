@@ -50,10 +50,9 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> GetSizeByIdAsync(int sizeId)
         {
             try { 
-            var checkSizeExist = await _repo.CheckSizeExistAsync(sizeId);
-                if (checkSizeExist == true)
-                {
+          
                     var size = await _repo.GetSizeByIdAsync(sizeId);
+                if(size != null) { 
                     return StatusCode(200, new
                     {
                         Message = "Get size by id" + ok,

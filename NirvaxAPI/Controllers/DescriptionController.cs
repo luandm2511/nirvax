@@ -23,15 +23,15 @@ namespace WebAPI.Controllers
         {
             _transactionRepository = transactionRepository;
             _repo = repo;
-            _imageRepository = imageRepository;          
+            _imageRepository = imageRepository;
         }
 
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize)
+        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            var list = await _repo.GetAllDescriptionsAsync(searchQuery, page, pageSize);
+            var list = await _repo.GetAllDescriptionsAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -74,27 +74,25 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetDescriptionByIdAsync(int descriptionId)
         {
-            var checkDescriptionExist = await _repo.CheckDescriptionExistAsync(descriptionId);
-            if (checkDescriptionExist == true)
+
+            var description = await _repo.GetDescriptionByIdAsync(descriptionId);
+
+            if(description != null) { 
+            return StatusCode(200, new
             {
-                var description = await _repo.GetDescriptionByIdAsync(descriptionId);
+
+                Message = "Get description by id" + ok,
+                Data = description
+            });
 
 
-                return StatusCode(200, new
-                {
-
-                    Message = "Get description by id" + ok,
-                    Data = description
-                });
-
-
-            }
-
+        }
+           else{
             return StatusCode(404, new
             {
 
                 Message = notFound + "any description"
-            });
+            });}
         }
 
         [HttpPost]

@@ -21,8 +21,6 @@ namespace DataAccess.IRepository
         
         Task<bool> CreateAdvertisementAsync(AdvertisementCreateDTO advertisementCreateDTO);
         Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO);
-
-        Task<bool> CheckAdvertisementExistAsync(int adId);
         Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO);
         Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost);
         Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);

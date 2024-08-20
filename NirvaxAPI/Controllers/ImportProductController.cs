@@ -56,10 +56,9 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<ActionResult> GetImportProductByIdAsync(int importId)
         {
-            var checkSizeExist = await _repo.CheckImportProductExistAsync(importId);
-            if (checkSizeExist == true)
-            {
+            
                 var importProduct = await _repo.GetImportProductByIdAsync(importId);
+            if(importProduct != null) { 
                 return StatusCode(200, new
                 {
                     Message = "Get import product by id" + ok,

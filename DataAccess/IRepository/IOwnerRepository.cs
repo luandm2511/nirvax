@@ -24,10 +24,6 @@ namespace DataAccess.IRepository
        Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
         Task<bool> ChangePasswordOwnerAsync(int  ownerId, string oldPassword, string newPassword, string confirmPassword);
 
-        Task<bool> CheckOwnerExistAsync(int ownerId);
-
-        Task<bool> CheckProfileExistAsync(string ownerEmail);
-
         Task<string> GetEmailAsync(int ownerId);
         Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO);
 

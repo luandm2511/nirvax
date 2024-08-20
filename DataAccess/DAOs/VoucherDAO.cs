@@ -40,20 +40,20 @@ namespace DataAccess.DAOs
             return await _context.Vouchers.Include(i=> i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
         }
 
-        public async Task<bool> CheckVoucherByIdAsync(string voucherId)
-        {
+       // public async Task<bool> CheckVoucherByIdAsync(string voucherId)
+       // {
 
-            Voucher? voucher = new Voucher();
-            voucher = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId); 
+          //  Voucher? voucher = new Voucher();
+         //   voucher = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId); 
 
 
-            if (voucher == null)
-            {
-                return false;
+            //if (voucher == null)
+          //  {
+              //  return false;
 
-            }
-            return true;
-        }
+            //}
+            //return true;
+       // }
 
         public async Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId)
         {

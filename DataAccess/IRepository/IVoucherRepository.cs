@@ -15,7 +15,6 @@ namespace DataAccess.IRepository
     {
         Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId);
         Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO);
-        Task<bool> CheckVoucherByIdAsync(string voucherId);
         Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId);
         Task<double> PriceVoucherUsedStatisticsAsync(int ownerId);
         Task<List<Voucher>> GetAllVoucherForUserAsync();

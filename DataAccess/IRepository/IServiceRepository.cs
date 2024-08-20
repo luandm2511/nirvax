@@ -15,7 +15,6 @@ namespace DataAccess.IRepository
         Task<List<Service>> GetAllServiceForUserAsync(string? searchQuery);
         Task<Service> GetServiceByIdAsync(int serviceId);
         Task<bool> CheckServiceAsync(int serviceId, string name);
-        Task<bool> CheckServiceExistAsync(int serviceId);
         Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO);
         Task<bool> RestoreServiceAsync(int serviceId);
 

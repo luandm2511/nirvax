@@ -32,22 +32,8 @@ namespace DataAccess.Repository
         {
             return _productSizeDAO.UpdateAsync(productSize);
         }
-        public Task<bool> CheckProductSizeByIdAsync(string productSizeId)
-        {
-            return _productSizeDAO.CheckProductSizeByIdAsync(productSizeId);
-        }
-       
-        public Task<bool> CheckProductSizeAsync(ProductSizeDTO productSizeDTO)
-        {
-            return _productSizeDAO.CheckProductSizeAsync(productSizeDTO);
-        }
-        public Task<bool> CheckProductSizeExistAsync(string productSizeId)
-        {
-            return _productSizeDAO.CheckProductSizeExistAsync(productSizeId);
-        }
-
-       
-        public Task<List<ProductSize>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+     
+        public Task<List<ProductSizeListDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _productSizeDAO.GetAllProductSizesAsync(searchQuery, page, pageSize, ownerId);
         }
