@@ -8,13 +8,13 @@ using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Identity.Client;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
     public class OrderDAO
     {
         private readonly NirvaxContext _context;
-        private IDbContextTransaction _transaction;
 
         public OrderDAO(NirvaxContext context)
         {
@@ -24,7 +24,6 @@ namespace DataAccess.DAOs
         public async Task<double> UpdateQuantityUsed(OrderDTO createOrderDTO, ItemGroup group)
         {
             var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.OwnerId);
-            double voucherPrice = 0;
             var voucher = new Voucher();
             if (ownerVoucherDto != null && !string.IsNullOrEmpty(ownerVoucherDto.VoucherId))
             {
@@ -182,46 +181,108 @@ namespace DataAccess.DAOs
                 .ToList();
 
             return topShops;
-        } 
-        public async Task<OrderStatisticsDTO> GetOrderStatisticsAsync()
-        {
-            var totalOrders = await _context.Orders.CountAsync();
-            var successfulOrders = await _context.Orders.CountAsync(o => o.StatusId == 3); // Assuming 2 is for successful status
-            var failedOrders = await _context.Orders.CountAsync(o => o.StatusId == 4); // Assuming 3 is for failed status
-            var canceledOrders = await _context.Orders.CountAsync(o => o.StatusId == 5); // Assuming 4 is for canceled status
-
-            var totalRevenue = await _context.Orders.SumAsync(o => o.TotalAmount);
-
-            return new OrderStatisticsDTO
-            {
-                TotalOrders = totalOrders,
-                SuccessfulOrders = successfulOrders,
-                FailedOrders = failedOrders,
-                CanceledOrders = canceledOrders,
-                TotalRevenue = totalRevenue
-            };
         }
 
-        public async Task<OwnerStatisticsDTO> GetOwnerStatisticsAsync(int ownerId)
+        private DateTime GetStartOfWeek(DateTime date)
         {
-            var totalOrders = await _context.Orders.CountAsync(o => o.OwnerId == ownerId);
-            var successfulOrders = await _context.Orders.CountAsync(o => o.OwnerId == ownerId && o.StatusId == 3);
-            var failedOrders = await _context.Orders.CountAsync(o => o.OwnerId == ownerId && o.StatusId == 4);
-            var canceledOrders = await _context.Orders.CountAsync(o => o.OwnerId == ownerId && o.StatusId == 5);
+            var diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+            return date.AddDays(-1 * diff).Date;
+        }
 
-            var totalRevenue = await _context.Orders
-                .Where(o => o.OwnerId == ownerId)
-                .SumAsync(o => o.TotalAmount);
+        private DateTime GetEndOfWeek(DateTime date)
+        {
+            return GetStartOfWeek(date).AddDays(6);
+        }
 
-            return new OwnerStatisticsDTO
-            {
-                OwnerId = ownerId,
-                TotalOrders = totalOrders,
-                SuccessfulOrders = successfulOrders,
-                FailedOrders = failedOrders,
-                CanceledOrders = canceledOrders,
-                TotalRevenue = totalRevenue
-            };
+        public async Task<IEnumerable<OrderStatisticsDTO>> GetOrderStatisticsAsync()
+        {
+            var orders = await _context.Orders.ToListAsync();
+
+            var statistics = orders
+                .GroupBy(order => new
+                {
+                    Year = order.OrderDate.Year,
+                    StartDate = GetStartOfWeek(order.OrderDate),
+                    EndDate = GetEndOfWeek(order.OrderDate),
+                    DayOfWeek = (int)order.OrderDate.DayOfWeek == 0 ? 7 : (int)order.OrderDate.DayOfWeek
+                })
+                .Select(group => new
+                {
+                    Year = group.Key.Year,
+                    StartDate = group.Key.StartDate,
+                    EndDate = group.Key.EndDate,
+                    DayOfWeek = group.Key.DayOfWeek,
+                    TotalOrders = group.Count(),
+                    TotalAmount = group.Sum(order => order.TotalAmount)
+                })
+                .ToList();
+
+            var result = statistics
+                .GroupBy(stat => new { stat.Year, stat.StartDate, stat.EndDate })
+                .Select(weekGroup => new OrderStatisticsDTO
+                {
+                    Year = weekGroup.Key.Year,
+                    StartDate = weekGroup.Key.StartDate,
+                    EndDate = weekGroup.Key.EndDate,
+                    DailyStatistics = weekGroup
+                        .OrderBy(stat => stat.DayOfWeek)
+                        .Select(stat => new DailyOrderStatistics
+                        {
+                            DayOfWeek = stat.DayOfWeek,
+                            TotalOrders = stat.TotalOrders,
+                            TotalAmount = stat.TotalAmount
+                        })
+                        .ToList()
+                })
+                .ToList();
+
+            return result;
+
+        }
+
+        public async Task<IEnumerable<OrderStatisticsDTO>> GetOwnerStatisticsAsync(int ownerId)
+        {
+            var orders = await _context.Orders.Where(o => o.OwnerId == ownerId).ToListAsync();
+
+            var statistics = orders
+                .GroupBy(order => new
+                {
+                    Year = order.OrderDate.Year,
+                    StartDate = GetStartOfWeek(order.OrderDate),
+                    EndDate = GetEndOfWeek(order.OrderDate),
+                    DayOfWeek = (int)order.OrderDate.DayOfWeek == 0 ? 7 : (int)order.OrderDate.DayOfWeek
+                })
+                .Select(group => new
+                {
+                    Year = group.Key.Year,
+                    StartDate = group.Key.StartDate,
+                    EndDate = group.Key.EndDate,
+                    DayOfWeek = group.Key.DayOfWeek,
+                    TotalOrders = group.Count(),
+                    TotalAmount = group.Sum(order => order.TotalAmount)
+                })
+                .ToList();
+
+            var result = statistics
+                .GroupBy(stat => new { stat.Year, stat.StartDate, stat.EndDate })
+                .Select(weekGroup => new OrderStatisticsDTO
+                {
+                    Year = weekGroup.Key.Year,
+                    StartDate = weekGroup.Key.StartDate,
+                    EndDate = weekGroup.Key.EndDate,
+                    DailyStatistics = weekGroup
+                        .OrderBy(stat => stat.DayOfWeek)
+                        .Select(stat => new DailyOrderStatistics
+                        {
+                            DayOfWeek = stat.DayOfWeek,
+                            TotalOrders = stat.TotalOrders,
+                            TotalAmount = stat.TotalAmount
+                        })
+                        .ToList()
+                })
+                .ToList();
+
+            return result;
         }
         private string GenerateCodeOrder()
         {

@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAccessLogs()
         {
-            var logs = await _accessLogRepository.GetAccessLogsAsync();
+            var logs = await _accessLogRepository.GetAccessLogsByWeekAsync();
             return Ok(logs);
         }
     }

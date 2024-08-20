@@ -174,7 +174,6 @@ namespace WebAPI.Controllers
                             IsBan = false
                         };
                         await _repository.AddOwnerAsync(owner);
-                       
                         return Ok("Registration successful.");
                     }
                     else

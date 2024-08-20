@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
@@ -17,9 +18,10 @@ namespace DataAccess.Repository
             _accessLogDAO = accessLogDAO;
         }
 
-        public async Task<int> GetAccessLogsAsync()
+
+        public Task<IEnumerable<AccessLogDTO>> GetAccessLogsByWeekAsync()
         {
-            return await _accessLogDAO.GetAccessLogsAsync();
+            return _accessLogDAO.GetAccessLogsByWeekAsync();
         }
 
         public async Task LogAccessAsync(AccessLog accessLog)
