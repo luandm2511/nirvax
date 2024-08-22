@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
@@ -58,8 +59,8 @@ namespace DataAccess.Repository
 
         public async Task<IEnumerable<Product>> GetByOwnerAsync(int ownerId) => await _pro.GetByOwnerAsync(ownerId);
 
-        public async Task<IEnumerable<Product>> GetTopSellingProductsAsync() => await _pro.GetTopSellingProductsAsync();
-        public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId) => await _pro.GetTopSellingProductsByOwnerAsync(ownerId);
+        public async Task<IEnumerable<TopProductDTO>> GetTopSellingProductsAsync() => await _pro.GetTopSellingProductsAsync();
+        public async Task<IEnumerable<TopProductDTO>> GetTopSellingProductsByOwnerAsync(int ownerId) => await _pro.GetTopSellingProductsByOwnerAsync(ownerId);
         public async Task UpdateAsync(Product product)
         {
             await _pro.UpdateAsync(product);
