@@ -27,11 +27,11 @@ namespace WebAPI.Controllers
                 var noti = await _notificationRepository.GetNotificationsByUserAsync(id);
                 return Ok(noti);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -45,11 +45,11 @@ namespace WebAPI.Controllers
                 var noti = await _notificationRepository.GetNotificationsByOwnerAsync(id);
                 return Ok(noti);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -68,11 +68,11 @@ namespace WebAPI.Controllers
                 var url = await _notificationRepository.UpdateStatusNotificationAsync(noti);
                 return Ok(url);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }

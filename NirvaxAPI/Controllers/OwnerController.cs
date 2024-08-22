@@ -131,19 +131,19 @@ namespace WebAPI.Controllers
                         Message = "Change password of owner" + ok,
                     });
                 }
-            else
-            {
-                return StatusCode(400, new
+                else
                 {
-                    Message = "Error!",
-                });
+                    return StatusCode(400, new
+                    {
+                        Message = badRequest,
+                    });
+                }
             }
-        }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -181,11 +181,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -224,11 +224,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
         }

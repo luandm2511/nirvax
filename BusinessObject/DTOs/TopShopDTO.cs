@@ -8,8 +8,7 @@ namespace BusinessObject.DTOs
 {
     public class TopShopDTO
     {
-        public int OwnerId { get; set; }
-        public int TotalProductsSold { get; set; }
+        public string OwnerName { get; set; }
         public double TotalSalesAmount { get; set; }
     }
 }

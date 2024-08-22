@@ -53,5 +53,15 @@ namespace DataAccess.DAOs
                 TotalOwnerBanned = totalOwnerBanned
             };
         }
+
+        public async Task<bool> CheckPhoneAsync(int accountId, string phone)
+        {
+            if (await _context.Accounts
+                    .AnyAsync(p => p.Phone == phone && p.AccountId != accountId)) return false;
+            if (await _context.Owners
+                    .AnyAsync(p => p.Phone == phone)) return false;
+            if (await _context.Staff.AnyAsync(o => o.Phone == phone)) return false;
+            return true;
+        }
     }
 }

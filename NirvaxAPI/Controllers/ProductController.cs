@@ -48,9 +48,9 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetAllAsync();
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -63,9 +63,9 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetProductsInHomeAsync();
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -81,11 +81,11 @@ namespace WebAPI.Controllers
                 }
                 return Ok(product);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -106,11 +106,11 @@ namespace WebAPI.Controllers
                 }
                 return Ok(product);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -123,11 +123,11 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetByOwnerAsync(ownerId);
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -140,11 +140,11 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetByOwnerInDashboardAsync(ownerId);
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -157,11 +157,11 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetByCategoryAsync(categoryId);
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -174,11 +174,11 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetByBrandAsync(brandId);
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -215,12 +215,12 @@ namespace WebAPI.Controllers
                 await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is created successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -271,12 +271,12 @@ namespace WebAPI.Controllers
                 await _transactionRepository.CommitTransactionAsync();
                 return Ok(new { message = "Product is updated successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -295,11 +295,11 @@ namespace WebAPI.Controllers
                 await _productRepository.DeleteAsync(product);
                 return Ok(new { message = "Product is deleted successfully"});
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -333,12 +333,12 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Product is banned successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -372,12 +372,12 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Product has been unbanned successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();    
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -399,11 +399,11 @@ namespace WebAPI.Controllers
 
                 return Ok(new { message = "Product is rated successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -416,11 +416,11 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetTopSellingProductsByOwnerAsync(ownerId);
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -433,11 +433,11 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetTopSellingProductsAsync();
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -450,11 +450,11 @@ namespace WebAPI.Controllers
                 var result = await _productRepository.SearchProductsInAdminAsync(searchTerm);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }   
         }
@@ -467,11 +467,11 @@ namespace WebAPI.Controllers
                 var result = await _productRepository.SearchProductsInOwnerAsync(searchTerm, ownerId);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -484,11 +484,11 @@ namespace WebAPI.Controllers
                 var result = await _productRepository.SearchProductsAndOwnersAsync(searchTerm, minPrice, maxPrice, categoryIds, brandIds, sizes);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }

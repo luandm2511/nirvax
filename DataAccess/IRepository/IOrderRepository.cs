@@ -15,11 +15,11 @@ namespace DataAccess.IRepository
         Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId);
         Task<IEnumerable<OrderOwnerDTO>> GetOrdersByOwnerIdAsync(int ownerId);
         Task<Order> GetOrderByIdAsync(int orderId);
-        Task UpdateOrderAsync(Order order);
         Task<Order> ConfirmOrder(int orderId);
         Task<Order> SucessOrder(int orderId);
-        Task<Order> CancleOrder(int orderId);
+        Task<Order> CancelOrder(int orderId);
         Task<Order> RejectedOrder(int orderId);
+        Task<Order> FailedOrder(int orderId);
         Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync();

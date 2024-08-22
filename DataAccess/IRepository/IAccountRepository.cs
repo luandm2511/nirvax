@@ -12,6 +12,7 @@ namespace DataAccess.IRepository
     {
         Task<IEnumerable<Account>> GetAllAccountAsync();
         Task<Account> GetAccountByIdAsync(int id);
+        Task<bool> CheckPhoneAsync(int accountId, string phone);
         Task BanAccountAsync(Account account);
         Task UnbanAccountAsync(Account account);
         Task UpdateAccountAsync(Account account);

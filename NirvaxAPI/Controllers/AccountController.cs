@@ -35,9 +35,9 @@ namespace WebAPI.Controllers
                 var accounts = await _repository.GetAllAccountAsync();
                 return Ok(accounts);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -54,9 +54,9 @@ namespace WebAPI.Controllers
                 }
                 return Ok(account);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -67,18 +67,13 @@ namespace WebAPI.Controllers
             try
             {
                 var account = await _repository.GetAccountByIdAsync(id);
-                if (account == null)
-                {
-                    return StatusCode(404, new { message = "The account has been not found!" });
-                }
-
                 await _repository.BanAccountAsync(account);
                 await _emailService.SendEmailAsync(account.Email, "Ban Account", "Your account violates the policy, so we temporarily and permanently block your account!");
                 return Ok(new { message = "Account banned successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -89,18 +84,13 @@ namespace WebAPI.Controllers
             try
             {
                 var account = await _repository.GetAccountByIdAsync(id);
-                if (account == null)
-                {
-                    return StatusCode(404, new { message = "The account has been not found!" });
-                }
-
                 await _repository.UnbanAccountAsync(account);
                 await _emailService.SendEmailAsync(account.Email, "UnBan Account", "Through re-checking, we found that you have violated online trading standards but the impact is not too large, so we decided to re-unlock your account. Congratulations!!!");
                 return Ok(new { message = "Account unbanned successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -113,9 +103,9 @@ namespace WebAPI.Controllers
                 var accounts = await _repository.SearchAccountAsync(keyword);
                 return Ok(accounts);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -126,10 +116,6 @@ namespace WebAPI.Controllers
             try
             {
                 var account = await _repository.GetAccountByIdAsync(id);
-                if (account == null)
-                {
-                    StatusCode(404, new { message = "The account has been not found!" });
-                }
                 if(!PasswordHasher.VerifyPassword(changePassword.OldPassword, account.Password))
                 {
                     return StatusCode(406, new { message = "The old password is incorrect." });
@@ -142,30 +128,31 @@ namespace WebAPI.Controllers
                 await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Password changed successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
         [HttpPut("update-profile/{id}")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateAccount(int id,UpdateUserDTO model)
         {
             try
             {
-                var account = await _repository.GetAccountByIdAsync(id);
-                if (account == null)
+                var check = await _repository.CheckPhoneAsync(id, model.Phone);
+                if (!check)
                 {
-                    StatusCode(404, new { message = "The account has been not found!" });
+                    return StatusCode(406, new { message = "The phone number has been used!" });
                 }
+                var account = await _repository.GetAccountByIdAsync(id);
                 _mapper.Map(model, account);
                 await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Profile updated successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -176,17 +163,13 @@ namespace WebAPI.Controllers
             try
             {
                 var account = await _repository.GetAccountByIdAsync(id);
-                if (account == null)
-                {
-                    return StatusCode(404, new { message = "The account has been not found!" });
-                }
                 account.Image = avatarDTO.Image;
                 await _repository.UpdateAccountAsync(account);
                 return Ok(new { message = "Avatar updated successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -198,9 +181,9 @@ namespace WebAPI.Controllers
                 var statis = await _repository.AccountStatistics();
                 return Ok(statis);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
     }
