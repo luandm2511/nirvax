@@ -29,9 +29,9 @@ namespace WebAPI.Controllers
                 var categories = await _repository.GetAllCategoryParentAsync();
                 return Ok(categories);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -47,9 +47,9 @@ namespace WebAPI.Controllers
                 }
                 return Ok(category);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -73,9 +73,9 @@ namespace WebAPI.Controllers
                 await _repository.CreateCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent added successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -105,9 +105,9 @@ namespace WebAPI.Controllers
                 await _repository.CheckCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent updated successfully." }); 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -125,9 +125,9 @@ namespace WebAPI.Controllers
                 await _repository.DeleteCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent deleted successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -144,9 +144,9 @@ namespace WebAPI.Controllers
                 var categoryParents = await _repository.SearchCateParentsAsync(keyword);
                 return Ok(categoryParents);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
     }

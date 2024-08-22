@@ -163,23 +163,17 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync()
         {
-            var orderDetails = await _context.OrderDetails
+            var topShops = await _context.OrderDetails
                                 .Include(od => od.Order)
                                 .Where(od => od.Order.StatusId == 3)
-                                .ToListAsync();
-
-            var topShops = orderDetails
-                .GroupBy(od => od.Order.OwnerId)
-                .Select(group => new TopShopDTO
-                {
-                    OwnerId = group.Key,
-                    TotalProductsSold = group.Sum(od => od.Quantity),
-                    TotalSalesAmount = group.Sum(od => od.Quantity * od.UnitPrice)
-                })
-                .OrderByDescending(t => t.TotalSalesAmount)
-                .Take(10)
-                .ToList();
-
+                                .GroupBy(od => new { od.Order.OwnerId, od.Order.Owner.Fullname })
+                                .Select(group => new TopShopDTO
+                                {
+                                    OwnerName = group.Key.Fullname,
+                                    TotalSalesAmount = group.Sum(od => od.Quantity * od.UnitPrice)
+                                })
+                                .OrderByDescending(t => t.TotalSalesAmount)
+                                .Take(10).ToListAsync();
             return topShops;
         }
 
@@ -212,7 +206,6 @@ namespace DataAccess.DAOs
                     StartDate = group.Key.StartDate,
                     EndDate = group.Key.EndDate,
                     DayOfWeek = group.Key.DayOfWeek,
-                    TotalOrders = group.Count(),
                     TotalAmount = group.Sum(order => order.TotalAmount)
                 })
                 .ToList();
@@ -229,7 +222,6 @@ namespace DataAccess.DAOs
                         .Select(stat => new DailyOrderStatistics
                         {
                             DayOfWeek = stat.DayOfWeek,
-                            TotalOrders = stat.TotalOrders,
                             TotalAmount = stat.TotalAmount
                         })
                         .ToList()
@@ -275,13 +267,11 @@ namespace DataAccess.DAOs
                         .Select(stat => new DailyOrderStatistics
                         {
                             DayOfWeek = stat.DayOfWeek,
-                            TotalOrders = stat.TotalOrders,
                             TotalAmount = stat.TotalAmount
                         })
                         .ToList()
                 })
                 .ToList();
-
             return result;
         }
         private string GenerateCodeOrder()

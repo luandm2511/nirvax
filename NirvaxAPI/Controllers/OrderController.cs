@@ -92,9 +92,9 @@ namespace WebAPI.Controllers
 
                 return Ok(orderItemDetails);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -113,9 +113,9 @@ namespace WebAPI.Controllers
 
                 return Ok(voucher);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             } 
         }
 
@@ -180,10 +180,10 @@ namespace WebAPI.Controllers
 
                 return Ok(new { message = "Order successful!" });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -196,9 +196,9 @@ namespace WebAPI.Controllers
                 var orders = await _orderRepository.GetOrdersByAccountIdAsync(accountId);
                 return Ok(orders);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -211,9 +211,9 @@ namespace WebAPI.Controllers
                 var orders = await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
                 return Ok(orders);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -246,12 +246,9 @@ namespace WebAPI.Controllers
                 }
                 if (statusId == 5) 
                 {
-                    order = await _orderRepository.CancleOrder(orderId);
+                    order = await _orderRepository.FailedOrder(orderId);
                     content = $"You have an order with code {order.CodeOrder} that has been cancelled.";
                 }
-
-                order.StatusId = statusId; 
-                await _orderRepository.UpdateOrderAsync(order);
 
                 // Notify user about order confirmation (implementation skipped)
                 var notification = new Notification
@@ -270,10 +267,10 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"User-{order.AccountId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Confirm order successful!" });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -283,7 +280,7 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
-                var order = await _orderRepository.CancleOrder(orderId);
+                var order = await _orderRepository.CancelOrder(orderId);
 
                 var notification = new Notification
                 {
@@ -301,10 +298,10 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "You have just canceled successfully order!" });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -331,10 +328,10 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"Owner-{order.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "You have just confirmed that you have received your order successfully.!" });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -347,9 +344,9 @@ namespace WebAPI.Controllers
                 var orders = await _orderRepository.SearchOrdersAsync(codeOrder);
                 return Ok(orders);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -361,9 +358,9 @@ namespace WebAPI.Controllers
                 var order = await _orderRepository.GetOrderByIdAsync(id);
                 return Ok(order);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -375,9 +372,9 @@ namespace WebAPI.Controllers
                 var topShops = await _orderRepository.GetTop10ShopsAsync();
                 return Ok(topShops);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -389,9 +386,9 @@ namespace WebAPI.Controllers
                 var stats = await _orderRepository.GetOrderStatisticsAsync();
                 return Ok(stats);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 
@@ -403,9 +400,9 @@ namespace WebAPI.Controllers
                 var ownerStats = await _orderRepository.GetOwnerStatisticsAsync(ownerId);
                 return Ok(ownerStats);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
         

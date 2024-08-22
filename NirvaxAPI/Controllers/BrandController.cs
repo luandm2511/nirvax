@@ -30,9 +30,9 @@ namespace WebAPI.Controllers
                 var brands = await _repository.GetAllBrandAsync();
                 return Ok(brands);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -48,9 +48,9 @@ namespace WebAPI.Controllers
                 }
                 return Ok(brand);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -73,9 +73,9 @@ namespace WebAPI.Controllers
                 await _repository.CreateBrandAsync(brand);
                 return Ok(new { message = "Brand added successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -105,9 +105,9 @@ namespace WebAPI.Controllers
                 await _repository.UpdateBrandAsync(brand);
                 return Ok(new { message = "Brand updated successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -125,9 +125,9 @@ namespace WebAPI.Controllers
                 await _repository.DeleteBrandAsync(brand);
                 return Ok(new { message = "Brand deleted successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -144,9 +144,9 @@ namespace WebAPI.Controllers
                 var brands = await _repository.SearchBrandsAsync(keyword);
                 return Ok(brands);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }  
         }
     }

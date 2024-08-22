@@ -317,7 +317,7 @@ namespace DataAccess.DAOs
                
                 return ads;
             }
-            catch (Exception ex) { throw new Exception(ex.Message); }
+            catch (Exception ) { throw new Exception("Something went wrong, please try again."); }
         
         }
 

@@ -26,9 +26,9 @@ namespace WebAPI.Controllers
                var orderDetail = await _orderDetailRepository.GetHistoryOrderDetailsByOrderIdAsync(orderId);
                return Ok(orderDetail);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
             }
         }
 

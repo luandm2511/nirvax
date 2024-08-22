@@ -43,9 +43,9 @@ namespace WebAPI.Controllers
                 };
                 return Ok(cartDto);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -100,9 +100,9 @@ namespace WebAPI.Controllers
 
                 return Ok(new { message = "Product is add to cart successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -134,9 +134,9 @@ namespace WebAPI.Controllers
                 await _cartService.SaveCartToCookie(userId, cart);
                 return Ok(new { message = "You have just updated product form cart successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -150,9 +150,9 @@ namespace WebAPI.Controllers
                 await _cartService.SaveCartToCookie(userId,cart);
                 return Ok(new { message = "You have just deleted product form cart successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
     }

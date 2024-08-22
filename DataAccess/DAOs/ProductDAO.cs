@@ -166,11 +166,12 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId)
         {
-            return await _context.Products.Include(p => p.Images)
+            return await _context.Products
+                .Include(p => p.Images)
                 .Include(p => p.Owner)
+                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(5)
-                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Product>> GetTopSellingProductsAsync()
@@ -178,9 +179,9 @@ namespace DataAccess.DAOs
             return await _context.Products
                 .Include(p => p.Images)
                 .Include(p => p.Owner)
+                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(10)
-                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)
                 .ToListAsync();
         }
 

@@ -25,6 +25,8 @@ public partial class Owner
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
+    public virtual ICollection<Description> Descriptions { get; set; } = new List<Description>();
+
     public virtual ICollection<GuestConsultation> GuestConsultations { get; set; } = new List<GuestConsultation>();
 
     public virtual ICollection<ImportProduct> ImportProducts { get; set; } = new List<ImportProduct>();
