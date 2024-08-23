@@ -3,16 +3,17 @@ using System.Collections.Generic;
 
 namespace BusinessObject.Models;
 
-public partial class Description
+public partial class SizeChart
 {
-    public int DescriptionId { get; set; }
-    public int OwnerId { get; set; }
+    public int SizeChartId { get; set; }
 
     public string Title { get; set; } = null!;
 
     public string Content { get; set; } = null!;
 
     public bool Isdelete { get; set; }
+
+    public int OwnerId { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 

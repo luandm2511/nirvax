@@ -7,21 +7,23 @@ public partial class Account
 {
     public int AccountId { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string UserEmail { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string UserPassword { get; set; } = null!;
 
-    public string Fullname { get; set; } = null!;
+    public string UserName { get; set; } = null!;
 
-    public string? Image { get; set; }
+    public string? UserImage { get; set; }
 
-    public string Phone { get; set; } = null!;
+    public string UserPhone { get; set; } = null!;
 
     public DateTime Dob { get; set; }
 
     public string Gender { get; set; } = null!;
 
-    public string Address { get; set; } = null!;
+    public string UserAddress { get; set; } = null!;
+
+    public DateTime? UserCreatedDate { get; set; }
 
     public string Role { get; set; } = null!;
 

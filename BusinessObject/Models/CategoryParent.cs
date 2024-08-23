@@ -7,7 +7,7 @@ public partial class CategoryParent
 {
     public int CateParentId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string CateParentName { get; set; } = null!;
 
     public bool Isdelete { get; set; }
 

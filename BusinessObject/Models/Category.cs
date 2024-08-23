@@ -7,9 +7,9 @@ public partial class Category
 {
     public int CategoryId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string CategoryName { get; set; } = null!;
 
-    public string Image { get; set; } = null!;
+    public string CategoryImage { get; set; } = null!;
 
     public bool Isdelete { get; set; }
 

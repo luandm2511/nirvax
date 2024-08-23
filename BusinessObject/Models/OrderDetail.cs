@@ -9,11 +9,11 @@ public partial class OrderDetail
 
     public string ProductSizeId { get; set; } = null!;
 
-    public int Quantity { get; set; }
+    public int OdQuantity { get; set; }
 
-    public double UnitPrice { get; set; }
+    public double OdUnitPrice { get; set; }
 
-    public double UserRate { get; set; }
+    public double OdTuserRate { get; set; }
 
     public virtual Order Order { get; set; } = null!;
 

@@ -9,7 +9,7 @@ public partial class Order
 
     public string CodeOrder { get; set; } = null!;
 
-    public string Fullname { get; set; } = null!;
+    public string OrderUserName { get; set; } = null!;
 
     public DateTime OrderDate { get; set; }
 
@@ -17,13 +17,13 @@ public partial class Order
 
     public DateTime? RequiredDate { get; set; }
 
-    public string Phone { get; set; } = null!;
+    public string OrderUserPhone { get; set; } = null!;
 
-    public string Address { get; set; } = null!;
+    public string OrderUserAddress { get; set; } = null!;
 
     public string? Note { get; set; }
 
-    public double TotalAmount { get; set; }
+    public double OrderTotalAmount { get; set; }
 
     public int AccountId { get; set; }
 
