@@ -9,7 +9,6 @@ namespace BusinessObject.DTOs
     public class DailyOrderStatistics
     {
         public int DayOfWeek { get; set; }
-        public int TotalOrders { get; set; }
         public double TotalAmount { get; set; }
     }
 }

@@ -42,9 +42,9 @@ namespace WebAPI.Controllers
                 var comments = await _commentRepository.GetCommentsByProductIdAsync(productId);
                 return Ok(comments);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -83,12 +83,12 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Comment is created successfully." });               
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }
@@ -133,12 +133,12 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"User-{comment.AccountId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Reply successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
-                    message = ex.Message
+                    message = "Something went wrong, please try again."
                 });
             }
         }

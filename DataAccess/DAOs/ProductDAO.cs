@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.DTOs;
 using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
@@ -164,24 +166,41 @@ namespace DataAccess.DAOs
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId)
+        public async Task<IEnumerable<TopProductDTO>> GetTopSellingProductsByOwnerAsync(int ownerId)
         {
-            return await _context.Products.Include(p => p.Images)
-                .Include(p => p.Owner)
-                .OrderByDescending(p => p.QuantitySold)
-                .Take(5)
-                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
-                .ToListAsync();
-        }
-        public async Task<IEnumerable<Product>> GetTopSellingProductsAsync()
-        {
-            return await _context.Products
+            var products = await _context.Products
                 .Include(p => p.Images)
                 .Include(p => p.Owner)
+                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
+                .OrderByDescending(p => p.QuantitySold)
+                .Take(5)
+                .ToListAsync();
+            var topProducts = products.Select(p => new TopProductDTO
+            {
+                ProductName = p.Name,
+                Image = p.Images.FirstOrDefault()?.LinkImage,
+                QuantitySold = p.QuantitySold,
+                RatePoint = p.RatePoint
+            });
+            return topProducts;
+        }
+        public async Task<IEnumerable<TopProductDTO>> GetTopSellingProductsAsync()
+        {
+            var products = await _context.Products
+                .Include(p => p.Images)
+            .Include(p => p.Owner)
+                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(10)
-                .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)
                 .ToListAsync();
+            var topProducts = products.Select(p => new TopProductDTO
+            {
+                ProductName = p.Name,
+                Image = p.Images.FirstOrDefault()?.LinkImage,
+                QuantitySold = p.QuantitySold,
+                RatePoint = p.RatePoint
+            });
+            return topProducts;
         }
 
         public async Task<bool> CheckProductAsync(Product product)

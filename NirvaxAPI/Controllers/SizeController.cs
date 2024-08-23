@@ -69,11 +69,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
         }
@@ -110,11 +110,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -152,11 +152,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -202,11 +202,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 

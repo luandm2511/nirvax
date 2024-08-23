@@ -265,11 +265,19 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Description");
 
             entity.Property(e => e.DescriptionId).HasColumnName("description_id");
-            entity.Property(e => e.Content).HasColumnName("content");
+            entity.Property(e => e.Content)
+                .HasMaxLength(700)
+                .HasColumnName("content");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
+            entity.Property(e => e.OwnerId).HasColumnName("owner_id");
             entity.Property(e => e.Title)
                 .HasMaxLength(100)
                 .HasColumnName("title");
+
+            entity.HasOne(d => d.Owner).WithMany(p => p.Descriptions)
+                .HasForeignKey(d => d.OwnerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_description_owner");
         });
 
         modelBuilder.Entity<GuestConsultation>(entity =>

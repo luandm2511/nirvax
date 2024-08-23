@@ -67,11 +67,11 @@ namespace WebAPI.Controllers
                     Message = notFound + "any advertisement"
                 });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
         }
@@ -95,11 +95,11 @@ namespace WebAPI.Controllers
                 Message = notFound + "any advertisement"
             });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
         }
@@ -123,11 +123,11 @@ namespace WebAPI.Controllers
                 Message = notFound + "any advertisement"
             });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
         }
@@ -289,11 +289,11 @@ namespace WebAPI.Controllers
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
         }
@@ -331,11 +331,11 @@ namespace WebAPI.Controllers
                 Message = "Dont't accept empty information!",
             });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -368,12 +368,12 @@ namespace WebAPI.Controllers
                     });            
            
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 

@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
                 var categories = await _repository.GetAllCategoryAsync();
                 return Ok(categories);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -46,9 +46,9 @@ namespace WebAPI.Controllers
                 }
                 return Ok(category);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -72,9 +72,9 @@ namespace WebAPI.Controllers
                 await _repository.CreateCategoryAsync(category);
                 return Ok(new { message = "Category added successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -104,9 +104,9 @@ namespace WebAPI.Controllers
                 await _repository.UpdateAsync(category);
                 return Ok(new { message = "Category updated successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -124,9 +124,9 @@ namespace WebAPI.Controllers
                 await _repository.DeleteCategoryAsync(category);
                 return Ok(new { message = "Category deleted successfully." });
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
 
@@ -143,9 +143,9 @@ namespace WebAPI.Controllers
                 var categories = await _repository.SearchCategoriesAsync(keyword);
                 return Ok(categories);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
         }
     }

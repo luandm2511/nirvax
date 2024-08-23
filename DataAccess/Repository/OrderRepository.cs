@@ -48,7 +48,7 @@ namespace DataAccess.Repository
             return order;
         }
 
-        public async Task<Order> CancleOrder(int orderId)
+        public async Task<Order> CancelOrder(int orderId)
         { 
             var order = await _orderDAO.GetOrderByIdAsync(orderId);
             order.StatusId = 5;
@@ -58,6 +58,14 @@ namespace DataAccess.Repository
         }
         public async Task<Order> RejectedOrder(int orderId)
         {
+            var order = await _orderDAO.GetOrderByIdAsync(orderId);
+            order.StatusId = 4;
+            order.RequiredDate = DateTime.Now;
+            await _orderDAO.UpdateOrderAsync(order);
+            return order;
+        }
+        public async Task<Order> FailedOrder(int orderId)
+        {
             var orderDetails = await _orderDetailDAO.GetOrderDetailsByOrderIdAsync(orderId);
             foreach (var detail in orderDetails)
             {
@@ -66,7 +74,7 @@ namespace DataAccess.Repository
                 await _productSizeDAO.UpdateAsync(productSize);
             }
             var order = await _orderDAO.GetOrderByIdAsync(orderId);
-            order.StatusId = 4;
+            order.StatusId = 6;
             order.ShippedDate = DateTime.Now;
             await _orderDAO.UpdateOrderAsync(order);
             return order;
@@ -128,9 +136,5 @@ namespace DataAccess.Repository
             return order;
         }
 
-        public async Task UpdateOrderAsync(Order order)
-        {
-            await _orderDAO.UpdateOrderAsync(order);
-        }
     }
 }

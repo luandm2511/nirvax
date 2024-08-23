@@ -42,5 +42,10 @@ namespace DataAccess.Repository
         {
             return await _accountDAO.AccountStatistics();
         }
+
+        public async Task<bool> CheckPhoneAsync(int accountId, string phone)
+        {
+            return await _accountDAO.CheckPhoneAsync(accountId, phone);
+        }
     }
 }

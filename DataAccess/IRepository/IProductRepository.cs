@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.DTOs;
 using BusinessObject.Models;
 
 namespace DataAccess.IRepository
@@ -26,8 +27,8 @@ namespace DataAccess.IRepository
         Task UnbanProductAsync(Product product);
         Task<bool> CheckProductAsync(Product product);
         Task AddRatingAsync(Product product, double rating);
-        Task<IEnumerable<Product>> GetTopSellingProductsAsync();
-        Task<IEnumerable<Product>> GetTopSellingProductsByOwnerAsync(int ownerId);
+        Task<IEnumerable<TopProductDTO>> GetTopSellingProductsAsync();
+        Task<IEnumerable<TopProductDTO>> GetTopSellingProductsByOwnerAsync(int ownerId);
         Task<OrderDetail> GetOrderDetailAsync(int orderId, string productSizeId);
     }
 }

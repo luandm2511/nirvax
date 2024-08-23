@@ -132,11 +132,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -149,28 +149,38 @@ namespace WebAPI.Controllers
         {
             try
             {
-                        var checkStaff = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
-                if (checkStaff == true)
-                {
-                    return StatusCode(200, new
+               // if (ModelState.IsValid)
+               // {
+                    var checkStaff = await _repo.CheckStaffExistAsync(staffId);
+                    if (checkStaff == true)
                     {
-                        Message = "Change password of staff" + ok
-                    });
-
-                }
-                else
-                {
-                    return StatusCode(400, new
+                        var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
+                        return StatusCode(200, new
+                        {
+                            Message = "Change password of staff" + ok,
+                            Data = staff1
+                        });
+                    }
+                    else
                     {
-                        Message = "Error!",
-                    });
-                }
-                }
+                        return StatusCode(400, new
+                        {
+                            Message = "Staff not exist!",
+                        });
+                    }
+             //   } else
+               // {
+                 //   return StatusCode(404, new
+                 //   {
+                //        Message = "Don't accept empty!",
+                  //  });
+              //  }
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {                 
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -209,11 +219,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
@@ -251,11 +261,11 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + ex.Message
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 
