@@ -7,9 +7,9 @@ public partial class Product
 {
     public int ProductId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string ProductName { get; set; } = null!;
 
-    public string ShortDescription { get; set; } = null!;
+    public string Description { get; set; } = null!;
 
     public double Price { get; set; }
 
@@ -23,7 +23,7 @@ public partial class Product
 
     public bool Isban { get; set; }
 
-    public int DescriptionId { get; set; }
+    public int SizeChartId { get; set; }
 
     public int CategoryId { get; set; }
 
@@ -37,11 +37,11 @@ public partial class Product
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
-    public virtual Description Description { get; set; } = null!;
-
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual Owner Owner { get; set; } = null!;
 
     public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
+
+    public virtual SizeChart SizeChart { get; set; } = null!;
 }

@@ -9,9 +9,9 @@ public partial class Message
 
     public int SenderId { get; set; }
 
-    public string Content { get; set; } = null!;
+    public string ContentMessage { get; set; } = null!;
 
-    public DateTime Timestamp { get; set; }
+    public DateTime MessageTimestamp { get; set; }
 
     public string Sendertype { get; set; } = null!;
 

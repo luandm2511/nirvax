@@ -7,11 +7,11 @@ public partial class Voucher
 {
     public string VoucherId { get; set; } = null!;
 
-    public double Price { get; set; }
+    public double VoucherPrice { get; set; }
 
-    public int Quantity { get; set; }
+    public int VoucherQuantity { get; set; }
 
-    public int QuantityUsed { get; set; }
+    public int VoucherQuantityUsed { get; set; }
 
     public DateTime StartDate { get; set; }
 

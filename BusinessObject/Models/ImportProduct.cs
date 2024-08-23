@@ -13,9 +13,9 @@ public partial class ImportProduct
 
     public string Origin { get; set; } = null!;
 
-    public int Quantity { get; set; }
+    public int ImportQuantity { get; set; }
 
-    public double TotalPrice { get; set; }
+    public double ImportTotalPrice { get; set; }
 
     public virtual ICollection<ImportProductDetail> ImportProductDetails { get; set; } = new List<ImportProductDetail>();
 

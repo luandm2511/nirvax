@@ -7,11 +7,11 @@ public partial class GuestConsultation
 {
     public int GuestId { get; set; }
 
-    public string Fullname { get; set; } = null!;
+    public string GuestName { get; set; } = null!;
 
-    public string Phone { get; set; } = null!;
+    public string GuestPhone { get; set; } = null!;
 
-    public string Content { get; set; } = null!;
+    public string ContentConsulation { get; set; } = null!;
 
     public int StatusGuestId { get; set; }
 
