@@ -49,6 +49,8 @@ namespace DataAccess.DAOs
         //staff,owner
         public async Task<List<ProductSizeListDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if(checkOwner == null) { return  new List<ProductSizeListDTO>(); }
             List<ProductSizeListDTO> list = new List<ProductSizeListDTO>();
 
 

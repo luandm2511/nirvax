@@ -13,6 +13,7 @@ using Azure.Core;
 using System.Security.Cryptography;
 using System.Drawing;
 using Microsoft.Identity.Client;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
@@ -52,6 +53,8 @@ namespace DataAccess.DAOs
         //owner,staff
         public async Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
         {
+            var checkRoom = await _context.Accounts.Where(i => i.AccountId == accountId).FirstOrDefaultAsync();
+            if (checkRoom == null) { return new List<RoomDTO>(); }
             var listSizeDTO = await _context.Rooms
             .Include(i => i.Account)
             .Include(i => i.Owner)
@@ -72,6 +75,8 @@ namespace DataAccess.DAOs
 
         public async Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
         {
+            var checkRoom = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkRoom == null) { return new List<RoomDTO>(); }
             var listSizeDTO = await _context.Rooms
            .Include(i => i.Account)
            .Include(i => i.Owner)

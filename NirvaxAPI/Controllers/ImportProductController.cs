@@ -156,14 +156,9 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> ViewImportProductStatisticsAsync(int ownerId)
         {
             var total = await _repo.ViewImportProductStatisticsAsync(ownerId);
-            var total2 = await _repo.ViewNumberOfProductByImportStatisticsAsync(ownerId);
-            var total3 = await _repo.ViewPriceByImportStatisticsAsync(ownerId);
-
             return StatusCode(200, new
             {
-                totalImportProduct = total,
-                totalProductByImport = total2,
-                totalPriceByImport = total3
+                Data = total,
             });
         }
 
@@ -175,7 +170,7 @@ namespace WebAPI.Controllers
 
             return StatusCode(200, new
             {
-                data= total
+                Data= total
             });
         }
 

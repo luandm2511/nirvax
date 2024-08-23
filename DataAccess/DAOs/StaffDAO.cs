@@ -134,6 +134,8 @@ namespace DataAccess.DAOs
         //owner
         public async Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<Staff>(); }
             List<Staff> listStaff = new List<Staff>();
 
 

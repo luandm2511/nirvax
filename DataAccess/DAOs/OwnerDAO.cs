@@ -132,6 +132,7 @@ namespace DataAccess.DAOs
         //admin
         public async Task<List<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
+          
             List<Owner> getList = new List<Owner>();
 
 

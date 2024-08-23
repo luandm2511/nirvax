@@ -37,9 +37,9 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(404, new
+                    return StatusCode(200, new
                     {
-                        Message = notFound + "any productSize"
+                        Message = "Empty!"
                     });
                 }
             }

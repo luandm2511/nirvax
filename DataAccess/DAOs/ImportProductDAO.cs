@@ -40,6 +40,8 @@ namespace DataAccess.DAOs
         }
         public async Task<List<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<ImportProduct>(); }
             List<ImportProduct> listImport = new List<ImportProduct>();
          
             var getList = _context.ImportProducts
@@ -214,35 +216,30 @@ namespace DataAccess.DAOs
 
 
 
+
         //số lần nhập hàng
-        public async Task<int> ViewImportProductStatisticsAsync(int ownerId)
+        public async Task<object> ViewImportProductStatisticsAsync(int ownerId)
         {
-
-            var sumImport = await _context.ImportProducts.Where(i => i.OwnerId == ownerId).GroupBy(w => w.ImportId).CountAsync();
-            return sumImport;
-        }
-
-
-        //tổng số sản phẩm lần nhập đó
-        public async Task<int> ViewNumberOfProductByImportStatisticsAsync(int ownerId)
-        {
+            var sumImport = await _context.ImportProducts
+                .Where(i => i.OwnerId == ownerId)
+                .GroupBy(w => w.ImportId)
+                .CountAsync();
             List<ImportProduct> listImportProduct = await _context.ImportProducts
-             .Where(i => i.OwnerId == ownerId)
-             .ToListAsync();
+                .Where(i => i.OwnerId == ownerId)
+                .ToListAsync();
             var sumOfProduct = listImportProduct.Sum(p => p.Quantity);
-            return sumOfProduct;
+            var sumOfPrice = listImportProduct.Sum(p => p.TotalPrice);
+            var result = new Dictionary<string, object>
+    {
+        { "totalImportProduct", sumImport },
+        { "totalQuantityByImport", sumOfProduct },
+        { "totalPriceByImport", sumOfPrice }
+    };
+
+            return result;
         }
 
-        //tổng tiền lần nhập đó
-        public async Task<double> ViewPriceByImportStatisticsAsync( int ownerId)
-        {
-         
-            List<ImportProduct> listImportProduct = await _context.ImportProducts
-             .Where(i => i.OwnerId == ownerId)
-             .ToListAsync();
-            var sumOfPrice = listImportProduct.Sum(p => p.TotalPrice);
-            return sumOfPrice;
-        }
+
 
 
     }

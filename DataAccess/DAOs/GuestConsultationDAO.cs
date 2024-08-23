@@ -84,7 +84,8 @@ namespace DataAccess.DAOs
         //owner,staff or admin??
         public async Task<List<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId) 
         {
-          
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<GuestConsultation>(); }
             IQueryable<GuestConsultation> query = _context.GuestConsultations.Include(i => i.Owner)
                                                        .Include(i => i.Ad)
                                                        .Include(i => i.StatusGuest)
@@ -114,6 +115,8 @@ namespace DataAccess.DAOs
 
         public async Task<List<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<GuestConsultation>(); }
             List<GuestConsultation> getList = new List<GuestConsultation>();
 
 
@@ -145,6 +148,8 @@ namespace DataAccess.DAOs
 
         public async Task<List<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<GuestConsultation>(); }
             List<GuestConsultation> getList = new List<GuestConsultation>();
 
 
@@ -176,6 +181,8 @@ namespace DataAccess.DAOs
 
         public async Task<List<GuestConsultation>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<GuestConsultation>(); }
             List<GuestConsultation> getList = new List<GuestConsultation>();
 
 

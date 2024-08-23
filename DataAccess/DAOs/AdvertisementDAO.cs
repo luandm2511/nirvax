@@ -15,6 +15,7 @@ using DataAccess.IRepository;
 using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 
 namespace DataAccess.DAOs
@@ -85,6 +86,7 @@ namespace DataAccess.DAOs
         //get all for owner,staff 
         public async Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
+          
             List<Advertisement> listAdvertisement = new List<Advertisement>();
 
             IQueryable<Advertisement> query = _context.Advertisements
@@ -222,6 +224,8 @@ namespace DataAccess.DAOs
         //user
         public async Task<List<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
+            if (checkOwner == null) { return new List<Advertisement>(); }
             List<Advertisement> getList = new List<Advertisement>();
 
 
@@ -365,23 +369,19 @@ namespace DataAccess.DAOs
         }
 
 
-
-        //riêng
-        public async Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId)
+        public async Task<object> ViewAdversisementStatisticsAsync(int ownerId)
         {
-            Advertisement ad = new Advertisement();
             var number = await _context.Advertisements.Where(i => i.OwnerId == ownerId).CountAsync();
-            return number;
-        }
+            var number2 = await _context.Advertisements.Include(i => i.Owner).CountAsync();
 
-        //chung
-        public async Task<int> ViewAdversisementStatisticsAsync()
-        {
-            Advertisement ad = new Advertisement();
-            var number = await _context.Advertisements.Include(i=>i.Owner).CountAsync();
-            return number;
-        }
+            var result = new Dictionary<string, object>
+    {
+        { "totalAdversisement", number },
+        { "totalOwnerAdversisement", number2 }
+    };
 
+            return result;
+        }
     }
 }
 

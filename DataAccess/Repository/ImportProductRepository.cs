@@ -55,19 +55,9 @@ namespace DataAccess.Repository
         {
             return _importProductDAO.UpdateQuantityAndPriceImportProductAsync(importId);
         }
-        public Task<int> ViewImportProductStatisticsAsync(int ownerId)
+        public Task<object> ViewImportProductStatisticsAsync(int ownerId)
         {
             return _importProductDAO.ViewImportProductStatisticsAsync(ownerId);
-        }
-
-
-        public Task<int> ViewNumberOfProductByImportStatisticsAsync(int ownerId)
-        {
-            return _importProductDAO.ViewNumberOfProductByImportStatisticsAsync(ownerId);
-        }
-        public Task<double> ViewPriceByImportStatisticsAsync(int ownerId)
-        {
-            return _importProductDAO.ViewPriceByImportStatisticsAsync(ownerId);
         }
 
         public Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)

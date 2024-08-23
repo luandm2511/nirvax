@@ -14,8 +14,7 @@ namespace DataAccess.IRepository
     {
 
         Task<Advertisement> GetAdvertisementByIdAsync(int adId);
-        Task<int> ViewOwnerAdversisementStatisticsAsync(int ownerId);
-        Task<int> ViewAdversisementStatisticsAsync();
+        Task<object> ViewAdversisementStatisticsAsync(int ownerId);
         Task<Advertisement> GetAdvertisementByIdForUserAsync(int adId);
         Task<bool> CheckAdvertisementCreateAsync(AdvertisementCreateDTO advertisementCreateDTO);
         

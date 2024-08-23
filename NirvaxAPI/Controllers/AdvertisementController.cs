@@ -216,13 +216,13 @@ namespace WebAPI.Controllers
             public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
             {
                
-                    var advertisement =await _repo.GetAdvertisementByIdAsync(adId);
-            if (advertisement != null)
+                    var ads =await _repo.GetAdvertisementByIdAsync(adId);
+            if (ads != null)
             {
                 return StatusCode(200, new
                 {
                     Message = "Get advertisement by id" + ok,
-                    Data = advertisement
+                    Data = ads
                 });
             }
             else
@@ -380,15 +380,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> AdversisementStatisticsAsync(int ownerId)
+        public async Task<ActionResult> ViewAdversisementStatisticsAsync(int ownerId)
         {
-            var total2 = await _repo.ViewOwnerAdversisementStatisticsAsync(ownerId);
-            var total = await _repo.ViewAdversisementStatisticsAsync();
+            var total = await _repo.ViewAdversisementStatisticsAsync(ownerId);
 
             return StatusCode(200, new
                 {
-                totalAdversisement = total,
-                totalOwnerAdversisement = total2,
+                Data = total,
                 });
         }
     }

@@ -66,6 +66,7 @@ namespace DataAccess.DAOs
         //owner,staff
         public async Task<List<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
+
             List<Service> getList = new List<Service>();
 
 
