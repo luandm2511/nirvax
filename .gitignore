@@ -408,3 +408,4 @@ FodyWeavers.xsd
 /NirvaxAPI/obj
 /NirvaxAPI/bin
 /NirvaxAPI/appsettings.json
+/BusinessObject/Models/AccessLog.cs
