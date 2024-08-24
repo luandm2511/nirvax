@@ -19,13 +19,13 @@ public partial class Owner
 
     public string Address { get; set; } = null!;
 
+    public DateTime? CreatedDate { get; set; }
+
     public bool IsBan { get; set; }
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
-    public virtual ICollection<Description> Descriptions { get; set; } = new List<Description>();
 
     public virtual ICollection<GuestConsultation> GuestConsultations { get; set; } = new List<GuestConsultation>();
 
@@ -36,10 +36,10 @@ public partial class Owner
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-    public virtual ICollection<Description> Descriptions { get; set; } = new List<Description>();
-
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+
+    public virtual ICollection<SizeChart> SizeCharts { get; set; } = new List<SizeChart>();
 
     public virtual ICollection<Size> Sizes { get; set; } = new List<Size>();
 

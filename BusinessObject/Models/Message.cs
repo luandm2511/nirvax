@@ -13,9 +13,7 @@ public partial class Message
 
     public DateTime Timestamp { get; set; }
 
-    public string Sendertype { get; set; } = null!;
-
     public int RoomId { get; set; }
 
-    public virtual Room Room { get; set; } = null!;
+    public string Sendertype { get; set; } = null!;
 }

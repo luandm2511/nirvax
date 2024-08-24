@@ -142,7 +142,7 @@ namespace WebAPI.Controllers
 
         }
 
-
+        /*
 
         [HttpPut]
         public async Task<ActionResult> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
@@ -185,7 +185,7 @@ namespace WebAPI.Controllers
             }
 
         }
-
+        */
         [HttpPut]
         public async Task<ActionResult> UpdateStaffAsync([FromForm] StaffDTO staffDTO)
         {

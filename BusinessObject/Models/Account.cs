@@ -23,6 +23,8 @@ public partial class Account
 
     public string Address { get; set; } = null!;
 
+    public DateTime? CreatedDate { get; set; }
+
     public string Role { get; set; } = null!;
 
     public bool IsBan { get; set; }
