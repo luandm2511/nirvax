@@ -7,25 +7,23 @@ public partial class Owner
 {
     public int OwnerId { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string OwnerEmail { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string OwnerPassword { get; set; } = null!;
 
-    public string Fullname { get; set; } = null!;
+    public string OwnerName { get; set; } = null!;
 
-    public string? Image { get; set; }
+    public string? OwnerImage { get; set; }
 
-    public string Phone { get; set; } = null!;
+    public string OwnerPhone { get; set; } = null!;
 
-    public string Address { get; set; } = null!;
+    public string OwnerAddress { get; set; } = null!;
 
     public bool IsBan { get; set; }
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
-    public virtual ICollection<Description> Descriptions { get; set; } = new List<Description>();
 
     public virtual ICollection<GuestConsultation> GuestConsultations { get; set; } = new List<GuestConsultation>();
 
@@ -36,10 +34,10 @@ public partial class Owner
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-    public virtual ICollection<Description> Descriptions { get; set; } = new List<Description>();
-
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+
+    public virtual ICollection<SizeChart> SizeCharts { get; set; } = new List<SizeChart>();
 
     public virtual ICollection<Size> Sizes { get; set; } = new List<Size>();
 

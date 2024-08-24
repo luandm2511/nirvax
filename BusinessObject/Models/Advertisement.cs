@@ -11,7 +11,9 @@ public partial class Advertisement
 
     public string Content { get; set; } = null!;
 
-    public string Image { get; set; } = null!;
+    public string AdImage { get; set; } = null!;
+
+    public DateTime? AdCreatedDate { get; set; }
 
     public int StatusPostId { get; set; }
 

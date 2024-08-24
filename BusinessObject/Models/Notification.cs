@@ -11,13 +11,13 @@ public partial class Notification
 
     public int? OwnerId { get; set; }
 
-    public string Content { get; set; } = null!;
+    public string ContentNotification { get; set; } = null!;
 
     public bool IsRead { get; set; }
 
     public string? Url { get; set; }
 
-    public DateTime CreateDate { get; set; }
+    public DateTime NotificationCreatedDate { get; set; }
 
     public virtual Account? Account { get; set; }
 

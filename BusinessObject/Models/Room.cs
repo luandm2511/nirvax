@@ -11,9 +11,9 @@ public partial class Room
 
     public int OwnerId { get; set; }
 
-    public string Content { get; set; } = null!;
+    public string ContentLastMessage { get; set; } = null!;
 
-    public DateTime Timestamp { get; set; }
+    public DateTime LastMessageTimestamp { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 

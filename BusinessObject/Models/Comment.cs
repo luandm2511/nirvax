@@ -15,7 +15,7 @@ public partial class Comment
 
     public string Content { get; set; } = null!;
 
-    public DateTime Timestamp { get; set; }
+    public DateTime CommentTimestamp { get; set; }
 
     public string? Reply { get; set; }
 

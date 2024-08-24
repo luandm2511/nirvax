@@ -13,9 +13,9 @@ public partial class Image
 
     public int? ProductId { get; set; }
 
-    public int? DescriptionId { get; set; }
-
-    public virtual Description? Description { get; set; }
+    public int? SizeChartId { get; set; }
 
     public virtual Product? Product { get; set; }
+
+    public virtual SizeChart? SizeChart { get; set; }
 }
