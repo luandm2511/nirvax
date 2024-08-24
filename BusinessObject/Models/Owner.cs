@@ -19,6 +19,8 @@ public partial class Owner
 
     public string OwnerAddress { get; set; } = null!;
 
+    public DateTime? CreatedDate { get; set; }
+
     public bool IsBan { get; set; }
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();

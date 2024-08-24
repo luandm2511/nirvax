@@ -13,7 +13,7 @@ public partial class OrderDetail
 
     public double OdUnitPrice { get; set; }
 
-    public double OdTuserRate { get; set; }
+    public double? UserRate { get; set; }
 
     public virtual Order Order { get; set; } = null!;
 

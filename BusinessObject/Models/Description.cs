@@ -14,6 +14,7 @@ public partial class Description
 
     public bool Isdelete { get; set; }
 
+
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual Owner Owner { get; set; } = null!;

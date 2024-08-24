@@ -25,6 +25,8 @@ public partial class Account
 
     public DateTime? UserCreatedDate { get; set; }
 
+    public DateTime? CreatedDate { get; set; }
+
     public string Role { get; set; } = null!;
 
     public bool IsBan { get; set; }

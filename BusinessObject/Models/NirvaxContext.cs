@@ -101,6 +101,12 @@ public partial class NirvaxContext : DbContext
             entity.ToTable("Account");
 
             entity.Property(e => e.AccountId).HasColumnName("account_id");
+            entity.Property(e => e.Address)
+                .HasMaxLength(150)
+                .HasColumnName("address");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("date")
+                .HasColumnName("created_date");
             entity.Property(e => e.Dob)
                 .HasColumnType("date")
                 .HasColumnName("dob");
@@ -370,7 +376,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.ImportId).HasColumnName("import_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.QuantityReceived).HasColumnName("quantity_received");
             entity.Property(e => e.UnitPrice).HasColumnName("unit_price");
@@ -388,27 +393,24 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Message__0BBF6EE65EE8AE97");
+            entity
+                .HasNoKey()
+                .ToTable("Message");
 
-            entity.ToTable("Message");
-
-            entity.Property(e => e.MessageId).HasColumnName("message_id");
-            entity.Property(e => e.ContentMessage)
+            entity.Property(e => e.Content)
                 .HasMaxLength(500)
-                .HasColumnName("content_message");
-            entity.Property(e => e.MessageTimestamp)
-                .HasColumnType("datetime")
-                .HasColumnName("message_timestamp");
+                .HasColumnName("content");
+            entity.Property(e => e.MessageId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("message_id");
             entity.Property(e => e.RoomId).HasColumnName("room_id");
             entity.Property(e => e.SenderId).HasColumnName("sender_id");
             entity.Property(e => e.Sendertype)
                 .HasMaxLength(10)
                 .HasColumnName("sendertype");
-
-            entity.HasOne(d => d.Room).WithMany(p => p.Messages)
-                .HasForeignKey(d => d.RoomId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_message_room");
+            entity.Property(e => e.Timestamp)
+                .HasColumnType("datetime")
+                .HasColumnName("timestamp");
         });
 
         modelBuilder.Entity<Notification>(entity =>
@@ -511,7 +513,6 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.OdQuantity).HasColumnName("od_quantity");
             entity.Property(e => e.OdTuserRate).HasColumnName("od_tuser_rate");
@@ -550,8 +551,11 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
             entity.Property(e => e.OwnerAddress)
                 .HasMaxLength(200)
-                .HasColumnName("owner_address");
-            entity.Property(e => e.OwnerEmail)
+                .HasColumnName("address");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("date")
+                .HasColumnName("created_date");
+            entity.Property(e => e.Email)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("owner_email");
@@ -636,7 +640,6 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.ProductSizeId)
                 .HasMaxLength(30)
-                .IsUnicode(false)
                 .HasColumnName("product_size_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
@@ -740,9 +743,8 @@ public partial class NirvaxContext : DbContext
             entity.HasKey(e => e.StaffId).HasName("PK__Staff__1963DD9C124845EC");
 
             entity.Property(e => e.StaffId).HasColumnName("staff_id");
-            entity.Property(e => e.OwnerId).HasColumnName("owner_id");
-            entity.Property(e => e.StaffEmail)
-                .HasMaxLength(50)
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("staff_email");
             entity.Property(e => e.StaffImage)
