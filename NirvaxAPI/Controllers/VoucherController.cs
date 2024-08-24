@@ -35,9 +35,9 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return StatusCode(404, new
+                return StatusCode(204, new
                 {
-                    Message = notFound + "any voucher"
+                    Message = "Empty!"
                 });
             }
         }
@@ -55,13 +55,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "any voucher"
-                    });
-                }          
+                    Message = "Empty!"
+                });
+            }
         }
 
         [HttpGet]
@@ -77,13 +77,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "any voucher"
-                    });
-                }
+                    Message = "Empty!"
+                });
+            }
         }
 
 
@@ -219,56 +219,26 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> VoucherStatisticsAsync(int ownerId)
+        public async Task<ActionResult> ViewVoucherStatisticsAsync(int ownerId)
         {
-                var total = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
-                var total2 = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);     
-
+            try { 
+                var total = await _repo.ViewVoucherStatisticsAsync(ownerId);    
                 return StatusCode(200, new
                 {
-                    totalQuantityVoucherUsed = total,
-                    totalPriceVoucherUsed = total2,
-                   
-                });                  
+                    Data = total                               
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + "Something went wrong, please try again."
+                });
+            }
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult> QuantityVoucherUsedStatisticsAsync(int ownerId)
-        {
-                var number = await _repo.QuantityVoucherUsedStatisticsAsync(ownerId);
-                if (number != null)
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = number,
-                    });
-                }
-                return StatusCode(200, new
-                { 
-                    Message = 0,
-                });         
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> PriceVoucherUsedStatisticsAsync(int ownerId)
-        {
-            var number = await _repo.PriceVoucherUsedStatisticsAsync(ownerId);
-                if (number != null)
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = number,
-                    });
-                }
-                else
-                {
-                    return StatusCode(200, new
-                    {
-                        Message = 0,
-                    });
-                }         
-        }
+        
 
     }
 }

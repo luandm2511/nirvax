@@ -41,11 +41,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
+            else
             {
-
-                Message = notFound + "any description"
-            });
+                return StatusCode(204, new
+                {
+                    Message = "Empty!"
+                });
+            }
         }
 
         [HttpGet]
@@ -62,11 +64,13 @@ namespace WebAPI.Controllers
                     Data = description
                 });
             }
-            return StatusCode(404, new
+            else
             {
-
-                Message = notFound + "any description"
-            });
+                return StatusCode(204, new
+                {
+                    Message = "Empty!"
+                });
+            }
         }
 
 

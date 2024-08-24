@@ -43,10 +43,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
+            else
             {
-                Message = notFound + "any guest consultation"
-            });
+                return StatusCode(204, new
+                {
+                    Message = "Empty!"
+                });
+            }
         }
 
 
@@ -66,10 +69,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
+                else
                 {
-                    Message = notFound + "any guest consultation"
-                });
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -96,10 +102,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
+                else
                 {
-                    Message = notFound + "any guest consultation"
-                });
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -126,10 +135,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
+                else
                 {
-                    Message = notFound + "any guest consultation"
-                });
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception ex)
             {

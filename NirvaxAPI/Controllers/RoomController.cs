@@ -35,10 +35,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
-            {                
-                Message = notFound + "any room"
-            });
+            else
+            {
+                return StatusCode(204, new
+                {
+                    Message = "Empty!"
+                });
+            }
         }
 
         [HttpGet]
@@ -55,10 +58,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
-            {               
-                Message = notFound + "any room"
-            });
+                else
+                {
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception )
             {

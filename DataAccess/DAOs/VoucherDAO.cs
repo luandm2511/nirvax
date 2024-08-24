@@ -208,25 +208,20 @@ namespace DataAccess.DAOs
             return false;
         }
 
-      
-        public async Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId)
+
+        public async Task<object> ViewVoucherStatisticsAsync(int ownerId)
         {
             List<Voucher> voucher = await _context.Vouchers.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).ToListAsync();
             var totalQuantity = voucher.Sum(i => i.QuantityUsed);
-            return totalQuantity ;
-        }
-
-       
-
-        public async Task<double> PriceVoucherUsedStatisticsAsync(int ownerId)
-        {
-            List<Voucher> voucher = await _context.Vouchers.Include(i => i.Owner).Where(i => i.OwnerId == ownerId).ToListAsync();
-            //  var totalPrice = voucher.Sum(i => i.TotalPriceUsed);
             var totalPrice = voucher.Sum(v => (v.QuantityUsed) * v.Price);
-            return totalPrice;
+            var result = new Dictionary<string, object>
+          {
+            { "totalQuantityVoucherUsed", totalQuantity },
+            { "totalPriceVoucherUsed", totalPrice },
+          };
+
+            return result;
         }
-
-
     }
 }
 

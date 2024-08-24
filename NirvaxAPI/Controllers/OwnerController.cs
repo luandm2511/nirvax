@@ -38,13 +38,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "any owner"
-                    });
-                }     
+                    Message = "Empty!"
+                });
+            }
         }
 
 
@@ -62,13 +62,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "any owner"
-                    });
-                }
+                    Message = "Empty!"
+                });
+            }
         }
 
 

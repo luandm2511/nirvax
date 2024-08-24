@@ -43,9 +43,9 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(404, new
+                    return StatusCode(204, new
                     {
-                        Message = notFound + "any staff"
+                        Message = "Empty!"
                     });
                 }         
         }
@@ -149,38 +149,28 @@ namespace WebAPI.Controllers
         {
             try
             {
-               // if (ModelState.IsValid)
-               // {
-                    var checkStaff = await _repo.CheckStaffExistAsync(staffId);
-                    if (checkStaff == true)
+                var checkStaff = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
+                if (checkStaff == true)
+                {
+                    return StatusCode(200, new
                     {
-                        var staff1 = await _repo.ChangePasswordStaffAsync(staffId, oldPassword, newPassword, confirmPassword);
-                        return StatusCode(200, new
-                        {
-                            Message = "Change password of staff" + ok,
-                            Data = staff1
-                        });
-                    }
-                    else
+                        Message = "Change password of staff" + ok
+                    });
+
+                }
+                else
+                {
+                    return StatusCode(400, new
                     {
-                        return StatusCode(400, new
-                        {
-                            Message = "Staff not exist!",
-                        });
-                    }
-             //   } else
-               // {
-                 //   return StatusCode(404, new
-                 //   {
-                //        Message = "Don't accept empty!",
-                  //  });
-              //  }
+                        Message = "Error!",
+                    });
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
-                {                 
-                    Message = "An error occurred: " + "Something went wrong, please try again."
+                {
+                    Message = "An error occurred: " + ex.Message
                 });
             }
 

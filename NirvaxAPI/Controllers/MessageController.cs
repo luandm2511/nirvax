@@ -46,13 +46,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "all message of this room"
-                    });
-                }
+                    Message = "Empty!"
+                });
+            }
         }
 
         [HttpPost]

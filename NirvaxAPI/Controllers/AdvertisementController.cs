@@ -42,10 +42,10 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
-                {
-                    Message = notFound + "any advertisement"
-                });
+                 return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
         }
 
             [HttpGet]
@@ -62,10 +62,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
+                else
                 {
-                    Message = notFound + "any advertisement"
-                });
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception )
             {
@@ -90,10 +93,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
-            {
-                Message = notFound + "any advertisement"
-            });
+                else
+                {
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception )
             {
@@ -118,10 +124,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
-            {
-                Message = notFound + "any advertisement"
-            });
+                else
+                {
+                    return StatusCode(204, new
+                    {
+                        Message = "Empty!"
+                    });
+                }
             }
             catch (Exception )
             {
@@ -145,10 +154,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
+            else
             {
-                Message = notFound + "any advertisement"
-            });
+                return StatusCode(204, new
+                {
+                    Message = "Empty!"
+                });
+            }
         }
 
         [HttpGet]
@@ -164,10 +176,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
+            else
+            {
+                return StatusCode(204, new
                 {
-                    Message = notFound + "any advertisement"
+                    Message = "Empty!"
                 });
+            }
         }
 
         [HttpGet]
@@ -183,10 +198,13 @@ namespace WebAPI.Controllers
                     Data = list
                 });
             }
-            return StatusCode(404, new
+            else
             {
-                Message = notFound + "any advertisement"
-            });
+                return StatusCode(204, new
+                {
+                    Message = "Empty!"
+                });
+            }
         }
 
         [HttpGet]
@@ -203,11 +221,14 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                return StatusCode(404, new
+            else
+            {
+                return StatusCode(204, new
                 {
-                    Message = notFound + "any advertisement"
+                    Message = "Empty!"
                 });
-           
+            }
+
         }
 
 
@@ -382,12 +403,22 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> ViewAdversisementStatisticsAsync(int ownerId)
         {
+            try { 
             var total = await _repo.ViewAdversisementStatisticsAsync(ownerId);
 
             return StatusCode(200, new
                 {
                 Data = total,
                 });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + "Something went wrong, please try again."
+                });
+            }
+
         }
     }
 }

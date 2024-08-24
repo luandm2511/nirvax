@@ -34,14 +34,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-
-                        Message = notFound + "any size"
-                    });
-                }
+                    Message = "Empty!"
+                });
+            }
         }
 
 

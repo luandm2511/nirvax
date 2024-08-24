@@ -42,13 +42,13 @@ namespace WebAPI.Controllers
                         Data = list
                     });
                 }
-                else
+            else
+            {
+                return StatusCode(204, new
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "any import product"
-                    });
-                }
+                    Message = "Empty!"
+                });
+            }
         }
 
 
@@ -155,16 +155,26 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> ViewImportProductStatisticsAsync(int ownerId)
         {
+            try { 
             var total = await _repo.ViewImportProductStatisticsAsync(ownerId);
             return StatusCode(200, new
             {
                 Data = total,
             });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + "Something went wrong, please try again."
+                });
+            }
         }
 
         [HttpGet]
         public async Task<ActionResult> ViewWeeklyImportProductAsync(int ownerId)
         {
+            try { 
             var total = await _repo.ViewWeeklyImportProductAsync(ownerId);
           
 
@@ -172,6 +182,14 @@ namespace WebAPI.Controllers
             {
                 Data= total
             });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred: " + "Something went wrong, please try again."
+                });
+            }
         }
 
         

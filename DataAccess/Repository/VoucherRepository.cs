@@ -24,20 +24,16 @@ namespace DataAccess.Repository
         {
             _voucherDAO = voucherDAO;
         }
-        public Task<int> QuantityVoucherUsedStatisticsAsync(int ownerId)
+        public Task<object> ViewVoucherStatisticsAsync(int ownerId)
         {
-            return _voucherDAO.QuantityVoucherUsedStatisticsAsync(ownerId);
+            return _voucherDAO.ViewVoucherStatisticsAsync(ownerId);
 
         }
        public Task<Voucher> GetVoucherById(string voucherId)
         {
             return _voucherDAO.GetVoucherById(voucherId);
         }
-        public Task<double> PriceVoucherUsedStatisticsAsync(int ownerId)
-        {
-            return _voucherDAO.PriceVoucherUsedStatisticsAsync(ownerId);
-
-        }
+      
     
         public Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId)
         {

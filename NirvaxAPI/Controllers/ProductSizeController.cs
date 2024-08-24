@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(200, new
+                    return StatusCode(204, new
                     {
                         Message = "Empty!"
                     });
@@ -69,9 +69,9 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(404, new
+                    return StatusCode(204, new
                     {
-                        Message = notFound + "any productSize"
+                        Message = "Empty!"
                     });
                 }
             }
