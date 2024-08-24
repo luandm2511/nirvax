@@ -178,7 +178,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var statis = await _repository.AccountStatistics();
+                var statis = await _repository.GetAccountStatisticsAsync();
                 return Ok(statis);
             }
             catch (Exception )

@@ -19,7 +19,7 @@ public partial class Owner
 
     public string Address { get; set; } = null!;
 
-    public DateTime? CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     public bool IsBan { get; set; }
 

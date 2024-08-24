@@ -128,6 +128,7 @@ namespace WebAPI.Controllers
                             Dob = request.Dob,
                             Gender = request.Gender,
                             Address = request.Address,
+                            CreatedDate = DateTime.Now,
                             Role = "User",
                             IsBan = false
                         };
@@ -171,6 +172,7 @@ namespace WebAPI.Controllers
                             Fullname = request.Fullname,
                             Phone = request.Phone,
                             Address = request.Address,
+                            CreatedDate = DateTime.Now,
                             IsBan = false
                         };
                         await _repository.AddOwnerAsync(owner);

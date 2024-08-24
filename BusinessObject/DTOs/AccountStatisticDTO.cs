@@ -8,9 +8,9 @@ namespace BusinessObject.DTOs
 {
     public class AccountStatisticDTO
     {
-        public int TotalAccount { get; set; }
-        public int TotalAccountBanned { get; set; }
-        public int TotalOwner { get; set;}
-        public int TotalOwnerBanned { get;set;}
+        public int Year { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public List<DailyAccountStatistics> DailyStatistics { get; set; } = new List<DailyAccountStatistics>();
     }
 }
