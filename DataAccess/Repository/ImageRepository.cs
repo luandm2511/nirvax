@@ -26,7 +26,7 @@ namespace DataAccess.Repository
             await _img.DeleteImagesAsync(image);
         }
 
-        public async Task<IEnumerable<Image>> GetByDescriptionAsync(int desId) => await _img.GetByDescriptionAsync(desId);
+        public async Task<IEnumerable<Image>> GetBySizeChartAsync(int sizeChartId) => await _img.GetBySizeChartAsync(sizeChartId);
 
         public async Task<Image> GetByIdAsync(int id) => await _img.GetByIdAsync(id);
 

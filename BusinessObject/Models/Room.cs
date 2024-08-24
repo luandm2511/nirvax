@@ -18,4 +18,6 @@ public partial class Room
     public virtual Account Account { get; set; } = null!;
 
     public virtual Owner Owner { get; set; } = null!;
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
 }

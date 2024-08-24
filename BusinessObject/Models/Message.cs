@@ -16,4 +16,6 @@ public partial class Message
     public int RoomId { get; set; }
 
     public string Sendertype { get; set; } = null!;
+
+    public virtual Room Room { get; set; } = null!;
 }

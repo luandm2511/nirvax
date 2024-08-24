@@ -29,7 +29,8 @@ namespace WebAPI.Helpers
             CreateMap<Staff, StaffDTO>().ReverseMap();
             CreateMap<Description, DescriptionDTO>().ReverseMap();
             CreateMap<Description, DescriptionCreateDTO>().ReverseMap();
-
+            CreateMap<SizeChart, SizeChartDTO>().ReverseMap();
+            CreateMap<SizeChart, SizeChartCreateDTO>().ReverseMap();
 
 
 

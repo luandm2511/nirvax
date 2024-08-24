@@ -11,7 +11,7 @@ namespace DataAccess.IRepository
     {
         Task<Image> GetByIdAsync(int id);
         Task<IEnumerable<Image>> GetByProductAsync(int productId);
-        Task<IEnumerable<Image>> GetByDescriptionAsync(int desId);
+        Task<IEnumerable<Image>> GetBySizeChartAsync(int sizeChartId);
         Task AddImagesAsync(Image image);
         Task DeleteImagesAsync(Image image);
     }

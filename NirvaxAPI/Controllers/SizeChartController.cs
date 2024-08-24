@@ -10,16 +10,16 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]/[Action]")]
     [ApiController]
-    public class DescriptionController : ControllerBase
-    {/*
-        private readonly IDescriptionRepository _repo;
+    public class SizeChartController : ControllerBase
+    {
+        private readonly ISizeChartRepository _repo;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IImageRepository _imageRepository;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
-        public DescriptionController(IDescriptionRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository)
+        public SizeChartController(ISizeChartRepository repo, IImageRepository imageRepository, ITransactionRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
             _repo = repo;
@@ -29,9 +29,9 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Description>>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<ActionResult<IEnumerable<SizeChart>>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            var list = await _repo.GetAllDescriptionsAsync(searchQuery, page, pageSize, ownerId);
+            var list = await _repo.GetAllSizeChartsAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -52,16 +52,16 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Description>>> GetDescriptionForUserAsync(string? searchQuery)
+        public async Task<ActionResult<IEnumerable<SizeChart>>> GetSizeChartForUserAsync(string? searchQuery)
         {
-            var description = await _repo.GetDescriptionForUserAsync(searchQuery);
-            if (description.Any())
+            var sizeChart = await _repo.GetSizeChartForUserAsync(searchQuery);
+            if (sizeChart.Any())
             {
                 return StatusCode(200, new
                 {
 
-                    Message = "Get descriptions" + ok,
-                    Data = description
+                    Message = "Get size chart" + ok,
+                    Data = sizeChart
                 });
             }
             else
@@ -74,19 +74,19 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet("{descriptionId}")]
+        [HttpGet("{sizeChartId}")]
         //  [Authorize]
-        public async Task<ActionResult> GetDescriptionByIdAsync(int descriptionId)
+        public async Task<ActionResult> GetSizeChartByIdAsync(int sizeChartId)
         {
 
-            var description = await _repo.GetDescriptionByIdAsync(descriptionId);
+            var sizeChart = await _repo.GetSizeChartByIdAsync(sizeChartId);
 
-            if(description != null) { 
+            if(sizeChart != null) { 
             return StatusCode(200, new
             {
 
-                Message = "Get description by id" + ok,
-                Data = description
+                Message = "Get size chart by id" + ok,
+                Data = sizeChart
             });
 
 
@@ -95,28 +95,28 @@ namespace WebAPI.Controllers
             return StatusCode(404, new
             {
 
-                Message = notFound + "any description"
+                Message = notFound + "any size chart"
             });}
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateDesctiptionAsync([FromForm] DescriptionCreateDTO descriptionCreateDTO)
+        public async Task<ActionResult> CreateSizeChartAsync([FromForm] SizeChartCreateDTO sizeChartDTOCreateDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try {
                 if (ModelState.IsValid)
                 {
 
-                    var checkDescription = await _repo.CheckDescriptionAsync(0, descriptionCreateDTO.Title, descriptionCreateDTO.Content);
-                    if (checkDescription == true)
+                    var checkSizeChart = await _repo.CheckSizeChartAsync(0, sizeChartDTOCreateDTO.Title, sizeChartDTOCreateDTO.Content);
+                    if (checkSizeChart == true)
                     {
-                        var description1 = await _repo.CreateDesctiptionAsync(descriptionCreateDTO);
-                        foreach (var link in descriptionCreateDTO.ImageLinks)
+                        var description1 = await _repo.CreateSizeChartAsync(sizeChartDTOCreateDTO);
+                        foreach (var link in sizeChartDTOCreateDTO.ImageLinks)
                         {
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                DescriptionId = description1.DescriptionId
+                                SizeChartId = description1.SizeChartId
                             };
                             await _imageRepository.AddImagesAsync(image);
 
@@ -125,7 +125,7 @@ namespace WebAPI.Controllers
 
                         return StatusCode(200, new
                         {
-                            Message = "Create description " + ok,
+                            Message = "Create size chart " + ok,
                             Data = description1
                         });
 
@@ -134,7 +134,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            Message = "There already exists a description with that information",
+                            Message = "There already exists a size chart with that information",
                         });
                     }
 
@@ -143,7 +143,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Description!",
+                        Message = "Please enter valid size chart!",
                     });
                 }
             }
@@ -159,7 +159,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateDesctiptionAsync([FromForm] DescriptionDTO descriptionDTO)
+        public async Task<ActionResult> UpdateSizeChartAsync([FromForm] SizeChartDTO sizeChartDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
 
@@ -167,24 +167,24 @@ namespace WebAPI.Controllers
             {
                 if (ModelState.IsValid) {
 
-                    var checkDescription = await _repo.CheckDescriptionAsync(descriptionDTO.DescriptionId, descriptionDTO.Title, descriptionDTO.Content);
-                    if (checkDescription == true)
+                    var checkSizeChart = await _repo.CheckSizeChartAsync(sizeChartDTO.SizeChartId, sizeChartDTO.Title, sizeChartDTO.Content);
+                    if (checkSizeChart == true)
                     {
-                        var description1 = await _repo.UpdateDesctiptionAsync(descriptionDTO);
-                        IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByDescriptionAsync(descriptionDTO.DescriptionId);
+                        var description1 = await _repo.UpdateSizeChartAsync(sizeChartDTO);
+                        IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetBySizeChartAsync(sizeChartDTO.SizeChartId);
                         foreach (BusinessObject.Models.Image img in images)
                         {
                             // Xóa ảnh cũ trước khi cập nhật ảnh mới
                             await _imageRepository.DeleteImagesAsync(img);
 
                         }
-                        foreach (var link in descriptionDTO.ImageLinks)
+                        foreach (var link in sizeChartDTO.ImageLinks)
                         {
                             // Save image information to database
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                DescriptionId = description1.DescriptionId
+                                SizeChartId = description1.SizeChartId
                             };
                             await _imageRepository.AddImagesAsync(image);
                         }
@@ -192,7 +192,7 @@ namespace WebAPI.Controllers
 
                         return StatusCode(200, new
                         {
-                            Message = "Update description" + ok,
+                            Message = "Update size chart" + ok,
                             Data = description1
                         });
                     }
@@ -200,7 +200,7 @@ namespace WebAPI.Controllers
                     {
                         return StatusCode(400, new
                         {
-                            Message = "There already exists a description with that information!",
+                            Message = "There already exists a size chart with that information!",
                         });
                     }
                 }
@@ -208,7 +208,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Please enter valid Description!",
+                        Message = "Please enter valid size chart!",
                     });
                 }
             }
@@ -223,27 +223,27 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPatch("{descriptionId}")]
-        public async Task<ActionResult> DeleteDesctiptionAsync(int descriptionId)
+        [HttpPatch("{sizeChartId}")]
+        public async Task<ActionResult> DeleteSizeChartAsync(int sizeChartId)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
 
             try
             { 
-            IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetByDescriptionAsync(descriptionId);
+            IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetBySizeChartAsync(sizeChartId);
             foreach (BusinessObject.Models.Image img in images)
             {
                 // Xóa ảnh cũ trước khi xóa ảnh mới
                 await _imageRepository.DeleteImagesAsync(img);
             }
-            var description = await _repo.DeleteDesctiptionAsync(descriptionId);
-                if (description)
+            var sizeChart = await _repo.DeleteSizeChartAsync(sizeChartId);
+                if (sizeChart)
                 {
                     await _transactionRepository.CommitTransactionAsync();
 
                     return StatusCode(200, new
                     {
-                        Message = "Delete description " + ok,
+                        Message = "Delete size chart " + ok,
                     });
                 }
                 else
@@ -264,7 +264,6 @@ namespace WebAPI.Controllers
             }
 
         }
-        */
 
     }
 }

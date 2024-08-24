@@ -12,7 +12,7 @@ namespace DataAccess.IRepository
 {
     public interface IDescriptionRepository
     {
-
+        /*
         Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<List<Description>> GetDescriptionForUserAsync(string? searchQuery);
         Task<Description> GetDescriptionByIdAsync(int sizeId);
@@ -22,6 +22,7 @@ namespace DataAccess.IRepository
 
         Task<Description> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO);
         Task<bool> DeleteDesctiptionAsync(int sizeId);
+        */
 
     }
 }

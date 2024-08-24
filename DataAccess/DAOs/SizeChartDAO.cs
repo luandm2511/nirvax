@@ -15,28 +15,28 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.DAOs
 {
-    public  class DescriptionDAO
+    public  class SizeChartDAO
     {
-        /*
+
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
         private IDbContextTransaction _transaction;
 
 
 
-        public DescriptionDAO(NirvaxContext context, IMapper mapper)
+        public SizeChartDAO(NirvaxContext context, IMapper mapper)
         {
 
              _context = context;
             _mapper = mapper;
         }
   
-        public async Task<bool> CheckDescriptionAsync(int descriptionId, string title, string content)
+        public async Task<bool> CheckSizeChartAsync(int descriptionId, string title, string content)
         {
             if (descriptionId == 0)
             {
-                Description? des = new Description();
-                des = await _context.Descriptions.SingleOrDefaultAsync(i => i.Content.Trim() == content.Trim() || i.Title.Trim() == title.Trim());
+                SizeChart? des = new SizeChart();
+                des = await _context.SizeCharts.SingleOrDefaultAsync(i => i.Content.Trim() == content.Trim() || i.Title.Trim() == title.Trim());
                 if (des == null)
                 {
                     return true;
@@ -44,9 +44,9 @@ namespace DataAccess.DAOs
             }
             else
             {
-                List<Description> getList = await _context.Descriptions
+                List<SizeChart> getList = await _context.SizeCharts
       
-                .Where(i => i.DescriptionId != descriptionId)
+                .Where(i => i.SizeChartId != descriptionId)
                // .Where(i => i.Content.Trim() == content.Trim())
                 .Where(i => i.Title.Trim() == title.Trim())
                 .ToListAsync();
@@ -66,16 +66,16 @@ namespace DataAccess.DAOs
           
         }
         //owner,staff
-        public async Task<List<Description>> GetAllDescriptionsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if (checkOwner == null) { return new List<Description>(); }
-            List < Description> getList = new List<Description> ();
+            if (checkOwner == null) { return new List<SizeChart>(); }
+            List < SizeChart> getList = new List<SizeChart> ();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                 getList = await _context.Descriptions
+                 getList = await _context.SizeCharts
                    .Where(i => i.Isdelete == false)
                   .Include(i => i.Images)
                   .Include(i => i.Products)
@@ -88,7 +88,7 @@ namespace DataAccess.DAOs
             }
             else
             {
-               getList = await _context.Descriptions
+               getList = await _context.SizeCharts
                     .Where(i => i.Isdelete == false)
                    .Include(i => i.Images)
                   .Include(i => i.Products)
@@ -101,14 +101,14 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<Description>> GetDescriptionForUserAsync(string? searchQuery)
+        public async Task<List<SizeChart>> GetSizeChartForUserAsync(string? searchQuery)
         {
-            List<Description> getList = new List<Description>();
+            List<SizeChart> getList = new List<SizeChart>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                 getList = await _context.Descriptions
+                 getList = await _context.SizeCharts
                      .Include(i => i.Images)
                   .Include(i => i.Products)
                     .Where(i => i.Isdelete == false)
@@ -118,7 +118,7 @@ namespace DataAccess.DAOs
             }
             else
             {
-                getList = await _context.Descriptions
+                getList = await _context.SizeCharts
                      .Include(i => i.Images)
                   .Include(i => i.Products)
                     .Where(i => i.Isdelete == false)                  
@@ -128,21 +128,21 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<Description> GetDescriptionByIdAsync(int descriptionId)
+        public async Task<SizeChart> GetSizeChartByIdAsync(int descriptionId)
         {
                
-                Description? des = await _context.Descriptions.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);               
+                SizeChart? des = await _context.SizeCharts.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeChartId == descriptionId);               
       
                 return des;       
         }
 
 
-        public async Task<Description> CreateDesctiptionAsync(DescriptionCreateDTO descriptionCreateDTO)
+        public async Task<SizeChart> CreateSizeChartAsync(SizeChartCreateDTO descriptionCreateDTO)
         {
 
-            Description description = _mapper.Map<Description>(descriptionCreateDTO);
+            SizeChart description = _mapper.Map<SizeChart>(descriptionCreateDTO);
             description.Isdelete = false;
-            await _context.Descriptions.AddAsync(description);
+            await _context.SizeCharts.AddAsync(description);
             int i = await _context.SaveChangesAsync();
             if (i > 0)
             {
@@ -152,26 +152,26 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<Description> UpdateDesctiptionAsync(DescriptionDTO descriptionDTO)
+        public async Task<SizeChart> UpdateSizeChartAsync(SizeChartDTO descriptionDTO)
         {
-            Description? description = await _context.Descriptions.Include(i => i.Images)
-                  .Include(i => i.Products).SingleOrDefaultAsync(i => i.DescriptionId == descriptionDTO.DescriptionId);
-            //ánh xạ đối tượng DescriptionDTO đc truyền vào cho staff
+            SizeChart? description = await _context.SizeCharts.Include(i => i.Images)
+                  .Include(i => i.Products).SingleOrDefaultAsync(i => i.SizeChartId == descriptionDTO.SizeChartId);
+            //ánh xạ đối tượng SizeChartDTO đc truyền vào cho staff
             descriptionDTO.Isdelete = false;
                 _mapper.Map(descriptionDTO, description);
-                 _context.Descriptions.Update(description);
+                 _context.SizeCharts.Update(description);
                 await _context.SaveChangesAsync();
                 return description;
         }
 
-        public async Task<bool> DeleteDesctiptionAsync(int descriptionId)
+        public async Task<bool> DeleteSizeChartAsync(int descriptionId)
         {
-            Description? description = await _context.Descriptions.SingleOrDefaultAsync(i => i.DescriptionId == descriptionId);
+            SizeChart? description = await _context.SizeCharts.SingleOrDefaultAsync(i => i.SizeChartId == descriptionId);
 
             if (description != null)
             {
                 description.Isdelete = true;
-                _context.Descriptions.Update(description);
+                _context.SizeCharts.Update(description);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -180,7 +180,6 @@ namespace DataAccess.DAOs
 
 
         }
-        */
     }
 }
 

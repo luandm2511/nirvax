@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Repository
 {
     public class DescriptionRepository : IDescriptionRepository
-    {
+    {/*
        
         private readonly DescriptionDAO _descriptionDAO;
         public DescriptionRepository(DescriptionDAO descriptionDAO)
@@ -58,6 +58,7 @@ namespace DataAccess.Repository
         {
             return _descriptionDAO.DeleteDesctiptionAsync(descriptionId);
         }
+        */
 
     }
 }
