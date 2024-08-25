@@ -60,7 +60,8 @@ namespace DataAccess.DAOs
                 VoucherId = ownerVoucherDto?.VoucherId,
             };
 
-            _context.Orders.Add(order);
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
             return order;
         }
         public async Task<IEnumerable<HistoryOrderDTO>> GetOrdersByAccountIdAsync(int accountId)
@@ -92,7 +93,6 @@ namespace DataAccess.DAOs
                 UnitPrice = o.OrderDetails.FirstOrDefault()?.UnitPrice ?? 0,
                 TotalPrice = o.TotalAmount
             }).ToList();
-
             return historyList;
         }
 
