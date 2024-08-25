@@ -122,6 +122,11 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == sizeCreateDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
             Size size = _mapper.Map<Size>(sizeCreateDTO);
             size.Isdelete = false;
             await _context.Sizes.AddAsync(size);
@@ -136,6 +141,11 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateSizeAsync(SizeDTO sizeDTO)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == sizeDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
             Size? size = await _context.Sizes.Include(i => i.Owner).SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
             sizeDTO.Isdelete = false;
                 _mapper.Map(sizeDTO, size);

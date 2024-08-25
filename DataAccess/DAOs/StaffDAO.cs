@@ -184,7 +184,11 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO)
         {
-            
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == staffCreateDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
             string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(staffCreateDTO.Password);
             staffCreateDTO.Password = newpasswordHash;
             Staff staff = _mapper.Map<Staff>(staffCreateDTO);
@@ -206,6 +210,11 @@ namespace DataAccess.DAOs
         //newPass =1234
         public async Task<bool> UpdateStaffAsync(StaffDTO staffDTO)
         {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == staffDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
             StaffDTO newStaff;
             newStaff = staffDTO;
             Staff? staffOrgin = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffDTO.StaffId);

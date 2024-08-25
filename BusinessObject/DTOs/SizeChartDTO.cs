@@ -11,6 +11,8 @@ namespace BusinessObject.DTOs
     {
         [Required(ErrorMessage = "SizeChartId cannot be empty!!")]
         public int SizeChartId { get; set; }
+        [Required(ErrorMessage = "OwnerId cannot be empty!!")]
+        public int OwnerId { get; set; }
         [Required(ErrorMessage = " Title be empty!!")]
         [MinLength(2, ErrorMessage = " Title to be at least 2 characters!!")]
         [MaxLength(100, ErrorMessage = "Title is limited to 100 characters!!")]
@@ -25,7 +27,8 @@ namespace BusinessObject.DTOs
 
     public class SizeChartCreateDTO
     {
-        
+        [Required(ErrorMessage = "OwnerId cannot be empty!!")]
+        public int OwnerId { get; set; }
         [Required(ErrorMessage = " Title be empty!!")]
         [MinLength(2, ErrorMessage = " Title to be at least 2 characters!!")]
         [MaxLength(100, ErrorMessage = "Title is limited to 100 characters!!")]

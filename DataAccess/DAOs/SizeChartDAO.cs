@@ -12,6 +12,7 @@ using Azure;
 using Azure.Core;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Net.WebSockets;
 
 namespace DataAccess.DAOs
 {
@@ -31,9 +32,9 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
   
-        public async Task<bool> CheckSizeChartAsync(int descriptionId, string title, string content)
+        public async Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content)
         {
-            if (descriptionId == 0)
+            if (sizeChartId == 0)
             {
                 SizeChart? des = new SizeChart();
                 des = await _context.SizeCharts.SingleOrDefaultAsync(i => i.Content.Trim() == content.Trim() || i.Title.Trim() == title.Trim());
@@ -46,7 +47,7 @@ namespace DataAccess.DAOs
             {
                 List<SizeChart> getList = await _context.SizeCharts
       
-                .Where(i => i.SizeChartId != descriptionId)
+                .Where(i => i.SizeChartId != sizeChartId)
                // .Where(i => i.Content.Trim() == content.Trim())
                 .Where(i => i.Title.Trim() == title.Trim())
                 .ToListAsync();
@@ -128,19 +129,23 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<SizeChart> GetSizeChartByIdAsync(int descriptionId)
+        public async Task<SizeChart> GetSizeChartByIdAsync(int sizeChartId)
         {
                
-                SizeChart? des = await _context.SizeCharts.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeChartId == descriptionId);               
+                SizeChart? des = await _context.SizeCharts.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeChartId == sizeChartId);               
       
                 return des;       
         }
 
 
-        public async Task<SizeChart> CreateSizeChartAsync(SizeChartCreateDTO descriptionCreateDTO)
+        public async Task<SizeChart> CreateSizeChartAsync(SizeChartCreateDTO sizeChartCreateDTO)
         {
-
-            SizeChart description = _mapper.Map<SizeChart>(descriptionCreateDTO);
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == sizeChartCreateDTO.OwnerId).SingleOrDefaultAsync();            
+            if(checkOwner == null) 
+            {
+                throw new Exception("Not exist this owner!");
+            }
+            SizeChart description = _mapper.Map<SizeChart>(sizeChartCreateDTO);
             description.Isdelete = false;
             await _context.SizeCharts.AddAsync(description);
             int i = await _context.SaveChangesAsync();
@@ -152,26 +157,31 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<SizeChart> UpdateSizeChartAsync(SizeChartDTO descriptionDTO)
+        public async Task<SizeChart> UpdateSizeChartAsync(SizeChartDTO sizeChartDTO)
         {
-            SizeChart? description = await _context.SizeCharts.Include(i => i.Images)
-                  .Include(i => i.Products).SingleOrDefaultAsync(i => i.SizeChartId == descriptionDTO.SizeChartId);
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == sizeChartDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
+            SizeChart? sizeChart = await _context.SizeCharts.Include(i => i.Images)
+                  .Include(i => i.Products).SingleOrDefaultAsync(i => i.SizeChartId == sizeChartDTO.SizeChartId);
             //ánh xạ đối tượng SizeChartDTO đc truyền vào cho staff
-            descriptionDTO.Isdelete = false;
-                _mapper.Map(descriptionDTO, description);
-                 _context.SizeCharts.Update(description);
+            sizeChartDTO.Isdelete = false;
+                _mapper.Map(sizeChartDTO, sizeChart);
+                 _context.SizeCharts.Update(sizeChart);
                 await _context.SaveChangesAsync();
-                return description;
+                return sizeChart;
         }
 
-        public async Task<bool> DeleteSizeChartAsync(int descriptionId)
+        public async Task<bool> DeleteSizeChartAsync(int sizeChartId)
         {
-            SizeChart? description = await _context.SizeCharts.SingleOrDefaultAsync(i => i.SizeChartId == descriptionId);
+            SizeChart? sizeChart = await _context.SizeCharts.SingleOrDefaultAsync(i => i.SizeChartId == sizeChartId);
 
-            if (description != null)
+            if (sizeChart != null)
             {
-                description.Isdelete = true;
-                _context.SizeCharts.Update(description);
+                sizeChart.Isdelete = true;
+                _context.SizeCharts.Update(sizeChart);
                 await _context.SaveChangesAsync();
                 return true;
             }

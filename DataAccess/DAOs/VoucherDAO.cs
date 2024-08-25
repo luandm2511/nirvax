@@ -169,7 +169,12 @@ namespace DataAccess.DAOs
 
 
         public async Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
-        {             
+        {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == voucherCreateDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
             Voucher voucher = _mapper.Map<Voucher>(voucherCreateDTO);
             voucher.Isdelete = false;
             voucher.QuantityUsed = 0;
@@ -186,8 +191,13 @@ namespace DataAccess.DAOs
         }
 
         public async Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO)
-        {     
-                Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);             
+        {
+            var checkOwner = await _context.Owners.Where(i => i.OwnerId == voucherDTO.OwnerId).SingleOrDefaultAsync();
+            if (checkOwner == null)
+            {
+                throw new Exception("Not exist this owner!");
+            }
+            Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);             
                 voucherDTO.Isdelete = false;
                 _mapper.Map(voucherDTO, voucher);
                  _context.Vouchers.Update(voucher);
