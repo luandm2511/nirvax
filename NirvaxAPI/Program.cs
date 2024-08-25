@@ -52,6 +52,8 @@ builder.Services.AddScoped<OwnerDAO>();
 builder.Services.AddScoped<ProductDAO>();
 builder.Services.AddScoped<ProductSizeDAO>();
 builder.Services.AddScoped<VoucherDAO>();
+builder.Services.AddScoped<SizeChartDAO>();
+
 builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<AccessLogDAO>();
 builder.Services.AddScoped<TransactionDAO>();
@@ -74,6 +76,8 @@ builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 builder.Services.AddScoped<IAccessLogService, AccessLogService>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<ISizeChartRepository, SizeChartRepository>();
+
 builder.Services.AddScoped<StaffDAO>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<OwnerDAO>();

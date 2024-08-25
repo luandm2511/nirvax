@@ -385,16 +385,12 @@ public partial class NirvaxContext : DbContext
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Message");
+            entity.ToTable("Message");
 
+            entity.Property(e => e.MessageId).HasColumnName("message_id");
             entity.Property(e => e.Content)
                 .HasMaxLength(500)
                 .HasColumnName("content");
-            entity.Property(e => e.MessageId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("message_id");
             entity.Property(e => e.RoomId).HasColumnName("room_id");
             entity.Property(e => e.SenderId).HasColumnName("sender_id");
             entity.Property(e => e.Sendertype)
