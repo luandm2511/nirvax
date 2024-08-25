@@ -43,7 +43,7 @@ namespace DataAccess.DAOs
         {
             List<MessageDTO> list = new List<MessageDTO>();
                 List<Message> getList = await _context.Messages
-                 .Include(i => i.Room)
+                 .Include(i => i)
                     .Where(i => i.RoomId == roomId)
                     .OrderBy(i=> i.Timestamp)
                     .ToListAsync();
