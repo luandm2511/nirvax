@@ -58,8 +58,11 @@ namespace DataAccess.DAOs
             {
                 List<ProductSize>  getList = await _context.ProductSizes
                     .Include(i => i.Size) .Include(i => i.Product)
-                  //  .Where(i => i.Isdelete == false)
-                    .Where(i => i.Size.OwnerId == ownerId)
+                   .Where(i => i.Isdelete == false)
+                    .Where(i => i.Size.OwnerId == ownerId
+                    && i.Product.Isdelete == false
+                    && i.Size.Isdelete == false
+                    )
                     .Where(i => i.ProductSizeId.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -72,8 +75,11 @@ namespace DataAccess.DAOs
                 List<ProductSize> getList = await _context.ProductSizes
                     .Include(i => i.Size).Include(i => i.Product)
 
-                    //  .Where(i => i.Isdelete == false)
-                    .Where(i => i.Size.OwnerId == ownerId)
+                    .Where(i => i.Isdelete == false)
+                    .Where(i => i.Size.OwnerId == ownerId 
+                    && i.Product.Isdelete == false
+                    && i.Size.Isdelete == false
+                    )
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
