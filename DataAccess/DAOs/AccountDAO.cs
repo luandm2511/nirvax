@@ -58,7 +58,7 @@ namespace DataAccess.DAOs
                 StartDate = group.Key.StartDate,
                 EndDate = group.Key.EndDate,
                 DayOfWeek = group.Key.DayOfWeek,
-                NewAccounts = group.Count()
+                NumberAccounts = group.Count()
             })
             .ToList();
 
@@ -76,7 +76,7 @@ namespace DataAccess.DAOs
                     StartDate = group.Key.StartDate,
                     EndDate = group.Key.EndDate,
                     DayOfWeek = group.Key.DayOfWeek,
-                    NewOwners = group.Count()
+                    NumberOwners = group.Count()
                 })
                 .ToList();
 
@@ -89,8 +89,8 @@ namespace DataAccess.DAOs
                                             acc.StartDate,
                                             acc.EndDate,
                                             acc.DayOfWeek,
-                                            acc.NewAccounts,
-                                            NewOwners = ownGroup.Sum(o => o.NewOwners)
+                                            acc.NumberAccounts,
+                                            NumberOwners = ownGroup.Sum(o => o.NumberOwners)
                                         })
                 .ToList();
 
@@ -106,8 +106,8 @@ namespace DataAccess.DAOs
                         .Select(stat => new DailyAccountStatistics
                         {
                             DayOfWeek = stat.DayOfWeek,
-                            NumberAccounts = stat.NewAccounts,
-                            NumberOwners = stat.NewOwners
+                            NumberAccounts = stat.NumberAccounts,
+                            NumberOwners = stat.NumberOwners
                         })
                         .ToList()
                 })
