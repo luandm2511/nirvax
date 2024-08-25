@@ -77,7 +77,9 @@ public partial class NirvaxContext : DbContext
     {
         modelBuilder.Entity<AccessLog>(entity =>
         {
-            entity.HasKey(e => e.AccessId);
+            entity.HasKey(e => e.AccessId).HasName("PK_AccessLogs");
+
+            entity.ToTable("AccessLog");
 
             entity.Property(e => e.AccessId).HasColumnName("access_id");
             entity.Property(e => e.AccessTime)
@@ -402,10 +404,10 @@ public partial class NirvaxContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("timestamp");
 
-            entity.HasOne(d => d.Room).WithMany()
+            entity.HasOne(d => d.Room).WithMany(p => p.Messages)
                 .HasForeignKey(d => d.RoomId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Messages_Room");
+                .HasConstraintName("fk_message_room");
         });
 
         modelBuilder.Entity<Notification>(entity =>
