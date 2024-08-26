@@ -116,8 +116,6 @@ builder.Services.AddScoped<AdvertisementDAO>();
 
 
 
-builder.Services.AddScoped<IDescriptionRepository, DescriptionRepository>();
-builder.Services.AddScoped<DescriptionDAO>();
 builder.Services.AddScoped<NotificationDAO>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IGuestConsultationRepository, GuestConsultationRepository>();

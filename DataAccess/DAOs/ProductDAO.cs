@@ -21,7 +21,7 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.SizeChart)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner).AsNoTracking().Where(p => !p.Isdelete).ToListAsync();
         }
@@ -35,7 +35,8 @@ namespace DataAccess.DAOs
         public async Task<Product> GetByIdAsync(int id)
         {
             return await _context.Products.Include(p => p.Images)
-                    .Include(p => p.Description)
+                    .Include(p => p.SizeChart)
+                        .ThenInclude(sc => sc.Images)
                     .Include(p => p.Category)
                     .Include(p => p.Brand)
                     .Include(p => p.Comments)
@@ -47,13 +48,13 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Product>> GetByOwnerAsync(int ownerId)
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.SizeChart)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner).AsNoTracking().Where(p => p.OwnerId == ownerId && !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
         }
         public async Task<IEnumerable<Product>> GetByOwnerInDashboardAsync(int ownerId)
         {
-            return await _context.Products.Include(p => p.Images).Include(p => p.Description)
+            return await _context.Products.Include(p => p.Images).Include(p => p.SizeChart)
                     .Include(p => p.Category).Include(p => p.Brand)
                     .Include(p => p.Owner).AsNoTracking().Where(p => p.OwnerId == ownerId && !p.Isdelete).ToListAsync();
         }
@@ -76,7 +77,7 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Product>> SearchProductsInAdminAsync(string? searchTerm)
         {
             var productsQuery = _context.Products
-                .Include(p => p.Images).Include(p => p.Description)
+                .Include(p => p.Images).Include(p => p.SizeChart)
                 .Include(p => p.Category).Include(p => p.Brand)
                 .Include(p => p.Owner)
                 .Where(p => !p.Isdelete);
@@ -93,7 +94,7 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Product>> SearchProductsInOwnerAsync(string? searchTerm, int ownerId)
         {
             var productsQuery = _context.Products
-                .Include(p => p.Images).Include(p => p.Description)
+                .Include(p => p.Images).Include(p => p.SizeChart)
                 .Include(p => p.Category).Include(p => p.Brand)
                 .Include(p => p.Owner)
                 .Where(p => !p.Isdelete && p.OwnerId == ownerId);
