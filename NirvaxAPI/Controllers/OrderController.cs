@@ -180,10 +180,10 @@ namespace WebAPI.Controllers
 
                 return Ok(new { message = "Order successful!" });
             }
-            catch (Exception )
+            catch (Exception e)
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return StatusCode(500, $"Internal server error: {"Something went wrong, please try again."}");
+                return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
 
