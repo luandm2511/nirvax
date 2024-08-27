@@ -183,7 +183,7 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost]
-        [Authorize(Roles = "Owner,Staff")]
+        //[Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> Create([FromForm] ProductDTO productDto)
         {
             if (!ModelState.IsValid)

@@ -38,7 +38,17 @@ namespace DataAccess.DAOs
         public async Task<Order> AddOrderAsync(OrderDTO createOrderDTO, ItemGroup group, double priceVoucher)
         {
             var ownerVoucherDto = createOrderDTO.Vouchers?.FirstOrDefault(v => v.OwnerId == group.OwnerId);
+            string ownerVoucherId = null;
+            string ownerVoucherNote = null;
 
+            if (ownerVoucherDto != null)
+            {
+                if (!string.IsNullOrEmpty(ownerVoucherDto.VoucherId))
+                {
+                    ownerVoucherId = ownerVoucherDto.VoucherId;
+                }
+                ownerVoucherNote = ownerVoucherDto.Note;
+            }
             string codeOrder;
             do
             {
@@ -52,12 +62,12 @@ namespace DataAccess.DAOs
                 Phone = createOrderDTO.Phone,
                 OrderDate = DateTime.Now,
                 Address = createOrderDTO.Address,
-                Note = ownerVoucherDto.Note,
+                Note = ownerVoucherNote,
                 TotalAmount = group.Items.Sum(item => item.Quantity * item.UnitPrice) - priceVoucher,
                 AccountId = createOrderDTO.AccountId,
                 OwnerId = group.OwnerId,
                 StatusId = 1,
-                VoucherId = ownerVoucherDto?.VoucherId,
+                VoucherId = ownerVoucherId,
             };
 
             await _context.Orders.AddAsync(order);
@@ -77,6 +87,7 @@ namespace DataAccess.DAOs
                     .ThenInclude(od => od.ProductSize)
                         .ThenInclude(ps => ps.Size)
                 .Where(o => o.AccountId == accountId)
+                .OrderByDescending(o => o.RequiredDate )
                 .ToListAsync();
 
             var historyList = orders.Select(o => new HistoryOrderDTO
