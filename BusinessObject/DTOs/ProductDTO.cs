@@ -10,15 +10,15 @@ namespace BusinessObject.DTOs
 {
     public class ProductDTO
     {
-        [Required(ErrorMessage = " Name cannot be empty!!")]
+        [Required(ErrorMessage = "Name cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Name to be at least 2 characters!!")]
         [MaxLength(50, ErrorMessage = "Name is limited to 50 characters!!")]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = " ShortDescription cannot be empty!!")]
-        [MinLength(10, ErrorMessage = " ShortDescription to be at least 10 characters!!")]
-        [MaxLength(200, ErrorMessage = "ShortDescription is limited to 200 characters!!")]
-        public string ShortDescription { get; set; } = null!;
+        [Required(ErrorMessage = "Description cannot be empty!!")]
+        [MinLength(10, ErrorMessage = "Description to be at least 10 characters!!")]
+        [MaxLength(200, ErrorMessage = "Description is limited to 200 characters!!")]
+        public string Description { get; set; } = null!;
         public List<string> ImageLinks {  get; set; }
             
         [Required(ErrorMessage = " Price cannot be empty!!")]
@@ -26,7 +26,7 @@ namespace BusinessObject.DTOs
         public double Price { get; set; }
 
         [Required(ErrorMessage = " DescriptionId cannot be empty!!")]
-        public int DescriptionId { get; set; }
+        public int SizeChartId { get; set; }
         [Required(ErrorMessage = " CategoryId cannot be empty!!")]
         public int CategoryId { get; set; }
 
