@@ -43,10 +43,8 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return StatusCode(204, new
-                {
-                    Message = "Empty!"
-                });
+                return NoContent();
+
             }
         }
 
@@ -66,10 +64,8 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return StatusCode(204, new
-                {
-                    Message = "Empty!"
-                });
+                return NoContent();
+
             }
         }
 
@@ -170,7 +166,7 @@ namespace WebAPI.Controllers
                     var checkSizeChart = await _repo.CheckSizeChartAsync(sizeChartDTO.SizeChartId, sizeChartDTO.Title, sizeChartDTO.Content);
                     if (checkSizeChart == true)
                     {
-                        var description1 = await _repo.UpdateSizeChartAsync(sizeChartDTO);
+                        var sizeChart = await _repo.UpdateSizeChartAsync(sizeChartDTO);
                         IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetBySizeChartAsync(sizeChartDTO.SizeChartId);
                         foreach (BusinessObject.Models.Image img in images)
                         {
@@ -184,7 +180,7 @@ namespace WebAPI.Controllers
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
-                                SizeChartId = description1.SizeChartId
+                                SizeChartId = sizeChart.SizeChartId
                             };
                             await _imageRepository.AddImagesAsync(image);
                         }
@@ -193,7 +189,7 @@ namespace WebAPI.Controllers
                         return StatusCode(200, new
                         {
                             Message = "Update size chart" + ok,
-                            Data = description1
+                            Data = sizeChart
                         });
                     }
                     else

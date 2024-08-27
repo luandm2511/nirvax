@@ -30,8 +30,8 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Image>> GetBySizeChartAsync(int sizeChartId)
         {
-            return await _context.Images.Include(i => i.SizeChart)
-                .Where(i => i.SizeChartId == sizeChartId && i.Isdelete).ToListAsync();
+            return await _context.Images.Include(i => i.Product).Include(i => i.SizeChart)
+                .Where(i => i.SizeChartId == sizeChartId && !i.Isdelete).ToListAsync();
         }
 
         public async Task AddImagesAsync(Image image)

@@ -32,15 +32,17 @@ namespace DataAccess.DAOs
 
 
         //show list theo import Id => detail import đó
-        public async Task<List<ImportProductDetail>> GetAllImportProductDetailByImportIdAsync(int importId)
+        public async Task<List<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
-          
+            List<ImportProductDetailByImportDTO> list = new List<ImportProductDetailByImportDTO>();
+
             List<ImportProductDetail> getList = await _context.ImportProductDetails
             .Include(i => i.Import).Include(i => i.ProductSize.Product).Include(i=>i.ProductSize.Size)
             .Where(x => x.ImportId == importId).ToListAsync();
-         
-            
-            return getList;
+            if(getList == null) { return new List<ImportProductDetailByImportDTO>(); }
+
+            list = _mapper.Map<List<ImportProductDetailByImportDTO>>(getList);
+            return list;
         }
 
         // detail list all các detail của import nhưng 
@@ -63,11 +65,22 @@ namespace DataAccess.DAOs
                 throw new Exception("ImportProduct not found.");
             }
 
-            foreach (var item in importProductDetailDTO)
+            var groupedItems = importProductDetailDTO
+                .GroupBy(i => new { i.ProductId, i.SizeId })
+                .Select(g => new ImportProductDetailCreateDTO
+                {
+                    ProductId = g.Key.ProductId,
+                    SizeId = g.Key.SizeId,
+                    QuantityReceived = g.Sum(x => x.QuantityReceived),
+                    UnitPrice = g.First().UnitPrice 
+                })
+                .ToList();
+
+            foreach (var item in groupedItems)
             {
                 var nameProductSize = $"{item.ProductId}_{item.SizeId}";
 
-                var productSize = await _context.ProductSizes.SingleOrDefaultAsync(i => i.ProductSizeId == nameProductSize);
+                var productSize = await _context.ProductSizes.FirstOrDefaultAsync(i => i.ProductSizeId == nameProductSize);
                 if (productSize == null)
                 {
                     throw new Exception($"ProductSize with ID {nameProductSize} does not exist.");
@@ -87,6 +100,7 @@ namespace DataAccess.DAOs
 
             return true;
         }
+
 
 
         public async Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailUpdateDTO> importProductDetailDTO)

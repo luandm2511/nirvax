@@ -56,4 +56,17 @@ namespace BusinessObject.DTOs
         [Range(1, Double.MaxValue, ErrorMessage = "The field unit price must be greater than {1}.")]
         public double UnitPrice { get; set; }
     }
+
+    public class ImportProductDetailByImportDTO
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+
+        public int SizeId { get; set; }
+        public string SizeName { get; set; }
+
+        public int ImportId { get; set; }
+        public int QuantityReceived { get; set; }
+        public double UnitPrice { get; set; }
+    }
 }
