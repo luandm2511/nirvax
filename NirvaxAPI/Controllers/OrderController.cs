@@ -105,10 +105,10 @@ namespace WebAPI.Controllers
             {
                 var voucher = await _voucherRepository.GetVoucherById(request.VoucherId);
 
-                if (voucher != null && (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now
+                if (voucher == null || (voucher.OwnerId != request.OwnerId || voucher.EndDate < DateTime.Now
                     || DateTime.Now < voucher.StartDate || voucher.Quantity <= voucher.QuantityUsed || voucher.VoucherId != request.VoucherId))
                 {
-                    return StatusCode(400, $"{request.VoucherId} is invalid.");
+                    return StatusCode(400, new { message = $"The voucher code is invalid." });
                 }
 
                 return Ok(voucher);

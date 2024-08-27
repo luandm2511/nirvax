@@ -87,6 +87,7 @@ namespace DataAccess.DAOs
                     .ThenInclude(od => od.ProductSize)
                         .ThenInclude(ps => ps.Size)
                 .Where(o => o.AccountId == accountId)
+                .OrderByDescending(o => o.RequiredDate )
                 .ToListAsync();
 
             var historyList = orders.Select(o => new HistoryOrderDTO

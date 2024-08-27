@@ -424,7 +424,7 @@ namespace WebAPI.Controllers
                         Email = request.Email,
                         Password = "Nirvax@123",
                         Fullname = request.Name,
-                        Phone = request.PhoneNumber ?? "N/A",
+                        Phone = "N/A",
                         Image = request.Picture,
                         Address = "N/A",
                         Dob = request.Birthday ?? DateTime.MinValue,
