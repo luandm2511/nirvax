@@ -40,8 +40,16 @@ namespace DataAccess.DAOs
             .Include(i => i.Import).Include(i => i.ProductSize.Product).Include(i=>i.ProductSize.Size)
             .Where(x => x.ImportId == importId).ToListAsync();
             if(getList == null) { return new List<ImportProductDetailByImportDTO>(); }
+            var totalPrice = getList.Sum(i => i.UnitPrice * i.QuantityReceived);
+            var totalQuantity = getList.Sum(i => i.QuantityReceived);
+
 
             list = _mapper.Map<List<ImportProductDetailByImportDTO>>(getList);
+            list.ForEach(dto =>
+            {
+                dto.TotalPrice = totalPrice;
+                dto.TotalQuantity = totalQuantity;
+            });
             return list;
         }
 

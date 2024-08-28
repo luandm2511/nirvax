@@ -66,7 +66,14 @@ namespace BusinessObject.DTOs
         public string SizeName { get; set; }
 
         public int ImportId { get; set; }
+        public string Origin { get; set; } = null!;
+        public DateTime ImportDate { get; set; }
+
         public int QuantityReceived { get; set; }
         public double UnitPrice { get; set; }
+        public double TotalPrice { get; set; }
+        public int TotalQuantity { get; set; }
+
+
     }
 }

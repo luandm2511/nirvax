@@ -68,6 +68,8 @@ namespace WebAPI.Helpers
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductSize.Product.Name))
                 .ForMember(dest => dest.SizeId, opt => opt.MapFrom(src => src.ProductSize.Size.SizeId))
                 .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.ProductSize.Size.Name))
+                .ForMember(dest => dest.Origin, opt => opt.MapFrom(src => src.Import.Origin))
+                .ForMember(dest => dest.ImportDate, opt => opt.MapFrom(src => src.Import.ImportDate))
                 .ReverseMap();
 
             
