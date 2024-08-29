@@ -63,11 +63,21 @@ namespace WebAPI.Helpers
             CreateMap<ImportProductDetail, ImportProductDetailDTO>().ReverseMap();
             CreateMap<ImportProductDetail, ImportProductDetailCreateDTO>().ReverseMap();
             CreateMap<ImportProductDetail, ImportProductDetailUpdateDTO>().ReverseMap();
-
-           
-
+            CreateMap<ImportProductDetail, ImportProductDetailByImportDTO>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductSize.Product.ProductId))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductSize.Product.Name))
+                .ForMember(dest => dest.SizeId, opt => opt.MapFrom(src => src.ProductSize.Size.SizeId))
+                .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.ProductSize.Size.Name))
+                .ForMember(dest => dest.Origin, opt => opt.MapFrom(src => src.Import.Origin))
+                .ForMember(dest => dest.ImportDate, opt => opt.MapFrom(src => src.Import.ImportDate))
+                .ReverseMap();
 
             
+
+
+
+
+
             CreateMap<ProductSize, ProductSizeDTO>()
                 .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.Size.Name))
                 .ReverseMap();

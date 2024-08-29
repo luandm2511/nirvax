@@ -123,13 +123,21 @@ namespace DataAccess.DAOs
   
         }
 
-
-
-        public async Task<bool> CreateProductSizeAsync(int ownerId,List<ImportProductDetailCreateDTO> importProductDetailDTO)
+        public async Task<bool> CreateProductSizeAsync(int ownerId, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
+            var groupedItems = importProductDetailDTO
+                .GroupBy(i => new { i.ProductId, i.SizeId })
+                .Select(g => new ImportProductDetailCreateDTO
+                {
+                    ProductId = g.Key.ProductId,
+                    SizeId = g.Key.SizeId,
+                    QuantityReceived = g.Sum(x => x.QuantityReceived),
+                    UnitPrice = g.First().UnitPrice
+                })
+                .ToList();
 
-            foreach (var item in importProductDetailDTO)
-            {       
+            foreach (var item in groupedItems)
+            {
                 var nameProductSize = $"{item.ProductId}_{item.SizeId}";
 
                 Product product = await _context.Products.SingleOrDefaultAsync(i => i.ProductId == item.ProductId);
@@ -158,7 +166,7 @@ namespace DataAccess.DAOs
                     .FirstOrDefaultAsync();
 
                 if (existingProdSize == null)
-                {        
+                {
                     ProductSize productSize = new ProductSize
                     {
                         ProductId = item.ProductId,
@@ -170,14 +178,16 @@ namespace DataAccess.DAOs
                     await _context.ProductSizes.AddAsync(productSize);
                 }
                 else
-                {          
+                {
                     existingProdSize.Quantity += item.QuantityReceived;
                     _context.ProductSizes.Update(existingProdSize);
                 }
             }
+
             await _context.SaveChangesAsync();
             return true;
         }
+
 
         public async Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId, List<ImportProductDetailUpdateDTO> importProductDetail)
         {

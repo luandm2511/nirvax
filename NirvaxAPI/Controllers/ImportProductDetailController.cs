@@ -43,16 +43,14 @@ namespace WebAPI.Controllers
                 }
             else
             {
-                return StatusCode(204, new
-                {
-                    Message = "Empty!"
-                });
+                    return NoContent();
+
             }
         }
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailByImportIdAsync(int importId)
+        public async Task<ActionResult<IEnumerable<ImportProductDetailByImportDTO>>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
             var list = await _repo.GetAllImportProductDetailByImportIdAsync(importId);
                 if (list.Any())
@@ -66,11 +64,9 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    return StatusCode(404, new
-                    {
-                        Message = notFound + "any Import Product Detail"
-                    });
-                }
+                    return NoContent();
+
+            }
         }
 
         [HttpPut]

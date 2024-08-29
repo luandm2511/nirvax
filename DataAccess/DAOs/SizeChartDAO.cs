@@ -69,38 +69,55 @@ namespace DataAccess.DAOs
         //owner,staff
         public async Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
+            // Check if owner exists
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<SizeChart>(); }
-            List < SizeChart> getList = new List<SizeChart> ();
 
+            List<SizeChart> getList = new List<SizeChart>();
 
+   
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                 getList = await _context.SizeCharts
-                   .Where(i => i.Isdelete == false)
-                  .Include(i => i.Images)
-                  .Include(i => i.Products)
-                  .Where(i => i.OwnerId == ownerId)
-                    .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
+                getList = await _context.SizeCharts
+                    .Where(i => i.Isdelete == false && i.OwnerId == ownerId && i.Title.Trim().Contains(searchQuery.Trim()))
+                    .Include(i => i.Products) 
+                    .Select(sc => new SizeChart
+                    {
+                        SizeChartId = sc.SizeChartId,
+                        Title = sc.Title,
+                        Content = sc.Content,
+                        Isdelete = sc.Isdelete,
+                        OwnerId = sc.OwnerId,
+                        Products = sc.Products,
+                        Images = sc.Images.Where(img => !img.Isdelete).ToList()
+                    })
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-              
             }
             else
             {
-               getList = await _context.SizeCharts
-                    .Where(i => i.Isdelete == false)
-                   .Include(i => i.Images)
-                  .Include(i => i.Products)
-                  .Where(i => i.OwnerId == ownerId)
+                getList = await _context.SizeCharts
+                    .Where(i => i.Isdelete == false && i.OwnerId == ownerId)
+                    .Include(i => i.Products) 
+                    .Select(sc => new SizeChart
+                    {
+                        SizeChartId = sc.SizeChartId,
+                        Title = sc.Title,
+                        Content = sc.Content,
+                        Isdelete = sc.Isdelete,
+                        OwnerId = sc.OwnerId,
+                        Products = sc.Products,
+                        Images = sc.Images.Where(img => !img.Isdelete).ToList() 
+                    })
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-               
             }
+
             return getList;
         }
+
 
         public async Task<List<SizeChart>> GetSizeChartForUserAsync(string? searchQuery)
         {
@@ -114,6 +131,16 @@ namespace DataAccess.DAOs
                   .Include(i => i.Products)
                     .Where(i => i.Isdelete == false)
                     .Where(i => i.Title.Trim().Contains(searchQuery.Trim()))
+                     .Select(sc => new SizeChart
+                     {
+                         SizeChartId = sc.SizeChartId,
+                         Title = sc.Title,
+                         Content = sc.Content,
+                         Isdelete = sc.Isdelete,
+                         OwnerId = sc.OwnerId,
+                         Products = sc.Products,
+                         Images = sc.Images.Where(img => !img.Isdelete).ToList()
+                     })
                     .ToListAsync();
               
             }
@@ -122,7 +149,17 @@ namespace DataAccess.DAOs
                 getList = await _context.SizeCharts
                      .Include(i => i.Images)
                   .Include(i => i.Products)
-                    .Where(i => i.Isdelete == false)                  
+                    .Where(i => i.Isdelete == false)
+                     .Select(sc => new SizeChart
+                     {
+                         SizeChartId = sc.SizeChartId,
+                         Title = sc.Title,
+                         Content = sc.Content,
+                         Isdelete = sc.Isdelete,
+                         OwnerId = sc.OwnerId,
+                         Products = sc.Products,
+                         Images = sc.Images.Where(img => !img.Isdelete).ToList()
+                     })
                     .ToListAsync();
                 
             }
@@ -131,11 +168,24 @@ namespace DataAccess.DAOs
 
         public async Task<SizeChart> GetSizeChartByIdAsync(int sizeChartId)
         {
-               
-                SizeChart? des = await _context.SizeCharts.Include(i => i.Images).Include(i => i.Products).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.SizeChartId == sizeChartId);               
-      
-                return des;       
+            SizeChart? des = await _context.SizeCharts
+                .Where(i => i.Isdelete == false && i.SizeChartId == sizeChartId)
+                .Include(i => i.Products)
+                .Select(sc => new SizeChart
+                {
+                    SizeChartId = sc.SizeChartId,
+                    Title = sc.Title,
+                    Content = sc.Content,
+                    Isdelete = sc.Isdelete,
+                    OwnerId = sc.OwnerId,
+                    Products = sc.Products,
+                    Images = sc.Images.Where(img => !img.Isdelete).ToList() 
+                })
+                .SingleOrDefaultAsync();
+
+            return des;
         }
+
 
 
         public async Task<SizeChart> CreateSizeChartAsync(SizeChartCreateDTO sizeChartCreateDTO)

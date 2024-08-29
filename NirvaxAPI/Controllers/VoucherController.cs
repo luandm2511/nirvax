@@ -35,10 +35,8 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return StatusCode(204, new
-                {
-                    Message = "Empty!"
-                });
+                return NoContent();
+
             }
         }
 
@@ -57,10 +55,8 @@ namespace WebAPI.Controllers
                 }
             else
             {
-                return StatusCode(204, new
-                {
-                    Message = "Empty!"
-                });
+                return NoContent();
+
             }
         }
 
@@ -79,10 +75,8 @@ namespace WebAPI.Controllers
                 }
             else
             {
-                return StatusCode(204, new
-                {
-                    Message = "Empty!"
-                });
+                    return NoContent();
+
             }
         }
 

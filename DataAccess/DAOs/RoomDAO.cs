@@ -55,7 +55,7 @@ namespace DataAccess.DAOs
         {
             var checkRoom = await _context.Accounts.Where(i => i.AccountId == accountId).FirstOrDefaultAsync();
             if (checkRoom == null) { return new List<RoomDTO>(); }
-            var listSizeDTO = await _context.Rooms
+            var listRoomDTO = await _context.Rooms
             .Include(i => i.Account)
             .Include(i => i.Owner)
             .Select(room => new
@@ -68,7 +68,7 @@ namespace DataAccess.DAOs
         .Select(x => x.Room)
         .ToListAsync();
 
-            var roomDTOs = _mapper.Map<List<RoomDTO>>(listSizeDTO);
+            var roomDTOs = _mapper.Map<List<RoomDTO>>(listRoomDTO);
 
             return roomDTOs;
         }
@@ -76,8 +76,8 @@ namespace DataAccess.DAOs
         public async Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
         {
             var checkRoom = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if (checkRoom == null) { return new List<RoomDTO>(); }
-            var listSizeDTO = await _context.Rooms
+            if (checkRoom == null) { throw new Exception("Not exist this user!"); };
+            var listRoomDTO = await _context.Rooms
            .Include(i => i.Account)
            .Include(i => i.Owner)
            .Select(room => new
@@ -90,7 +90,7 @@ namespace DataAccess.DAOs
        .Select(x => x.Room)
        .ToListAsync();
 
-            var roomDTOs = _mapper.Map<List<RoomDTO>>(listSizeDTO);
+            var roomDTOs = _mapper.Map<List<RoomDTO>>(listRoomDTO);
 
             return roomDTOs;
         }
