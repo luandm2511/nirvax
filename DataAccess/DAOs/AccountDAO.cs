@@ -39,10 +39,13 @@ namespace DataAccess.DAOs
             return await _context.Accounts.Where(a => a.Fullname.Contains(keyword) || a.Email.Contains(keyword)).ToListAsync();
         }
 
-        public async Task<IEnumerable<AccountStatisticDTO>> GetAccountStatisticsAsync()
+        public async Task<AccountStatisticDTO> GetAccountStatisticsAsync()
         {
-            var accounts = await _context.Accounts.ToListAsync();
+            var accounts = await _context.Accounts.Where(a => a.Role.Equals("User")).ToListAsync();
             var owners = await _context.Owners.ToListAsync();
+
+            int totalAccounts = accounts.Count;
+            int totalOwners = owners.Count;
 
             var accountStats = accounts
             .GroupBy(account => new
@@ -96,7 +99,7 @@ namespace DataAccess.DAOs
 
             var result = combinedStats
                 .GroupBy(stat => new { stat.Year, stat.StartDate, stat.EndDate })
-                .Select(weekGroup => new AccountStatisticDTO
+                .Select(weekGroup => new AccountStatisticByTime
                 {
                     Year = weekGroup.Key.Year,
                     StartDate = weekGroup.Key.StartDate,
@@ -113,7 +116,14 @@ namespace DataAccess.DAOs
                 })
                 .ToList();
 
-            return result;
+            var statisticsResult = new AccountStatisticDTO
+            {
+                TotalAccountUser = totalAccounts,
+                TotalAccountOwner = totalOwners,
+                AccountStatistics = result
+            };
+
+            return statisticsResult;
         }
 
         private DateTime GetStartOfWeek(DateTime date)

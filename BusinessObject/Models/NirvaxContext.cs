@@ -123,6 +123,7 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("gender");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
@@ -150,6 +151,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.AdId).HasColumnName("ad_id");
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
@@ -183,6 +185,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.BrandId).HasColumnName("brand_id");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
@@ -200,6 +203,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CateParentId).HasColumnName("cate_parent_id");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
@@ -322,6 +326,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.LinkImage)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("link_image");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
@@ -555,6 +560,7 @@ public partial class NirvaxContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("fullname");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
@@ -744,6 +750,7 @@ public partial class NirvaxContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("fullname");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
