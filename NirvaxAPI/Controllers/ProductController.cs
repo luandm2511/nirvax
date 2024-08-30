@@ -433,7 +433,7 @@ namespace WebAPI.Controllers
                 var products = await _productRepository.GetTopSellingProductsAsync();
                 return Ok(products);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {

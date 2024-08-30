@@ -171,17 +171,18 @@ namespace DataAccess.DAOs
         {
             var products = await _context.Products
                 .Include(p => p.Images.Where(i => !i.Isdelete))
-                .Include(p => p.Owner)
                 .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan && p.OwnerId == ownerId)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(5)
                 .ToListAsync();
             var topProducts = products.Select(p => new TopProductDTO
             {
+                ProductId = p.ProductId,
                 ProductName = p.Name,
-                Image = p.Images.FirstOrDefault()?.LinkImage,
+                Image = p.Images.FirstOrDefault(i => i.ProductId == p.ProductId)?.LinkImage,
                 QuantitySold = p.QuantitySold,
-                RatePoint = p.RatePoint
+                RatePoint = p.RatePoint,
+                Price = p.Price
             });
             return topProducts;
         }
@@ -189,17 +190,18 @@ namespace DataAccess.DAOs
         {
             var products = await _context.Products
                 .Include(p => p.Images.Where(i => !i.Isdelete))
-            .Include(p => p.Owner)
                 .Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan)
                 .OrderByDescending(p => p.QuantitySold)
                 .Take(10)
                 .ToListAsync();
             var topProducts = products.Select(p => new TopProductDTO
             {
+                ProductId = p.ProductId,
                 ProductName = p.Name,
-                Image = p.Images.FirstOrDefault()?.LinkImage,
+                Image = p.Images.FirstOrDefault(i => i.ProductId == p.ProductId)?.LinkImage,
                 QuantitySold = p.QuantitySold,
-                RatePoint = p.RatePoint
+                RatePoint = p.RatePoint,
+                Price = p.Price
             });
             return topProducts;
         }
