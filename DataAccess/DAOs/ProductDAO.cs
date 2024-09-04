@@ -179,7 +179,7 @@ namespace DataAccess.DAOs
             {
                 ProductId = p.ProductId,
                 ProductName = p.Name,
-                Image = p.Images.FirstOrDefault(i => i.ProductId == p.ProductId)?.LinkImage,
+                Image = p.Images.FirstOrDefault()?.LinkImage,
                 QuantitySold = p.QuantitySold,
                 RatePoint = p.RatePoint,
                 Price = p.Price
@@ -198,7 +198,7 @@ namespace DataAccess.DAOs
             {
                 ProductId = p.ProductId,
                 ProductName = p.Name,
-                Image = p.Images.FirstOrDefault(i => i.ProductId == p.ProductId)?.LinkImage,
+                Image = p.Images.FirstOrDefault()?.LinkImage,
                 QuantitySold = p.QuantitySold,
                 RatePoint = p.RatePoint,
                 Price = p.Price

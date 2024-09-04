@@ -21,7 +21,6 @@ namespace DataAccess.IRepository
         Task<Order> RejectedOrder(int orderId);
         Task<Order> FailedOrder(int orderId);
         Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder);
-        Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync();
         Task<IEnumerable<OrderStatisticsDTO>> GetOrderStatisticsAsync();
         Task<IEnumerable<OrderStatisticsDTO>> GetOwnerStatisticsAsync(int ownerId);

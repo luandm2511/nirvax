@@ -80,11 +80,6 @@ namespace DataAccess.Repository
             return order;
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
-        {
-            return await _orderDAO.GetAllOrdersAsync();
-        }
-
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
             return await _orderDAO.GetOrderByIdAsync(orderId);

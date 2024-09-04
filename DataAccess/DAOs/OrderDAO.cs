@@ -54,7 +54,11 @@ namespace DataAccess.DAOs
             {
                 codeOrder = GenerateCodeOrder();
             } while (await _context.Orders.AnyAsync(o => o.CodeOrder == codeOrder));
-
+            var totalAmount = group.Items.Sum(item => item.Quantity * item.UnitPrice) - priceVoucher;
+            if(totalAmount < 0 )
+            {
+                totalAmount = 0;
+            }
             var order = new Order
             {
                 CodeOrder = codeOrder,
@@ -63,7 +67,7 @@ namespace DataAccess.DAOs
                 OrderDate = DateTime.Now,
                 Address = createOrderDTO.Address,
                 Note = ownerVoucherNote,
-                TotalAmount = group.Items.Sum(item => item.Quantity * item.UnitPrice) - priceVoucher,
+                TotalAmount = totalAmount,
                 AccountId = createOrderDTO.AccountId,
                 OwnerId = group.OwnerId,
                 StatusId = 1,
@@ -87,7 +91,7 @@ namespace DataAccess.DAOs
                     .ThenInclude(od => od.ProductSize)
                         .ThenInclude(ps => ps.Size)
                 .Where(o => o.AccountId == accountId)
-                .OrderByDescending(o => o.RequiredDate )
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
             var historyList = orders.Select(o => new HistoryOrderDTO
@@ -161,15 +165,6 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Order>> SearchOrdersAsync(string codeOrder)
         {
             return await _context.Orders.Where(o => o.CodeOrder.Contains(codeOrder) || o.Fullname.Contains(codeOrder)).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
-        {
-            return await _context.Orders.Include(o => o.Owner)
-                    .Include(o => o.Account)
-                    .Include(o => o.Status)
-                    .Include(o => o.Voucher)
-                    .Include(o => o.OrderDetails).ToListAsync();
         }
 
         public async Task<IEnumerable<TopShopDTO>> GetTop10ShopsAsync()
