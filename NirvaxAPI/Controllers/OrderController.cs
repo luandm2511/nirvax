@@ -244,7 +244,7 @@ namespace WebAPI.Controllers
                     order = await _orderRepository.RejectedOrder(orderId);
                     content = $"You have an order with code {order.CodeOrder} that has failed to be delivered.";
                 }
-                if (statusId == 5) 
+                if (statusId == 6) 
                 {
                     order = await _orderRepository.FailedOrder(orderId);
                     content = $"You have an order with code {order.CodeOrder} that has been cancelled.";
