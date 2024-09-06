@@ -17,7 +17,7 @@ namespace BusinessObject.DTOs
 
         [Required(ErrorMessage = "Description cannot be empty!!")]
         [MinLength(10, ErrorMessage = "Description to be at least 10 characters!!")]
-        [MaxLength(200, ErrorMessage = "Description is limited to 200 characters!!")]
+        [MaxLength(700, ErrorMessage = "Description is limited to 700 characters!!")]
         public string Description { get; set; } = null!;
         public List<string> ImageLinks {  get; set; }
             

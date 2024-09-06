@@ -8,9 +8,8 @@ namespace BusinessObject.DTOs
 {
     public class AccountStatisticDTO
     {
-        public int Year { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public List<DailyAccountStatistics> DailyStatistics { get; set; } = new List<DailyAccountStatistics>();
+        public int TotalAccountUser { get; set; }
+        public int TotalAccountOwner { get; set;}
+        public List<AccountStatisticByTime> AccountStatistics { get; set; } = new List<AccountStatisticByTime>();
     }
 }

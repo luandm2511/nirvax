@@ -71,7 +71,7 @@ public partial class NirvaxContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=WINDOWS-10\\SQLEXPRESS;Initial Catalog=Nirvax;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Integrated Security=True;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-HKH7PJO\\MSSQLSERVER01;Initial Catalog=Nirvax;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;TrustServerCertificate=true;Integrated Security=True;");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -124,6 +124,7 @@ public partial class NirvaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("gender");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
@@ -151,6 +152,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.AdId).HasColumnName("ad_id");
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
@@ -184,6 +186,7 @@ public partial class NirvaxContext : DbContext
 
             entity.Property(e => e.BrandId).HasColumnName("brand_id");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
@@ -201,6 +204,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CateParentId).HasColumnName("cate_parent_id");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
@@ -323,6 +327,7 @@ public partial class NirvaxContext : DbContext
             entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.Isdelete).HasColumnName("isdelete");
             entity.Property(e => e.LinkImage)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("link_image");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
@@ -556,6 +561,7 @@ public partial class NirvaxContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("fullname");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.IsBan).HasColumnName("is_ban");
@@ -745,6 +751,7 @@ public partial class NirvaxContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("fullname");
             entity.Property(e => e.Image)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("image");
             entity.Property(e => e.OwnerId).HasColumnName("owner_id");
