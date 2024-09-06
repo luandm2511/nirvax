@@ -53,7 +53,7 @@ namespace DataAccess.DAOs
             return list;
         }
 
-        // detail list all các detail của import nhưng 
+        // detail list all các detail 
         public async  Task<List<ImportProductDetail>> GetAllImportProductDetailAsync()
         {
            

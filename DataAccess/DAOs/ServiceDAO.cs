@@ -31,7 +31,7 @@ namespace DataAccess.DAOs
             if (serviceId == 0)
             {
                 Service? service = new Service();
-                service = await _context.Services.SingleOrDefaultAsync(i => i.Name.Trim() == name.Trim());
+                service = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.Name.Trim() == name.Trim());
                 if (service == null)
                 {
                     return true;
@@ -44,6 +44,7 @@ namespace DataAccess.DAOs
 
                  //check khác Id`
                  .Where(i => i.ServiceId != serviceId)
+                 .Where(i => i.Isdelete == false)
                  .Where(i => i.Name.Trim() == name.Trim())
                  .ToListAsync();
 
@@ -148,9 +149,12 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceDTO.ServiceId);
-            serviceDTO.Isdelete = false;
+           
             _mapper.Map(serviceDTO, service);
-             _context.Services.Update(service);
+
+            service.Isdelete = false;
+
+            _context.Services.Update(service);
             await _context.SaveChangesAsync();
             return true;
 

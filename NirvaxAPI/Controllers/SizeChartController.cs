@@ -103,7 +103,7 @@ namespace WebAPI.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    var checkSizeChart = await _repo.CheckSizeChartAsync(0, sizeChartDTOCreateDTO.Title, sizeChartDTOCreateDTO.Content);
+                    var checkSizeChart = await _repo.CheckSizeChartAsync(0, sizeChartDTOCreateDTO.Title, sizeChartDTOCreateDTO.Content, sizeChartDTOCreateDTO.OwnerId);
                     if (checkSizeChart == true)
                     {
                         var description1 = await _repo.CreateSizeChartAsync(sizeChartDTOCreateDTO);
@@ -163,7 +163,7 @@ namespace WebAPI.Controllers
             {
                 if (ModelState.IsValid) {
 
-                    var checkSizeChart = await _repo.CheckSizeChartAsync(sizeChartDTO.SizeChartId, sizeChartDTO.Title, sizeChartDTO.Content);
+                    var checkSizeChart = await _repo.CheckSizeChartAsync(sizeChartDTO.SizeChartId, sizeChartDTO.Title, sizeChartDTO.Content, sizeChartDTO.OwnerId);
                     if (checkSizeChart == true)
                     {
                         var sizeChart = await _repo.UpdateSizeChartAsync(sizeChartDTO);

@@ -271,19 +271,20 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
-            var number = await _repo.ViewGuestConsultationStatisticsAsync(ownerId);
-            if (number != null)
+            
+            try
             {
+                var total = await _repo.ViewGuestConsultationStatisticsAsync(ownerId);
                 return StatusCode(200, new
                 {
-                    Message = number,
+                    Data = total
                 });
             }
-            else
+            catch (Exception)
             {
-                return StatusCode(200, new
+                return StatusCode(500, new
                 {
-                    Message = 0,
+                    Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
 

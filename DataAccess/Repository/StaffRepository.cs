@@ -23,10 +23,10 @@ namespace DataAccess.Repository
             _staffDAO = staffDAO;
         }
 
-       
 
 
-        public Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+
+        public Task<IEnumerable<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
 
             return _staffDAO.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);
@@ -46,9 +46,9 @@ public Task<StaffDTO> ViewStaffProfileAsync(string ownerEmail)
 }
 
 
-public Task<bool> CheckStaffAsync(int staffId, string email, string phone, int ownerId)
+public Task<bool> CheckStaffAsync(int staffId, string email, string phone)
 {
-    return _staffDAO.CheckStaffAsync(staffId, email, phone, ownerId);
+    return _staffDAO.CheckStaffAsync(staffId, email, phone);
 }
 
 public Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO)

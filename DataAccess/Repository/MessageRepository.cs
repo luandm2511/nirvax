@@ -44,10 +44,7 @@ namespace DataAccess.Repository
             return _messageDAO.CreateMessageFirstAsync(messageCreateDTO);
         }
 
-        public Task<bool> CreateMessageFromOwnerAsync(Message message)
-        {
-            return _messageDAO.CreateMessageFromOwnerAsync(message);
-        }
+    
 
     }
 }

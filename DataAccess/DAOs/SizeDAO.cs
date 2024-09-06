@@ -147,9 +147,11 @@ namespace DataAccess.DAOs
                 throw new Exception("Not exist this owner!");
             }
             Size? size = await _context.Sizes.Include(i => i.Owner).SingleOrDefaultAsync(i => i.SizeId == sizeDTO.SizeId);
-            sizeDTO.Isdelete = false;
+         
                 _mapper.Map(sizeDTO, size);
-                 _context.Sizes.Update(size);
+            size.Isdelete = false;
+
+            _context.Sizes.Update(size);
                 await _context.SaveChangesAsync();
                 return true;
         }

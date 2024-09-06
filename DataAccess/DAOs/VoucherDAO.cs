@@ -69,7 +69,7 @@ namespace DataAccess.DAOs
                         throw new Exception("EndDate phải sau StartDate về mặt thời gian trong cùng ngày!");
                     }
                 }
-                voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
+                voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId.Trim() == voucherId.Trim());
                 if (voucher == null)
                 {
                     return true;
@@ -163,8 +163,7 @@ namespace DataAccess.DAOs
        
             return sid;
         }
-
-      
+              
 
 
 
@@ -198,8 +197,9 @@ namespace DataAccess.DAOs
                 throw new Exception("Not exist this owner!");
             }
             Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);             
-                voucherDTO.Isdelete = false;
+                //voucherDTO.Isdelete = false;
                 _mapper.Map(voucherDTO, voucher);
+            voucher.Isdelete = false;
                  _context.Vouchers.Update(voucher);
                 await _context.SaveChangesAsync();
                 return true; 

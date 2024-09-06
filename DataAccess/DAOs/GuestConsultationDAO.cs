@@ -46,11 +46,12 @@ namespace DataAccess.DAOs
                 .Where( i => i.OwnerId == guestConsultationCreateDTO.OwnerId )
                 .SingleOrDefaultAsync(i => i.Phone == guestConsultationCreateDTO.Phone && i.AdId == guestConsultationCreateDTO.AdId);
 
-            if (guestCreate == null)
+            if (guestCreate != null)
             {
-                return true;
+                    throw new Exception("You already register this Ads!");
+
             }
-            return false;
+            return true;
         }
 
       
@@ -74,7 +75,6 @@ namespace DataAccess.DAOs
 
         public async Task<int> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
-            GuestConsultation guest = new GuestConsultation();
             var number = await _context.GuestConsultations.Where(i=> i.Owner.OwnerId == ownerId).CountAsync();
             return number;
         }
