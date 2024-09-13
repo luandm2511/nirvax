@@ -24,9 +24,9 @@ namespace DataAccess.Repository
             _sizeChartDAO = sizeChartDAO;
         }
 
-        public Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content)
+        public Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content, int ownerId)
         {
-            return _sizeChartDAO.CheckSizeChartAsync( sizeChartId,  title, content);
+            return _sizeChartDAO.CheckSizeChartAsync( sizeChartId,  title, content, ownerId);
         }
         public Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {

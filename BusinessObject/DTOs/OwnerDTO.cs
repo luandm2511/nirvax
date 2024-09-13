@@ -16,8 +16,8 @@ namespace BusinessObject.DTOs {
         public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = " Password cannot be empty!!")]
-        [MinLength(8, ErrorMessage = " Password to be at least 6 characters!!")]
-        [MaxLength(24, ErrorMessage = "Password is limited to 10 characters!!")]
+        [MinLength(8, ErrorMessage = " Password to be at least 8 characters!!")]
+        [MaxLength(24, ErrorMessage = "Password is limited to 24 characters!!")]
         public string Password { get; set; } = null!;
         [Required(ErrorMessage = " Fullname cannot be empty!!")]
         [MinLength(5, ErrorMessage = " Fullname to be at least 5 characters!!")]
@@ -29,12 +29,12 @@ namespace BusinessObject.DTOs {
 
         [Required(ErrorMessage = " Phone cannot be empty!!")]
         [MinLength(9, ErrorMessage = " Phone to be at least 9 characters!!")]
-        [MaxLength(11, ErrorMessage = "Phone is limited to 10 characters!!")]
+        [MaxLength(13, ErrorMessage = "Phone is limited to 13 characters!!")]
         public string Phone { get; set; } = null!;
         [Required(ErrorMessage = " Address cannot be empty!!")]
         public string Address { get; set; } = null!;
 
-        public bool? IsBan { get; set; }
+       // public bool? IsBan { get; set; }
 
     }
 
@@ -62,7 +62,7 @@ namespace BusinessObject.DTOs {
         //  public string? Image { get; set; }
         [Required(ErrorMessage = " Phone cannot be empty!!")]
         [MinLength(9, ErrorMessage = " Phone to be at least 9 characters!!")]
-        [MaxLength(11, ErrorMessage = "Phone is limited to 13 characters!!")]
+        [MaxLength(13, ErrorMessage = "Phone is limited to 13 characters!!")]
         public string Phone { get; set; } = null!;
         [Required(ErrorMessage = " Address cannot be empty!!")]
         public string Address { get; set; } = null!;

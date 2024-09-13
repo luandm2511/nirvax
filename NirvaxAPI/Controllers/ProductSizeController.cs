@@ -114,9 +114,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewQuantityStatisticsAsync(int ownerId)
+        public async Task<ActionResult> ViewProductSizeStatisticsAsync(int ownerId)
         {
-            var total = await _repo.ViewQuantityStatisticsAsync(ownerId);  
+            var total = await _repo.ViewProductSizeStatisticsAsync(ownerId);  
 
             return StatusCode(200, new
             {

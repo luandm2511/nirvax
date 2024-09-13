@@ -22,7 +22,7 @@ namespace BusinessObject.DTOs
         [MaxLength(4000, ErrorMessage = "Content is limited to 4000 characters!!")]
         public string Content { get; set; } = null!;
         public List<string> ImageLinks { get; set; }
-        public bool? Isdelete { get; set; }
+     //   public bool? Isdelete { get; set; }
     }
 
     public class SizeChartCreateDTO

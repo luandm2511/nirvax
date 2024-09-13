@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async  Task<ActionResult<IEnumerable<Staff>>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IActionResult> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {     
             var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
@@ -102,7 +102,7 @@ namespace WebAPI.Controllers
             try {
                 if (ModelState.IsValid)
                 {
-                    var checkStaff = await _repo.CheckStaffAsync(0, staffCreateDTO.Email, staffCreateDTO.Phone, staffCreateDTO.OwnerId);
+                    var checkStaff = await _repo.CheckStaffAsync(0, staffCreateDTO.Email, staffCreateDTO.Phone);
                     if (checkStaff == true)
                     {
                         var staff1 = await _repo.CreateStaffAsync(staffCreateDTO);
@@ -130,12 +130,12 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Message = "An error occurred: " + "Something went wrong, please try again."
-                });
+                    Message = "An error occurred: " + ex.Message
+                }) ;
             }
 
         }
@@ -180,7 +180,7 @@ namespace WebAPI.Controllers
             try {
                 if (ModelState.IsValid)
                 {
-                    var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone, staffDTO.OwnerId);
+                    var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone);
                     if (checkStaff == true)
                     {
 

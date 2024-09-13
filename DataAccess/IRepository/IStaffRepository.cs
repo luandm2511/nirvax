@@ -11,12 +11,12 @@ namespace DataAccess.IRepository
 {
     public interface  IStaffRepository
     {
-        Task<List<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<Staff> GetStaffByIdAsync(int staffId);
         Task<StaffDTO> ViewStaffProfileAsync(string ownerEmail);
 
      //   Task<bool> CheckStaffAsync(StaffDTO staffDTO);
-        Task<bool> CheckStaffAsync(int staffId, string email, string phone, int ownerId);
+        Task<bool> CheckStaffAsync(int staffId, string email, string phone);
 
         Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO);
         Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword);

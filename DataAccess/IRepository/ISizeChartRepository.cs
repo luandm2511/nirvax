@@ -16,7 +16,7 @@ namespace DataAccess.IRepository
         Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<List<SizeChart>> GetSizeChartForUserAsync(string? searchQuery);
         Task<SizeChart> GetSizeChartByIdAsync(int sizeChartId);
-        Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content);
+        Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content, int ownerId);
 
         Task<SizeChart> CreateSizeChartAsync(SizeChartCreateDTO sizeChartCreateDTO);
 

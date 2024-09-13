@@ -23,7 +23,7 @@ namespace BusinessObject.DTOs
         public DateTime EndDate { get; set; }
         public int QuantityUsed { get; set; }
     //    public string? OwnerName { get; set; }
-        public bool? Isdelete { get; set; }
+        //public bool? Isdelete { get; set; }
    
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
 
@@ -31,7 +31,6 @@ namespace BusinessObject.DTOs
       
 
     }
-
     public class VoucherCreateDTO
     {
         public string VoucherId { get; set; } = null!;
@@ -45,14 +44,13 @@ namespace BusinessObject.DTOs
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-       
 
-        [Required(ErrorMessage = " OwnerId cannot be empty!!")]
 
         public int OwnerId { get; set; }
 
-
     }
+
+
 
 
 

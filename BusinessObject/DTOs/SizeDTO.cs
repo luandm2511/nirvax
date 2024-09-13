@@ -13,7 +13,7 @@ namespace BusinessObject.DTOs
 
         public int SizeId { get; set; }
         [Required(ErrorMessage = " Content cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Content to be at least 2 characters!!")]
+        [MinLength(1, ErrorMessage = " Content to be at least 1 characters!!")]
         [MaxLength(20, ErrorMessage = "Content is limited to 20 characters!!")]
         public string Name { get; set; } = null!;
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
@@ -21,7 +21,7 @@ namespace BusinessObject.DTOs
        // public string? OwnerName { get; set; }
         public int OwnerId { get; set; }
 
-        public bool? Isdelete { get; set; }
+     //   public bool? Isdelete { get; set; }
 
     }
 
@@ -29,7 +29,7 @@ namespace BusinessObject.DTOs
     {
 
         [Required(ErrorMessage = " Content cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Content to be at least 2 characters!!")]
+        [MinLength(1, ErrorMessage = " Content to be at least 1 characters!!")]
         [MaxLength(20, ErrorMessage = "Content is limited to 20 characters!!")]
         public string Name { get; set; } = null!;
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]

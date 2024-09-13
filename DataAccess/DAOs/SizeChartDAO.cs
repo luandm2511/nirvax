@@ -13,6 +13,7 @@ using Azure.Core;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net.WebSockets;
+using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
@@ -32,38 +33,48 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
   
-        public async Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content)
+        public async Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content, int ownerId)
         {
             if (sizeChartId == 0)
             {
-                SizeChart? des = new SizeChart();
-                des = await _context.SizeCharts.SingleOrDefaultAsync(i => i.Content.Trim() == content.Trim() || i.Title.Trim() == title.Trim());
-                if (des == null)
+                bool contentExists = await _context.SizeCharts.Include(i => i.Owner).Where(i => i.Isdelete == false)
+.AnyAsync(i => i.OwnerId == ownerId && i.Content.Trim() == content.Trim());
+
+                if (contentExists)
                 {
-                    return true;
+                    throw new Exception("Content already exists!");
+                }
+
+
+                bool titleExists = await _context.SizeCharts.Include(i => i.Owner).Where(i => i.Isdelete == false)
+.AnyAsync(i => i.OwnerId == ownerId && i.Title.Trim() == title.Trim());
+
+                if (titleExists)
+                {
+                    throw new Exception("Title already exists!");
                 }
             }
             else
             {
-                List<SizeChart> getList = await _context.SizeCharts
-      
-                .Where(i => i.SizeChartId != sizeChartId)
-               // .Where(i => i.Content.Trim() == content.Trim())
-                .Where(i => i.Title.Trim() == title.Trim())
-                .ToListAsync();
+                bool contentExists = await _context.SizeCharts.Include(i => i.Owner).Where(i => i.Isdelete == false).Where(i => i.SizeChartId != sizeChartId)
+ .AnyAsync(i => i.OwnerId == ownerId && i.Content.Trim() == content.Trim());
 
-                if (getList.Count > 0)
+                if (contentExists)
                 {
-                    return false;
-                }
-                else
-                {
-                    return true;
+                    throw new Exception("Content already exists!");
+
                 }
 
+                bool titleExists = await _context.SizeCharts.Include(i => i.Owner).Where(i => i.Isdelete == false).Where(i => i.SizeChartId != sizeChartId)
+.AnyAsync(i => i.OwnerId == ownerId && i.Title.Trim() == title.Trim());
+
+                if (titleExists)
+                {
+                    throw new Exception("Title already exists!");
+                }
             }
 
-            return false;
+            return true;
           
         }
         //owner,staff
@@ -216,10 +227,11 @@ namespace DataAccess.DAOs
             }
             SizeChart? sizeChart = await _context.SizeCharts.Include(i => i.Images)
                   .Include(i => i.Products).SingleOrDefaultAsync(i => i.SizeChartId == sizeChartDTO.SizeChartId);
-            //ánh xạ đối tượng SizeChartDTO đc truyền vào cho staff
-            sizeChartDTO.Isdelete = false;
+           
                 _mapper.Map(sizeChartDTO, sizeChart);
-                 _context.SizeCharts.Update(sizeChart);
+            sizeChart.Isdelete = false;
+
+            _context.SizeCharts.Update(sizeChart);
                 await _context.SaveChangesAsync();
                 return sizeChart;
         }

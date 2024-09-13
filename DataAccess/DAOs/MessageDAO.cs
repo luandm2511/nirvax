@@ -105,19 +105,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<bool> CreateMessageFromOwnerAsync(Message message)
-        {
-           
-            await _context.Messages.AddAsync(message);
-            int i = await _context.SaveChangesAsync();
-            if (i > 0)
-            {
-                return true;
-            }
-            else { return false; }
-
-        }
-
+       
 
     }
 }

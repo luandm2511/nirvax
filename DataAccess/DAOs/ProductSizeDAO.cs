@@ -250,7 +250,7 @@ namespace DataAccess.DAOs
 
         }
 
-        public async Task<int> ViewQuantityStatisticsAsync(int ownerId)
+        public async Task<int> ViewProductSizeStatisticsAsync(int ownerId)
         {
             List<ProductSize> listProductSize = await _context.ProductSizes
              .Where(i => i.Product.OwnerId == ownerId)

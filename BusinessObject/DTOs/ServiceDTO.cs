@@ -15,7 +15,7 @@ namespace BusinessObject.DTOs
         [MaxLength(50, ErrorMessage = "Name is limited to 50 characters!!")]
         public string Name { get; set; } = null!;
 
-        public bool? Isdelete { get; set; }
+      //  public bool? Isdelete { get; set; }
     }
 
     public class ServiceCreateDTO

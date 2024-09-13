@@ -34,6 +34,7 @@ namespace BusinessObject.DTOs
 
     public class ProductSizeListDTO
     {
+        public string ProductSizeId { get; set; }
         public string SizeName { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }

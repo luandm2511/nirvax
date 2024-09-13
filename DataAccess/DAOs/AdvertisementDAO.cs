@@ -55,7 +55,7 @@ namespace DataAccess.DAOs
                  .ToListAsync();
                 if (getList.Count > 0)
                 {
-                    return false;
+                    throw new Exception("Title already exists!");
                 }
                 else
                 {
@@ -74,12 +74,13 @@ namespace DataAccess.DAOs
                 .Include(i => i.StatusPost)
                 .SingleOrDefaultAsync(i => i.Title.Trim() == advertisementCreateDTO.Title.Trim());
            
-             if (StaffCreate == null)
+             if (StaffCreate != null)
             {
 
-                return true;
+                    throw new Exception("Title already exists!");
+
             }
-            return false;
+            return true;
         }
 
 
@@ -299,16 +300,9 @@ namespace DataAccess.DAOs
         //owner,staff 
         public async Task<Advertisement> GetAdvertisementByIdAsync(int adId)
 
-        {
-           
-            try
-            {
-                Advertisement? ads = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).SingleOrDefaultAsync(i => i.AdId == adId);
-               
-                return ads;
-            }
-            catch (Exception ) { throw new Exception("Something went wrong, please try again."); }
-        
+        {         
+                Advertisement? ads = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).SingleOrDefaultAsync(i => i.AdId == adId);              
+                return ads;                  
         }
 
         public async Task<Advertisement> GetAdvertisementByIdForUserAsync(int adId) 

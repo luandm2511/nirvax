@@ -50,61 +50,95 @@ namespace DataAccess.DAOs
             owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerDTO.OwnerId);
             if (owner != null)
             {
-                List<Owner> getList = await _context.Owners
-                 .Where(i => i.IsBan == false)
-         
-                 .Where(i => i.OwnerId != ownerDTO.OwnerId)
-                 .Where(i => i.Email.Trim() == ownerDTO.Email.Trim() || i.Phone == ownerDTO.Phone)
-                 .ToListAsync();
-                if (getList.Count > 0)
+                bool emailExists = await _context.Owners
+                    .Where(i => i.OwnerId != ownerDTO.OwnerId)
+                    .AnyAsync(i => i.Email.Trim() == ownerDTO.Email.Trim());
+
+                if (emailExists)
                 {
-                    return false;
+                    throw new Exception("Email is already exist!");
                 }
-                else
+
+                bool phoneExists = await _context.Owners
+                    .Where(i => i.OwnerId != ownerDTO.OwnerId)
+                    .AnyAsync(i => i.Phone == ownerDTO.Phone);
+
+                if (phoneExists)
                 {
-                    return true;
+                    throw new Exception("Phone is already exist!");
                 }
+
+                bool nameExists = await _context.Owners
+                   .Where(i => i.OwnerId != ownerDTO.OwnerId)
+                   .AnyAsync(i => i.Fullname.Trim() == ownerDTO.Fullname.Trim());
+
+                if (nameExists)
+                {
+                    throw new Exception("This Name is already exist!");
+                }
+
+                return true;
             }
             return false;
         }
 
         public async Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
-            // OwnerDTO checkownerDTO = new OwnerDTO();
-            Owner? owner = new Owner();
-            owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
+            Owner? owner = await _context.Owners.SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
             if (owner != null)
-            {
-                List<Owner> getList = await _context.Owners
-                // .Where(i => i.IsBan == false)
-         
-                 .Where(i => i.OwnerId != ownerProfileDTO.OwnerId)
-                 .Where(i => i.Email.Trim() == ownerProfileDTO.Email.Trim() || i.Phone == ownerProfileDTO.Phone)
-                 .ToListAsync();
-                if (getList.Count > 0)
+            {               
+                bool emailExists = await _context.Owners
+                    .Where(i => i.OwnerId != ownerProfileDTO.OwnerId) 
+                    .AnyAsync(i => i.Email.Trim() == ownerProfileDTO.Email.Trim());
+
+                if (emailExists)
                 {
-                    return false;
+                    throw new Exception("Email is already exist!");
                 }
-                else
+
+                bool phoneExists = await _context.Owners
+                    .Where(i => i.OwnerId != ownerProfileDTO.OwnerId) 
+                    .AnyAsync(i => i.Phone == ownerProfileDTO.Phone);
+
+                if (phoneExists)
                 {
-                    return true;
+                    throw new Exception("Phone is already exist!");
                 }
+                bool nameExists = await _context.Owners
+                   .Where(i => i.OwnerId != ownerProfileDTO.OwnerId)
+                   .AnyAsync(i => i.Fullname.Trim() == ownerProfileDTO.Fullname.Trim());
+
+                if (nameExists)
+                {
+                    throw new Exception("This Name is already exist!");
+                }
+
+                return true;
             }
+
             return false;
         }
 
-     
 
-     
+
+
+
         public async Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword,string confirmPassword)
         { 
                 //check password             
                 Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerId);  
                if (sid == null) { throw new Exception("Not found this owner!"); }
-               bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
+               if(oldPassword.Trim() == newPassword.Trim())
+            {
+                throw new Exception("The password you want to change is the same as the old password. Please enter the new password!");
+            }
+               if(newPassword.Trim().Length == 0 || newPassword.Trim().Length == 0 || confirmPassword.Trim().Length== 0) { 
+                    throw new Exception("Don't accept empty information!");
+            }
+            bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
                 if (verified == true)
                 {
-                if (newPassword == confirmPassword)
+                if (newPassword.Trim() == confirmPassword.Trim())
                 {
                     string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
                     sid.Password = newpasswordHash;
@@ -195,8 +229,8 @@ namespace DataAccess.DAOs
         //profile
         public async Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail)
         {
-                OwnerDTO owner = new OwnerDTO();
-                Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.Email == ownerEmail);
+            OwnerDTO owner = new OwnerDTO();
+                Owner? sid = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.Email.Trim() == ownerEmail.Trim());
             owner = _mapper.Map<OwnerDTO>(sid);
                 return owner;      
         }
@@ -205,6 +239,11 @@ namespace DataAccess.DAOs
 
         public async Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO)
         {
+            var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!System.Text.RegularExpressions.Regex.IsMatch(ownerDTO.Email, emailRegex))
+            {
+                throw new ArgumentException("Invalid email format.");
+            }
             string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(ownerDTO.Password);
             Owner owner = _mapper.Map<Owner>(ownerDTO);
             owner.IsBan = false;
@@ -240,10 +279,16 @@ namespace DataAccess.DAOs
         }
         public async Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
+            var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!System.Text.RegularExpressions.Regex.IsMatch(ownerDTO.Email, emailRegex))
+            {
+                throw new ArgumentException("Invalid email format.");
+            }
             Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerDTO.OwnerId);
             _mapper.Map(ownerDTO, owner);
             string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(owner.Password);
             owner.Password = newpasswordHash;
+            owner.IsBan = false;
             _context.Owners.Update(owner);
             await _context.SaveChangesAsync();
             return true;
@@ -254,20 +299,27 @@ namespace DataAccess.DAOs
         //owner
         public async Task<bool> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
-            Owner? owner = await _context.Owners.Where(i => i.IsBan == false).SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
+            var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!System.Text.RegularExpressions.Regex.IsMatch(ownerProfileDTO.Email, emailRegex))
+            {
+                throw new ArgumentException("Invalid email format.");
+            }
+
+            Owner? owner = await _context.Owners.Where(i => i.IsBan == false)
+                                                .SingleOrDefaultAsync(i => i.OwnerId == ownerProfileDTO.OwnerId);
+
+            if (owner == null)
+            {
+                throw new InvalidOperationException("Owner not found.");
+            }
 
             owner.Image = owner.Image;
             owner.Password = owner.Password;
-
             _mapper.Map(ownerProfileDTO, owner);
-           
-                 _context.Owners.Update(owner);
-                await _context.SaveChangesAsync();
-                return true;
-            
 
-         
-
+            _context.Owners.Update(owner);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> BanOwnerAsync(int ownerId)
