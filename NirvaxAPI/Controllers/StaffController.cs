@@ -74,7 +74,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{staffEmail}")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> ViewStaffProfileAsync(string staffEmail)
         {
             var staff = await _repo.ViewStaffProfileAsync(staffEmail);
@@ -145,7 +145,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Owner, Staff")]
 
         public async Task<ActionResult> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
         {
@@ -224,7 +224,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Owner, Staff")]
 
         public async Task<ActionResult> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
@@ -268,7 +268,7 @@ namespace WebAPI.Controllers
 
         }
         [HttpPut]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Owner, Staff")]
 
         public async Task<ActionResult> UpdateAvatarStaffAsync([FromForm] StaffAvatarDTO staffAvatarDTO)
         {
