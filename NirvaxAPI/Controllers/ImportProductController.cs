@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -30,8 +31,8 @@ namespace WebAPI.Controllers
         
 
         [HttpGet]
-        //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
             var list = await _repo.GetAllImportProductAsync(ownerId, from, to);
                 if (list.Any())
@@ -102,7 +103,7 @@ namespace WebAPI.Controllers
                 {
                     return StatusCode(400, new
                     {
-                        Message = "Dont't accept empty information!",
+                        Message = "Don't accept empty information!",
                     });
                 }
             }
@@ -136,7 +137,7 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(400, new
                 {
-                    Message = "Dont't accept empty information!",
+                    Message = "Don't accept empty information!",
                 });
             }
             }

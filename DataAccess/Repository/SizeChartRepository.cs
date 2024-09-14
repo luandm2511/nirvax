@@ -28,13 +28,13 @@ namespace DataAccess.Repository
         {
             return _sizeChartDAO.CheckSizeChartAsync( sizeChartId,  title, content, ownerId);
         }
-        public Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             
             return _sizeChartDAO.GetAllSizeChartsAsync(searchQuery, page,  pageSize, ownerId);
         }
 
-        public Task<List<SizeChart>> GetSizeChartForUserAsync(string? searchQuery)
+        public Task<IEnumerable<SizeChart>> GetSizeChartForUserAsync(string? searchQuery)
         {
             return _sizeChartDAO.GetSizeChartForUserAsync(searchQuery);
 

@@ -13,8 +13,8 @@ namespace DataAccess.IRepository
     public interface ISizeChartRepository
     {
 
-        Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<List<SizeChart>> GetSizeChartForUserAsync(string? searchQuery);
+        Task<IEnumerable<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<SizeChart>> GetSizeChartForUserAsync(string? searchQuery);
         Task<SizeChart> GetSizeChartByIdAsync(int sizeChartId);
         Task<bool> CheckSizeChartAsync(int sizeChartId, string title, string content, int ownerId);
 

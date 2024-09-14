@@ -14,8 +14,8 @@ namespace DataAccess.IRepository
     { 
         Task<ProductSize> GetByIdAsync(string id);
         Task UpdateAsync(ProductSize productSize);
-        Task<List<ProductSizeListDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<List<ProductSize>> GetProductSizeByProductIdAsync(int productId);
+        Task<IEnumerable<ProductSizeListDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<ProductSize>> GetProductSizeByProductIdAsync(int productId);
 
         Task<ProductSize> GetProductSizeByIdAsync(string productSizeId);
 

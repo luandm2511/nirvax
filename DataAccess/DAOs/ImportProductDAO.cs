@@ -26,19 +26,8 @@ namespace DataAccess.DAOs
             _mapper = mapper;
         }
 
-        public async Task<bool> CheckImportProductExistAsync(int importId)
-        {
-            ImportProduct? sid = new ImportProduct();
-
-            sid = await _context.ImportProducts.SingleOrDefaultAsync(i => i.ImportId == importId) ;
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
-        public async Task<List<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
+       
+        public async Task<IEnumerable<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<ImportProduct>(); }
@@ -148,7 +137,7 @@ namespace DataAccess.DAOs
 
 
 
-        public async Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)
+        public async Task<IEnumerable<object>> ViewWeeklyImportProductAsync(int ownerId)
         {
             var listImportProduct = await _context.ImportProducts
                 .Where(i => i.OwnerId == ownerId)

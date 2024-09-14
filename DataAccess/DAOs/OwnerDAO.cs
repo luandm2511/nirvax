@@ -54,18 +54,46 @@ namespace DataAccess.DAOs
                     .Where(i => i.OwnerId != ownerDTO.OwnerId)
                     .AnyAsync(i => i.Email.Trim() == ownerDTO.Email.Trim());
 
+                bool emailExists2 = await _context.Staff
+                    .AnyAsync(i => i.Email.Trim() == ownerDTO.Email.Trim());
+
+                bool emailExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Email.Trim() == ownerDTO.Email.Trim());
+
                 if (emailExists)
                 {
                     throw new Exception("Email is already exist!");
                 }
+                if (emailExists2)
+                {
+                    throw new Exception("Email already exists!");
+                }
+                if (emailExists3)
+                {
+                    throw new Exception("Email already exists!");
+                }
+
 
                 bool phoneExists = await _context.Owners
                     .Where(i => i.OwnerId != ownerDTO.OwnerId)
                     .AnyAsync(i => i.Phone == ownerDTO.Phone);
+                bool phoneExists2 = await _context.Staff
+                    .AnyAsync(i => i.Phone == ownerDTO.Phone);
+
+                bool phoneExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Phone == ownerDTO.Phone);
 
                 if (phoneExists)
                 {
-                    throw new Exception("Phone is already exist!");
+                    throw new Exception("Phone number is already exist!");
+                }
+                if (phoneExists2)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists3)
+                {
+                    throw new Exception("Phone number already exists!");
                 }
 
                 bool nameExists = await _context.Owners
@@ -74,7 +102,7 @@ namespace DataAccess.DAOs
 
                 if (nameExists)
                 {
-                    throw new Exception("This Name is already exist!");
+                    throw new Exception("This name is already registered by another shop!");
                 }
 
                 return true;
@@ -91,19 +119,49 @@ namespace DataAccess.DAOs
                     .Where(i => i.OwnerId != ownerProfileDTO.OwnerId) 
                     .AnyAsync(i => i.Email.Trim() == ownerProfileDTO.Email.Trim());
 
+                bool emailExists2 = await _context.Staff
+                    .AnyAsync(i => i.Email.Trim() == ownerProfileDTO.Email.Trim());
+
+                bool emailExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Email.Trim() == ownerProfileDTO.Email.Trim());
+
                 if (emailExists)
                 {
                     throw new Exception("Email is already exist!");
+                }
+
+                if (emailExists2)
+                {
+                    throw new Exception("Email already exists!");
+                }
+                if (emailExists3)
+                {
+                    throw new Exception("Email already exists!");
                 }
 
                 bool phoneExists = await _context.Owners
                     .Where(i => i.OwnerId != ownerProfileDTO.OwnerId) 
                     .AnyAsync(i => i.Phone == ownerProfileDTO.Phone);
 
+                bool phoneExists2 = await _context.Staff
+                   .AnyAsync(i => i.Phone == ownerProfileDTO.Phone);
+
+                bool phoneExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Phone == ownerProfileDTO.Phone);
+
                 if (phoneExists)
                 {
-                    throw new Exception("Phone is already exist!");
+                    throw new Exception("Phone number is already exist!");
                 }
+                if (phoneExists2)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists3)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+
                 bool nameExists = await _context.Owners
                    .Where(i => i.OwnerId != ownerProfileDTO.OwnerId)
                    .AnyAsync(i => i.Fullname.Trim() == ownerProfileDTO.Fullname.Trim());
@@ -164,7 +222,7 @@ namespace DataAccess.DAOs
 
 
         //admin
-        public async Task<List<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
           
             List<Owner> getList = new List<Owner>();
@@ -194,7 +252,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<Owner>> GetAllOwnersForUserAsync(string? searchQuery)
+        public async Task<IEnumerable<Owner>> GetAllOwnersForUserAsync(string? searchQuery)
         {
             List<Owner> getList = new List<Owner>();
 

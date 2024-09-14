@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
+            public async Task<IActionResult> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
             {
                 var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherForUserAsync()
+        public async Task<IActionResult> GetAllVoucherForUserAsync()
         {
             var list = await _repo.GetAllVoucherForUserAsync();
                 if (list.Any())
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Voucher>>> GetAllVoucherByOwnerAsync(int ownerId)
+        public async Task<IActionResult> GetAllVoucherByOwnerAsync(int ownerId)
         {
                 var list = await _repo.GetAllVoucherByOwnerAsync(ownerId);
                 if (list.Any())

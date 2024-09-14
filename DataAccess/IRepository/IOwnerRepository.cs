@@ -14,9 +14,9 @@ namespace DataAccess.IRepository
     public interface IOwnerRepository
     {
         Task<int> NumberOfOwnerStatisticsAsync();
-        Task<List<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize);
+        Task<IEnumerable<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize);
 
-        Task<List<Owner>> GetAllOwnersForUserAsync(string? searchQuery);
+        Task<IEnumerable<Owner>> GetAllOwnersForUserAsync(string? searchQuery);
         Task<Owner> GetOwnerByIdAsync(int ownerId);
         Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail);
 

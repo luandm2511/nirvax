@@ -25,13 +25,13 @@ namespace DataAccess.Repository
 
 
 
-        public Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
+        public Task<IEnumerable<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
         {
             
             return _roomDAO.ViewUserHistoryChatAsync(accountId); 
         }
         
-        public Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
+        public Task<IEnumerable<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId)
         {
 
             return _roomDAO.ViewOwnerHistoryChatAsync(ownerId);

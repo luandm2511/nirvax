@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ImportProductDetail>>> GetAllImportProductDetailAsync()
+        public async Task<IActionResult> GetAllImportProductDetailAsync()
         {
             var list = await _repo.GetAllImportProductDetailAsync();
                 if (list.Any())

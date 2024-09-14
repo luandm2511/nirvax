@@ -39,7 +39,7 @@ namespace DataAccess.DAOs
        
 
         //owner,staff
-        public async Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
+        public async Task<IEnumerable<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
         {
             List<MessageDTO> list = new List<MessageDTO>();
                 List<Message> getList = await _context.Messages

@@ -25,7 +25,7 @@ namespace DataAccess.Repository
 
     
       
-        public Task<List<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
+        public Task<IEnumerable<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
             
             return _importProductDAO.GetAllImportProductAsync(ownerId, from, to);
@@ -33,10 +33,7 @@ namespace DataAccess.Repository
 
   
 
-        public Task<bool> CheckImportProductExistAsync(int importId)
-        {
-            return _importProductDAO.CheckImportProductExistAsync(importId);
-        }
+     
         public Task<ImportProduct> GetImportProductByIdAsync(int importId)
         {
             return (_importProductDAO.GetImportProductByIdAsync(importId));
@@ -60,7 +57,7 @@ namespace DataAccess.Repository
             return _importProductDAO.ViewImportProductStatisticsAsync(ownerId);
         }
 
-        public Task<List<object>> ViewWeeklyImportProductAsync(int ownerId)
+        public Task<IEnumerable<object>> ViewWeeklyImportProductAsync(int ownerId)
         {
             return _importProductDAO.ViewWeeklyImportProductAsync(ownerId);
         }

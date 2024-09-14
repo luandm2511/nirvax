@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
      
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Room>>> ViewUserHistoryChatAsync(int accountId)
+        public async Task<IActionResult> ViewUserHistoryChatAsync(int accountId)
         {
             var list = await _repo.ViewUserHistoryChatAsync(accountId);
             if (list.Any())
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Room>>> ViewOwnerHistoryChatAsync(int ownerId)
+        public async Task<IActionResult> ViewOwnerHistoryChatAsync(int ownerId)
         {
             try { 
             var list = await _repo.ViewOwnerHistoryChatAsync(ownerId);

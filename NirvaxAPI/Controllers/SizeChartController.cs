@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<SizeChart>>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IActionResult> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var list = await _repo.GetAllSizeChartsAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<SizeChart>>> GetSizeChartForUserAsync(string? searchQuery)
+        public async Task<IActionResult> GetSizeChartForUserAsync(string? searchQuery)
         {
             var sizeChart = await _repo.GetSizeChartForUserAsync(searchQuery);
             if (sizeChart.Any())

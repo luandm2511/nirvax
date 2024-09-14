@@ -54,22 +54,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-      
-    //update
-        public async Task<bool> CheckGuestConsultationExistAsync(int guestId ) 
-        {
-            GuestConsultation? sid = new GuestConsultation();
-
-            sid = await _context.GuestConsultations.Include(i => i.Owner)
-                .Include(i => i.Ad)
-                .Include(i => i.StatusGuest).SingleOrDefaultAsync(i => i.GuestId  == guestId );
-
-            if (sid == null)
-            {
-                return false;
-            }
-            return true;
-        }
+  
 
 
 
@@ -82,7 +67,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff or admin??
-        public async Task<List<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId) 
+        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId) 
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<GuestConsultation>(); }
@@ -113,7 +98,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<GuestConsultation>(); }
@@ -146,7 +131,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<GuestConsultation>(); }
@@ -179,7 +164,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<GuestConsultation>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<GuestConsultation>(); }

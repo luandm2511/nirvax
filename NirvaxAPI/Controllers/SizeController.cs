@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Size>>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IActionResult> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var list = await _repo.GetAllSizesAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())

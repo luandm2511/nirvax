@@ -66,7 +66,7 @@ namespace DataAccess.DAOs
                 {
                     if (endDate.TimeOfDay <= startDate.TimeOfDay)
                     {
-                        throw new Exception("EndDate phải sau StartDate về mặt thời gian trong cùng ngày!");
+                        throw new Exception("If on the same day then EndDate must be after StartDate in terms of time on the same day!");
                     }
                 }
                 voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId.Trim() == voucherId.Trim());
@@ -82,7 +82,7 @@ namespace DataAccess.DAOs
             } else
             {
                 return false;
-                throw new Exception("StartDate should >= Today and StartDate should bottom EndDate!");
+                throw new Exception("StartDate should be greater than or equal to Today and StartDate should be less than or equal to EndDate!");
             }
             
         }
@@ -91,10 +91,13 @@ namespace DataAccess.DAOs
         {
             Voucher? sid = new Voucher();
             sid = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
+         
             if ((sid != null) && (voucherDTO.StartDate < voucherDTO.EndDate))
             {
                 return true;
+          
             } else
+
             {
                 throw new Exception("StartDate should bottom EndDate!");
             }
@@ -104,7 +107,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<Voucher>(); }
@@ -137,7 +140,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<Voucher>> GetAllVoucherForUserAsync()
+        public async Task<IEnumerable<Voucher>> GetAllVoucherForUserAsync()
         {
               List<Voucher> getList = await _context.Vouchers
                 .Include(i => i.Owner)
@@ -146,7 +149,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<Voucher>> GetAllVoucherByOwnerAsync(int ownerId)
+        public async Task<IEnumerable<Voucher>> GetAllVoucherByOwnerAsync(int ownerId)
         {
             List<Voucher> getList = await _context.Vouchers
               .Include(i => i.Owner)

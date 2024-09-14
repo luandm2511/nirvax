@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IActionResult> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
             var list = await _repo.GetAllOwnersAsync( searchQuery, page,  pageSize);
                 if (list.Any())
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Owner>>> GetAllOwnersForUserAsync(string? searchQuery)
+        public async Task<IActionResult> GetAllOwnersForUserAsync(string? searchQuery)
         {
            
             var list = await _repo.GetAllOwnersForUserAsync(searchQuery);

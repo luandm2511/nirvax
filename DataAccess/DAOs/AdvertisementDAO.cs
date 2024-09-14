@@ -55,7 +55,8 @@ namespace DataAccess.DAOs
                  .ToListAsync();
                 if (getList.Count > 0)
                 {
-                    throw new Exception("Title already exists!");
+                    //throw new Exception("Title already exists!");
+                    return false;
                 }
                 else
                 {
@@ -77,7 +78,7 @@ namespace DataAccess.DAOs
              if (StaffCreate != null)
             {
 
-                    throw new Exception("Title already exists!");
+                return false;
 
             }
             return true;
@@ -85,7 +86,7 @@ namespace DataAccess.DAOs
 
 
         //get all for owner,staff 
-        public async Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
+        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
           
             List<Advertisement> listAdvertisement = new List<Advertisement>();
@@ -118,7 +119,7 @@ namespace DataAccess.DAOs
         }
 
         // get status waiting
-        public async Task<List<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -145,7 +146,7 @@ namespace DataAccess.DAOs
             return getList;
         }
         //get status deny
-        public async Task<List<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -172,7 +173,7 @@ namespace DataAccess.DAOs
             return getList;
         }
         //get status accept
-        public async Task<List<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -199,7 +200,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery)
+        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -223,7 +224,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
+        public async Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<Advertisement>(); }
@@ -250,7 +251,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<List<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
 
           
@@ -285,7 +286,7 @@ namespace DataAccess.DAOs
         }
 
         //service
-        public async Task<List<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
         
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)

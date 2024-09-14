@@ -28,13 +28,13 @@ namespace DataAccess.Repository
 
             return _ownerDAO.NumberOfOwnerStatisticsAsync();
         }
-        public Task<List<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
+        public Task<IEnumerable<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
 
             return _ownerDAO.GetAllOwnersAsync(searchQuery, page, pageSize);
         }
 
-        public Task<List<Owner>> GetAllOwnersForUserAsync(string? searchQuery)
+        public Task<IEnumerable<Owner>> GetAllOwnersForUserAsync(string? searchQuery)
         {
 
             return _ownerDAO.GetAllOwnersForUserAsync(searchQuery);

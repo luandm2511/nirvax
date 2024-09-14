@@ -32,7 +32,7 @@ namespace DataAccess.DAOs
 
 
         //show list theo import Id => detail import đó
-        public async Task<List<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
+        public async Task<IEnumerable<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
             List<ImportProductDetailByImportDTO> list = new List<ImportProductDetailByImportDTO>();
 
@@ -54,7 +54,7 @@ namespace DataAccess.DAOs
         }
 
         // detail list all các detail 
-        public async  Task<List<ImportProductDetail>> GetAllImportProductDetailAsync()
+        public async  Task<IEnumerable<ImportProductDetail>> GetAllImportProductDetailAsync()
         {
            
              List<ImportProductDetail> getList = await _context.ImportProductDetails

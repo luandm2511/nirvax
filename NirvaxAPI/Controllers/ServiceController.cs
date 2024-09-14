@@ -1,6 +1,7 @@
 ﻿using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -20,8 +21,10 @@ namespace WebAPI.Controllers
             }
 
             [HttpGet]
-            //  [Authorize]
-            public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
+            [Authorize(Roles = "Admin")]
+
+        //  [Authorize]
+        public async Task<IActionResult> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
             {
                 var list = await _repo.GetAllServicesAsync(searchQuery, page, pageSize);
                 if (list.Any())
@@ -43,7 +46,7 @@ namespace WebAPI.Controllers
 
             [HttpGet]
         //  [Authorize]
-            public async Task<ActionResult<IEnumerable<BusinessObject.Models.Service>>> GetAllServiceForUserAsync(string? searchQuery)
+            public async Task<IActionResult> GetAllServiceForUserAsync(string? searchQuery)
             {
                  var list = await _repo.GetAllServiceForUserAsync(searchQuery);
                 if (list.Any())
@@ -85,7 +88,9 @@ namespace WebAPI.Controllers
         }
 
             [HttpPost]
-            public async Task<ActionResult> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<ActionResult> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
             {
             try { 
             if (ModelState.IsValid)
@@ -127,7 +132,9 @@ namespace WebAPI.Controllers
         }
 
             [HttpPut]
-            public async Task<ActionResult> UpdateServiceAsync(ServiceDTO serviceDTO)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<ActionResult> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
             try { 
             if (ModelState.IsValid)
@@ -171,7 +178,9 @@ namespace WebAPI.Controllers
         }
 
             [HttpPatch("{serviceId}")]
-            public async Task<ActionResult> DeleteServiceAsync(int serviceId)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<ActionResult> DeleteServiceAsync(int serviceId)
             {
                 var service1 = await _repo.DeleteServiceAsync(serviceId);
                 if (service1)
@@ -192,6 +201,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{serviceId}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<ActionResult> RestoreServiceAsync(int serviceId)
         {
             var service1 = await _repo.RestoreServiceAsync(serviceId);

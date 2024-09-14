@@ -38,17 +38,41 @@ namespace DataAccess.DAOs
             {
                 bool emailExists = await _context.Staff
                     .AnyAsync(i=> i.Email.Trim() == email.Trim());
+                bool emailExists2 = await _context.Owners
+                    .AnyAsync(i => i.Email.Trim() == email.Trim());
+                bool emailExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Email.Trim() == email.Trim());
 
                 if (emailExists)
                 {
                     throw new Exception("Email already exists!");
                 }
+                if (emailExists2)
+                {
+                    throw new Exception("Email already exists!");
+                }
+                if (emailExists3)
+                {
+                    throw new Exception("Email already exists!");
+                }
 
-                
+
                 bool phoneExists = await _context.Staff
+                    .AnyAsync(i => i.Phone == phone);
+                bool phoneExists2 = await _context.Owners
+                    .AnyAsync(i => i.Phone == phone);
+                bool phoneExists3 = await _context.Accounts
                     .AnyAsync(i => i.Phone == phone);
 
                 if (phoneExists)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists2)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists3)
                 {
                     throw new Exception("Phone number already exists!");
                 }
@@ -59,15 +83,43 @@ namespace DataAccess.DAOs
                     .Where(i => i.StaffId != staffId) 
                     .AnyAsync(i => i.Email.Trim() == email.Trim());
 
+                bool emailExists2 = await _context.Owners
+                    .AnyAsync(i => i.Email.Trim() == email.Trim());
+                bool emailExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Email.Trim() == email.Trim());
+
                 if (emailExists)
                 {
                     throw new Exception("Email already exists!");
                 }
+                if (emailExists2)
+                {
+                    throw new Exception("Email already exists!");
+                }
+                if (emailExists3)
+                {
+                    throw new Exception("Email already exists!");
+                }
+
                 bool phoneExists = await _context.Staff
                     .Where(i => i.StaffId != staffId) 
                     .AnyAsync(i => i.Phone == phone);
 
+                bool phoneExists2 = await _context.Owners
+                    .AnyAsync(i => i.Phone == phone);
+                bool phoneExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Phone == phone);
+
+
                 if (phoneExists)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists2)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists3)
                 {
                     throw new Exception("Phone number already exists!");
                 }
@@ -89,14 +141,44 @@ namespace DataAccess.DAOs
                    .Where(i => i.StaffId != staffProfileDTO.StaffId)
                    .AnyAsync(i => i.OwnerId == ownerId && i.Email.Trim() == staffProfileDTO.Email.Trim());
 
+                bool emailExists2 = await _context.Owners
+                   .AnyAsync(i => i.Email.Trim() == staffProfileDTO.Email.Trim());
+                bool emailExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Email.Trim() == staffProfileDTO.Email.Trim());
+
                 if (emailExists)
+                {
+                    throw new Exception("Email already exists!");
+                }
+                if (emailExists2)
+                {
+                    throw new Exception("Email already exists!");
+                }
+                if (emailExists3)
                 {
                     throw new Exception("Email already exists!");
                 }
                 bool phoneExists = await _context.Staff
                     .Where(i => i.StaffId != staffProfileDTO.StaffId)
                     .AnyAsync(i => i.OwnerId == ownerId && i.Phone == staffProfileDTO.Phone);
+                bool phoneExists2 = await _context.Owners
+                    .AnyAsync(i => i.Phone == staffProfileDTO.Phone);
+                bool phoneExists3 = await _context.Accounts
+                    .AnyAsync(i => i.Phone == staffProfileDTO.Phone);
 
+
+                if (phoneExists)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists2)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
+                if (phoneExists3)
+                {
+                    throw new Exception("Phone number already exists!");
+                }
                 if (phoneExists)
                 {
                     throw new Exception("Phone number already exists!");

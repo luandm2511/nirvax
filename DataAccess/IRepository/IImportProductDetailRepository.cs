@@ -12,9 +12,9 @@ namespace DataAccess.IRepository
     public interface IImportProductDetailRepository
     {
 
-        Task<List<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId);
+        Task<IEnumerable<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId);
         
-        Task<List<ImportProductDetail>> GetAllImportProductDetailAsync();
+        Task<IEnumerable<ImportProductDetail>> GetAllImportProductDetailAsync();
 
         Task<bool> CreateImportProductDetailAsync(int importId, List<ImportProductDetailCreateDTO> importProductDetailDTO);
 

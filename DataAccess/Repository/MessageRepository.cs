@@ -25,7 +25,7 @@ namespace DataAccess.Repository
 
 
 
-        public Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
+        public Task<IEnumerable<MessageDTO>> ViewAllMessageByRoomAsync(int roomId)
         {
             return _messageDAO.ViewAllMessageByRoomAsync(roomId);
         }

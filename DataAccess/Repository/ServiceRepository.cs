@@ -27,13 +27,13 @@ namespace DataAccess.Repository
         {
             return _serviceDAO.CheckServiceAsync(serviceId, name); 
         }
-        public Task<List<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
+        public Task<IEnumerable<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
             
             return _serviceDAO.GetAllServicesAsync(searchQuery, page,  pageSize);
         }
        
-             public Task<List<Service>> GetAllServiceForUserAsync(string? searchQuery)
+             public Task<IEnumerable<Service>> GetAllServiceForUserAsync(string? searchQuery)
         {
 
             return _serviceDAO.GetAllServiceForUserAsync(searchQuery);

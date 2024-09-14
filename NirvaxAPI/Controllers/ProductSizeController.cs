@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<ProductSizeListDTO>>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IActionResult> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try { 
             var list = await _repo.GetAllProductSizesAsync(searchQuery, page, pageSize, ownerId);

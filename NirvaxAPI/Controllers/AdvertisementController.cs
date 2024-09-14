@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
+            public async Task<IActionResult> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
             {
                 var list =await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
                 if (list.Any())
@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
 
             [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+            public async Task<IActionResult> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
             {
             try { 
                 var list =await _repo.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IActionResult> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             try { 
             var list = await _repo.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
@@ -103,7 +103,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IActionResult> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             try { 
             var list = await _repo.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
@@ -131,7 +131,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsForUserAsync(string? searchQuery)
+        public async Task<IActionResult> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
             var list =await _repo.GetAllAdvertisementsForUserAsync(searchQuery);
             if (list.Any())
@@ -150,7 +150,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
+        public async Task<IActionResult> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
                 var list = await _repo.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
                 if (list.Any())
@@ -169,7 +169,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IActionResult> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         { 
             var list = await _repo.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
@@ -188,7 +188,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         //  [Authorize]
-        public async Task<ActionResult<IEnumerable<Advertisement>>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        public async Task<IActionResult> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
 
                 var list = await _repo.GetAllAdvertisementsByServiceAsync(serviceId);

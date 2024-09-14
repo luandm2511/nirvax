@@ -28,7 +28,7 @@ namespace DataAccess.Repository
             return _sizeDAO.CheckSizeAsync(sizeId, ownerId, name); 
         }
 
-        public Task<List<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             
             return _sizeDAO.GetAllSizesAsync(searchQuery, page,  pageSize, ownerId);

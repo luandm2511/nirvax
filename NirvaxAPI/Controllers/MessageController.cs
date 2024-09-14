@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
             //  [Authorize]
-            public async Task<ActionResult<IEnumerable<Message>>> ViewAllMessageByRoomAsync(int roomId)
+            public async Task<IActionResult> ViewAllMessageByRoomAsync(int roomId)
             {
 
                 var list = await _repo.ViewAllMessageByRoomAsync(roomId);

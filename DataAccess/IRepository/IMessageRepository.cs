@@ -11,7 +11,7 @@ namespace DataAccess.IRepository
 {
     public interface IMessageRepository
     {
-        Task<List<MessageDTO>> ViewAllMessageByRoomAsync(int roomId);
+        Task<IEnumerable<MessageDTO>> ViewAllMessageByRoomAsync(int roomId);
         Task<bool> CheckMessageAsync(MessageCreateDTO messageCreateDTO);
         Task<bool> CreateMessageAsync(MessageCreateDTO messageCreateDTO);
         Task<bool> CreateMessageFirstAsync(MessageCreateDTO messageCreateDTO);

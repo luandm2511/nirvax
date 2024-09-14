@@ -78,7 +78,7 @@ namespace DataAccess.DAOs
           
         }
         //owner,staff
-        public async Task<List<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<SizeChart>> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             // Check if owner exists
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
@@ -130,7 +130,7 @@ namespace DataAccess.DAOs
         }
 
 
-        public async Task<List<SizeChart>> GetSizeChartForUserAsync(string? searchQuery)
+        public async Task<IEnumerable<SizeChart>> GetSizeChartForUserAsync(string? searchQuery)
         {
             List<SizeChart> getList = new List<SizeChart>();
 

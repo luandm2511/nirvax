@@ -11,20 +11,20 @@ namespace DataAccess.IRepository
 {
     public interface IImportProductRepository
     {
-        Task<List<ImportProduct>> GetAllImportProductAsync(int ownerId, DateTime? from, DateTime? to);
+        Task<IEnumerable<ImportProduct>> GetAllImportProductAsync(int ownerId, DateTime? from, DateTime? to);
         
         Task<ImportProduct> GetImportProductByIdAsync(int importId);
 
         Task<object> ViewImportProductStatisticsAsync(int ownerId);
 
-        Task<bool> CheckImportProductExistAsync(int importId);
+        //Task<bool> CheckImportProductExistAsync(int importId);
 
         Task<ImportProduct> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO);
 
         Task<bool> UpdateImportProductAsync(ImportProductDTO importProductDTO);
         Task<bool> UpdateQuantityAndPriceImportProductAsync(int importId);
 
-        Task<List<object>> ViewWeeklyImportProductAsync(int ownerId);
+        Task<IEnumerable<object>> ViewWeeklyImportProductAsync(int ownerId);
 
 
     }

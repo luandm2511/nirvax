@@ -11,8 +11,8 @@ namespace DataAccess.IRepository
 {
     public interface IRoomRepository 
     {
-        Task<List<RoomDTO>> ViewUserHistoryChatAsync(int accountId);
-        Task<List<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId);
+        Task<IEnumerable<RoomDTO>> ViewUserHistoryChatAsync(int accountId);
+        Task<IEnumerable<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId);
         Task<Room> CreateRoomAsync(RoomCreateDTO roomCreateDTO);
         Task<bool> CheckRoomAsync(int accountId, int ownerId);
         Task<bool> UpdateContentRoomAsync(int roomId);

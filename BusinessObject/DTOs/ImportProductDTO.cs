@@ -18,10 +18,10 @@ namespace BusinessObject.DTOs
         [MaxLength(30, ErrorMessage = "Origin is limited to 30 characters!!")]
         public string Origin { get; set; } = null!;
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {0}.")]
         public int Quantity { get; set; }
         [Required(ErrorMessage = " Total price cannot be empty!!")]
-        [Range(1, Double.MaxValue, ErrorMessage = "The field total price must be greater than {1}.")]
+        [Range(0, Double.MaxValue, ErrorMessage = "The field total price must be greater than {0}.")]
         public double TotalPrice { get; set; }
     }
 
@@ -33,12 +33,12 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " Origin cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Origin to be at least 2 characters!!")]
         [MaxLength(30, ErrorMessage = "Origin is limited to 30 characters!!")]
-        public string Origin { get; set; } = null!;
+        public string Origin { get; set; } = null!; 
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {0}.")]
         public int Quantity { get; set; }
         [Required(ErrorMessage = " Total price cannot be empty!!")]
-        [Range(1, Double.MaxValue, ErrorMessage = "The field total price must be greater than {1}.")]
+        [Range(0, Double.MaxValue, ErrorMessage = "The field total price must be greater than {0}.")]
         public double TotalPrice { get; set; }
     }
 }

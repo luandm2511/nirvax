@@ -75,7 +75,7 @@ namespace DataAccess.DAOs
 
 
         //owner,staff
-        public async Task<List<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<Size>> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<Size>(); }

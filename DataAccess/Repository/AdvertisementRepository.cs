@@ -57,39 +57,39 @@ namespace DataAccess.Repository
         {
             return _advertisementDAO.CheckAdvertisementAsync(advertisementDTO);
         }
-        public Task<List<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
+        public Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
         }
 
-        public Task<List<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
+        public Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
             return _advertisementDAO.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
         }
 
-        public Task<List<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _advertisementDAO.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
         }
 
-        public Task<List<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)
+        public Task<IEnumerable<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
             return _advertisementDAO.GetAllAdvertisementsByServiceAsync(serviceId);
         }
 
-        public Task<List<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public Task<IEnumerable<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
         }
-        public Task<List<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public Task<IEnumerable<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
         }
-        public Task<List<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        public Task<IEnumerable<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             return _advertisementDAO.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
         }
-        public Task<List<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery)
+        public Task<IEnumerable<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
             return _advertisementDAO.GetAllAdvertisementsForUserAsync(searchQuery);
         }

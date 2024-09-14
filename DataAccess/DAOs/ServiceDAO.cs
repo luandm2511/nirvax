@@ -65,7 +65,7 @@ namespace DataAccess.DAOs
         }
 
         //owner,staff
-        public async Task<List<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
 
             List<Service> getList = new List<Service>();
@@ -94,7 +94,7 @@ namespace DataAccess.DAOs
         }
 
         //user
-        public async Task<List<Service>> GetAllServiceForUserAsync(string? searchQuery)
+        public async Task<IEnumerable<Service>> GetAllServiceForUserAsync(string? searchQuery)
         {
             List<Service> getList = new List<Service>();
             if (!string.IsNullOrEmpty(searchQuery))

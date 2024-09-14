@@ -22,13 +22,13 @@ namespace DataAccess.Repository
            _importProductDetailDAO = importProductDetailDAO;
        }
 
-        public Task<List<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
+        public Task<IEnumerable<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
 
             return _importProductDetailDAO.GetAllImportProductDetailByImportIdAsync(importId);
         }
 
-        public Task<List<ImportProductDetail>> GetAllImportProductDetailAsync()
+        public Task<IEnumerable<ImportProductDetail>> GetAllImportProductDetailAsync()
         {
 
             return _importProductDetailDAO.GetAllImportProductDetailAsync();
