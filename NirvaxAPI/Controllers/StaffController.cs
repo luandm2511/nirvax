@@ -29,6 +29,8 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
+
         //  [Authorize]
         public async Task<IActionResult> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {     
@@ -52,6 +54,7 @@ namespace WebAPI.Controllers
       
 
         [HttpGet("{staffId}")]
+        [Authorize(Roles = "Owner,Staff")]
         //  [Authorize]
         public async Task<ActionResult> GetStaffByIdAsync(int staffId)
         {
@@ -74,6 +77,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{staffEmail}")]
+        [Authorize(Roles = "Staff")]
         //  [Authorize]
         public async Task<ActionResult> ViewStaffProfileAsync(string staffEmail)
         { 
@@ -97,6 +101,8 @@ namespace WebAPI.Controllers
 
         //check exist
         [HttpPost]
+        [Authorize(Roles = "Owner")]
+
         public async Task<ActionResult> CreateStaffAsync([FromForm] StaffCreateDTO staffCreateDTO)
         {
             try {
@@ -143,6 +149,8 @@ namespace WebAPI.Controllers
        
 
         [HttpPut]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
         {
             try
@@ -175,6 +183,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateStaffAsync([FromForm] StaffDTO staffDTO)
         {
             try {
@@ -218,6 +227,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
             try {
@@ -259,6 +270,8 @@ namespace WebAPI.Controllers
 
         }
         [HttpPut]
+        [Authorize(Roles = "Staff")]
+
         public async Task<ActionResult> UpdateAvatarStaffAsync([FromForm] StaffAvatarDTO staffAvatarDTO)
         {
             try { 
@@ -291,6 +304,8 @@ namespace WebAPI.Controllers
 
         }
         [HttpDelete("{staffId}")]
+        [Authorize(Roles = "Owner")]
+
         public async Task<ActionResult> DeleteStaffAsync(int staffId)
         {
            

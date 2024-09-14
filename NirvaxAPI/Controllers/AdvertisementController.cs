@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -30,8 +31,8 @@ namespace WebAPI.Controllers
 
 
             [HttpGet]
-            //  [Authorize]
-            public async Task<IActionResult> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
+        [Authorize(Roles = "Owner, Staff")]
+        public async Task<IActionResult> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
             {
                 var list =await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
                 if (list.Any())
@@ -46,8 +47,8 @@ namespace WebAPI.Controllers
         }
 
             [HttpGet]
-            //  [Authorize]
-            public async Task<IActionResult> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        [Authorize(Roles = "Owner, Staff")]
+        public async Task<IActionResult> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
             {
             try { 
                 var list =await _repo.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
@@ -74,7 +75,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             try { 
@@ -102,7 +103,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             try { 
@@ -253,7 +254,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-            public async Task<ActionResult> CreateAdvertisementAsync([FromForm] AdvertisementCreateDTO advertisementCreateDTO)
+        [Authorize(Roles = "Owner, Staff")]
+
+        public async Task<ActionResult> CreateAdvertisementAsync([FromForm] AdvertisementCreateDTO advertisementCreateDTO)
             {
             try {
                 if (ModelState.IsValid)
@@ -297,7 +300,8 @@ namespace WebAPI.Controllers
      
 
             [HttpPut]
-            public async Task<ActionResult> UpdateAdvertisementAsync([FromForm] AdvertisementDTO advertisementDTO)
+        [Authorize(Roles = "Owner, Staff")]
+        public async Task<ActionResult> UpdateAdvertisementAsync([FromForm] AdvertisementDTO advertisementDTO)
             {
             try { 
             if (ModelState.IsValid)
@@ -340,6 +344,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
@@ -377,6 +382,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewAdversisementStatisticsAsync(int ownerId)
         {
             try { 

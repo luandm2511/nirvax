@@ -3,6 +3,7 @@ using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -23,7 +24,7 @@ namespace WebAPI.Controllers
 
      
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> ViewUserHistoryChatAsync(int accountId)
         {
             var list = await _repo.ViewUserHistoryChatAsync(accountId);
@@ -43,7 +44,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> ViewOwnerHistoryChatAsync(int ownerId)
         {
             try { 
@@ -73,7 +74,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
             try { 
@@ -105,7 +106,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
             try { 
@@ -136,7 +137,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{roomId}")]
-        //  [Authorize]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> GetRoomByIdAsync(int roomId)
         {
             try { 
@@ -167,6 +168,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
             try

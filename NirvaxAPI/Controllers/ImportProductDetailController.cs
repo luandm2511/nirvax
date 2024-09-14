@@ -2,6 +2,7 @@
 using BusinessObject.Models;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 
@@ -29,7 +30,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner")]
         public async Task<IActionResult> GetAllImportProductDetailAsync()
         {
             var list = await _repo.GetAllImportProductDetailAsync();
@@ -49,7 +50,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult<IEnumerable<ImportProductDetailByImportDTO>>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
             var list = await _repo.GetAllImportProductDetailByImportIdAsync(importId);
@@ -70,6 +71,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateImportProductDetailAsync(int ownerId, int importId ,List<ImportProductDetailUpdateDTO> importProductDetail)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();

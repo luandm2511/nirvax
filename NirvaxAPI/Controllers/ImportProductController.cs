@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("{importId}")]
-        //  [Authorize]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> GetImportProductByIdAsync(int importId)
         {
             
@@ -74,6 +74,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> CreateImportProductAsync(int ownerId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
@@ -120,6 +121,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
             try
@@ -152,6 +154,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewImportProductStatisticsAsync(int ownerId)
         {
             try { 
@@ -171,6 +174,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewWeeklyImportProductAsync(int ownerId)
         {
             try { 

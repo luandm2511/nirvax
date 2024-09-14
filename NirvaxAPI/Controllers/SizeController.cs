@@ -2,6 +2,7 @@
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -76,6 +77,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
             try {
@@ -118,6 +120,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> UpdateSizeAsync(SizeDTO sizeDTO)
         {
             try {
@@ -160,6 +163,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{sizeId}")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> DeleteSizeAsync(int sizeId)
         {
             var size1 = await _repo.DeleteSizeAsync(sizeId);
@@ -180,6 +184,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{sizeId}")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> RestoreSizeAsync(int sizeId)
         {
             try { 

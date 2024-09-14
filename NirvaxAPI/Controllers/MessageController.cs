@@ -1,6 +1,7 @@
 ﻿using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Pipelines.Sockets.Unofficial.Buffers;
@@ -33,8 +34,8 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-            //  [Authorize]
-            public async Task<IActionResult> ViewAllMessageByRoomAsync(int roomId)
+        [Authorize(Roles = "User,Owner,Staff")]
+        public async Task<IActionResult> ViewAllMessageByRoomAsync(int roomId)
             {
 
                 var list = await _repo.ViewAllMessageByRoomAsync(roomId);
@@ -54,6 +55,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> CreateMessageAsync(MessageCreateDTO messageCreateDTO)
         {
             try
@@ -112,6 +114,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> CreateMessageFirstAsync(int accountId, int ownerId)
         {
             try

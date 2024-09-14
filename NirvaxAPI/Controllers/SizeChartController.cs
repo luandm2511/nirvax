@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -28,6 +29,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Owner,Staff")]
         //  [Authorize]
         public async Task<IActionResult> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
@@ -96,6 +98,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> CreateSizeChartAsync([FromForm] SizeChartCreateDTO sizeChartDTOCreateDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
@@ -155,6 +158,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> UpdateSizeChartAsync([FromForm] SizeChartDTO sizeChartDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
@@ -220,6 +224,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{sizeChartId}")]
+        [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> DeleteSizeChartAsync(int sizeChartId)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();

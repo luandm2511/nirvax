@@ -2,6 +2,7 @@
 using BusinessObject.Models;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 using System.Diagnostics.Eventing.Reader;
@@ -30,7 +31,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var list = await _repo.GetAllGuestConsultationsAsync(searchQuery, page, pageSize, ownerId);
@@ -54,7 +55,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try
@@ -87,7 +88,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try
@@ -120,7 +121,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             try
@@ -156,7 +157,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("{guestId}")]
-        //  [Authorize]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<ActionResult> GetGuestConsultationsByIdAsync(int guestId)
         {
 
@@ -181,7 +182,8 @@ namespace WebAPI.Controllers
            
 
             [HttpPost]
-            public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
+
+        public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
             {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
 
@@ -246,6 +248,7 @@ namespace WebAPI.Controllers
       
 
         [HttpPut]
+        [Authorize(Roles = "Owner, Staff")]
         public async Task<ActionResult> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest)
         {
             try
@@ -269,6 +272,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
+
         public async Task<ActionResult> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
             

@@ -1,6 +1,7 @@
 ﻿using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
 using WebAPI.Service;
@@ -91,7 +92,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{ownerEmail}")]
-        //  [Authorize]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewOwnerProfileAsync(string ownerEmail)
         {       
                     var owner = await _repo.ViewOwnerProfileAsync(ownerEmail);
@@ -116,6 +117,7 @@ namespace WebAPI.Controllers
            
 
         [HttpPut]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword, string confirmPassword)
         {
             try { 
@@ -146,6 +148,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Owner, Admin")]
         public async Task<ActionResult> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
             try {
@@ -188,6 +191,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
             try {
@@ -231,6 +235,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPut]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateAvatarOwnerAsync([FromForm] OwnerAvatarDTO ownerAvatarDTO)
         {
             try
@@ -262,6 +267,7 @@ namespace WebAPI.Controllers
         
 
         [HttpPatch("{ownerId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> BanOwnerAsync(int ownerId)
         {
                 var owner1 = await _repo.BanOwnerAsync(ownerId);
@@ -291,6 +297,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch("{ownerId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UnBanOwnerAsync(int ownerId)
         {
             var owner1 = await _repo.UnBanOwnerAsync(ownerId);
@@ -320,6 +327,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> NumberOfOwnerStatisticsAsync()
         {
             var number = await _repo.NumberOfOwnerStatisticsAsync();

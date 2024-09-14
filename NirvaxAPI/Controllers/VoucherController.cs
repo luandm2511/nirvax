@@ -1,6 +1,7 @@
 ﻿using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -21,8 +22,10 @@ namespace WebAPI.Controllers
 
 
             [HttpGet]
-            //  [Authorize]
-            public async Task<IActionResult> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        [Authorize(Roles = "Owner,Staff")]
+
+        //  [Authorize]
+        public async Task<IActionResult> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
             {
                 var list = await _repo.GetAllVouchersAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
@@ -41,6 +44,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+
         //  [Authorize]
         public async Task<IActionResult> GetAllVoucherForUserAsync()
         {
@@ -105,8 +109,10 @@ namespace WebAPI.Controllers
         }
 
             //check exist
-            [HttpPost]
-            public async Task<ActionResult> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
+        [HttpPost]
+        [Authorize(Roles = "Owner,Staff")]
+
+        public async Task<ActionResult> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
             {
             try {
                 if (ModelState.IsValid)
@@ -150,8 +156,10 @@ namespace WebAPI.Controllers
 
 
 
-            [HttpPut]
-            public async Task<ActionResult> UpdateVoucherAsync(VoucherDTO voucherDTO)
+        [HttpPut]
+        [Authorize(Roles = "Owner,Staff")]
+
+        public async Task<ActionResult> UpdateVoucherAsync(VoucherDTO voucherDTO)
             {
             try { 
             if (ModelState.IsValid)
@@ -192,8 +200,10 @@ namespace WebAPI.Controllers
 
 
 
-            [HttpPatch("{voucherId}")]
-            public async Task<ActionResult> DeleteVoucherAsync(string voucherId)
+        [HttpPatch("{voucherId}")]
+        [Authorize(Roles = "Owner,Staff")]
+
+        public async Task<ActionResult> DeleteVoucherAsync(string voucherId)
             {
                 var voucher1 = await _repo.DeleteVoucherAsync(voucherId);
                 if (voucher1)
@@ -213,6 +223,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewVoucherStatisticsAsync(int ownerId)
         {
             try { 

@@ -2,6 +2,7 @@
 using BusinessObject.Models;
 using DataAccess.DAOs;
 using DataAccess.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -114,6 +115,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
+
         public async Task<ActionResult> ViewProductSizeStatisticsAsync(int ownerId)
         {
             var total = await _repo.ViewProductSizeStatisticsAsync(ownerId);  
