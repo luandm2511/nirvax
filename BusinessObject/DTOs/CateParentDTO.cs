@@ -13,7 +13,5 @@ namespace BusinessObject.DTOs
         [MinLength(2, ErrorMessage = " Name to be at least 2 characters!!")]
         [MaxLength(50, ErrorMessage = "Name is limited to 50 characters!!")]
         public string Name { get; set; }
-        [Required(ErrorMessage = " Image cannot be empty!!")]
-        public string Image { get; set; }
     }
 }

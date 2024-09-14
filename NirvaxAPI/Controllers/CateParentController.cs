@@ -80,15 +80,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromForm] CateParentDTO dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(0, new { message = "Please pass the valid data." });
+            }
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return StatusCode(0, new { message = "Please pass the valid data." });
-                }
                 var cateparent = await _repository.GetCategoryParentByIdAsync(id);
                 if (cateparent == null || cateparent.Isdelete == true)
                 {
@@ -102,7 +102,7 @@ namespace WebAPI.Controllers
                     return StatusCode(406, new { message = "The category parent name has been duplicated." });
                 }
 
-                await _repository.CheckCategoryParentAsync(cateparent);
+                await _repository.UpdateCategoryParentAsync(cateparent);
                 return Ok(new { message = "Category parent updated successfully." }); 
             }
             catch (Exception )

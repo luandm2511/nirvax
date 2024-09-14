@@ -23,7 +23,7 @@ namespace DataAccess.DAOs
 
         public async Task<Owner> GetOwnerByEmailAsync(string email) => await _context.Owners.FirstOrDefaultAsync(o => o.Email == email);
 
-        public async Task<Staff> GetStaffByEmailAsync(string email) => await _context.Staff.FirstOrDefaultAsync(o => o.Email == email);
+        public async Task<Staff> GetStaffByEmailAsync(string email) => await _context.Staff.FirstOrDefaultAsync(s => s.Email == email && !s.Owner.IsBan);
 
         public async Task<Account> GetAccountByPhoneAsync(string phone) => await _context.Accounts.FirstOrDefaultAsync(a => a.Phone == phone);
 
