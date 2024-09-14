@@ -15,25 +15,18 @@ namespace DataAccess.IRepository
     {
         Task<int> NumberOfOwnerStatisticsAsync();
         Task<IEnumerable<Owner>> GetAllOwnersAsync(string? searchQuery, int page, int pageSize);
-
         Task<IEnumerable<Owner>> GetAllOwnersForUserAsync(string? searchQuery);
         Task<Owner> GetOwnerByIdAsync(int ownerId);
         Task<OwnerDTO> ViewOwnerProfileAsync(string ownerEmail);
-
         Task<bool> CheckOwnerAsync(OwnerDTO ownerDTO);
-       Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
-        Task<bool> ChangePasswordOwnerAsync(int  ownerId, string oldPassword, string newPassword, string confirmPassword);
-
+        Task<bool> CheckProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
+        Task<bool> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword, string confirmPassword);
         Task<string> GetEmailAsync(int ownerId);
         Task<bool> CreateOwnerAsync(OwnerDTO ownerDTO);
-
         Task<bool> UpdateOwnerAsync(OwnerDTO ownerDTO);
         Task<bool> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO);
         Task<bool> UpdateAvatarOwnerAsync(OwnerAvatarDTO ownerAvatarDTO);
-
         Task<bool> BanOwnerAsync(int ownerId);
         Task<bool> UnBanOwnerAsync(int ownerId);
-
-
     }
 }

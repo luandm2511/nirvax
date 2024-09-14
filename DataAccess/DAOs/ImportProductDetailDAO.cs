@@ -16,34 +16,25 @@ namespace DataAccess.DAOs
     {
 
         private readonly NirvaxContext _context;
-         private readonly  IMapper _mapper;
+        private readonly IMapper _mapper;
 
-  
-        
-
-        public ImportProductDetailDAO(NirvaxContext context, IMapper mapper) 
+        public ImportProductDetailDAO(NirvaxContext context, IMapper mapper)
         {
-           
+
             _context = context;
             _mapper = mapper;
         }
 
-   
-
-
-        //show list theo import Id => detail import đó
         public async Task<IEnumerable<ImportProductDetailByImportDTO>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
             List<ImportProductDetailByImportDTO> list = new List<ImportProductDetailByImportDTO>();
 
             List<ImportProductDetail> getList = await _context.ImportProductDetails
-            .Include(i => i.Import).Include(i => i.ProductSize.Product).Include(i=>i.ProductSize.Size)
+            .Include(i => i.Import).Include(i => i.ProductSize.Product).Include(i => i.ProductSize.Size)
             .Where(x => x.ImportId == importId).ToListAsync();
-            if(getList == null) { return new List<ImportProductDetailByImportDTO>(); }
+            if (getList == null) { return new List<ImportProductDetailByImportDTO>(); }
             var totalPrice = getList.Sum(i => i.UnitPrice * i.QuantityReceived);
             var totalQuantity = getList.Sum(i => i.QuantityReceived);
-
-
             list = _mapper.Map<List<ImportProductDetailByImportDTO>>(getList);
             list.ForEach(dto =>
             {
@@ -53,14 +44,11 @@ namespace DataAccess.DAOs
             return list;
         }
 
-        // detail list all các detail 
-        public async  Task<IEnumerable<ImportProductDetail>> GetAllImportProductDetailAsync()
+        public async Task<IEnumerable<ImportProductDetail>> GetAllImportProductDetailAsync()
         {
-           
-             List<ImportProductDetail> getList = await _context.ImportProductDetails
-            .Include(i => i.Import).Include(i => i.ProductSize)
-            .ToListAsync();
-               
+            List<ImportProductDetail> getList = await _context.ImportProductDetails
+           .Include(i => i.Import).Include(i => i.ProductSize)
+           .ToListAsync();
             return getList;
         }
 
@@ -80,7 +68,7 @@ namespace DataAccess.DAOs
                     ProductId = g.Key.ProductId,
                     SizeId = g.Key.SizeId,
                     QuantityReceived = g.Sum(x => x.QuantityReceived),
-                    UnitPrice = g.First().UnitPrice 
+                    UnitPrice = g.First().UnitPrice
                 })
                 .ToList();
 
@@ -109,8 +97,6 @@ namespace DataAccess.DAOs
             return true;
         }
 
-
-
         public async Task<bool> UpdateImportProductDetailAsync(int importId, List<ImportProductDetailUpdateDTO> importProductDetailDTO)
         {
             var importProductDetail = await _context.ImportProductDetails.Where(i => i.ImportId == importId).ToListAsync();
@@ -119,25 +105,19 @@ namespace DataAccess.DAOs
             {
                 foreach (var item1 in importProductDetailDTO)
                 {
-                    if(item.ProductSizeId == item1.ProductSizeId)
+                    if (item.ProductSizeId == item1.ProductSizeId)
                     {
                         _mapper.Map(item1, item);
-                         _context.ImportProductDetails.Update(item);
+                        _context.ImportProductDetails.Update(item);
                     }
                 }
             }
-               
             await _context.SaveChangesAsync();
-
             return true;
         }
-
-
-
-
     }
-    }
+}
 
-  
+
 
 

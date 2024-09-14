@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         private readonly IMapper _mapper;
 
         public AuthenticationController(IConfiguration config, IAuthenticationRepository repo, IMemoryCache cache, IEmailService emailService, IMapper mapper)
-        {       
+        {
             _config = config;
             _repository = repo;
             _emailService = emailService;
@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
                 {
                     message = ex.Message
                 });
-            }         
+            }
         }
 
         [HttpPost("register-owner")]
@@ -112,7 +112,7 @@ namespace WebAPI.Controllers
         [HttpPost("verify-user")]
         public async Task<IActionResult> VerifyUser([FromBody] VerifyUser request)
         {
-            try 
+            try
             {
                 if (_cache.TryGetValue(request.Email, out string storedCode))
                 {
@@ -194,7 +194,7 @@ namespace WebAPI.Controllers
                 {
                     message = ex.Message
                 });
-            }         
+            }
         }
 
         [HttpPost("forgot-password")]
@@ -223,7 +223,7 @@ namespace WebAPI.Controllers
                 {
                     message = ex.Message
                 });
-            }       
+            }
         }
 
         [HttpPost("verify-code")]
@@ -254,7 +254,7 @@ namespace WebAPI.Controllers
                 {
                     message = ex.Message
                 });
-            }          
+            }
         }
 
         [HttpPost("reset-password")]
@@ -297,7 +297,7 @@ namespace WebAPI.Controllers
                 {
                     message = ex.Message
                 });
-            }           
+            }
         }
 
         [HttpPost("login-admin")]
@@ -308,9 +308,9 @@ namespace WebAPI.Controllers
                 return StatusCode(406, new { message = "Please pass the valid data." });
             }
             try
-            {  
+            {
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
-                if(account != null)
+                if (account != null)
                 {
                     if (account.Role == "Admin" && PasswordHasher.VerifyPassword(request.Password, account.Password))
                     {
@@ -339,7 +339,7 @@ namespace WebAPI.Controllers
             try
             {
                 var account = await _repository.GetAccountByEmailAsync(request.Email);
-                if(account != null)
+                if (account != null)
                 {
                     if (account.IsBan)
                     {
@@ -372,8 +372,8 @@ namespace WebAPI.Controllers
             }
             try
             {
-                if(request.Role == "Owner")
-                {                   
+                if (request.Role == "Owner")
+                {
                     var owner = await _repository.GetOwnerByEmailAsync(request.Email);
                     if (owner != null && owner.IsBan)
                     {
@@ -381,10 +381,10 @@ namespace WebAPI.Controllers
                     }
                     if (owner != null && PasswordHasher.VerifyPassword(request.Password, owner.Password))
                     {
-                        var token = GenerateJSONWebToken(owner.OwnerId,owner.Email, "Owner");
+                        var token = GenerateJSONWebToken(owner.OwnerId, owner.Email, "Owner");
                         return Ok(new { token, userType = "Owner" });
                     }
-                }               
+                }
                 if (request.Role == "Staff")
                 {
                     var staff = await _repository.GetStaffByEmailAsync(request.Email);
@@ -393,7 +393,7 @@ namespace WebAPI.Controllers
                         var token = GenerateJSONWebToken(staff.StaffId, staff.Email, "Staff");
                         return Ok(new { token, userType = "Staff" });
                     }
-                }               
+                }
                 return StatusCode(400, new { message = "Invalid email or password." });
             }
             catch (Exception ex)
@@ -440,7 +440,7 @@ namespace WebAPI.Controllers
 
                 var tokenString = GenerateJSONWebToken(user.AccountId, request.Email, "User");
 
-                return Ok(new {  token = tokenString, userType = "User" });
+                return Ok(new { token = tokenString, userType = "User" });
             }
             catch (Exception ex)
             {

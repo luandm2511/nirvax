@@ -9,23 +9,19 @@ namespace BusinessObject.DTOs
 {
     public class ServiceDTO
     {
+        [Required(ErrorMessage = " ServiceId cannot be empty!!")]
         public int ServiceId { get; set; }
         [Required(ErrorMessage = " Name cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Name to be at least 2 characters!!")]
+        [MinLength(1, ErrorMessage = " Name to be at least 1 characters!!")]
         [MaxLength(50, ErrorMessage = "Name is limited to 50 characters!!")]
         public string Name { get; set; } = null!;
-
-      //  public bool? Isdelete { get; set; }
     }
 
     public class ServiceCreateDTO
     {
-  
         [Required(ErrorMessage = " Name cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Name to be at least 2 characters!!")]
+        [MinLength(1, ErrorMessage = " Name to be at least 1 characters!!")]
         [MaxLength(50, ErrorMessage = "Name is limited to 50 characters!!")]
-        public string Name { get; set; } = null!;
-
-       
+        public string Name { get; set; } = null!;     
     }
 }

@@ -22,11 +22,9 @@ namespace DataAccess.DAOs
 {
     public class AdvertisementDAO
     {
-
         private readonly NirvaxContext  _context;
         private readonly IMapper _mapper;
         private IDbContextTransaction _transaction;
-
 
         public AdvertisementDAO( NirvaxContext context, IMapper mapper)
         {
@@ -34,7 +32,6 @@ namespace DataAccess.DAOs
              _context = context;
             _mapper = mapper;
         }
-       
 
         public async Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
@@ -49,13 +46,11 @@ namespace DataAccess.DAOs
             if (Advertisement != null)
             {
                 List<Advertisement> getList = await _context.Advertisements
-                 //check khác Id`
-                 .Where(i => i.AdId != advertisementDTO.AdId)
-                .Where(i => i.Title.Trim() == advertisementDTO.Title.Trim())
-                 .ToListAsync();
+                                           .Where(i => i.AdId != advertisementDTO.AdId)
+                                           .Where(i => i.Title.Trim() == advertisementDTO.Title.Trim())
+                                           .ToListAsync();
                 if (getList.Count > 0)
                 {
-                    //throw new Exception("Title already exists!");
                     return false;
                 }
                 else
@@ -84,8 +79,6 @@ namespace DataAccess.DAOs
             return true;
         }
 
-
-        //get all for owner,staff 
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
           
@@ -112,13 +105,9 @@ namespace DataAccess.DAOs
             List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
                                                      .Take(pageSize)
                                                      .ToListAsync();
-
-           
-
             return getList;
         }
 
-        // get status waiting
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
@@ -131,8 +120,7 @@ namespace DataAccess.DAOs
                     .Where(i => i.StatusPost.Name.Contains("WAITING"))               
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-              
+                    .ToListAsync();             
             }
             else
             {
@@ -140,12 +128,11 @@ namespace DataAccess.DAOs
                    .Where(i => i.StatusPost.Name.Contains("WAITING"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-              
+                    .ToListAsync();            
             }
             return getList;
         }
-        //get status deny
+        
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
@@ -158,8 +145,7 @@ namespace DataAccess.DAOs
                     .Where(i => i.StatusPost.Name.Contains("DENY"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-              
+                    .ToListAsync();          
             }
             else
             {
@@ -167,12 +153,11 @@ namespace DataAccess.DAOs
                    .Where(i => i.StatusPost.Name.Contains("DENY"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-              
+                    .ToListAsync();             
             }
             return getList;
         }
-        //get status accept
+       
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
@@ -185,8 +170,7 @@ namespace DataAccess.DAOs
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-              
+                    .ToListAsync();            
             }
             else
             {
@@ -194,8 +178,7 @@ namespace DataAccess.DAOs
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-              
+                    .ToListAsync();             
             }
             return getList;
         }
@@ -210,26 +193,22 @@ namespace DataAccess.DAOs
                 getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                    .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
-                    .ToListAsync();
-              
+                    .ToListAsync();             
             }
             else
             {
              getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
-                    .ToListAsync();
-              
+                    .ToListAsync();           
             }
             return getList;
         }
 
-        //user
         public async Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
             if (checkOwner == null) { return new List<Advertisement>(); }
             List<Advertisement> getList = new List<Advertisement>();
-
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -237,25 +216,20 @@ namespace DataAccess.DAOs
                     .Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i=> i.OwnerId == ownerId)
-                    .ToListAsync();
-              
+                    .ToListAsync();             
             }
             else
             {
                getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i => i.OwnerId == ownerId)
-                    .ToListAsync();
-              
+                    .ToListAsync();           
             }
             return getList;
         }
 
         public async Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-
-          
-
             IQueryable<Advertisement> query = _context.Advertisements
                                                        .Include(i => i.Owner)
                                                        .Include(i => i.Service)
@@ -267,7 +241,6 @@ namespace DataAccess.DAOs
                 query = query.Where(i => i.Content.Trim().Contains(searchQuery.Trim()) || i.Title.Trim().Contains(searchQuery.Trim()));
             }
 
-
             query = query.OrderBy(i =>
                 i.StatusPost.Name == "WAITING" ? 1 :
                 i.StatusPost.Name == "ACCEPT" ? 2 :
@@ -275,30 +248,22 @@ namespace DataAccess.DAOs
                 4
             );
 
-            // Áp dụng phân trang
             List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
                                                      .Take(pageSize)
                                                      .ToListAsync();
-
-
-
             return getList;
         }
 
-        //service
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
         
                 List<Advertisement> getList = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost)
                     .Where(i => i.StatusPost.Name.Contains("ACCEPT"))
                     .Where(i => i.ServiceId == serviceId)
-                    .ToListAsync();
-              
-            
+                    .ToListAsync();    
             return getList;
         }
-
-        //owner,staff 
+ 
         public async Task<Advertisement> GetAdvertisementByIdAsync(int adId)
 
         {         
@@ -310,7 +275,6 @@ namespace DataAccess.DAOs
         {
                 Advertisement? ads = await _context.Advertisements.Include(i => i.Owner).Include(i => i.Service).Include(i => i.StatusPost).Where(i => i.StatusPost.Name.Contains("ACCEPT")).SingleOrDefaultAsync(i => i.AdId == adId);
                 return ads;           
-
         }
 
   
@@ -325,10 +289,8 @@ namespace DataAccess.DAOs
                 {
                     return true;
                 } else return false;
-
         }
 
-        //staff, owner
         public  async Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO)
         {
             Advertisement? adOrgin = await _context.Advertisements
@@ -342,14 +304,12 @@ namespace DataAccess.DAOs
             }
             _mapper.Map(advertisementDTO, adOrgin);
                  _context.Advertisements.Update(adOrgin);
-                await _context.SaveChangesAsync();
-         
+                await _context.SaveChangesAsync();       
                 return true;
         }
 
         public async Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost)
-        {
-           
+        {       
             PostStatus postStatus = await _context.PostStatuses.SingleOrDefaultAsync(i => i.Name.Trim() == statusPost.Trim());
             Advertisement? adOrgin = await _context.Advertisements
                 .Include(i => i.Owner)
@@ -363,19 +323,16 @@ namespace DataAccess.DAOs
             return adOrgin;
         }
 
-
         public async Task<object> ViewAdversisementStatisticsAsync(int ownerId)
         {
             var number = await _context.Advertisements.Where(i => i.OwnerId == ownerId).CountAsync();
             var number2 = await _context.Advertisements.Include(i => i.Owner).CountAsync();
-
             var result = new Dictionary<string, object>
-    {
-        { "totalAdversisement", number },
-        { "totalOwnerAdversisement", number2 }
-    };
-
-            return result;
+                             {
+                                  { "totalAdversisement", number },
+                                  { "totalOwnerAdversisement", number2 }
+                             };
+           return result;
         }
     }
 }

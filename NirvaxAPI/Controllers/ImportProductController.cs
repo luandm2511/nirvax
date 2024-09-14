@@ -28,24 +28,24 @@ namespace WebAPI.Controllers
             _repoImport = repoImport;
             _transactionRepository = transactionRepository;
         }
-        
+
 
         [HttpGet]
         [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
+        public async Task<IActionResult> GetAllImportProductAsync(int ownerId, DateTime? from, DateTime? to)
         {
             var list = await _repo.GetAllImportProductAsync(ownerId, from, to);
-                if (list.Any())
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list import product " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list import product " + ok,
+                    Data = list
+                });
+            }
             else
             {
-                    return NoContent();
+                return NoContent();
 
             }
         }
@@ -55,9 +55,10 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> GetImportProductByIdAsync(int importId)
         {
-            
-                var importProduct = await _repo.GetImportProductByIdAsync(importId);
-            if(importProduct != null) { 
+
+            var importProduct = await _repo.GetImportProductByIdAsync(importId);
+            if (importProduct != null)
+            {
                 return StatusCode(200, new
                 {
                     Message = "Get import product by id" + ok,
@@ -78,7 +79,8 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> CreateImportProductAsync(int ownerId, string origin, List<ImportProductDetailCreateDTO> importProductDetailDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     ImportProductCreateDTO importProduct = new ImportProductCreateDTO()
@@ -89,10 +91,10 @@ namespace WebAPI.Controllers
                         Quantity = 0,
                         TotalPrice = 0
                     };
-                    await _repoProdSize.CreateProductSizeAsync(ownerId, importProductDetailDTO);             
-                    var importProduct1 = await _repo.CreateImportProductAsync(importProduct);              
+                    await _repoProdSize.CreateProductSizeAsync(ownerId, importProductDetailDTO);
+                    var importProduct1 = await _repo.CreateImportProductAsync(importProduct);
                     await _repoImport.CreateImportProductDetailAsync(importProduct1.ImportId, importProductDetailDTO);
-                    await _repo.UpdateQuantityAndPriceImportProductAsync(importProduct1.ImportId);               
+                    await _repo.UpdateQuantityAndPriceImportProductAsync(importProduct1.ImportId);
                     await _transactionRepository.CommitTransactionAsync();
                     return StatusCode(200, new
                     {
@@ -108,12 +110,12 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
-                   
+
                     Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
@@ -125,25 +127,25 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
             try
-            {          
-            if (ModelState.IsValid)
             {
-                var importProduct1 = await _repo.UpdateImportProductAsync(importProductDTO);
-                return StatusCode(200, new
+                if (ModelState.IsValid)
                 {
-                    Message = "Update import product" + ok,
-                    Data = importProduct1
-                });
-            }
-            else
-            {
-                return StatusCode(400, new
+                    var importProduct1 = await _repo.UpdateImportProductAsync(importProductDTO);
+                    return StatusCode(200, new
+                    {
+                        Message = "Update import product" + ok,
+                        Data = importProduct1
+                    });
+                }
+                else
                 {
-                    Message = "Don't accept empty information!",
-                });
+                    return StatusCode(400, new
+                    {
+                        Message = "Don't accept empty information!",
+                    });
+                }
             }
-            }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -157,12 +159,13 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewImportProductStatisticsAsync(int ownerId)
         {
-            try { 
-            var total = await _repo.ViewImportProductStatisticsAsync(ownerId);
-            return StatusCode(200, new
+            try
             {
-                Data = total,
-            });
+                var total = await _repo.ViewImportProductStatisticsAsync(ownerId);
+                return StatusCode(200, new
+                {
+                    Data = total,
+                });
             }
             catch (Exception)
             {
@@ -177,14 +180,15 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewWeeklyImportProductAsync(int ownerId)
         {
-            try { 
-            var total = await _repo.ViewWeeklyImportProductAsync(ownerId);
-          
-
-            return StatusCode(200, new
+            try
             {
-                Data= total
-            });
+                var total = await _repo.ViewWeeklyImportProductAsync(ownerId);
+
+
+                return StatusCode(200, new
+                {
+                    Data = total
+                });
             }
             catch (Exception)
             {
@@ -195,6 +199,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+
     }
 }

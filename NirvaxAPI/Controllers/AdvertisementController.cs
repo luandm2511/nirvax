@@ -11,51 +11,52 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]/[Action]")]
     [ApiController]
-    public  class AdvertisementController : ControllerBase
-    {   
-            private readonly ITransactionRepository _transactionRepository;
-            private readonly IAdvertisementRepository _repo;
-            private readonly INotificationRepository _notificationRepository;
-
-   
-            private readonly string ok = "successfully";
-            private readonly string notFound = "Not found";
-            private readonly string badRequest = "Failed!";
-
-            public  AdvertisementController(IAdvertisementRepository repo, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
-            {
-                _repo = repo;
-               _notificationRepository = notificationRepository;
-               _transactionRepository = transactionRepository;
-            }
+    public class AdvertisementController : ControllerBase
+    {
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IAdvertisementRepository _repo;
+        private readonly INotificationRepository _notificationRepository;
 
 
-            [HttpGet]
+        private readonly string ok = "successfully";
+        private readonly string notFound = "Not found";
+        private readonly string badRequest = "Failed!";
+
+        public AdvertisementController(IAdvertisementRepository repo, INotificationRepository notificationRepository, ITransactionRepository transactionRepository)
+        {
+            _repo = repo;
+            _notificationRepository = notificationRepository;
+            _transactionRepository = transactionRepository;
+        }
+
+
+        [HttpGet]
         [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
+        {
+            var list = await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
+            if (list.Any())
             {
-                var list =await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
-                if (list.Any())
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    { 
-                        Message = "Get list of advertisements " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list of advertisements " + ok,
+                    Data = list
+                });
+            }
             return NoContent();
         }
 
-            [HttpGet]
+        [HttpGet]
         [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        {
+            try
             {
-            try { 
-                var list =await _repo.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
+                var list = await _repo.GetAllAdvertisementsWaitingAsync(searchQuery, page, pageSize);
                 if (list.Any())
                 {
                     return StatusCode(200, new
-                    { 
+                    {
                         Message = "Get list advertisement " + ok,
                         Data = list
                     });
@@ -65,7 +66,7 @@ namespace WebAPI.Controllers
                     return NoContent();
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -78,22 +79,23 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
-            try { 
-            var list = await _repo.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
-            if (list.Any())
+            try
             {
-                return StatusCode(200, new
+                var list = await _repo.GetAllAdvertisementsAcceptAsync(searchQuery, page, pageSize);
+                if (list.Any())
                 {
-                    Message = "Get list advertisement " + ok,
-                    Data = list
-                });
-            }
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list advertisement " + ok,
+                        Data = list
+                    });
+                }
                 else
                 {
                     return NoContent();
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -106,22 +108,23 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
-            try { 
-            var list = await _repo.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
-            if (list.Any())
+            try
             {
-                return StatusCode(200, new
+                var list = await _repo.GetAllAdvertisementsDenyAsync(searchQuery, page, pageSize);
+                if (list.Any())
                 {
-                    Message = "Get list advertisement " + ok,
-                    Data = list
-                });
-            }
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list advertisement " + ok,
+                        Data = list
+                    });
+                }
                 else
                 {
                     return NoContent();
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -134,7 +137,7 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<IActionResult> GetAllAdvertisementsForUserAsync(string? searchQuery)
         {
-            var list =await _repo.GetAllAdvertisementsForUserAsync(searchQuery);
+            var list = await _repo.GetAllAdvertisementsForUserAsync(searchQuery);
             if (list.Any())
             {
                 return StatusCode(200, new
@@ -153,15 +156,15 @@ namespace WebAPI.Controllers
         //  [Authorize]
         public async Task<IActionResult> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId)
         {
-                var list = await _repo.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
-                if (list.Any())
+            var list = await _repo.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list advertisement by owner" + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list advertisement by owner" + ok,
+                    Data = list
+                });
+            }
             else
             {
                 return NoContent();
@@ -171,7 +174,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         //  [Authorize]
         public async Task<IActionResult> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
-        { 
+        {
             var list = await _repo.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
             if (list.Any())
             {
@@ -192,15 +195,15 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetAllAdvertisementsByServiceAsync(int serviceId)
         {
 
-                var list = await _repo.GetAllAdvertisementsByServiceAsync(serviceId);
-                if (list.Any())
+            var list = await _repo.GetAllAdvertisementsByServiceAsync(serviceId);
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list advertisement by service" + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list advertisement by service" + ok,
+                    Data = list
+                });
+            }
             else
             {
                 return NoContent();
@@ -210,11 +213,11 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("{adId}")]
-            //  [Authorize]
-            public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
-            {
-               
-                    var ads =await _repo.GetAdvertisementByIdAsync(adId);
+        //  [Authorize]
+        public async Task<ActionResult> GetAdvertisementByIdAsync(int adId)
+        {
+
+            var ads = await _repo.GetAdvertisementByIdAsync(adId);
             if (ads != null)
             {
                 return StatusCode(200, new
@@ -230,13 +233,13 @@ namespace WebAPI.Controllers
                     Message = notFound + "any advertisement"
                 });
             }
-            }
+        }
 
         [HttpGet("{adId}")]
         //  [Authorize]
         public async Task<ActionResult> GetAdvertisementByIdForUserAsync(int adId)
         {
-                var advertisement =await _repo.GetAdvertisementByIdForUserAsync(adId);
+            var advertisement = await _repo.GetAdvertisementByIdForUserAsync(adId);
             if (advertisement != null)
             {
 
@@ -257,8 +260,9 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner, Staff")]
 
         public async Task<ActionResult> CreateAdvertisementAsync([FromForm] AdvertisementCreateDTO advertisementCreateDTO)
+        {
+            try
             {
-            try {
                 if (ModelState.IsValid)
                 {
                     var checkAdvertisement = await _repo.CheckAdvertisementCreateAsync(advertisementCreateDTO);
@@ -266,11 +270,11 @@ namespace WebAPI.Controllers
                     {
 
                         var advertisement1 = await _repo.CreateAdvertisementAsync(advertisementCreateDTO);
-                            return StatusCode(200, new
-                            {
-                                Message = "Create advertisement " + ok,
-                                Data = advertisement1
-                            });                    
+                        return StatusCode(200, new
+                        {
+                            Message = "Create advertisement " + ok,
+                            Data = advertisement1
+                        });
                     }
                     else
                     {
@@ -289,7 +293,7 @@ namespace WebAPI.Controllers
                 }
             }
 
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -297,42 +301,43 @@ namespace WebAPI.Controllers
                 });
             }
         }
-     
 
-            [HttpPut]
+
+        [HttpPut]
         [Authorize(Roles = "Owner, Staff")]
         public async Task<ActionResult> UpdateAdvertisementAsync([FromForm] AdvertisementDTO advertisementDTO)
+        {
+            try
             {
-            try { 
-            if (ModelState.IsValid)
-            {
-                var checkAdvertisement =await _repo.CheckAdvertisementAsync(advertisementDTO);
-                if (checkAdvertisement == true)
+                if (ModelState.IsValid)
                 {
-                    
-                    var advertisement1 =await _repo.UpdateAdvertisementAsync(advertisementDTO);          
+                    var checkAdvertisement = await _repo.CheckAdvertisementAsync(advertisementDTO);
+                    if (checkAdvertisement == true)
+                    {
+
+                        var advertisement1 = await _repo.UpdateAdvertisementAsync(advertisementDTO);
                         return StatusCode(200, new
                         {
                             Message = "Update advertisement" + ok,
                             Data = advertisement1
-                        });               
-                }
-                else
-                {
-                    return StatusCode(400, new
+                        });
+                    }
+                    else
                     {
-                        Message = "There already exists a Advertisement with that information",
-                    });
+                        return StatusCode(400, new
+                        {
+                            Message = "There already exists a Advertisement with that information",
+                        });
+                    }
+
                 }
 
+                return StatusCode(400, new
+                {
+                    Message = "Dont't accept empty information!",
+                });
             }
-
-            return StatusCode(400, new
-            {
-                Message = "Dont't accept empty information!",
-            });
-            }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -348,29 +353,30 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> UpdateStatusAdvertisementAsync(int adId, string statusPost)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
-            try {              
-                    var advertisement = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);
-                    
-                    var notification = new Notification
-                    {
-                        AccountId = null,
-                        OwnerId = advertisement.OwnerId,
-                        Content = $"Your new Advertisement has been moderated and its status changed to {advertisement.StatusPost.Name}",
-                        IsRead = false,
-                        Url = null,
-                        CreateDate = DateTime.Now
-                    };
-                    await _notificationRepository.AddNotificationAsync(notification);
+            try
+            {
+                var advertisement = await _repo.UpdateStatusAdvertisementAsync(adId, statusPost);
 
-                    await _transactionRepository.CommitTransactionAsync();
-                    return StatusCode(200, new
-                    {
-                        Message = "Update advertisement" + ok,
-                        Data = advertisement
-                    });            
-           
+                var notification = new Notification
+                {
+                    AccountId = null,
+                    OwnerId = advertisement.OwnerId,
+                    Content = $"Your new Advertisement has been moderated and its status changed to {advertisement.StatusPost.Name}",
+                    IsRead = false,
+                    Url = null,
+                    CreateDate = DateTime.Now
+                };
+                await _notificationRepository.AddNotificationAsync(notification);
+
+                await _transactionRepository.CommitTransactionAsync();
+                return StatusCode(200, new
+                {
+                    Message = "Update advertisement" + ok,
+                    Data = advertisement
+                });
+
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
@@ -385,12 +391,13 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewAdversisementStatisticsAsync(int ownerId)
         {
-            try { 
-            var total = await _repo.ViewAdversisementStatisticsAsync(ownerId);
+            try
+            {
+                var total = await _repo.ViewAdversisementStatisticsAsync(ownerId);
 
-            return StatusCode(200, new
+                return StatusCode(200, new
                 {
-                Data = total,
+                    Data = total,
                 });
             }
             catch (Exception)

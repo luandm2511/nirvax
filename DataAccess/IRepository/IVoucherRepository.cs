@@ -21,9 +21,7 @@ namespace DataAccess.IRepository
         Task<IEnumerable<Voucher>> GetAllVoucherByOwnerAsync(int ownerId);
         Task<Voucher> GetVoucherDTOByIdAsync(string voucherId);
         Task<Voucher> GetVoucherById(string voucherId);
-
         Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO);
-
         Task<bool> UpdateVoucherAsync(VoucherDTO voucherDTO);
         Task<bool> DeleteVoucherAsync(string voucherId);
 

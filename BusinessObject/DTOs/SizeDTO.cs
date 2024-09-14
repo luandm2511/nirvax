@@ -10,33 +10,23 @@ namespace BusinessObject.DTOs
 {
     public class SizeDTO
     {
-
+        [Required(ErrorMessage = " SizeId cannot be empty!!")]
         public int SizeId { get; set; }
         [Required(ErrorMessage = " Content cannot be empty!!")]
         [MinLength(1, ErrorMessage = " Content to be at least 1 characters!!")]
-        [MaxLength(20, ErrorMessage = "Content is limited to 20 characters!!")]
+        [MaxLength(50, ErrorMessage = "Content is limited to 50 characters!!")]
         public string Name { get; set; } = null!;
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
-
-       // public string? OwnerName { get; set; }
         public int OwnerId { get; set; }
-
-     //   public bool? Isdelete { get; set; }
-
     }
 
     public class SizeCreateDTO
     {
-
         [Required(ErrorMessage = " Content cannot be empty!!")]
         [MinLength(1, ErrorMessage = " Content to be at least 1 characters!!")]
-        [MaxLength(20, ErrorMessage = "Content is limited to 20 characters!!")]
+        [MaxLength(50, ErrorMessage = "Content is limited to 50 characters!!")]
         public string Name { get; set; } = null!;
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
-
-       
-
     }
-
 }

@@ -23,44 +23,25 @@ namespace DataAccess.DAOs
         private readonly NirvaxContext _context;
 
         private readonly IMapper _mapper;
-        private readonly IMemoryCache _memoryCache;
 
-
-
-        public  VoucherDAO(NirvaxContext context, IMapper mapper, IMemoryCache memoryCache)
+        public VoucherDAO(NirvaxContext context, IMapper mapper)
         {
 
-             _context = context;
+            _context = context;
             _mapper = mapper;
-            _memoryCache = memoryCache;
         }
 
         public async Task<Voucher> GetVoucherById(string voucherId)
         {
-            return await _context.Vouchers.Include(i=> i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
+            return await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
         }
-
-       // public async Task<bool> CheckVoucherByIdAsync(string voucherId)
-       // {
-
-          //  Voucher? voucher = new Voucher();
-         //   voucher = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId); 
-
-
-            //if (voucher == null)
-          //  {
-              //  return false;
-
-            //}
-            //return true;
-       // }
 
         public async Task<bool> CheckVoucherAsync(DateTime startDate, DateTime endDate, string voucherId)
         {
 
             Voucher? voucher = new Voucher();
 
-            if((startDate.Date >= DateTime.Now.Date) && (endDate.Date >= startDate.Date))
+            if ((startDate.Date >= DateTime.Now.Date) && (endDate.Date >= startDate.Date))
             {
                 if (startDate.Date == endDate.Date)
                 {
@@ -79,24 +60,26 @@ namespace DataAccess.DAOs
                 {
                     throw new Exception("Already has this voucher!");
                 };
-            } else
+            }
+            else
             {
                 return false;
                 throw new Exception("StartDate should be greater than or equal to Today and StartDate should be less than or equal to EndDate!");
             }
-            
+
         }
 
         public async Task<bool> CheckVoucherExistAsync(VoucherDTO voucherDTO)
         {
             Voucher? sid = new Voucher();
             sid = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
-         
+
             if ((sid != null) && (voucherDTO.StartDate < voucherDTO.EndDate))
             {
                 return true;
-          
-            } else
+
+            }
+            else
 
             {
                 throw new Exception("StartDate should bottom EndDate!");
@@ -105,8 +88,6 @@ namespace DataAccess.DAOs
             return false;
         }
 
-
-        //owner,staff
         public async Task<IEnumerable<Voucher>> GetAllVouchersAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
@@ -118,34 +99,31 @@ namespace DataAccess.DAOs
             {
                 getList = await _context.Vouchers
                     .Include(i => i.Owner)
-                 //   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
                     .Where(i => i.VoucherId.Trim().Contains(searchQuery.Trim()) && !i.Isdelete)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-               
+
             }
             else
             {
                 getList = await _context.Vouchers
                     .Include(i => i.Owner)
-                  //  .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();            
+                    .ToListAsync();
             }
             return getList;
         }
 
-        //user
         public async Task<IEnumerable<Voucher>> GetAllVoucherForUserAsync()
         {
-              List<Voucher> getList = await _context.Vouchers
-                .Include(i => i.Owner)
-                    .Where(i => i.Isdelete == false)
-                    .ToListAsync();                
+            List<Voucher> getList = await _context.Vouchers
+              .Include(i => i.Owner)
+                  .Where(i => i.Isdelete == false)
+                  .ToListAsync();
             return getList;
         }
 
@@ -155,20 +133,17 @@ namespace DataAccess.DAOs
               .Include(i => i.Owner)
                   .Where(i => i.Isdelete == false)
                     .Where(i => i.OwnerId == ownerId)
-                  .ToListAsync();        
+                  .ToListAsync();
             return getList;
         }
 
         public async Task<Voucher> GetVoucherDTOByIdAsync(string voucherId)
         {
-          
-            Voucher? sid = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);          
-       
+
+            Voucher? sid = await _context.Vouchers.Include(i => i.Owner).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.VoucherId == voucherId);
+
             return sid;
         }
-              
-
-
 
         public async Task<bool> CreateVoucherAsync(VoucherCreateDTO voucherCreateDTO)
         {
@@ -186,8 +161,9 @@ namespace DataAccess.DAOs
             {
                 return true;
             }
-            else { 
-                return false; 
+            else
+            {
+                return false;
             }
 
         }
@@ -199,13 +175,12 @@ namespace DataAccess.DAOs
             {
                 throw new Exception("Not exist this owner!");
             }
-            Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);             
-                //voucherDTO.Isdelete = false;
-                _mapper.Map(voucherDTO, voucher);
+            Voucher? voucher = await _context.Vouchers.Include(i => i.Owner).SingleOrDefaultAsync(i => i.VoucherId == voucherDTO.VoucherId);
+            _mapper.Map(voucherDTO, voucher);
             voucher.Isdelete = false;
-                 _context.Vouchers.Update(voucher);
-                await _context.SaveChangesAsync();
-                return true; 
+            _context.Vouchers.Update(voucher);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteVoucherAsync(string voucherId)
@@ -214,7 +189,7 @@ namespace DataAccess.DAOs
             if (voucher != null)
             {
                 voucher.Isdelete = true;
-                 _context.Vouchers.Update(voucher);
+                _context.Vouchers.Update(voucher);
                 await _context.SaveChangesAsync();
                 return true;
             }

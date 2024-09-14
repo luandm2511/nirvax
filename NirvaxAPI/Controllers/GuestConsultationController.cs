@@ -162,29 +162,31 @@ namespace WebAPI.Controllers
         {
 
             var guestConsultation = await _repo.GetGuestConsultationsByIdAsync(guestId);
-            if(guestConsultation != null) { 
-
-            return StatusCode(200, new
+            if (guestConsultation != null)
             {
 
-                Message = "Get guest consultation by id" + ok,
-                Data = guestConsultation
-            });
-        }
-       else {
+                return StatusCode(200, new
+                {
+
+                    Message = "Get guest consultation by id" + ok,
+                    Data = guestConsultation
+                });
+            }
+            else
+            {
                 return StatusCode(404, new
-                {      
+                {
                     Message = notFound + "any guest consultation"
-                });    
-    }
+                });
+            }
         }
 
-           
 
-            [HttpPost]
+
+        [HttpPost]
 
         public async Task<ActionResult> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO)
-            {
+        {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
 
             try
@@ -209,10 +211,10 @@ namespace WebAPI.Controllers
                         await _transactionRepository.CommitTransactionAsync();
 
                         return StatusCode(200, new
-                            {
-                                Message = "Send guest consultation " + ok,
-                                Data = guestConsultation1
-                            });
+                        {
+                            Message = "Send guest consultation " + ok,
+                            Data = guestConsultation1
+                        });
                     }
                     else
                     {
@@ -245,7 +247,7 @@ namespace WebAPI.Controllers
         }
 
 
-      
+
 
         [HttpPut]
         [Authorize(Roles = "Owner, Staff")]
@@ -253,13 +255,13 @@ namespace WebAPI.Controllers
         {
             try
             {
-               
-                    var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtAsync(guestId, statusGuest);
-                    return StatusCode(200, new
-                    {
-                        Message = "Update status guest consultation" + ok,
-                        Data = guestConsultation1
-                    });              
+
+                var guestConsultation1 = await _repo.UpdateStatusGuestConsultationtAsync(guestId, statusGuest);
+                return StatusCode(200, new
+                {
+                    Message = "Update status guest consultation" + ok,
+                    Data = guestConsultation1
+                });
             }
             catch (Exception ex)
             {
@@ -276,7 +278,7 @@ namespace WebAPI.Controllers
 
         public async Task<ActionResult> ViewGuestConsultationStatisticsAsync(int ownerId)
         {
-            
+
             try
             {
                 var total = await _repo.ViewGuestConsultationStatisticsAsync(ownerId);
@@ -293,6 +295,6 @@ namespace WebAPI.Controllers
                 });
             }
 
-        } 
+        }
     }
-    }
+}

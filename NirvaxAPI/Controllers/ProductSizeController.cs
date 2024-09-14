@@ -11,23 +11,23 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductSizeController : ControllerBase
     {
-        private readonly IProductSizeRepository  _repo;
+        private readonly IProductSizeRepository _repo;
         private readonly string ok = "successfully ";
         private readonly string notFound = "Not found ";
         private readonly string badRequest = "Failed! ";
 
         public ProductSizeController(IProductSizeRepository repo)
         {
-             _repo = repo;
+            _repo = repo;
         }
 
 
         [HttpGet]
-        //  [Authorize]
         public async Task<IActionResult> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
-            try { 
-            var list = await _repo.GetAllProductSizesAsync(searchQuery, page, pageSize, ownerId);
+            try
+            {
+                var list = await _repo.GetAllProductSizesAsync(searchQuery, page, pageSize, ownerId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
                     return NoContent();
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -52,11 +52,11 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        //  [Authorize]
         public async Task<ActionResult<IEnumerable<ProductSize>>> GetProductSizeByProductIdAsync(int productId)
         {
-            try { 
-            var list = await _repo.GetProductSizeByProductIdAsync(productId);
+            try
+            {
+                var list = await _repo.GetProductSizeByProductIdAsync(productId);
                 if (list.Any())
                 {
                     return StatusCode(200, new
@@ -71,7 +71,7 @@ namespace WebAPI.Controllers
 
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -84,13 +84,14 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("{productSizeId}")]
-        //  [Authorize]
         public async Task<ActionResult> GetProductSizeByIdAsync(string productSizeId)
         {
-            try { 
-          
-                    var productSize = await _repo.GetProductSizeByIdAsync(productSizeId);
-                if (productSize != null) { 
+            try
+            {
+
+                var productSize = await _repo.GetProductSizeByIdAsync(productSizeId);
+                if (productSize != null)
+                {
                     return StatusCode(200, new
                     {
                         Message = "Get productSize by id " + ok,
@@ -105,7 +106,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -119,15 +120,15 @@ namespace WebAPI.Controllers
 
         public async Task<ActionResult> ViewProductSizeStatisticsAsync(int ownerId)
         {
-            var total = await _repo.ViewProductSizeStatisticsAsync(ownerId);  
+            var total = await _repo.ViewProductSizeStatisticsAsync(ownerId);
 
             return StatusCode(200, new
             {
-                totalQuantityProductSize = total,          
+                totalQuantityProductSize = total,
             });
         }
 
-   
+
 
     }
 }

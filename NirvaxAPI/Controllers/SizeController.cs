@@ -11,30 +11,29 @@ namespace WebAPI.Controllers
     [ApiController]
     public class SizeController : ControllerBase
     {
-        private readonly ISizeRepository  _repo;
+        private readonly ISizeRepository _repo;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
         public SizeController(ISizeRepository repo)
         {
-             _repo = repo;
+            _repo = repo;
         }
 
 
         [HttpGet]
-        //  [Authorize]
         public async Task<IActionResult> GetAllSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var list = await _repo.GetAllSizesAsync(searchQuery, page, pageSize, ownerId);
-                if (list.Any())
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list of sizes " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list of sizes " + ok,
+                    Data = list
+                });
+            }
             else
             {
                 return NoContent();
@@ -44,13 +43,14 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("{sizeId}")]
-        //  [Authorize]
         public async Task<ActionResult> GetSizeByIdAsync(int sizeId)
         {
-            try { 
-          
-                    var size = await _repo.GetSizeByIdAsync(sizeId);
-                if(size != null) { 
+            try
+            {
+
+                var size = await _repo.GetSizeByIdAsync(sizeId);
+                if (size != null)
+                {
                     return StatusCode(200, new
                     {
                         Message = "Get size by id" + ok,
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -80,18 +80,19 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> CreateSizeAsync(SizeCreateDTO sizeCreateDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkSize = await _repo.CheckSizeAsync(0, sizeCreateDTO.OwnerId, sizeCreateDTO.Name);
                     if (checkSize == true)
                     {
-                        var size1 = await _repo.CreateSizeAsync(sizeCreateDTO);                    
-                            return StatusCode(200, new
-                            {
-                                Message = "Create size " + ok,
-                                Data = size1
-                            });                      
+                        var size1 = await _repo.CreateSizeAsync(sizeCreateDTO);
+                        return StatusCode(200, new
+                        {
+                            Message = "Create size " + ok,
+                            Data = size1
+                        });
                     }
                     else
                     {
@@ -109,7 +110,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -123,7 +124,8 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> UpdateSizeAsync(SizeDTO sizeDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkSize = await _repo.CheckSizeAsync(sizeDTO.SizeId, sizeDTO.OwnerId, sizeDTO.Name);
@@ -152,7 +154,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -167,28 +169,29 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> DeleteSizeAsync(int sizeId)
         {
             var size1 = await _repo.DeleteSizeAsync(sizeId);
-                if (size1)
+            if (size1)
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Delete size " + ok,
-                    });
-                }
-                else
+                    Message = "Delete size " + ok,
+                });
+            }
+            else
+            {
+                return StatusCode(400, new
                 {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }  
+                    Message = badRequest,
+                });
+            }
         }
 
         [HttpPatch("{sizeId}")]
         [Authorize(Roles = "Owner,Staff")]
         public async Task<ActionResult> RestoreSizeAsync(int sizeId)
         {
-            try { 
-            var size1 = await _repo.RestoreSizeAsync(sizeId);
+            try
+            {
+                var size1 = await _repo.RestoreSizeAsync(sizeId);
                 if (size1)
                 {
                     return StatusCode(200, new
@@ -204,7 +207,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {

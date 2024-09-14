@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.IRepository
 {
-    public interface IRoomRepository 
+    public interface IRoomRepository
     {
         Task<IEnumerable<RoomDTO>> ViewUserHistoryChatAsync(int accountId);
         Task<IEnumerable<RoomDTO>> ViewOwnerHistoryChatAsync(int ownerId);
@@ -19,6 +19,5 @@ namespace DataAccess.IRepository
         Task<RoomDTO> GetRoomByIdAsync(int roomId);
         Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId);
         Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId);
-
     }
 }

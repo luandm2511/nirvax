@@ -9,12 +9,11 @@ namespace BusinessObject.DTOs
 {
     public class ProductSizeDTO
     {
+        [Required(ErrorMessage = " ProductSizeId cannot be empty!!")]
         public string ProductSizeId { get; set; } = null!;
         [Required(ErrorMessage = " SizeId cannot be empty!!")]
-
         public int SizeId { get; set; }
         [Required(ErrorMessage = " ProductId cannot be empty!!")]
-
         public int ProductId { get; set; }
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
@@ -24,12 +23,10 @@ namespace BusinessObject.DTOs
     }
     public class ProductSizeCreateDTO
     {
-       
         [Required(ErrorMessage = " SizeId cannot be empty!!")]
         public int SizeId { get; set; }
         [Required(ErrorMessage = " ProductId cannot be empty!!")]
         public int ProductId { get; set; }
-
     }
 
     public class ProductSizeListDTO
@@ -40,8 +37,6 @@ namespace BusinessObject.DTOs
         public string ProductName { get; set; }
         public int Quantity { get; set; }
         public string ProductImage { get; set; }
-        public string Status { get; set; }
-
-       
+        public string Status { get; set; }     
     }
 }

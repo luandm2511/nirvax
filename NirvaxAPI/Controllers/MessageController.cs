@@ -11,13 +11,13 @@ using WebAPI.Service;
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]/[Action]")]
-        [ApiController]
+    [ApiController]
     public class MessageController : ControllerBase
     {
-        
-       
-     
-        private readonly IMessageRepository  _repo;
+
+
+
+        private readonly IMessageRepository _repo;
         private readonly IRoomRepository _room;
         private readonly IHubContext<ChatHub> _hubContext;
 
@@ -36,17 +36,17 @@ namespace WebAPI.Controllers
         [HttpGet]
         [Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> ViewAllMessageByRoomAsync(int roomId)
-            {
+        {
 
-                var list = await _repo.ViewAllMessageByRoomAsync(roomId);
-                if (list.Any())
+            var list = await _repo.ViewAllMessageByRoomAsync(roomId);
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get all message of this room " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get all message of this room " + ok,
+                    Data = list
+                });
+            }
             else
             {
                 return NoContent();
@@ -70,7 +70,6 @@ namespace WebAPI.Controllers
                         {
                             await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
 
-                            // Cập nhật nội dung của Room
                             await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
 
                             return StatusCode(200, new
@@ -137,27 +136,26 @@ namespace WebAPI.Controllers
                     Timestamp = DateTime.Now,
                 };
                 var messageCreated = await _repo.CreateMessageFirstAsync(messageCreateDTO);
-                        if (messageCreated)
-                        {
-                            await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
+                if (messageCreated)
+                {
+                    await _hubContext.Clients.Group(messageCreateDTO.RoomId.ToString()).SendAsync("ReceiveMessage", messageCreateDTO.SenderId.ToString(), messageCreateDTO.Content);
 
-                            // Cập nhật nội dung của Room
-                            await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
+                    await _room.UpdateContentRoomAsync(messageCreateDTO.RoomId);
 
-                            return StatusCode(200, new
-                            {
-                                Message = "Create message " + ok,
-                                Data = messageCreated
-                            });
-                        }
-                        else
-                        {
-                            return StatusCode(400, new
-                            {
-                                Message = "Failed to send message!"
-                            });
-                        }
-                  
+                    return StatusCode(200, new
+                    {
+                        Message = "Create message " + ok,
+                        Data = messageCreated
+                    });
+                }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = "Failed to send message!"
+                    });
+                }
+
             }
             catch (Exception ex)
             {

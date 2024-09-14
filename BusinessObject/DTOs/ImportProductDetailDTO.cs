@@ -11,7 +11,6 @@ namespace BusinessObject.DTOs
     {
         public int ImportId { get; set; }
         [Required(ErrorMessage = " ProductSizeId received cannot be empty!!")]
-
         public string ProductSizeId { get; set; } = null!;
         [Required(ErrorMessage = " Quantity received cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity received must be greater than {1}.")]
@@ -32,9 +31,10 @@ namespace BusinessObject.DTOs
 
     public class ImportProductDetailCreateDTO
     {
+        [Required(ErrorMessage = " ProductId cannot be empty!!")]
         public int ProductId { get; set; }
+        [Required(ErrorMessage = " SizeId cannot be empty!!")]
         public int SizeId { get; set; }
-
         [Required(ErrorMessage = " Quantity received cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity received must be greater than {1}.")]
         public int QuantityReceived { get; set; }
@@ -45,8 +45,11 @@ namespace BusinessObject.DTOs
 
     public class ImportProductDetailUpdateDTO
     {
+        [Required(ErrorMessage = " SizeId cannot be empty!!")]
         public int SizeId { get; set; } 
+        [Required(ErrorMessage = " ImportId cannot be empty!!")]
         public int ImportId { get; set; }
+        [Required(ErrorMessage = " ProductSizeId cannot be empty!!")]
         public string ProductSizeId { get; set; }
 
         [Required(ErrorMessage = " Quantity received cannot be empty!!")]
@@ -61,19 +64,14 @@ namespace BusinessObject.DTOs
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
-
         public int SizeId { get; set; }
         public string SizeName { get; set; }
-
         public int ImportId { get; set; }
         public string Origin { get; set; } = null!;
         public DateTime ImportDate { get; set; }
-
         public int QuantityReceived { get; set; }
         public double UnitPrice { get; set; }
         public double TotalPrice { get; set; }
         public int TotalQuantity { get; set; }
-
-
     }
 }

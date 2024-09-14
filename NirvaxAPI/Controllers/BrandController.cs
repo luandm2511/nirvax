@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
                 var brands = await _repository.GetAllBrandAsync();
                 return Ok(brands);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
                 }
                 return Ok(brand);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
@@ -63,17 +63,17 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new { message = "Please pass the valid data." });
             }
             try
-            {                
+            {
                 var brand = _mapper.Map<Brand>(brandDto);
                 var check = await _repository.CheckBrandAsync(brand);
                 if (!check)
                 {
                     return StatusCode(406, new { message = "The brand name has been duplicated." });
-                }   
+                }
                 await _repository.CreateBrandAsync(brand);
                 return Ok(new { message = "Brand added successfully." });
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
@@ -88,11 +88,11 @@ namespace WebAPI.Controllers
                 return StatusCode(400, new { message = "Please pass the valid data." });
             }
             try
-            {                
+            {
                 var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "The brand has been not found." });
+                    return StatusCode(404, new { message = "The brand has been not found." });
                 }
 
                 _mapper.Map(brandDto, brand);
@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
                 await _repository.UpdateBrandAsync(brand);
                 return Ok(new { message = "Brand updated successfully." });
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
@@ -120,12 +120,12 @@ namespace WebAPI.Controllers
                 var brand = await _repository.GetBrandByIdAsync(id);
                 if (brand == null || brand.Isdelete == true)
                 {
-                    return StatusCode(404,new { message = "The brand has been not found." });
+                    return StatusCode(404, new { message = "The brand has been not found." });
                 }
                 await _repository.DeleteBrandAsync(brand);
                 return Ok(new { message = "Brand deleted successfully." });
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
@@ -138,16 +138,16 @@ namespace WebAPI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(keyword))
                 {
-                    return StatusCode(400,new { message = "Keyword must not be empty" });
+                    return StatusCode(400, new { message = "Keyword must not be empty" });
                 }
 
                 var brands = await _repository.SearchBrandsAsync(keyword);
                 return Ok(brands);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
-            }  
+            }
         }
     }
 }

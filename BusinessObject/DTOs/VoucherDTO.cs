@@ -10,6 +10,7 @@ namespace BusinessObject.DTOs
 {
     public class VoucherDTO
     {
+        [Required(ErrorMessage = " VoucherId cannot be empty!!")]
         public string VoucherId { get; set; } = null!;
         [Required(ErrorMessage = " TotalPrice cannot be empty!!")]
         [Range(1, Double.MaxValue, ErrorMessage = "The field price must be greater than {1}.")]
@@ -17,19 +18,12 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
         public int Quantity { get; set; }
-
         public DateTime StartDate { get; set; }
-
         public DateTime EndDate { get; set; }
         public int QuantityUsed { get; set; }
-    //    public string? OwnerName { get; set; }
-        //public bool? Isdelete { get; set; }
    
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
-
         public int OwnerId { get; set; }
-      
-
     }
     public class VoucherCreateDTO
     {
@@ -40,14 +34,10 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = " Quantity cannot be empty!!")]
         [Range(1, Int32.MaxValue, ErrorMessage = "The field quantity must be greater than {1}.")]
         public int Quantity { get; set; }
-
         public DateTime StartDate { get; set; }
-
         public DateTime EndDate { get; set; }
-
-
+        [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
-
     }
 
 

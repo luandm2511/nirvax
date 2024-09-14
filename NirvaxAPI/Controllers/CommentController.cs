@@ -1,4 +1,4 @@
-﻿    using AutoMapper;
+﻿using AutoMapper;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using DataAccess.DAOs;
@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         private readonly IHubContext<NotificationHub> _hubContext;
         private readonly IMapper _mapper;
 
-        public CommentController(IHubContext<NotificationHub> hubContext, IProductRepository productRepository ,ICommentRepository commentRepository,INotificationRepository notificationRepository,ITransactionRepository transactionRepository, IMapper mapper)
+        public CommentController(IHubContext<NotificationHub> hubContext, IProductRepository productRepository, ICommentRepository commentRepository, INotificationRepository notificationRepository, ITransactionRepository transactionRepository, IMapper mapper)
         {
             _hubContext = hubContext;
             _commentRepository = commentRepository;
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
                 var comments = await _commentRepository.GetCommentsByProductIdAsync(productId);
                 return Ok(comments);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Something went wrong, please try again." });
             }
@@ -62,10 +62,10 @@ namespace WebAPI.Controllers
                 var product = await _productRepository.GetByIdAsync(commentDto.ProductId);
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "The product has been deleted or banned. You can't rate and comment product" });
+                    return StatusCode(404, new { message = "The product has been deleted or banned. You can't rate and comment product" });
                 }
                 var comment = _mapper.Map<Comment>(commentDto);
-                
+
                 await _commentRepository.AddCommentAsync(comment);
                 var notification = new Notification
                 {
@@ -81,9 +81,9 @@ namespace WebAPI.Controllers
                 await _transactionRepository.CommitTransactionAsync();
                 // Gửi thông báo cho chủ sở hữu sản phẩm
                 await _hubContext.Clients.Group($"Owner-{product.OwnerId}").SendAsync("ReceiveNotification", notification.Content);
-                return Ok(new { message = "Comment is created successfully." });               
+                return Ok(new { message = "Comment is created successfully." });
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new
@@ -110,8 +110,8 @@ namespace WebAPI.Controllers
 
                 if (product == null || product.Isdelete == true || product.Isban == true)
                 {
-                    return StatusCode(404,new { message = "The product has not been found.." });
-                }          
+                    return StatusCode(404, new { message = "The product has not been found.." });
+                }
 
                 _mapper.Map(replyDto, comment);
                 comment.ReplyTimestamp = DateTime.Now;
@@ -133,7 +133,7 @@ namespace WebAPI.Controllers
                 await _hubContext.Clients.Group($"User-{comment.AccountId}").SendAsync("ReceiveNotification", notification.Content);
                 return Ok(new { message = "Reply successfully." });
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(StatusCodes.Status500InternalServerError, new

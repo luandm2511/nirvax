@@ -11,104 +11,78 @@ using System.Threading.Tasks;
 namespace BusinessObject.DTOs
 {
     public class StaffDTO
-    {
-     
-      
+    {  
+        [Required(ErrorMessage = " StaffId cannot be empty!!")]
         public int StaffId { get; set; }
 
         [Required(ErrorMessage = " Email cannot be empty!!")]
         [EmailAddress]
         [MinLength(2, ErrorMessage = " Email to be at least 2 characters!!")]
-        [MaxLength(50, ErrorMessage = "Email is limited to 50 characters!!")]
+        [MaxLength(100, ErrorMessage = "Email is limited to 100 characters!!")]
         public string Email { get; set; } = null!;
         [Required(ErrorMessage = " Password cannot be empty!!")]
         [MinLength(8, ErrorMessage = " Password to be at least 8 characters!!")]
         [MaxLength(24, ErrorMessage = "Password is limited to 24  characters!!")]
         public string Password { get; set; } = null!;
         [Required(ErrorMessage = " Fullname cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Fullname to be at least 2 characters!!")]
+        [MinLength(1, ErrorMessage = " Fullname to be at least 1 characters!!")]
         [MaxLength(50, ErrorMessage = "Fullname is limited to 50 characters!!")]
         public string Fullname { get; set; } = null!;
-
         public string? Image { get; set; }
-        
-      //  public IFormFile? ImageFile { get; set; }
-
         [Required(ErrorMessage = " Phone cannot be empty!!")]
-        [MinLength(9, ErrorMessage = " Phone to be at least 9 characters!!")]
-        [MaxLength(13, ErrorMessage = "Phone is limited to 13 characters!!")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Phone must be exactly 10 characters!!")]
         public string Phone { get; set; } = null!;
-        [Required(ErrorMessage = " Owner cannot be empty!!")]
+        [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
-   
-       
-
     }
 
     public class StaffCreateDTO
     {
-
         [Required(ErrorMessage = " Email cannot be empty!!")]
         [EmailAddress]
         [MinLength(2, ErrorMessage = " Email to be at least 2 characters!!")]
-        [MaxLength(50, ErrorMessage = "Email is limited to 50 characters!!")]
+        [MaxLength(100, ErrorMessage = "Email is limited to 100 characters!!")]
         public string Email { get; set; } = null!;
         [Required(ErrorMessage = " Password cannot be empty!!")]
         [MinLength(8, ErrorMessage = " Password to be at least 8 characters!!")]
         [MaxLength(24, ErrorMessage = "Password is limited to 24 characters!!")]
         public string Password { get; set; } = null!;
         [Required(ErrorMessage = " Fullname cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Fullname to be at least 2 characters!!")]
-        [MaxLength(30, ErrorMessage = "Fullname is limited to 30 characters!!")]
+        [MinLength(1, ErrorMessage = " Fullname to be at least 1 characters!!")]
+        [MaxLength(50, ErrorMessage = "Fullname is limited to 50 characters!!")]
         public string Fullname { get; set; } = null!;
-
         public string? Image { get; set; }
-
-        
-
         [Required(ErrorMessage = " Phone cannot be empty!!")]
-        [MinLength(9, ErrorMessage = " Phone to be at least 9 characters!!")]
-        [MaxLength(13, ErrorMessage = "Phone is limited to 13 characters!!")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Phone must be exactly 10 characters!!")]
         public string Phone { get; set; } = null!;
-        [Required(ErrorMessage = " Owner cannot be empty!!")]
+        [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
-
-
-
     }
 
 
     public class StaffAvatarDTO
     {
-
-     
-   
+        [Required(ErrorMessage = " StaffId cannot be empty!!")]
         public int StaffId { get; set; }
         public string Image { get; set; }
-        //[NotMapped]
-       // public IFormFile? ImageFile { get; set; }
     }
 
     public class StaffProfileDTO
-    {
-       
+    {       
+        [Required(ErrorMessage = " StaffId cannot be empty!!")]
         public int StaffId { get; set; }
         [Required(ErrorMessage = " Email cannot be empty!!")]
         [EmailAddress]
         [MinLength(2, ErrorMessage = " Email to be at least 2 characters!!")]
-        [MaxLength(50, ErrorMessage = "Email is limited to 50 characters!!")]
+        [MaxLength(100, ErrorMessage = "Email is limited to 100 characters!!")]
         public string Email { get; set; } = null!;
         [Required(ErrorMessage = " Fullname cannot be empty!!")]
-        [MinLength(2, ErrorMessage = " Fullname to be at least 2 characters!!")]
-        [MaxLength(30, ErrorMessage = "Fullname is limited to 30 characters!!")]
+        [MinLength(1, ErrorMessage = " Fullname to be at least 1 characters!!")]
+        [MaxLength(50, ErrorMessage = "Fullname is limited to 50 characters!!")]
         public string Fullname { get; set; } = null!;
-
-        //public string? Image { get; set; }
         [Required(ErrorMessage = " Phone cannot be empty!!")]
-        [MinLength(9, ErrorMessage = " Phone to be at least 9 characters!!")]
-        [MaxLength(13, ErrorMessage = "Phone is limited to 13 characters!!")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Phone must be exactly 10 characters!!")]
         public string Phone { get; set; } = null!;
-
     }
 
 }

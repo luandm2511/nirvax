@@ -15,10 +15,8 @@ namespace DataAccess.IRepository
         Task<Size> GetSizeByIdAsync(int sizeId);
         Task<bool> CheckSizeAsync(int sizeId, int ownerId, string name);
         Task<bool> CreateSizeAsync(SizeCreateDTO sizeCreateDTO);
-
         Task<bool> UpdateSizeAsync(SizeDTO sizeDTO);
         Task<bool> DeleteSizeAsync(int sizeId);
         Task<bool> RestoreSizeAsync(int sizeId);
-
     }
 }

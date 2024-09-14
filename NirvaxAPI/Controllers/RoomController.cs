@@ -12,17 +12,17 @@ namespace WebAPI.Controllers
     [ApiController]
     public class RoomController : ControllerBase
     {
-        private readonly IRoomRepository  _repo;
+        private readonly IRoomRepository _repo;
         private readonly string ok = "successfully";
         private readonly string notFound = "Not found";
         private readonly string badRequest = "Failed!";
 
         public RoomController(IRoomRepository repo)
-        { 
-             _repo = repo;           
+        {
+            _repo = repo;
         }
 
-     
+
         [HttpGet]
         [Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> ViewUserHistoryChatAsync(int accountId)
@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
             if (list.Any())
             {
                 return StatusCode(200, new
-                {                   
+                {
                     Message = "Get list room of this account " + ok,
                     Data = list
                 });
@@ -47,26 +47,27 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "User,Owner,Staff")]
         public async Task<IActionResult> ViewOwnerHistoryChatAsync(int ownerId)
         {
-            try { 
-            var list = await _repo.ViewOwnerHistoryChatAsync(ownerId);
-            if (list.Any())
+            try
             {
-                return StatusCode(200, new
-                {               
-                    Message = "Get list room of this owner " + ok,
-                    Data = list
-                });
-            }
+                var list = await _repo.ViewOwnerHistoryChatAsync(ownerId);
+                if (list.Any())
+                {
+                    return StatusCode(200, new
+                    {
+                        Message = "Get list room of this owner " + ok,
+                        Data = list
+                    });
+                }
                 else
-                {     
+                {
                     return NoContent();
-                
+
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
-                {                   
+                {
                     Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }
@@ -77,8 +78,9 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-            try { 
-            var room = await _repo.GetRoomIdByAccountIdAndOwnerIdAsync(accountId, ownerId);
+            try
+            {
+                var room = await _repo.GetRoomIdByAccountIdAndOwnerIdAsync(accountId, ownerId);
                 if (room != null)
                 {
                     return StatusCode(200, new
@@ -95,7 +97,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -109,8 +111,9 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-            try { 
-            var room = await _repo.GetRoomByAccountIdAndOwnerIdAsync(accountId, ownerId);
+            try
+            {
+                var room = await _repo.GetRoomByAccountIdAndOwnerIdAsync(accountId, ownerId);
                 if (room != null)
                 {
                     return StatusCode(200, new
@@ -127,7 +130,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -140,7 +143,8 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "User,Owner,Staff")]
         public async Task<ActionResult> GetRoomByIdAsync(int roomId)
         {
-            try { 
+            try
+            {
                 var room = await _repo.GetRoomByIdAsync(roomId);
                 if (room != null)
                 {
@@ -158,7 +162,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -201,7 +205,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -211,6 +215,6 @@ namespace WebAPI.Controllers
 
         }
 
-       
+
     }
 }

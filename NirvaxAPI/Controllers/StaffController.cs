@@ -13,52 +13,49 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]/[Action]")]
     [ApiController]
-   
+
     public class StaffController : ControllerBase
     {
-        private readonly IStaffRepository  _repo;
-        
+        private readonly IStaffRepository _repo;
         private readonly string ok = "successfully ";
         private readonly string notFound = "Not found ";
         private readonly string badRequest = "Failed! ";
-
+        
         public StaffController(IStaffRepository repo)
         {
-             _repo = repo;           
+            _repo = repo;
         }
 
 
         [HttpGet]
         [Authorize(Roles = "Owner")]
 
-        //  [Authorize]
         public async Task<IActionResult> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
-        {     
-            var list =  await _repo.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);
-                if (list.Any())
+        {
+            var list = await _repo.GetAllStaffsAsync(searchQuery, page, pageSize, ownerId);
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list of staffs " + ok,
-                        Data = list
-                    });
-                }
-                else
-                {
+                    Message = "Get list of staffs " + ok,
+                    Data = list
+                });
+            }
+            else
+            {
                 return NoContent();
 
             }
         }
 
 
-      
+
 
         [HttpGet("{staffId}")]
         [Authorize(Roles = "Owner,Staff")]
-        //  [Authorize]
         public async Task<ActionResult> GetStaffByIdAsync(int staffId)
         {
-                    var staff = await _repo.GetStaffByIdAsync(staffId);
+            var staff = await _repo.GetStaffByIdAsync(staffId);
             if (staff != null)
             {
                 return StatusCode(200, new
@@ -78,10 +75,9 @@ namespace WebAPI.Controllers
 
         [HttpGet("{staffEmail}")]
         [Authorize(Roles = "Staff")]
-        //  [Authorize]
         public async Task<ActionResult> ViewStaffProfileAsync(string staffEmail)
-        { 
-                    var staff = await _repo.ViewStaffProfileAsync(staffEmail);
+        {
+            var staff = await _repo.ViewStaffProfileAsync(staffEmail);
             if (staff != null)
             {
                 return StatusCode(200, new
@@ -99,13 +95,13 @@ namespace WebAPI.Controllers
             }
         }
 
-        //check exist
         [HttpPost]
         [Authorize(Roles = "Owner")]
 
         public async Task<ActionResult> CreateStaffAsync([FromForm] StaffCreateDTO staffCreateDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkStaff = await _repo.CheckStaffAsync(0, staffCreateDTO.Email, staffCreateDTO.Phone);
@@ -113,11 +109,11 @@ namespace WebAPI.Controllers
                     {
                         var staff1 = await _repo.CreateStaffAsync(staffCreateDTO);
 
-                            return StatusCode(200, new
-                            {
-                                Message = "Create staff " + ok,
-                                Data = staff1
-                            });
+                        return StatusCode(200, new
+                        {
+                            Message = "Create staff " + ok,
+                            Data = staff1
+                        });
                     }
                     else
                     {
@@ -141,12 +137,12 @@ namespace WebAPI.Controllers
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
-                }) ;
+                });
             }
 
         }
 
-       
+
 
         [HttpPut]
         [Authorize(Roles = "Staff")]
@@ -181,12 +177,13 @@ namespace WebAPI.Controllers
             }
 
         }
-        
+
         [HttpPut]
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateStaffAsync([FromForm] StaffDTO staffDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkStaff = await _repo.CheckStaffAsync(staffDTO.StaffId, staffDTO.Email, staffDTO.Phone);
@@ -216,7 +213,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -231,18 +228,19 @@ namespace WebAPI.Controllers
 
         public async Task<ActionResult> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkStaff = await _repo.CheckProfileStaffAsync(staffProfileDTO);
                     if (checkStaff == true)
                     {
                         var staff1 = await _repo.UpdateProfileStaffAsync(staffProfileDTO);
-                            return StatusCode(200, new
-                            {
-                                Message = "Update profile staff" + ok,
-                                Data = staff1
-                            });                  
+                        return StatusCode(200, new
+                        {
+                            Message = "Update profile staff" + ok,
+                            Data = staff1
+                        });
                     }
                     else
                     {
@@ -260,7 +258,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -274,8 +272,9 @@ namespace WebAPI.Controllers
 
         public async Task<ActionResult> UpdateAvatarStaffAsync([FromForm] StaffAvatarDTO staffAvatarDTO)
         {
-            try { 
-                    var checkStaff = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);
+            try
+            {
+                var checkStaff = await _repo.UpdateAvatarStaffAsync(staffAvatarDTO);
                 if (checkStaff == true)
                 {
                     return StatusCode(200, new
@@ -283,24 +282,24 @@ namespace WebAPI.Controllers
                         Message = "Update avatar staff " + ok
                     });
                 }
-            
-            else
-            {
-                return StatusCode(400, new
-                {
-                    Message = "Error!",
-                });
-            }
 
-        }
+                else
+                {
+                    return StatusCode(400, new
+                    {
+                        Message = "Error!",
+                    });
+                }
+
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
                     Message = "An error occurred: " + ex.Message
-    });
+                });
             }
-                
+
 
         }
         [HttpDelete("{staffId}")]
@@ -308,26 +307,26 @@ namespace WebAPI.Controllers
 
         public async Task<ActionResult> DeleteStaffAsync(int staffId)
         {
-           
+
             var staff1 = await _repo.DeleteStaffAsync(staffId);
-                if (staff1 == true)
+            if (staff1 == true)
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Delete staff " + ok,
-                    });
-                }
-                else
+                    Message = "Delete staff " + ok,
+                });
+            }
+            else
+            {
+                return StatusCode(400, new
                 {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
-           
+                    Message = badRequest,
+                });
+            }
+
         }
 
-      
+
 
     }
 }

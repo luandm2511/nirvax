@@ -13,16 +13,13 @@ namespace DataAccess.DAOs
 {
     public class ServiceDAO
     {
-        private readonly NirvaxContext  _context;
+        private readonly NirvaxContext _context;
         private readonly IMapper _mapper;
-
-
-
 
         public ServiceDAO(NirvaxContext context, IMapper mapper)
         {
 
-             _context = context;
+            _context = context;
             _mapper = mapper;
         }
 
@@ -41,8 +38,6 @@ namespace DataAccess.DAOs
             {
 
                 List<Service> getList = await _context.Services
-
-                 //check khác Id`
                  .Where(i => i.ServiceId != serviceId)
                  .Where(i => i.Isdelete == false)
                  .Where(i => i.Name.Trim() == name.Trim())
@@ -56,15 +51,10 @@ namespace DataAccess.DAOs
                 {
                     return true;
                 }
-
             }
-
             return false;
-           
-        
         }
 
-        //owner,staff
         public async Task<IEnumerable<Service>> GetAllServicesAsync(string? searchQuery, int page, int pageSize)
         {
 
@@ -74,26 +64,21 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 getList = await _context.Services
-               //     .Where(i => i.Isdelete == false)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                
             }
             else
             {
-                 getList = await _context.Services
-                 //   .Where(i => i.Isdelete == false)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-             
+                getList = await _context.Services
+                   .Skip((page - 1) * pageSize)
+                   .Take(pageSize)
+                   .ToListAsync();
             }
             return getList;
         }
 
-        //user
         public async Task<IEnumerable<Service>> GetAllServiceForUserAsync(string? searchQuery)
         {
             List<Service> getList = new List<Service>();
@@ -103,37 +88,25 @@ namespace DataAccess.DAOs
                     .Where(i => i.Isdelete == false)
                     .Where(i => i.Name.Trim().Contains(searchQuery.Trim()))
                     .ToListAsync();
-               
             }
             else
             {
-                 getList = await _context.Services
-                               .Where(i => i.Isdelete == false)
-                               .ToListAsync();            
+                getList = await _context.Services
+                              .Where(i => i.Isdelete == false)
+                              .ToListAsync();
             }
             return getList;
-
-            
-            
-          
         }
 
 
         public async Task<Service> GetServiceByIdAsync(int sizeId)
         {
-           
-                Service? sid = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ServiceId == sizeId);
-                     
+            Service? sid = await _context.Services.Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ServiceId == sizeId);
             return sid;
         }
 
-
-
-
-
         public async Task<bool> CreateServiceAsync(ServiceCreateDTO serviceCreateDTO)
         {
-           
             Service service = _mapper.Map<Service>(serviceCreateDTO);
             service.Isdelete = false;
             await _context.Services.AddAsync(service);
@@ -143,22 +116,16 @@ namespace DataAccess.DAOs
                 return true;
             }
             else { return false; }
-
         }
 
         public async Task<bool> UpdateServiceAsync(ServiceDTO serviceDTO)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceDTO.ServiceId);
-           
             _mapper.Map(serviceDTO, service);
-
             service.Isdelete = false;
-
             _context.Services.Update(service);
             await _context.SaveChangesAsync();
             return true;
-
-
         }
 
         public async Task<bool> DeleteServiceAsync(int serviceId)
@@ -167,12 +134,13 @@ namespace DataAccess.DAOs
             if (service != null)
             {
                 service.Isdelete = true;
-                 _context.Services.Update(service);
+                _context.Services.Update(service);
                 await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
+
         public async Task<bool> RestoreServiceAsync(int serviceId)
         {
             Service? service = await _context.Services.SingleOrDefaultAsync(i => i.ServiceId == serviceId);
@@ -180,8 +148,6 @@ namespace DataAccess.DAOs
             {
                 service.Isdelete = false;
                 _context.Services.Update(service);
-               
-
                 await _context.SaveChangesAsync();
                 return true;
             }

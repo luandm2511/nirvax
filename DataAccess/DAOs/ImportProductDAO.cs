@@ -12,12 +12,8 @@ namespace DataAccess.DAOs
 {
     public class ImportProductDAO
     {
-
         private readonly NirvaxContext _context;
-         private readonly  IMapper _mapper;
-
-  
-        
+        private readonly  IMapper _mapper;
 
         public ImportProductDAO(NirvaxContext context, IMapper mapper) 
         {
@@ -25,8 +21,7 @@ namespace DataAccess.DAOs
             _context = context;
             _mapper = mapper;
         }
-
-       
+      
         public async Task<IEnumerable<ImportProduct>> GetAllImportProductAsync(int ownerId,DateTime? from, DateTime? to)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
@@ -55,7 +50,6 @@ namespace DataAccess.DAOs
             return list;
         }
 
-        //tự xem details số liệu
         public async Task<ImportProduct> GetImportProductByIdAsync(int importId)
         {
            
@@ -64,8 +58,6 @@ namespace DataAccess.DAOs
                 
             return sid;
         }
-
-
 
         public async Task<ImportProduct> CreateImportProductAsync(ImportProductCreateDTO importProductCreateDTO)
         {
@@ -117,8 +109,6 @@ namespace DataAccess.DAOs
             return false;
         }
 
-   
-
         public async Task<bool> UpdateImportProductAsync(ImportProductDTO importProductDTO)
         {
             ImportProduct? importProduct = await _context.ImportProducts.SingleOrDefaultAsync(i => i.ImportId == importProductDTO.ImportId);      
@@ -132,10 +122,7 @@ namespace DataAccess.DAOs
             }
 
             return false;
-
         }
-
-
 
         public async Task<IEnumerable<object>> ViewWeeklyImportProductAsync(int ownerId)
         {
@@ -203,10 +190,6 @@ namespace DataAccess.DAOs
             return result;
         }
 
-
-
-
-        //số lần nhập hàng
         public async Task<object> ViewImportProductStatisticsAsync(int ownerId)
         {
             var sumImport = await _context.ImportProducts
@@ -219,18 +202,13 @@ namespace DataAccess.DAOs
             var sumOfProduct = listImportProduct.Sum(p => p.Quantity);
             var sumOfPrice = listImportProduct.Sum(p => p.TotalPrice);
             var result = new Dictionary<string, object>
-    {
-        { "totalImportProduct", sumImport },
-        { "totalQuantityByImport", sumOfProduct },
-        { "totalPriceByImport", sumOfPrice }
-    };
-
+                        {
+                            { "totalImportProduct", sumImport },
+                            { "totalQuantityByImport", sumOfProduct },
+                            { "totalPriceByImport", sumOfPrice }
+                        };
             return result;
         }
-
-
-
-
     }
 }
 

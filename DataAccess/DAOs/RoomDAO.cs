@@ -17,40 +17,33 @@ using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
 {
-    public  class RoomDAO
+    public class RoomDAO
     {
-
-        private readonly NirvaxContext  _context;
+        private readonly NirvaxContext _context;
         private readonly IMapper _mapper;
 
-
-
-
-        public  RoomDAO(NirvaxContext context, IMapper mapper)
+        public RoomDAO(NirvaxContext context, IMapper mapper)
         {
 
-             _context = context;
+            _context = context;
             _mapper = mapper;
         }
 
         public async Task<bool> CheckRoomAsync(int accountId, int ownerId)
         {
 
-            List<Account> listAccount = await _context.Accounts.Where(i=> i.AccountId == accountId).ToListAsync();
+            List<Account> listAccount = await _context.Accounts.Where(i => i.AccountId == accountId).ToListAsync();
             List<Owner> listOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).ToListAsync();
 
 
             if (listAccount.Count > 0 && listOwner.Count > 0)
             {
-                    return true;           
+                return true;
             }
-          
-                return false;
+
+            return false;
         }
 
-       
-
-        //owner,staff
         public async Task<IEnumerable<RoomDTO>> ViewUserHistoryChatAsync(int accountId)
         {
             var checkRoom = await _context.Accounts.Where(i => i.AccountId == accountId).FirstOrDefaultAsync();
@@ -59,14 +52,14 @@ namespace DataAccess.DAOs
             .Include(i => i.Account)
             .Include(i => i.Owner)
             .Select(room => new
-        {
-            Room = room,
-            LatestMessageTimestamp = room.Messages.OrderByDescending(m => m.Timestamp).Select(m => m.Timestamp).FirstOrDefault()
-        })
-        .Where(x => x.Room.Account.AccountId == accountId)
-        .OrderByDescending(x => x.LatestMessageTimestamp)
-        .Select(x => x.Room)
-        .ToListAsync();
+            {
+                Room = room,
+                LatestMessageTimestamp = room.Messages.OrderByDescending(m => m.Timestamp).Select(m => m.Timestamp).FirstOrDefault()
+            })
+            .Where(x => x.Room.Account.AccountId == accountId)
+            .OrderByDescending(x => x.LatestMessageTimestamp)
+            .Select(x => x.Room)
+            .ToListAsync();
 
             var roomDTOs = _mapper.Map<List<RoomDTO>>(listRoomDTO);
 
@@ -85,10 +78,10 @@ namespace DataAccess.DAOs
                Room = room,
                LatestMessageTimestamp = room.Messages.OrderByDescending(m => m.Timestamp).Select(m => m.Timestamp).FirstOrDefault()
            })
-       .Where(i => i.Room.Owner.OwnerId == ownerId)
-       .OrderByDescending(x => x.LatestMessageTimestamp)
-       .Select(x => x.Room)
-       .ToListAsync();
+           .Where(i => i.Room.Owner.OwnerId == ownerId)
+           .OrderByDescending(x => x.LatestMessageTimestamp)
+           .Select(x => x.Room)
+           .ToListAsync();
 
             var roomDTOs = _mapper.Map<List<RoomDTO>>(listRoomDTO);
 
@@ -97,28 +90,28 @@ namespace DataAccess.DAOs
 
         public async Task<RoomDTO> GetRoomByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-                RoomDTO roomDTO = new RoomDTO();
-                Room? sid = await _context.Rooms
-                    .Include(i => i.Account)
-                    .Include(i => i.Owner)
-                    .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);             
-                roomDTO = _mapper.Map<RoomDTO>(sid);
-                return roomDTO;
+            RoomDTO roomDTO = new RoomDTO();
+            Room? sid = await _context.Rooms
+                .Include(i => i.Account)
+                .Include(i => i.Owner)
+                .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);
+            roomDTO = _mapper.Map<RoomDTO>(sid);
+            return roomDTO;
         }
 
-        public async Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId) 
+        public async Task<int> GetRoomIdByAccountIdAndOwnerIdAsync(int accountId, int ownerId)
         {
-                var roomId = 0;
-                Room? sid = await _context.Rooms
-                    .Include(i => i.Account)
-                    .Include(i => i.Owner)
-                    .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);
-                if(sid == null)
-                {
+            var roomId = 0;
+            Room? sid = await _context.Rooms
+                .Include(i => i.Account)
+                .Include(i => i.Owner)
+                .SingleOrDefaultAsync(i => i.AccountId == accountId && i.OwnerId == ownerId);
+            if (sid == null)
+            {
                 return 0;
-                }
-                roomId = _mapper.Map<RoomDTO>(sid).RoomId;
-                return roomId;
+            }
+            roomId = _mapper.Map<RoomDTO>(sid).RoomId;
+            return roomId;
         }
 
         public async Task<bool> CheckRoomExistAsync(int roomId)
@@ -138,22 +131,20 @@ namespace DataAccess.DAOs
         public async Task<RoomDTO> GetRoomByIdAsync(int roomId)
         {
             RoomDTO roomDTO = new RoomDTO();
-                Room? sid = await _context.Rooms.Include(i => i.Account)
-                    .Include(i => i.Owner).SingleOrDefaultAsync(i => i.RoomId == roomId);
-                roomDTO = _mapper.Map<RoomDTO>(sid);
-                return roomDTO;
+            Room? sid = await _context.Rooms.Include(i => i.Account)
+                .Include(i => i.Owner).SingleOrDefaultAsync(i => i.RoomId == roomId);
+            roomDTO = _mapper.Map<RoomDTO>(sid);
+            return roomDTO;
         }
-
-
 
         public async Task<Room> CreateRoomAsync(RoomCreateDTO roomCreateDTO)
         {
             Room room = await _context.Rooms.Where(i => i.OwnerId == roomCreateDTO.OwnerId && i.AccountId == roomCreateDTO.AccountId).FirstOrDefaultAsync();
-            if(room == null)
+            if (room == null)
             {
                 roomCreateDTO.Timestamp = DateTime.Now;
                 Room roomCreate = _mapper.Map<Room>(roomCreateDTO);
-                 await _context.Rooms.AddAsync(roomCreate);
+                await _context.Rooms.AddAsync(roomCreate);
                 int i = await _context.SaveChangesAsync();
                 if (i > 0)
                 {
@@ -197,12 +188,7 @@ namespace DataAccess.DAOs
             {
                 throw new Exception("Room between this owner and this user is already created");
             }
-
         }
-
-
-
-
     }
 }
 

@@ -18,26 +18,23 @@ namespace DataAccess.DAOs
 {
     public class StaffDAO
     {
-
         private readonly NirvaxContext _context;
         private readonly IMapper _mapper;
-        
 
 
-
-        public StaffDAO( NirvaxContext context, IMapper mapper)
+        public StaffDAO(NirvaxContext context, IMapper mapper)
         {
-           
+
             _context = context;
             _mapper = mapper;
         }
 
         public async Task<bool> CheckStaffAsync(int staffId, string email, string phone)
         {
-            if (staffId == 0) 
+            if (staffId == 0)
             {
                 bool emailExists = await _context.Staff
-                    .AnyAsync(i=> i.Email.Trim() == email.Trim());
+                    .AnyAsync(i => i.Email.Trim() == email.Trim());
                 bool emailExists2 = await _context.Owners
                     .AnyAsync(i => i.Email.Trim() == email.Trim());
                 bool emailExists3 = await _context.Accounts
@@ -77,10 +74,10 @@ namespace DataAccess.DAOs
                     throw new Exception("Phone number already exists!");
                 }
             }
-            else 
+            else
             {
                 bool emailExists = await _context.Staff
-                    .Where(i => i.StaffId != staffId) 
+                    .Where(i => i.StaffId != staffId)
                     .AnyAsync(i => i.Email.Trim() == email.Trim());
 
                 bool emailExists2 = await _context.Owners
@@ -102,7 +99,7 @@ namespace DataAccess.DAOs
                 }
 
                 bool phoneExists = await _context.Staff
-                    .Where(i => i.StaffId != staffId) 
+                    .Where(i => i.StaffId != staffId)
                     .AnyAsync(i => i.Phone == phone);
 
                 bool phoneExists2 = await _context.Owners
@@ -125,13 +122,12 @@ namespace DataAccess.DAOs
                 }
             }
 
-            return true; 
+            return true;
         }
 
 
         public async Task<bool> CheckProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
-            // StaffDTO checkownerDTO = new StaffDTO();
             Staff? Staff = new Staff();
             Staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffProfileDTO.StaffId);
             var ownerId = Staff.OwnerId;
@@ -184,19 +180,16 @@ namespace DataAccess.DAOs
                     throw new Exception("Phone number already exists!");
                 }
 
-                    return true;
-                
+                return true;
+
             }
             return false;
         }
 
-
-
         public async Task<bool> ChangePasswordStaffAsync(int staffId, string oldPassword, string newPassword, string confirmPassword)
         {
-            //check password             
             Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
-            if(sid == null) { throw new Exception("Not found this staff!"); }
+            if (sid == null) { throw new Exception("Not found this staff!"); }
             if (oldPassword.Trim() == newPassword.Trim())
             {
                 throw new Exception("The password you want to change is the same as the old password. Please enter the new password!");
@@ -206,10 +199,10 @@ namespace DataAccess.DAOs
                 throw new Exception("Don't accept empty information!");
             }
             bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, sid.Password);
-            
+
             if (verified == true)
             {
-                if(newPassword.Trim() == confirmPassword.Trim())
+                if (newPassword.Trim() == confirmPassword.Trim())
                 {
                     string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
                     sid.Password = newpasswordHash;
@@ -220,11 +213,11 @@ namespace DataAccess.DAOs
                 }
                 else
                 {
-                    
-                       throw new Exception("Your new password and confirm password not match!");
-                    
+
+                    throw new Exception("Your new password and confirm password not match!");
+
                 }
-               
+
             }
             else
             {
@@ -235,7 +228,6 @@ namespace DataAccess.DAOs
         }
 
 
-        //owner
         public async Task<IEnumerable<Staff>> GetAllStaffsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
@@ -246,13 +238,12 @@ namespace DataAccess.DAOs
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 listStaff = await _context.Staff.Include(i => i.Owner)
-                  //  .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()) || i.Email.Trim().Contains(searchQuery.Trim()) || i.Phone.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.Fullname.Trim().Contains(searchQuery.Trim()))
                     .Where(i => i.OwnerId == ownerId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                
+
             }
             else
             {
@@ -261,30 +252,26 @@ namespace DataAccess.DAOs
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-              
+
             }
             return listStaff;
         }
 
-        //details
         public async Task<Staff> GetStaffByIdAsync(int staffId)
         {
-               
-                Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
-               
-                return sid;        
+
+            Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
+
+            return sid;
         }
 
-        //profile
         public async Task<StaffDTO> ViewStaffProfileAsync(string staffEmail)
         {
-                StaffDTO staff = new StaffDTO();
-                Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email.Trim() == staffEmail.Trim());
+            StaffDTO staff = new StaffDTO();
+            Staff? sid = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.Email.Trim() == staffEmail.Trim());
             staff = _mapper.Map<StaffDTO>(sid);
-                return staff;       
+            return staff;
         }
-
-
 
         public async Task<bool> CreateStaffAsync(StaffCreateDTO staffCreateDTO)
         {
@@ -303,7 +290,7 @@ namespace DataAccess.DAOs
             string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(staffCreateDTO.Password);
             staffCreateDTO.Password = newpasswordHash;
             Staff staff = _mapper.Map<Staff>(staffCreateDTO);
-            
+
 
             await _context.Staff.AddAsync(staff);
             int i = await _context.SaveChangesAsync();
@@ -315,10 +302,6 @@ namespace DataAccess.DAOs
 
         }
 
-        //admin
-
-        //oldPass = xyz
-        //newPass =1234
         public async Task<bool> UpdateStaffAsync(StaffDTO staffDTO)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == staffDTO.OwnerId).SingleOrDefaultAsync();
@@ -336,27 +319,23 @@ namespace DataAccess.DAOs
             StaffDTO newStaff;
             newStaff = staffDTO;
             Staff? staffOrgin = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffDTO.StaffId);
-            bool verified = BCrypt.Net.BCrypt.Verify(staffDTO.Password,staffOrgin.Password); 
-            if(verified == false)
+            bool verified = BCrypt.Net.BCrypt.Verify(staffDTO.Password, staffOrgin.Password);
+            if (verified == false)
             {
                 string newpasswordHash = BCrypt.Net.BCrypt.HashPassword(staffDTO.Password);
                 staffDTO.Password = newpasswordHash;
-            } else
+            }
+            else
             {
                 staffDTO.Password = staffOrgin.Password;
             }
-              // staffOrgin.Image = staffDTO.
-              
-                _mapper.Map(staffDTO, staffOrgin);
-            
-                 _context.Staff.Update(staffOrgin);
-                await _context.SaveChangesAsync();
-                return true;
-           
+            _mapper.Map(staffDTO, staffOrgin);
 
+            _context.Staff.Update(staffOrgin);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        //owner
         public async Task<bool> UpdateProfileStaffAsync(StaffProfileDTO staffProfileDTO)
         {
             var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
@@ -369,28 +348,25 @@ namespace DataAccess.DAOs
             staff.OwnerId = staff.OwnerId;
             staff.Image = staff.Image;
             staff.Password = staff.Password;
-           
+
             _mapper.Map(staffProfileDTO, staff);
-                
-                 _context.Staff.Update(staff);
-                await _context.SaveChangesAsync();
-                return true;
-          
+
+            _context.Staff.Update(staff);
+            await _context.SaveChangesAsync();
+            return true;
+
 
         }
         public async Task<bool> UpdateAvatarStaffAsync(StaffAvatarDTO staffAvatarDTO)
         {
-          
+
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffAvatarDTO.StaffId);
-            if(staffAvatarDTO.Image == null)
+            if (staffAvatarDTO.Image == null)
             {
                 throw new Exception("Don't accept null image!");
             }
             staff.Image = staffAvatarDTO.Image;
-          
-
-           // _mapper.Map(staffAvatarDTO, staff);
-             _context.Staff.Update(staff);
+            _context.Staff.Update(staff);
             await _context.SaveChangesAsync();
             return true;
 
@@ -400,8 +376,8 @@ namespace DataAccess.DAOs
         {
             Staff? staff = await _context.Staff.Include(i => i.Owner).SingleOrDefaultAsync(i => i.StaffId == staffId);
             if (staff != null)
-            {           
-                 _context.Staff.Remove(staff);
+            {
+                _context.Staff.Remove(staff);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -409,7 +385,7 @@ namespace DataAccess.DAOs
             return false;
 
         }
-        
+
     }
 }
 

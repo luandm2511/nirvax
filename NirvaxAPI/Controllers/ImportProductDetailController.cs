@@ -34,17 +34,17 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetAllImportProductDetailAsync()
         {
             var list = await _repo.GetAllImportProductDetailAsync();
-                if (list.Any())
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list Import Product Detail " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list Import Product Detail " + ok,
+                    Data = list
+                });
+            }
             else
             {
-                    return NoContent();
+                return NoContent();
 
             }
         }
@@ -54,39 +54,39 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<ImportProductDetailByImportDTO>>> GetAllImportProductDetailByImportIdAsync(int importId)
         {
             var list = await _repo.GetAllImportProductDetailByImportIdAsync(importId);
-                if (list.Any())
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
 
-                        Message = "Get list Import Product Detail " + ok,
-                        Data = list
-                    });
-                }
-                else
-                {
-                    return NoContent();
+                    Message = "Get list Import Product Detail " + ok,
+                    Data = list
+                });
+            }
+            else
+            {
+                return NoContent();
 
             }
         }
 
         [HttpPut]
         [Authorize(Roles = "Owner")]
-        public async Task<ActionResult> UpdateImportProductDetailAsync(int ownerId, int importId ,List<ImportProductDetailUpdateDTO> importProductDetail)
+        public async Task<ActionResult> UpdateImportProductDetailAsync(int ownerId, int importId, List<ImportProductDetailUpdateDTO> importProductDetail)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
             try
             {
                 if (ModelState.IsValid)
                 {
-                    await _repoProdSize.UpdateProductSizeByImportDetailAsync(ownerId,importProductDetail);
+                    await _repoProdSize.UpdateProductSizeByImportDetailAsync(ownerId, importProductDetail);
                     await _repo.UpdateImportProductDetailAsync(importId, importProductDetail);
                     await _repoImport.UpdateQuantityAndPriceImportProductAsync(importId);
                     await _transactionRepository.CommitTransactionAsync();
                     return StatusCode(200, new
                     {
                         Message = "Update import product detail " + ok,
-                     //   Data = importProduct1
+                        //   Data = importProduct1
                     });
                 }
                 else
@@ -97,12 +97,12 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
                 {
-                    
+
                     Message = "An error occurred: " + "Something went wrong, please try again."
                 });
             }

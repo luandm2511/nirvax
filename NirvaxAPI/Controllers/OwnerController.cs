@@ -12,7 +12,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        private readonly IOwnerRepository  _repo;
+        private readonly IOwnerRepository _repo;
         private readonly IEmailService _emailService;
 
         private readonly string ok = "successfully";
@@ -21,24 +21,23 @@ namespace WebAPI.Controllers
 
         public OwnerController(IOwnerRepository repo, IEmailService emailService)
         {
-             _repo = repo;
+            _repo = repo;
             _emailService = emailService;
         }
 
 
         [HttpGet]
-        //  [Authorize]
         public async Task<IActionResult> GetAllOwnersAsync(string? searchQuery, int page, int pageSize)
         {
-            var list = await _repo.GetAllOwnersAsync( searchQuery, page,  pageSize);
-                if (list.Any())
+            var list = await _repo.GetAllOwnersAsync(searchQuery, page, pageSize);
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list of owners " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list of owners " + ok,
+                    Data = list
+                });
+            }
             else
             {
                 return NoContent();
@@ -48,41 +47,40 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        //  [Authorize]
         public async Task<IActionResult> GetAllOwnersForUserAsync(string? searchQuery)
         {
-           
+
             var list = await _repo.GetAllOwnersForUserAsync(searchQuery);
-                if (list.Any())
+            if (list.Any())
+            {
+                return StatusCode(200, new
                 {
-                    return StatusCode(200, new
-                    {
-                        Message = "Get list of owners " + ok,
-                        Data = list
-                    });
-                }
+                    Message = "Get list of owners " + ok,
+                    Data = list
+                });
+            }
             else
             {
-                    return NoContent();
+                return NoContent();
 
             }
         }
 
 
         [HttpGet("{ownerId}")]
-        //  [Authorize]
         public async Task<ActionResult> GetOwnerByIdAsync(int ownerId)
-        {        
-                    var owner = await _repo.GetOwnerByIdAsync(ownerId);
-            if(owner != null) { 
-                    return StatusCode(200, new
-                    {
+        {
+            var owner = await _repo.GetOwnerByIdAsync(ownerId);
+            if (owner != null)
+            {
+                return StatusCode(200, new
+                {
 
-                        Message = "Get owner by id " + ok,
-                        Data = owner
-                    });
+                    Message = "Get owner by id " + ok,
+                    Data = owner
+                });
             }
-             else
+            else
             {
                 return StatusCode(404, new
                 {
@@ -94,8 +92,8 @@ namespace WebAPI.Controllers
         [HttpGet("{ownerEmail}")]
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ViewOwnerProfileAsync(string ownerEmail)
-        {       
-                    var owner = await _repo.ViewOwnerProfileAsync(ownerEmail);
+        {
+            var owner = await _repo.ViewOwnerProfileAsync(ownerEmail);
             if (owner != null)
             {
                 return StatusCode(200, new
@@ -103,25 +101,26 @@ namespace WebAPI.Controllers
                     Message = "Get view owner profile  " + ok,
                     Data = owner
                 });
-        }
-             else
+            }
+            else
             {
                 return StatusCode(404, new
                 {
                     Message = notFound + "any owner"
                 });
             }
-            
+
         }
 
-           
+
 
         [HttpPut]
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> ChangePasswordOwnerAsync(int ownerId, string oldPassword, string newPassword, string confirmPassword)
         {
-            try { 
-                    var checkOwner = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPassword, confirmPassword);
+            try
+            {
+                var checkOwner = await _repo.ChangePasswordOwnerAsync(ownerId, oldPassword, newPassword, confirmPassword);
                 if (checkOwner == true)
                 {
                     return StatusCode(200, new
@@ -151,18 +150,19 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner, Admin")]
         public async Task<ActionResult> UpdateOwnerAsync(OwnerDTO ownerDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkOwner = await _repo.CheckOwnerAsync(ownerDTO);
                     if (checkOwner == true)
                     {
                         var owner1 = await _repo.UpdateOwnerAsync(ownerDTO);
-                            return StatusCode(200, new
-                            {
-                                Message = "Update owner" + ok,
-                                Data = owner1
-                            });                    
+                        return StatusCode(200, new
+                        {
+                            Message = "Update owner" + ok,
+                            Data = owner1
+                        });
                     }
                     else
                     {
@@ -180,7 +180,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -194,7 +194,8 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Owner")]
         public async Task<ActionResult> UpdateProfileOwnerAsync(OwnerProfileDTO ownerProfileDTO)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     var checkOwner = await _repo.CheckProfileOwnerAsync(ownerProfileDTO);
@@ -224,7 +225,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return StatusCode(500, new
                 {
@@ -241,20 +242,20 @@ namespace WebAPI.Controllers
             try
             {
                 var checkOwner = await _repo.UpdateAvatarOwnerAsync(ownerAvatarDTO);
-            if (checkOwner == true)
-            {
-                return StatusCode(200, new
+                if (checkOwner == true)
                 {
-                    Message = "Update avatar owner" + ok,
-                });
-            }
-            else
-            {
-                return StatusCode(400, new
+                    return StatusCode(200, new
+                    {
+                        Message = "Update avatar owner" + ok,
+                    });
+                }
+                else
                 {
-                    Message = "Error!",
-                });
-            }
+                    return StatusCode(400, new
+                    {
+                        Message = "Error!",
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -264,36 +265,36 @@ namespace WebAPI.Controllers
                 });
             }
         }
-        
+
 
         [HttpPatch("{ownerId}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> BanOwnerAsync(int ownerId)
         {
-                var owner1 = await _repo.BanOwnerAsync(ownerId);
-                if (owner1)
+            var owner1 = await _repo.BanOwnerAsync(ownerId);
+            if (owner1)
+            {
+                var email = await _repo.GetEmailAsync(ownerId);
+                if (email == null)
                 {
-                    var email = await _repo.GetEmailAsync(ownerId);
-                    if(email == null)
+                    return StatusCode(404, new
                     {
-                       return StatusCode(404, new
-                       {
                         Message = "Not found email!",
-                       });
-                    }
-                    await _emailService.SendEmailAsync(email, "Ban", "Your account violates the policy, so we temporarily and permanently block your account!");
-                    return StatusCode(200, new
-                    {
-                        Message = "Ban owner " + ok
                     });
                 }
-                else
+                await _emailService.SendEmailAsync(email, "Ban", "Your account violates the policy, so we temporarily and permanently block your account!");
+                return StatusCode(200, new
                 {
-                    return StatusCode(400, new
-                    {
-                        Message = badRequest,
-                    });
-                }
+                    Message = "Ban owner " + ok
+                });
+            }
+            else
+            {
+                return StatusCode(400, new
+                {
+                    Message = badRequest,
+                });
+            }
         }
 
         [HttpPatch("{ownerId}")]

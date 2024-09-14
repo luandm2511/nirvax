@@ -30,7 +30,6 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Owner,Staff")]
-        //  [Authorize]
         public async Task<IActionResult> GetAllSizeChartsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var list = await _repo.GetAllSizeChartsAsync(searchQuery, page, pageSize, ownerId);
@@ -51,7 +50,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        //  [Authorize]
         public async Task<IActionResult> GetSizeChartForUserAsync(string? searchQuery)
         {
             var sizeChart = await _repo.GetSizeChartForUserAsync(searchQuery);
@@ -73,28 +71,30 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("{sizeChartId}")]
-        //  [Authorize]
         public async Task<ActionResult> GetSizeChartByIdAsync(int sizeChartId)
         {
 
             var sizeChart = await _repo.GetSizeChartByIdAsync(sizeChartId);
 
-            if(sizeChart != null) { 
-            return StatusCode(200, new
+            if (sizeChart != null)
             {
+                return StatusCode(200, new
+                {
 
-                Message = "Get size chart by id" + ok,
-                Data = sizeChart
-            });
+                    Message = "Get size chart by id" + ok,
+                    Data = sizeChart
+                });
 
 
-        }
-           else{
-            return StatusCode(404, new
+            }
+            else
             {
+                return StatusCode(404, new
+                {
 
-                Message = notFound + "any size chart"
-            });}
+                    Message = notFound + "any size chart"
+                });
+            }
         }
 
         [HttpPost]
@@ -102,7 +102,8 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> CreateSizeChartAsync([FromForm] SizeChartCreateDTO sizeChartDTOCreateDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
 
@@ -146,7 +147,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
@@ -165,7 +166,8 @@ namespace WebAPI.Controllers
 
             try
             {
-                if (ModelState.IsValid) {
+                if (ModelState.IsValid)
+                {
 
                     var checkSizeChart = await _repo.CheckSizeChartAsync(sizeChartDTO.SizeChartId, sizeChartDTO.Title, sizeChartDTO.Content, sizeChartDTO.OwnerId);
                     if (checkSizeChart == true)
@@ -174,13 +176,11 @@ namespace WebAPI.Controllers
                         IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetBySizeChartAsync(sizeChartDTO.SizeChartId);
                         foreach (BusinessObject.Models.Image img in images)
                         {
-                            // Xóa ảnh cũ trước khi cập nhật ảnh mới
                             await _imageRepository.DeleteImagesAsync(img);
 
                         }
                         foreach (var link in sizeChartDTO.ImageLinks)
                         {
-                            // Save image information to database
                             var image = new BusinessObject.Models.Image
                             {
                                 LinkImage = link,
@@ -212,7 +212,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new
@@ -230,14 +230,13 @@ namespace WebAPI.Controllers
             using var transaction = await _transactionRepository.BeginTransactionAsync();
 
             try
-            { 
-            IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetBySizeChartAsync(sizeChartId);
-            foreach (BusinessObject.Models.Image img in images)
             {
-                // Xóa ảnh cũ trước khi xóa ảnh mới
-                await _imageRepository.DeleteImagesAsync(img);
-            }
-            var sizeChart = await _repo.DeleteSizeChartAsync(sizeChartId);
+                IEnumerable<BusinessObject.Models.Image> images = await _imageRepository.GetBySizeChartAsync(sizeChartId);
+                foreach (BusinessObject.Models.Image img in images)
+                {
+                    await _imageRepository.DeleteImagesAsync(img);
+                }
+                var sizeChart = await _repo.DeleteSizeChartAsync(sizeChartId);
                 if (sizeChart)
                 {
                     await _transactionRepository.CommitTransactionAsync();
@@ -255,7 +254,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
                 return StatusCode(500, new

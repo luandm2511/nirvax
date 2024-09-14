@@ -11,7 +11,6 @@ namespace BusinessObject.DTOs
     {
         [Required(ErrorMessage = "ImportId cannot be empty!!")]
         public int ImportId { get; set; }     
-
         public DateTime ImportDate { get; set; }
         [Required(ErrorMessage = " Origin cannot be empty!!")]
         [MinLength(2, ErrorMessage = " Origin to be at least 2 characters!!")]

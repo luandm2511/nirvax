@@ -25,7 +25,7 @@ namespace DataAccess.DAOs
         public ProductSizeDAO(NirvaxContext context, IMapper mapper)
         {
 
-             _context = context;
+            _context = context;
             _mapper = mapper;
         }
 
@@ -44,20 +44,20 @@ namespace DataAccess.DAOs
             _context.ProductSizes.Update(productSize);
             await _context.SaveChangesAsync();
         }
- 
+
 
         //staff,owner
         public async Task<IEnumerable<ProductSizeListDTO>> GetAllProductSizesAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if(checkOwner == null) { return  new List<ProductSizeListDTO>(); }
+            if (checkOwner == null) { return new List<ProductSizeListDTO>(); }
             List<ProductSizeListDTO> list = new List<ProductSizeListDTO>();
 
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                List<ProductSize>  getList = await _context.ProductSizes
-                    .Include(i => i.Size) .Include(i => i.Product)
+                List<ProductSize> getList = await _context.ProductSizes
+                    .Include(i => i.Size).Include(i => i.Product)
                    .Where(i => i.Isdelete == false)
                     .Where(i => i.Size.OwnerId == ownerId
                     && i.Product.Isdelete == false
@@ -76,7 +76,7 @@ namespace DataAccess.DAOs
                     .Include(i => i.Size).Include(i => i.Product)
 
                     .Where(i => i.Isdelete == false)
-                    .Where(i => i.Size.OwnerId == ownerId 
+                    .Where(i => i.Size.OwnerId == ownerId
                     && i.Product.Isdelete == false
                     && i.Size.Isdelete == false
                     )
@@ -86,7 +86,7 @@ namespace DataAccess.DAOs
                 list = _mapper.Map<List<ProductSizeListDTO>>(getList);
 
             }
-            
+
             foreach (var item in list)
             {
                 var link = await _context.Images.Where(i => i.ProductId == item.ProductId).FirstOrDefaultAsync();
@@ -96,7 +96,7 @@ namespace DataAccess.DAOs
         }
 
         //user,guest
-       
+
         public async Task<IEnumerable<ProductSize>> GetProductSizeByProductIdAsync(int productId)
         {
             List<ProductSize> getList = new List<ProductSize>();
@@ -112,15 +112,15 @@ namespace DataAccess.DAOs
         //detail
         public async Task<ProductSize> GetProductSizeByIdAsync(string productSizeId)
         {
-        
+
             try
             {
-                ProductSize? sid = await _context.ProductSizes.Include(i=>i.Size).Include(i => i.Product).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
+                ProductSize? sid = await _context.ProductSizes.Include(i => i.Size).Include(i => i.Product).Where(i => i.Isdelete == false).SingleOrDefaultAsync(i => i.ProductSizeId == productSizeId);
 
                 return sid;
             }
-            catch (Exception ) { throw new Exception("Something went wrong, please try again."); }
-  
+            catch (Exception) { throw new Exception("Something went wrong, please try again."); }
+
         }
 
         public async Task<bool> CreateProductSizeAsync(int ownerId, List<ImportProductDetailCreateDTO> importProductDetailDTO)
@@ -192,9 +192,9 @@ namespace DataAccess.DAOs
         public async Task<bool> UpdateProductSizeByImportDetailAsync(int ownerId, List<ImportProductDetailUpdateDTO> importProductDetail)
         {
             foreach (var item in importProductDetail)
-            {              
+            {
                 var oldImportDetail = await _context.ImportProductDetails
-                    .Where(i => i.ProductSizeId.Trim() == item.ProductSizeId.Trim())    
+                    .Where(i => i.ProductSizeId.Trim() == item.ProductSizeId.Trim())
                     .Where(i => i.ImportId == item.ImportId)
                     .SingleOrDefaultAsync();
                 if (oldImportDetail == null)
@@ -212,7 +212,7 @@ namespace DataAccess.DAOs
                 if (productSize != null)
                 {
                     var newQuantity = productSize.Quantity - oldImportDetail.QuantityReceived + item.QuantityReceived;
-                   
+
                     if (newQuantity < 0)
                     {
                         continue;
@@ -243,7 +243,7 @@ namespace DataAccess.DAOs
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 throw new Exception("Can't update!!!");
             }
