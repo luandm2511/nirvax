@@ -81,7 +81,8 @@ namespace WebAPI.Controllers
                             Quantity = item.Quantity,
                             UnitPrice = productSize.Product.Price,
                             OwnerId = productSize.Product.OwnerId,
-                            OwnerName = productSize.Product.Owner.Fullname
+                            OwnerName = productSize.Product.Owner.Fullname,
+                            Image = productSize.Product.Images.FirstOrDefault()?.LinkImage,
                         });
                     }
                     else
