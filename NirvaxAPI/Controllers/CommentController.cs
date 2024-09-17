@@ -123,7 +123,7 @@ namespace WebAPI.Controllers
                     OwnerId = null, // Assuming Product model has OwnerId field
                     Content = $"Your comment has just been replied.",
                     IsRead = false,
-                    Url = null,
+                    Url = "http://localhost:4200/product-detail/{comment.ProductId}",
                     CreateDate = DateTime.Now
                 };
 
