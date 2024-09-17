@@ -27,6 +27,6 @@ namespace DataAccess.IRepository
         Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize);
         Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize);
         Task<IEnumerable<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery);
-        Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<AdvertisementDTO>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId);
     }
 }

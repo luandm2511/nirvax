@@ -232,7 +232,7 @@ namespace DataAccess.DAOs
             return getList;
         }
 
-        public async Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<AdvertisementDTO>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             IQueryable<Advertisement> query = _context.Advertisements
                                                        .Include(i => i.Owner)
@@ -255,7 +255,8 @@ namespace DataAccess.DAOs
             List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
                                                      .Take(pageSize)
                                                      .ToListAsync();
-            return getList;
+            var getListDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            return getListDTO;
         }
 
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId)

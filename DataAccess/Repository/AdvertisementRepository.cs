@@ -67,7 +67,7 @@ namespace DataAccess.Repository
             return _advertisementDAO.GetAdvertisementsByOwnerForUserAsync(searchQuery, ownerId);
         }
 
-        public Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<AdvertisementDTO>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _advertisementDAO.GetAdvertisementsByOwnerAsync(searchQuery, page, pageSize, ownerId);
         }
