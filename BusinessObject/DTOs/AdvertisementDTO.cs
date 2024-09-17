@@ -28,5 +28,31 @@ namespace BusinessObject.DTOs
         public int ServiceId { get; set; }
         [Required(ErrorMessage = " OwnerId cannot be empty!!")]
         public int OwnerId { get; set; }
-    }  
+    }
+
+    public class AdvertisementViewDTO
+    {
+        [Required(ErrorMessage = " AdId cannot be empty!!")]
+        public int AdId { get; set; }
+        [Required(ErrorMessage = " Title cannot be empty!!")]
+        [MinLength(1, ErrorMessage = " Title to be at least 1 characters!!")]
+        [MaxLength(100, ErrorMessage = " Title to be at least 100 characters!!")]
+        public string Title { get; set; } = null!;
+        [Required(ErrorMessage = " Content cannot be empty!!")]
+        [MinLength(1, ErrorMessage = " Content to be at least 1 characters!!")]
+        [MaxLength(4000, ErrorMessage = "Content is limited to 4000 characters!!")]
+        public string Content { get; set; } = null!;
+        public string? Image { get; set; } = null!;
+        [Required(ErrorMessage = " StatusPostId cannot be empty!!")]
+        public int StatusPostId { get; set; }
+        [Required(ErrorMessage = " ServiceId cannot be empty!!")]
+        public int ServiceId { get; set; }
+        [Required(ErrorMessage = " OwnerId cannot be empty!!")]
+        public int OwnerId { get; set; }
+        public string StatusPostName { get; set; }
+        public string ServiceName { get; set; }
+
+        public string OwnerName { get; set; } 
+
+    }
 }

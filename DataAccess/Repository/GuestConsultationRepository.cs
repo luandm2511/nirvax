@@ -43,20 +43,20 @@ namespace DataAccess.Repository
         {
             return _guestConsultationDAO.CheckGuestConsultationAsync(guestConsultationCreateDTO);
         }
-        public Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<GuestConsultationViewDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _guestConsultationDAO.GetAllGuestConsultationsAsync(searchQuery, page, pageSize, ownerId);
         }
 
-        public Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<GuestConsultationViewDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _guestConsultationDAO.GetAllGuestConsultationsAcceptAsync(searchQuery, page, pageSize, ownerId);
         }
-        public Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<GuestConsultationViewDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _guestConsultationDAO.GetAllGuestConsultationsWaitingAsync(searchQuery, page, pageSize, ownerId);
         }
-        public Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public Task<IEnumerable<GuestConsultationViewDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             return _guestConsultationDAO.GetAllGuestConsultationsDenyAsync(searchQuery, page, pageSize, ownerId);
         }

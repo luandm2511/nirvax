@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
                             UnitPrice = productSize.Product.Price,
                             OwnerId = productSize.Product.OwnerId,
                             OwnerName = productSize.Product.Owner.Fullname,
-                            Image = productSize.Product.Images.Where(i=>i.ProductId == productSize.ProductId).FirstOrDefault()?.LinkImage,
+                            Image = productSize.Product.Images.Where(i=>i.ProductId == productSize.ProductId).FirstOrDefault()?.LinkImage
                         });
                     }
                     else
