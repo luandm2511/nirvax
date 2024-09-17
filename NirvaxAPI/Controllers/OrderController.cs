@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("get-order-items")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public async Task<IActionResult> GetOrderItems([FromBody] List<OrderItemDTO> orderItems)
         {
             try
@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
                             UnitPrice = productSize.Product.Price,
                             OwnerId = productSize.Product.OwnerId,
                             OwnerName = productSize.Product.Owner.Fullname,
-                            Image = productSize.Product.Images.Where(i=>i.ProductId == productSize.ProductId).FirstOrDefault()?.LinkImage,
+                            Image = productSize.Product.Images.Where(i => i.ProductId == productSize.ProductId && i.Isdelete == false).FirstOrDefault()?.LinkImage,
                         });
                     }
                     else
@@ -121,7 +121,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "User")]
+        ////[Authorize(Roles = "User")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO createOrderDTO)
         {
             using var transaction = await _transactionRepository.BeginTransactionAsync();
@@ -189,7 +189,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("history/{accountId}")]
-        //[Authorize(Roles = "User")]
+        ////[Authorize(Roles = "User")]
         public async Task<IActionResult> ViewOrderHistory(int accountId)
         {
             try
@@ -204,7 +204,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("owner/{ownerId}")]
-        //[Authorize(Roles = "Owner,Staff")]
+        ////[Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> ViewOrdersByOwner(int ownerId) 
         {
             try
@@ -337,7 +337,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("search")]
-        [Authorize(Roles = "Owner,Staff")]
+        //[Authorize(Roles = "Owner,Staff")]
         public async Task<IActionResult> SearchOrders([FromQuery] string codeOrder)
         {
             try
