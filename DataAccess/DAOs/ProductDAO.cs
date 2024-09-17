@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Pipelines.Sockets.Unofficial.Buffers;
 
 namespace DataAccess.DAOs
@@ -29,7 +30,7 @@ namespace DataAccess.DAOs
         public async Task<IEnumerable<Product>> GetProductsInHomeAsync()
         {
             return await _context.Products.Include(p => p.Images)
-                    .Include(p => p.Owner).AsNoTracking().Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan).ToListAsync();
+                    .Include(p => p.Owner).AsNoTracking().Where(p => !p.Isdelete && !p.Isban && !p.Owner.IsBan).Where(p => p.ProductSizes.Any()).ToListAsync();
         }
 
         public async Task<Product> GetByIdAsync(int id)

@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Owner, Staff")]
+       // [Authorize(Roles = "Owner, Staff")]
         public async Task<IActionResult> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize)
         {
             var list = await _repo.GetAllAdvertisementsAsync(searchQuery, page, pageSize);
