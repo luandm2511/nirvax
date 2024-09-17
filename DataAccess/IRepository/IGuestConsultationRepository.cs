@@ -17,10 +17,10 @@ namespace DataAccess.IRepository
         Task<int> ViewGuestConsultationStatisticsAsync(int ownerId);
         Task<GuestConsultation> CreateGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
         Task<bool> CheckGuestConsultationAsync(GuestConsultationCreateDTO guestConsultationCreateDTO);
-        Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId);
-        Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId);
+        Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId);
         Task<bool> UpdateStatusGuestConsultationtAsync(int guestId, string statusGuest);
     }
 }

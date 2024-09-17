@@ -79,7 +79,7 @@ namespace DataAccess.DAOs
             return true;
         }
 
-        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
+        public async Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize) 
         {
           
             List<Advertisement> listAdvertisement = new List<Advertisement>();
@@ -105,10 +105,11 @@ namespace DataAccess.DAOs
             List<Advertisement> getList = await query.Skip((page - 1) * pageSize)
                                                      .Take(pageSize)
                                                      .ToListAsync();
-            return getList;
+            var getListDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            return getListDTO;
         }
 
-        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -130,10 +131,11 @@ namespace DataAccess.DAOs
                     .Take(pageSize)
                     .ToListAsync();            
             }
-            return getList;
+            var getListDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            return getListDTO;
         }
         
-        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -155,10 +157,11 @@ namespace DataAccess.DAOs
                     .Take(pageSize)
                     .ToListAsync();             
             }
-            return getList;
+            var getListDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            return getListDTO;
         }
        
-        public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
+        public async Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize)
         {
             List<Advertisement> getList = new List<Advertisement>();
 
@@ -180,7 +183,8 @@ namespace DataAccess.DAOs
                     .Take(pageSize)
                     .ToListAsync();             
             }
-            return getList;
+            var getListDTO = _mapper.Map<List<AdvertisementDTO>>(getList);
+            return getListDTO;
         }
 
         public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery)

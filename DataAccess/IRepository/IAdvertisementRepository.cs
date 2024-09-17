@@ -20,12 +20,12 @@ namespace DataAccess.IRepository
         Task<bool> UpdateAdvertisementAsync(AdvertisementDTO advertisementDTO);
         Task<bool> CheckAdvertisementAsync(AdvertisementDTO advertisementDTO);
         Task<Advertisement> UpdateStatusAdvertisementAsync(int adId, string statusPost);
-        Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);
+        Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsAsync(string? searchQuery, int page, int pageSize);
         Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerForUserAsync(string? searchQuery, int ownerId);
         Task<IEnumerable<Advertisement>> GetAllAdvertisementsByServiceAsync(int serviceId);
-        Task<IEnumerable<Advertisement>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize);
-        Task<IEnumerable<Advertisement>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize);
-        Task<IEnumerable<Advertisement>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize);
+        Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsWaitingAsync(string? searchQuery, int page, int pageSize);
+        Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsAcceptAsync(string? searchQuery, int page, int pageSize);
+        Task<IEnumerable<AdvertisementDTO>> GetAllAdvertisementsDenyAsync(string? searchQuery, int page, int pageSize);
         Task<IEnumerable<Advertisement>> GetAllAdvertisementsForUserAsync(string? searchQuery);
         Task<IEnumerable<Advertisement>> GetAdvertisementsByOwnerAsync(string? searchQuery, int page, int pageSize, int ownerId);
     }

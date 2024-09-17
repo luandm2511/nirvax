@@ -56,10 +56,10 @@ namespace DataAccess.DAOs
             return number;
         }
 
-        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if (checkOwner == null) { return new List<GuestConsultation>(); }
+            if (checkOwner == null) { return new List<GuestConsultationDTO>(); }
             IQueryable<GuestConsultation> query = _context.GuestConsultations.Include(i => i.Owner)
                                                        .Include(i => i.Ad)
                                                        .Include(i => i.StatusGuest)
@@ -84,13 +84,14 @@ namespace DataAccess.DAOs
                     .ToListAsync();
 
 
-            return getList;
+            var getListDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            return getListDTO;
         }
 
-        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsAcceptAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if (checkOwner == null) { return new List<GuestConsultation>(); }
+            if (checkOwner == null) { return new List<GuestConsultationDTO>(); }
             List<GuestConsultation> getList = new List<GuestConsultation>();
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -116,13 +117,14 @@ namespace DataAccess.DAOs
                    .ToListAsync();
 
             }
-            return getList;
+            var getListDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            return getListDTO;
         }
 
-        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsWaitingAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if (checkOwner == null) { return new List<GuestConsultation>(); }
+            if (checkOwner == null) { return new List<GuestConsultationDTO>(); }
             List<GuestConsultation> getList = new List<GuestConsultation>();
 
 
@@ -149,13 +151,14 @@ namespace DataAccess.DAOs
                    .ToListAsync();
 
             }
-            return getList;
+            var getListDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            return getListDTO;
         }
 
-        public async Task<IEnumerable<GuestConsultation>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
+        public async Task<IEnumerable<GuestConsultationDTO>> GetAllGuestConsultationsDenyAsync(string? searchQuery, int page, int pageSize, int ownerId)
         {
             var checkOwner = await _context.Owners.Where(i => i.OwnerId == ownerId).FirstOrDefaultAsync();
-            if (checkOwner == null) { return new List<GuestConsultation>(); }
+            if (checkOwner == null) { return new List<GuestConsultationDTO>(); }
             List<GuestConsultation> getList = new List<GuestConsultation>();
 
 
@@ -182,7 +185,8 @@ namespace DataAccess.DAOs
                     .ToListAsync();
 
             }
-            return getList;
+            var getListDTO = _mapper.Map<List<GuestConsultationDTO>>(getList);
+            return getListDTO;
         }
 
         public async Task<GuestConsultation> GetGuestConsultationsByIdAsync(int guestId)
