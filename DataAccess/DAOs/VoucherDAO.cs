@@ -120,9 +120,10 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Voucher>> GetAllVoucherForUserAsync()
         {
+            var endDate = DateTime.Now;
             List<Voucher> getList = await _context.Vouchers
               .Include(i => i.Owner)
-                  .Where(i => i.Isdelete == false)
+                  .Where(i => i.Isdelete == false).Where(i => i.EndDate >= endDate)
                   .ToListAsync();
             return getList;
         }
